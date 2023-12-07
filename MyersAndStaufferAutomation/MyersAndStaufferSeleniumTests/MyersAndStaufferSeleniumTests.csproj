@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<Configurations>Debug;Release</Configurations>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+	<ItemGroup>
+		<Content Include="Arum\Mississippi\appsettings.Release.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<DependentUpon>appsettings.json</DependentUpon>
+		</Content>
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetSeleniumExtras.PageObjects" Version="3.11.0" />
+    <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
+    <PackageReference Include="ExtentReports" Version="4.1.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+    <PackageReference Include="Mailosaur" Version="8.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="Nancy" Version="2.0.0" />
+    <PackageReference Include="NLogger" Version="1.1.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
+    <PackageReference Include="NunitXml.TestLogger" Version="3.0.131" />
+    <PackageReference Include="Selenium.Support" Version="4.8.2" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.8.2" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="119.0.6045.10500" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyersAndStaufferFramework\MyersAndStaufferFramework.csproj" />
+  </ItemGroup>
+	<ItemGroup>
+		<None Update="Arum\Mississippi\appsettings.Debug.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<DependentUpon>appsettings.json</DependentUpon>
+		</None>
+		<None Update="Arum\Mississippi\appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<WriteLinesToFile File="$(TargetDir)/env.config" Lines="$(Configuration)" Overwrite="true">
+		</WriteLinesToFile>
+	</Target>
+
+</Project>
