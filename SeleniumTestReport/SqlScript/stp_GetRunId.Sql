@@ -1,0 +1,18 @@
+CREATE OR ALTER PROCEDURE stp_GetRunId
+AS
+BEGIN TRY
+	DECLARE @Count INT = 0
+	IF EXISTS(SELECT 1 FROM tbl_TestCase)
+	BEGIN
+		SELECT @Count = MAX(CAST(Replace(RunId,'TestRun-','') AS INT)) FROM tbl_TestCase
+	END
+	ELSE
+	BEGIN
+		SET @Count = @Count + 1;
+	END
+
+	SELECT CONCAT('TestRun-',CAST((@Count + 1) AS VARCHAR(20))) [RunId]
+END TRY
+BEGIN CATCH
+	SELECT CONCAT('TestRun-',CAST(ERROR_MESSAGE() AS VARCHAR(20))) [RunId]
+END CATCH
