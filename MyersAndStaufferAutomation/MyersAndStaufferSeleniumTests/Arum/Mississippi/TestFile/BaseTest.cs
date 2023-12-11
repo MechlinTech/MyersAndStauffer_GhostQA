@@ -6,11 +6,12 @@ using System.Text;
 using AventStack.ExtentReports;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
 using MyersAndStaufferSeleniumTests.Utils;
+using System.IO;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 {
     [TestFixture]
-    public class BaseTest
+    public class BaseTest : SetupClass
     {
         public static ExtentTest test;
         string reportPath;
@@ -26,12 +27,22 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         public bool IsQAA => EnvironmentHelper.Environment == "QA-Auto";
 
         public int EmailTimeoutInSeconds => EnvironmentHelper.SafeParse("EmailTimeoutInSeconds", 120);
+        public static DateTime startDate;
+        public static string testSuiteName;
+        public static string testCaseName;
 
         public BaseTest() { }
 
         [SetUp]
         public void SetUp()
         {
+            startDate = DateTime.Now;
+            testCaseName = TestContext.CurrentContext.Test.Name;
+            testSuiteName = TestContext.CurrentContext.Test.ClassName.Replace(".", "/");
+            testSuiteName = Directory.GetParent(testSuiteName).Parent.Parent.ToString();
+            string[] directories = testSuiteName.Split("\\");
+            testSuiteName = directories[directories.Length - 1];
+
             StringBuilder logMessage = new StringBuilder();
             test = SetupClass.extent.CreateTest(TestContext.CurrentContext.Test.Name);
 
@@ -97,12 +108,23 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 AttatchLogToTest();
             }
             Browser.Driver.Dispose();
-
+            TestData testData = new TestData()
+            {
+                Runid = RunId.ToString(),
+                TestSuiteName = testSuiteName,
+                TestCaseName = testCaseName,
+                TestCaseStatus = status.ToString(),
+                FailureMessage = message,
+                FailureScreenshotPath = "",
+                StackTraceMessage = stackTrace,
+                Startdate = startDate,
+            };
+            DBConfiguration.SaveTestCaseData(testData);
         }
 
         public static void ScreenShot(string fileName = null, bool hasTimeStamp = false)
         {
-            fileName = fileName ?? TestContext.CurrentContext.Test.MethodName;
+            fileName ??= TestContext.CurrentContext.Test.MethodName;
             Screenshot ss = ((ITakesScreenshot)Browser.Driver).GetScreenshot();
             string timestamp = DateTime.Now.ToString("yy-MM-dd hh-mm-ss");
             string screenshotFile = Path.Combine(TestContext.CurrentContext.WorkDirectory, fileName + (hasTimeStamp ? timestamp : null) + ".png");

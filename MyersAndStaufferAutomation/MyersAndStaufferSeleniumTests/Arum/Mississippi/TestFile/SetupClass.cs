@@ -2,15 +2,17 @@
 using AventStack.ExtentReports.Reporter;
 using NUnit.Framework;
 using MyersAndStaufferSeleniumTests.Utils;
+using MyersAndStaufferFramework;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 {
     [SetUpFixture]
-    class SetupClass
+    public class SetupClass
     {
         public static ExtentTest test;
         public static ExtentReports extent;
         string reportPath;
+        public static string RunId = "";
 
         [OneTimeSetUp]
         protected void Initialize()
@@ -24,6 +26,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             extent.AddSystemInfo("Tester Name", "Mukesh");
             extent.AddSystemInfo("Environment", "dev Environemnt");
+            RunId = DBConfiguration.GetRunId();
         }
 
         [OneTimeTearDown]
