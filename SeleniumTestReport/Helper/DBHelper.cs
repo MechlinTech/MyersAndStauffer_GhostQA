@@ -30,6 +30,7 @@ namespace SeleniumTestReport.Helper
                         {
                             adapter.Fill(dt);
                         }
+                        connection.Close();
                     };
                 }
             }
