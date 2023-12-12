@@ -1,9 +1,8 @@
-﻿using SeleniumTestReport.Helper;
-using System;
+﻿using Newtonsoft.Json;
+using SeleniumTestReport.Helper;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SeleniumTestReport.Controllers
@@ -14,7 +13,24 @@ namespace SeleniumTestReport.Controllers
         {
             DBHelper dbHelper = new DBHelper();
             DataTable TestSuits = dbHelper.GetDataTestSuits();
+            var result = TestSuits.AsEnumerable().Select(x => x.ItemArray[0]).ToList();
+            ViewBag.Result = result;
             return View();
+        }
+
+        public JsonResult GetTestRunIDs(string testSuitName)
+        {
+            DBHelper dbHelper = new DBHelper();
+            DataTable TestRunIDs = dbHelper.GetDataRunIDs(testSuitName);
+            var result = JsonConvert.SerializeObject(TestRunIDs);
+            return Json(result);
+        }
+
+        public DataTable GetTestCaseDetails(string testSuitName, string runId)
+        {
+            DBHelper dbHelper = new DBHelper();
+            DataTable TestRunIDs = dbHelper.GetTestCaseDetails(testSuitName, runId);
+            return TestRunIDs;
         }
     }
 }

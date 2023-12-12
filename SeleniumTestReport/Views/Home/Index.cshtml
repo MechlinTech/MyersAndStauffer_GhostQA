@@ -1,75 +1,177 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-
-<main>
-    <table>
-        <thead>
-            <tr>
-                <th>Run ID</th>
-                <th>Test Suit</th>
-                <th>Status</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Screenshot (If Failed)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>GET http://localhost:4030/api/work-war</td>
-                <td>Success</td>
-                <td>November 17, 2023 12:00 PM</td>
-                <td>November 17, 2023 12:05 PM</td>
-                <td>[Image of screenshot]</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>GET http://localhost:4030/api//combi</td>
-                <td>Success</td>
-                <td>November 17, 2023 12:10 PM</td>
-                <td>November 17, 2023 12:15 PM</td>
-                <td>[Image of screenshot]</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Post http://localhost:4030/api//combi</td>
-                <td>Success</td>
-                <td>November 17, 2023 12:20 PM</td>
-                <td>November 17, 2023 12:25 PM</td>
-                <td>[Image of screenshot]</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Post http://localhost: 4030/api/combin</td>
-                <td>Success</td>
-                <td>November 17, 2023 12:30 PM</td>
-                <td>November 17, 2023 12:35 PM</td>
-                <td>[Image of screenshot]</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>Post http://localhost:4030/api/combin</td>
-                <td>Success</td>
-                <td>November 17, 2023 12:40 PM</td>
-                <td>November 17, 2023 12:45 PM</td>
-                <td>[Image of screenshot]</td>
-            </tr>
-        </tbody>
-    </table>
-</main>
-<style type="text/css">
-    <style >
-    table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
+<style>
+    li {
+        list-style-type: none;
     }
 
-    th, td {
-        padding: 5px;
-    }
-
-    img {
-        max-width: 100%;
-    }
+        li:hover {
+            cursor: pointer;
+        }
 </style>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    // Your jQuery code using $ can go here
+    $(document).ready(function () {
+        $('#runId-toggle').click(function () {
+            $('#runId-container').toggle();
+        });
+    });
+
+    function GetRunIds(suitName) {
+            debugger;
+            $.ajax({
+                url: '@Url.Action("GetTestRunIDs", "Home")',
+                data: { testSuitName: suitName },
+                type: 'GET',
+                dataType: 'json',
+                success: function (result) {
+                    console.log(result);
+                },
+                error: function (error) {
+                    console.log("Error fetching data:", error);
+                }
+            });
+        };
+</script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 d-flex flex-column">
+            @{
+                foreach (var obj in ViewBag.Result)
+                {
+                    <button type="button" class="btn btn-light mb-2 border-secondary bg-white" onclick="GetRunIds(this.innerText)">@obj</button>
+                }
+            }
+
+        </div>
+        <div class="col-md-4">
+            <button type="button" id="runId-toggle" class="btn btn-light mb-2 border-secondary bg-white"><i class="fa fa-bars" aria-hidden="true"></i> Run Id</button>
+            <div class="container-fluid" id="runId-container">
+                <div class="accordion" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                Accordion Item #1
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>1</li>
+                                    <li>2</li>
+                                    <li>3</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                Accordion Item #2
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>1</li>
+                                    <li>2</li>
+                                    <li>3</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                Accordion Item #3
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>1</li>
+                                    <li>2</li>
+                                    <li>3</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">hi</div>
+    </div>
+</div>
+
+@*<main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Run ID</th>
+                    <th>Test Suit</th>
+                    <th>Status</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Screenshot (If Failed)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>GET http://localhost:4030/api/work-war</td>
+                    <td>Success</td>
+                    <td>November 17, 2023 12:00 PM</td>
+                    <td>November 17, 2023 12:05 PM</td>
+                    <td>[Image of screenshot]</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>GET http://localhost:4030/api//combi</td>
+                    <td>Success</td>
+                    <td>November 17, 2023 12:10 PM</td>
+                    <td>November 17, 2023 12:15 PM</td>
+                    <td>[Image of screenshot]</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Post http://localhost:4030/api//combi</td>
+                    <td>Success</td>
+                    <td>November 17, 2023 12:20 PM</td>
+                    <td>November 17, 2023 12:25 PM</td>
+                    <td>[Image of screenshot]</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Post http://localhost: 4030/api/combin</td>
+                    <td>Success</td>
+                    <td>November 17, 2023 12:30 PM</td>
+                    <td>November 17, 2023 12:35 PM</td>
+                    <td>[Image of screenshot]</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Post http://localhost:4030/api/combin</td>
+                    <td>Success</td>
+                    <td>November 17, 2023 12:40 PM</td>
+                    <td>November 17, 2023 12:45 PM</td>
+                    <td>[Image of screenshot]</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>*@
+@*<style type="text/css">
+          table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+        }
+
+        img {
+            max-width: 100%;
+        }
+    </style>*@
