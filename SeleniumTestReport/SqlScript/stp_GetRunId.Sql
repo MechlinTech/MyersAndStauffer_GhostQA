@@ -1,16 +1,18 @@
-CREATE OR ALTER PROCEDURE stp_GetRunId
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetRunId]
 AS
 BEGIN TRY
 	DECLARE @Count INT = 0
-	IF EXISTS(SELECT 1 FROM tbl_TestCase)
+	IF OBJECT_ID('tbl_TestCase', 'U') IS NOT NULL
 	BEGIN
-		SELECT @Count = MAX(CAST(Replace(RunId,'TestRun-','') AS INT)) FROM tbl_TestCase
+		IF EXISTS(SELECT 1 FROM tbl_TestCase)
+		BEGIN
+			SELECT @Count = MAX(CAST(Replace(RunId,'TestRun-','') AS INT)) FROM tbl_TestCase
+		END
+		ELSE
+		BEGIN
+			SET @Count = @Count + 1;
+		END
 	END
-	ELSE
-	BEGIN
-		SET @Count = @Count + 1;
-	END
-
 	SELECT CONCAT('TestRun-',CAST((@Count + 1) AS VARCHAR(20))) [RunId]
 END TRY
 BEGIN CATCH

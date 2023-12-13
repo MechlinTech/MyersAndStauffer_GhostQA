@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using SeleniumTestReport.DTO_s;
 using SeleniumTestReport.Helper;
 using System.Collections.Generic;
 using System.Data;
@@ -13,24 +13,27 @@ namespace SeleniumTestReport.Controllers
         {
             DBHelper dbHelper = new DBHelper();
             DataTable TestSuits = dbHelper.GetDataTestSuits();
-            var result = TestSuits.AsEnumerable().Select(x => x.ItemArray[0]).ToList();
-            ViewBag.Result = result;
+            ViewBag.TestSuites = dbHelper.GetListFromDataTable(TestSuits);
             return View();
         }
 
-        public JsonResult GetTestRunIDs(string testSuitName)
+        [HttpGet]
+        public ActionResult GetTestRunIDs(string testSuitName)
         {
             DBHelper dbHelper = new DBHelper();
             DataTable TestRunIDs = dbHelper.GetDataRunIDs(testSuitName);
-            var result = JsonConvert.SerializeObject(TestRunIDs);
-            return Json(result);
+            List<dto_RunId> _RunIds = dbHelper.GetModelListFromDataTable(TestRunIDs);
+            ViewBag.RunDates = _RunIds.Select(x => x.RunDateTime).Distinct().ToList();
+            return PartialView("_RunIds", _RunIds);
         }
 
-        public DataTable GetTestCaseDetails(string testSuitName, string runId)
+        [HttpGet]
+        public ActionResult GetTestCaseDetails(string testSuitName, string runId)
         {
             DBHelper dbHelper = new DBHelper();
-            DataTable TestRunIDs = dbHelper.GetTestCaseDetails(testSuitName, runId);
-            return TestRunIDs;
+            DataTable TestDetails = dbHelper.GetTestCaseDetails(testSuitName, runId);
+            dto_TestDetails _TestDetails = dbHelper.GetDetailsListFromDataTable(TestDetails);
+            return PartialView("_TestDetails", _TestDetails);
         }
     }
 }

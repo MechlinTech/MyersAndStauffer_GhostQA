@@ -1,0 +1,31 @@
+﻿@model SeleniumTestReport.DTO_s.dto_TestDetails
+<html>
+<body>
+    <canvas id="testCaseChart" style="width:100%;max-width:600px"></canvas>
+    <script>
+        var xValues = ["Passed", "Failed"];
+        var yValues = [@Model.PassedTestCases, @Model.FailedTestCases];
+        var barColors = [
+            "Green",
+            "Maroon"
+        ];
+
+        new Chart("testCaseChart", {
+            type: "doughnut",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Test Case Details Chart"
+                }
+            }
+        });
+    </script>
+</body>
+</html>
