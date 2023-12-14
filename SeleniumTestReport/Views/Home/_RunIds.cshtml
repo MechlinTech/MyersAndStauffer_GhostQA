@@ -1,4 +1,4 @@
-﻿@model List<SeleniumTestReport.DTO_s.dto_RunId>
+﻿@model List<SeleniumTestReport.DTO_s.Dto_RunId>
 
 <html>
 <head>
@@ -39,7 +39,7 @@
                                 {
                                     if (runDate == runId.RunDateTime)
                                     {
-                                        <button id="runId_@runId.RunId" type="button" class="btn btn-light mb-2 border-secondary w-100 card testRunId_Clickable" onclick="GetDestDetails('@runId.TestSuiteName','@runId.RunId')">@runId.RunId</button>
+                                        <button id="runId_@runId.TestSuiteName@runId.RunId" type="button" class="btn btn-light mb-2 border-secondary w-100 card testRunId_Clickable" onclick="GetDestDetails('@runId.TestSuiteName','@runId.RunId')">@runId.RunId</button>
                                     }
                                 }
                             }

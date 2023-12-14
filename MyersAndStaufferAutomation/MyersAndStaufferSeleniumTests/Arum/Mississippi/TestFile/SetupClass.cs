@@ -12,7 +12,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         public static ExtentTest test;
         public static ExtentReports extent;
         string reportPath;
-        public static string RunId = "";
 
         [OneTimeSetUp]
         protected void Initialize()
@@ -26,7 +25,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             extent.AddSystemInfo("Tester Name", "Mukesh");
             extent.AddSystemInfo("Environment", "dev Environemnt");
-            RunId = DBConfiguration.GetRunId();
         }
 
         [OneTimeTearDown]

@@ -18,11 +18,26 @@ namespace SeleniumTestReport.Controllers
         }
 
         [HttpGet]
+        public ActionResult Details()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult GetTestDetails(string testSuitName, string runId)
+        {
+            DBHelper dbHelper = new DBHelper();
+            DataTable TestDetails = dbHelper.GetRunIdDetails(testSuitName, runId);
+            List<Dto_TestRunDetails> _TestRunDetails = dbHelper.GetTestRunListFromDataTable(TestDetails);
+            return View(_TestRunDetails);
+        }
+
+        [HttpGet]
         public ActionResult GetTestRunIDs(string testSuitName)
         {
             DBHelper dbHelper = new DBHelper();
             DataTable TestRunIDs = dbHelper.GetDataRunIDs(testSuitName);
-            List<dto_RunId> _RunIds = dbHelper.GetModelListFromDataTable(TestRunIDs);
+            List<Dto_RunId> _RunIds = dbHelper.GetModelListFromDataTable(TestRunIDs);
             ViewBag.RunDates = _RunIds.Select(x => x.RunDateTime).Distinct().ToList();
             return PartialView("_RunIds", _RunIds);
         }
@@ -32,7 +47,7 @@ namespace SeleniumTestReport.Controllers
         {
             DBHelper dbHelper = new DBHelper();
             DataTable TestDetails = dbHelper.GetTestCaseDetails(testSuitName, runId);
-            dto_TestDetails _TestDetails = dbHelper.GetDetailsListFromDataTable(TestDetails);
+            Dto_TestDetails _TestDetails = dbHelper.GetDetailsListFromDataTable(TestDetails);
             return PartialView("_TestDetails", _TestDetails);
         }
     }

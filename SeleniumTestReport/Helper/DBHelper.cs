@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Web.UI.WebControls;
 
 namespace SeleniumTestReport.Helper
 {
@@ -59,6 +60,34 @@ namespace SeleniumTestReport.Helper
                         {
                             adapter.Fill(dt);
                         }
+                        connection.Close();
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dt;
+        }
+
+        internal DataTable GetRunIdDetails(string testSuitName, string runId)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    using (SqlCommand command = new SqlCommand("stp_GetRunDetails", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuitName", testSuitName);
+                        command.Parameters.AddWithValue("@TestRunId", runId);
+                        connection.Open();
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            adapter.Fill(dt);
+                        }
                     };
                 }
             }
@@ -108,25 +137,45 @@ namespace SeleniumTestReport.Helper
 
         }
 
-        internal List<dto_RunId> GetModelListFromDataTable(DataTable testRunId)
+        internal List<Dto_TestRunDetails> GetTestRunListFromDataTable(DataTable testRunId)
         {
-            List<dto_RunId> dataList = new List<dto_RunId>();
+            List<Dto_TestRunDetails> dataList = new List<Dto_TestRunDetails>();
             foreach (DataRow row in testRunId.Rows)
             {
-                dto_RunId _RunId = new dto_RunId()
+                Dto_TestRunDetails _RunId = new Dto_TestRunDetails()
                 {
-                    TestSuiteName = row["TestSuiteName"].ToString(),
-                    RunId = row["Runid"].ToString(),
-                    RunDateTime = Convert.ToDateTime(row["StartDate"]).ToString("MMMM dd"),
+                    TestRun = row["TestRunName"].ToString(),
+                    TestCaseName = row["TestCaseName"].ToString(),
+                    TestFailureMessage = row["TestFailureMessage"].ToString(),
+                    TestFailureScreenShot = row["TestFailureScreenShot"].ToString(),
+                    TestStartDate = Convert.ToDateTime(row["TestRunStartDateTime"]).ToString("MM/dd/yyyy hh:mm:ss tt"),
+                    TestEndDate = Convert.ToDateTime(row["TestRunEndDateTime"]).ToString("MM/dd/yyyy hh:mm:ss tt"),
+                    TestSteps = row["TestCaseSteps"].ToString()
                 };
                 dataList.Add(_RunId);
             }
             return dataList;
         }
 
-        internal dto_TestDetails GetDetailsListFromDataTable(DataTable testDetails)
+        internal List<Dto_RunId> GetModelListFromDataTable(DataTable testRunId)
         {
-            dto_TestDetails _TestDetails = new dto_TestDetails();
+            List<Dto_RunId> dataList = new List<Dto_RunId>();
+            foreach (DataRow row in testRunId.Rows)
+            {
+                Dto_RunId _RunId = new Dto_RunId()
+                {
+                    TestSuiteName = row["TestSuiteName"].ToString(),
+                    RunId = row["TestRunName"].ToString(),
+                    RunDateTime = Convert.ToDateTime(row["TestRunStartDateTime"]).ToString("MMMM dd"),
+                };
+                dataList.Add(_RunId);
+            }
+            return dataList;
+        }
+
+        internal Dto_TestDetails GetDetailsListFromDataTable(DataTable testDetails)
+        {
+            Dto_TestDetails _TestDetails = new Dto_TestDetails();
             foreach (DataRow row in testDetails.Rows)
             {
                 _TestDetails.TotalTestCases = (Int32)row["TotalTestCases"];
@@ -135,5 +184,7 @@ namespace SeleniumTestReport.Helper
             }
             return _TestDetails;
         }
+
+
     }
 }

@@ -7,6 +7,7 @@ using AventStack.ExtentReports;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
 using MyersAndStaufferSeleniumTests.Utils;
 using System.IO;
+using System;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 {
@@ -28,8 +29,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
         public int EmailTimeoutInSeconds => EnvironmentHelper.SafeParse("EmailTimeoutInSeconds", 120);
         public static DateTime startDate;
+        public static DateTime endDate;
         public static string testSuiteName;
         public static string testCaseName;
+        public static string TestRunName;
 
         public BaseTest() { }
 
@@ -42,6 +45,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             testSuiteName = Directory.GetParent(testSuiteName).Parent.Parent.ToString();
             string[] directories = testSuiteName.Split("\\");
             testSuiteName = directories[directories.Length - 1];
+            TestRunName = DBConfiguration.GetRunId(testSuiteName);
 
             StringBuilder logMessage = new StringBuilder();
             test = SetupClass.extent.CreateTest(TestContext.CurrentContext.Test.Name);
@@ -108,16 +112,17 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 AttatchLogToTest();
             }
             Browser.Driver.Dispose();
+            endDate = DateTime.Now;
             TestData testData = new TestData()
             {
-                Runid = RunId.ToString(),
+                TestRunName = TestRunName.ToString(),
                 TestSuiteName = testSuiteName,
                 TestCaseName = testCaseName,
                 TestCaseStatus = status.ToString(),
-                FailureMessage = message,
-                FailureScreenshotPath = "",
-                StackTraceMessage = stackTrace,
-                Startdate = startDate,
+                TestFailureMessage = message,
+                TestFailureScreenShot = "",
+                TestRunStartDateTime = startDate,
+                TestRunEndDateTime = endDate,
             };
             DBConfiguration.SaveTestCaseData(testData);
         }

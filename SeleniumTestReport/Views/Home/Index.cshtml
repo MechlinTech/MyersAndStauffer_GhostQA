@@ -3,7 +3,7 @@
 
 <div class="container-fluid">
     <div class="row p-2">
-        <div class="col-md-2 d-flex flex-column card border-dark p-2">
+        <div class="col-md-4 d-flex flex-column card m-2 shadow-lg p-2">
             @{
                 if (ViewBag.TestSuites != null)
                 {
@@ -14,13 +14,8 @@
                 }
             }
         </div>
-        <div id="runId" class="col-md-4 card border-dark p-2">
+        <div id="runId" class="col-md-7 card m-2 shadow-lg p-2">
             <div id="testRunListContainer">
-
-            </div>
-        </div>
-        <div class="col-md-6 card border-dark p-2">
-            <div id="testcaseChartContainer">
 
             </div>
         </div>
@@ -42,12 +37,13 @@
 
     function GetDestDetails(testSuitesName, runId) {
     $.ajax({
-        url: '@Url.Action("GetTestCaseDetails", "Home")',
-        data: { testSuitName: testSuitesName, runId : runId },
+        url: '@Url.Action("GetTestDetails", "Home")',
+        data: { testSuitName: testSuitesName, runId: runId },
+        Type:"Post",
         success: function (result) {
             $('#testcaseChartContainer').html(result);
             $(".testRunId_Clickable").removeClass("bg-warning");
-            var selector = '#runId_' + runId;
+            var selector = '#runId_' + testSuitesName+ runId;
             $(selector).addClass("bg-warning");
         }
     });

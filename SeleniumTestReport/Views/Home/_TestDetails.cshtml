@@ -1,31 +1,53 @@
-﻿@model SeleniumTestReport.DTO_s.dto_TestDetails
+﻿@model SeleniumTestReport.DTO_s.Dto_TestDetails
 <html>
+<head>
+    <style>
+        .video-frame {
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
 <body>
-    <canvas id="testCaseChart" style="width:100%;max-width:600px"></canvas>
-    <script>
-        var xValues = ["Passed", "Failed"];
-        var yValues = [@Model.PassedTestCases, @Model.FailedTestCases];
-        var barColors = [
-            "Green",
-            "Maroon"
-        ];
+    <div class="row d-flex">
+        <div class="col-md-5 card" style="margin-left:10px;">
+            <canvas id="testCaseChart"></canvas>
+            <script>
+            var xValues = ["Passed", "Failed"];
+            var yValues = [@Model.PassedTestCases, @Model.FailedTestCases];
+            var barColors = [
+                "Green",
+                "Maroon"
+            ];
 
-        new Chart("testCaseChart", {
-            type: "doughnut",
-            data: {
-                labels: xValues,
-                datasets: [{
-                    backgroundColor: barColors,
-                    data: yValues
-                }]
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: "Test Case Details Chart"
+            new Chart("testCaseChart", {
+                type: "doughnut",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        backgroundColor: barColors,
+                        data: yValues
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: "Test Case Details Chart"
+                    }
                 }
-            }
-        });
-    </script>
+            });
+            </script>
+        </div>
+        <div class="col-md-5 card" style="margin-left:10px; padding:5px;">
+            <div class="video-frame">
+                <iframe id="player2" src="https://www.youtube.com/embed/cs1e0fRyI18" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <button type="button" class="btn btn-light m-2 w-25 border-secondary">Show Details</button>
+        <button type="button" class="btn btn-light m-2 w-25 border-secondary">Show Log</button>
+    </div>
+
 </body>
 </html>

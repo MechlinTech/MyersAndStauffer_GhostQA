@@ -7,18 +7,18 @@ BEGIN TRY
 	SELECT @TotalTestCases = COUNT(1) 
 		FROM tbl_TestCase
 	WHERE [TestSuiteName] = @TestSuitName 
-		  AND [Runid] = @TestRunId
+		  AND [TestRunName] = @TestRunId
 
 	SELECT @PassedTestCases = COUNT(1) 
 		FROM tbl_TestCase
 	WHERE [TestSuiteName] = @TestSuitName 
-		  AND [Runid] = @TestRunId
+		  AND [TestRunName] = @TestRunId
 		  AND [TestCaseStatus] LIKE '%Pass%'
 
 	SELECT @FailedTestCases = COUNT(1) 
 		FROM tbl_TestCase
 	WHERE [TestSuiteName] = @TestSuitName 
-		  AND [Runid] = @TestRunId
+		  AND [TestRunName] = @TestRunId
 		  AND [TestCaseStatus] LIKE '%Fail%'
 	SELECT @TotalTestCases [TotalTestCases], @PassedTestCases [PassedTestCases], @FailedTestCases [FailedTestCases]
 END TRY

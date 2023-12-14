@@ -10,13 +10,12 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
     public class LoginTest : BaseTest
     {
         [Test, Order(1)]
-        
+
 
         public void VerifyLoginOK()
         {
             var logInPage = new LoginPage();
 
-            
             logInPage.WaitForPageLoad();
             test.Log(Status.Info, "wait for plage to load");
             logInPage.ClickonLogin();
@@ -27,8 +26,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             test.Log(Status.Info, "Enter passoword");
             logInPage.SubmitLogIn();
             test.Log(Status.Info, "Click on LoSubmit button");
-
-
         }
     }
 }

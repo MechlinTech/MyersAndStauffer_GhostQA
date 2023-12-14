@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace SeleniumTestReport.DTO_s
+﻿namespace SeleniumTestReport.DTO_s
 {
-    public class dto_RunId
+    public class Dto_RunId
     {
         public string TestSuiteName { get; set; }
         public string RunId { get; set; }

@@ -1,4 +1,5 @@
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetRunId]
+@TestSuite		VARCHAR(1000)
 AS
 BEGIN TRY
 	DECLARE @Count INT = 0
@@ -6,15 +7,15 @@ BEGIN TRY
 	BEGIN
 		IF EXISTS(SELECT 1 FROM tbl_TestCase)
 		BEGIN
-			SELECT @Count = MAX(CAST(Replace(RunId,'TestRun-','') AS INT)) FROM tbl_TestCase
+			SELECT @Count = ISNULL((MAX(CAST(REPLACE([TestRunName],'TestRun-','') AS INT))),0) FROM tbl_TestCase WHERE [TestSuiteName] = @TestSuite
 		END
 		ELSE
 		BEGIN
 			SET @Count = @Count + 1;
 		END
 	END
-	SELECT CONCAT('TestRun-',CAST((@Count + 1) AS VARCHAR(20))) [RunId]
+	SELECT CONCAT('TestRun-',CAST((@Count + 1) AS VARCHAR(20))) [TestRunName]
 END TRY
 BEGIN CATCH
-	SELECT CONCAT('TestRun-',CAST(ERROR_MESSAGE() AS VARCHAR(20))) [RunId]
+	SELECT CONCAT('TestRun-',CAST(ERROR_MESSAGE() AS VARCHAR(20))) [TestRunName]
 END CATCH
