@@ -201,7 +201,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\_RunIds.cshtml" />
     <Content Include="Views\Home\_TestDetails.cshtml" />
-    <Content Include="Views\Home\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

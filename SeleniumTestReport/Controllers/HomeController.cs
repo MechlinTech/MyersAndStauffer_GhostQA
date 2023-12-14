@@ -17,13 +17,6 @@ namespace SeleniumTestReport.Controllers
             return View();
         }
 
-        [HttpGet]
-        public ActionResult Details()
-        {
-            return View();
-        }
-
-        [HttpPost]
         public ActionResult GetTestDetails(string testSuitName, string runId)
         {
             DBHelper dbHelper = new DBHelper();

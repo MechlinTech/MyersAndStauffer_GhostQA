@@ -9,8 +9,11 @@
     </style>
 </head>
 <body>
+    <div class="row col-lg-2 m-0">
+        <button type="button" class="btn btn-light mb-2 border-secondary w-25 card" onclick="Back()">Back</button>
+    </div>
     <div class="row d-flex">
-        <div class="col-md-5 card" style="margin-left:10px;">
+        <div class="card col-md-5" style="margin-left:10px;">
             <canvas id="testCaseChart"></canvas>
             <script>
             var xValues = ["Passed", "Failed"];
@@ -38,11 +41,11 @@
             });
             </script>
         </div>
-        <div class="col-md-5 card" style="margin-left:10px; padding:5px;">
-            <div class="video-frame">
-                <iframe id="player2" src="https://www.youtube.com/embed/cs1e0fRyI18" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            </div>
-        </div>
+        @*<div class="col-md-5 card" style="margin-left:10px; padding:5px;">
+                <div class="video-frame">
+                    <iframe id="player2" src="https://www.youtube.com/embed/cs1e0fRyI18" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>*@
     </div>
     <div class="row">
         <button type="button" class="btn btn-light m-2 w-25 border-secondary">Show Details</button>

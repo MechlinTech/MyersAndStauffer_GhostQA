@@ -1,8 +1,38 @@
 ﻿<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
+@*<div class="container-fluid">
+        <div class="row p-2">
+            <div id="TestRun">
+                <div class="col-md-2 d-flex flex-column card m-2 shadow-lg p-2">
+                    @{
+                        if (ViewBag.TestSuites != null)
+                        {
+                            foreach (var item in ViewBag.TestSuites)
+                            {
+                                <button id="testSuites_@item" type="button" class="btn btn-light mb-2 border-secondary card testSuite_Clickable" onclick="GetRunIds(this.innerText)">@item</button>
+                            }
+                        }
+                    }
+                </div>
+                <div id="runId" class="col-md-3 card m-2 shadow-lg p-2">
+                    <div id="testRunListContainer">
+
+                    </div>
+                </div>
+            </div>
+            <div id="TestRunDetails">
+                <div id="runId" class="col-md-6 card m-2 shadow-lg p-2">
+                    <div id="testcaseChartContainer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
 <div class="container-fluid">
-    <div class="row p-2">
+    <div class="row p-2" id="TestRun">
         <div class="col-md-4 d-flex flex-column card m-2 shadow-lg p-2">
             @{
                 if (ViewBag.TestSuites != null)
@@ -14,14 +44,25 @@
                 }
             }
         </div>
-        <div id="runId" class="col-md-7 card m-2 shadow-lg p-2">
+        <div id="runId" class="col card m-2 shadow-lg p-2">
             <div id="testRunListContainer">
+
+            </div>
+        </div>
+    </div>
+    <div id="TestRunDetails">
+        <div id="runId" class="m-2 shadow-lg p-2">
+            <div id="testcaseChartContainer">
 
             </div>
         </div>
     </div>
 </div>
 <script>
+    $(document).ready(function () {
+        $('#TestRun').show();
+        $('#TestRunDetails').hide();
+    });
     function GetRunIds(testSuitesName) {
         $.ajax({
             url: '@Url.Action("GetTestRunIDs", "Home")',
@@ -36,17 +77,24 @@
     };
 
     function GetDestDetails(testSuitesName, runId) {
-    $.ajax({
-        url: '@Url.Action("GetTestDetails", "Home")',
-        data: { testSuitName: testSuitesName, runId: runId },
-        Type:"Post",
-        success: function (result) {
-            $('#testcaseChartContainer').html(result);
-            $(".testRunId_Clickable").removeClass("bg-warning");
-            var selector = '#runId_' + testSuitesName+ runId;
-            $(selector).addClass("bg-warning");
-        }
-    });
-};
+        $.ajax({
+            url: '@Url.Action("GetTestCaseDetails", "Home")',
+            data: { testSuitName: testSuitesName, runId: runId },
+            Type: "Post",
+            success: function (result) {
+                $('#testcaseChartContainer').html(result);
+                $(".testRunId_Clickable").removeClass("bg-warning");
+                var selector = '#runId_' + testSuitesName + runId;
+                $(selector).addClass("bg-warning");
+                $('#TestRun').hide();
+                $('#TestRunDetails').show();
+            }
+        });
+    };
+
+    function Back() {
+        $('#TestRun').show();
+        $('#TestRunDetails').hide();
+    };
 
 </script>
