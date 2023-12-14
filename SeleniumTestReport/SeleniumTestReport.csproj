@@ -124,8 +124,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="DTO%27s\dto_RunId.cs" />
-    <Compile Include="DTO%27s\dto_TestDetails.cs" />
+    <Compile Include="DTO%27s\Dto_RunId.cs" />
+    <Compile Include="DTO%27s\Dto_TestDetails.cs" />
+    <Compile Include="DTO%27s\Dto_TestRunDetails.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -180,6 +181,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="SqlScript\stp_GetRunDetails.Sql" />
     <Content Include="SqlScript\stp_GetTestCaseDetails.Sql" />
     <Content Include="SqlScript\stp_GetRunIDs.Sql" />
     <Content Include="SqlScript\stp_GetRunId.Sql" />
@@ -199,6 +201,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\_RunIds.cshtml" />
     <Content Include="Views\Home\_TestDetails.cshtml" />
+    <Content Include="Views\Home\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
