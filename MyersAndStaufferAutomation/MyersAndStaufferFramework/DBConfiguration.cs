@@ -33,9 +33,8 @@ namespace MyersAndStaufferFramework
                 string connectionString = GetDBConnectionString("AppSettings:ConnectionString");
                 string testerName = GetDBConnectionString("AppSettings:TesterName");
                 string env = GetDBConnectionString("AppSettings:TestEnv");
-                testData.TesterEnvironment = env;
+                testData.TestEnvironment = env;
                 testData.TesterName = testerName;
-                testData.EndDate = DateTime.Now;
                 string tableObject = ConvertObjectIntoJson(testData);
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -61,9 +60,9 @@ namespace MyersAndStaufferFramework
             return JsonSerializer.Serialize(testData);
         }
 
-        public static string GetRunId()
+        public static string GetRunId(string testSuite)
         {
-            string runId = "";
+            string TestRunName = "";
             try
             {
                 string connectionString = GetDBConnectionString("AppSettings:ConnectionString");
@@ -75,22 +74,24 @@ namespace MyersAndStaufferFramework
                     };
 
                     connection.Open();
+                    SqlParameter sqlParameter = cmd.Parameters.AddWithValue("@TestSuite", testSuite);
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             // Access data from the result set
-                            runId = reader["RunId"].ToString();
+                            TestRunName = reader["TestRunName"].ToString();
                         }
                     }
+                    connection.Close();
                 }
             }
             catch (Exception ex)
             {
-                runId = "Error";
+                TestRunName = "Error";
                 throw ex;
             }
-            return runId;
+            return TestRunName;
         }
     }
 }

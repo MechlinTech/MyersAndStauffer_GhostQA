@@ -1,28 +1,6 @@
 ﻿@model List<SeleniumTestReport.DTO_s.Dto_RunId>
 
 <html>
-<head>
-    <style>
-        .accordion {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .date {
-            background-color: #f1f1f1;
-            padding: 10px;
-            cursor: pointer;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        .content {
-            display: none;
-            padding: 10px;
-            border-top: 1px solid #ddd;
-        }
-    </style>
-</head>
 <body>
     <div class="accordion">
         @{
@@ -50,15 +28,5 @@
             }
         }
     </div>
-    <script>
-        function toggleContent(id) {
-            var content = document.getElementById(id);
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        }
-    </script>
 </body>
 </html>

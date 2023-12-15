@@ -146,6 +146,7 @@ namespace SeleniumTestReport.Helper
                 {
                     TestRun = row["TestRunName"].ToString(),
                     TestCaseName = row["TestCaseName"].ToString(),
+                    TestRunStatus = row["TestCaseStatus"].ToString(),
                     TestFailureMessage = row["TestFailureMessage"].ToString(),
                     TestFailureScreenShot = row["TestFailureScreenShot"].ToString(),
                     TestStartDate = Convert.ToDateTime(row["TestRunStartDateTime"]).ToString("MM/dd/yyyy hh:mm:ss tt"),

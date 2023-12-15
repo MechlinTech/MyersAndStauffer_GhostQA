@@ -30,6 +30,28 @@
             </div>
         </div>
     </div>*@
+<style>
+    .accordion {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .date {
+        background-color: #f1f1f1;
+        padding: 10px;
+        cursor: pointer;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    .content {
+        display: none;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+    }
+
+    
+</style>
 
 <div class="container-fluid">
     <div class="row p-2" id="TestRun">
@@ -97,4 +119,12 @@
         $('#TestRunDetails').hide();
     };
 
+    function toggleContent(id) {
+        var content = document.getElementById(id);
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+    }
 </script>

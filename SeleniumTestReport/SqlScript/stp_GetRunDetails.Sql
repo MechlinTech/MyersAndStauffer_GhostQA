@@ -4,7 +4,7 @@ CREATE OR ALTER PROCEDURE [dbo].[stp_GetRunDetails]
 AS
 BEGIN TRY
 	SELECT 
-		[TestRunName], [TestCaseName], [TestFailureMessage], [TestFailureScreenShot]
+		[TestRunName], [TestCaseName], [TestCaseStatus], [TestFailureMessage], [TestFailureScreenShot]
 		, [TestRunStartDateTime], [TestRunEndDateTime],	[TestCaseSteps]
 	FROM tbl_TestCase
 	WHERE [TestSuiteName] = @TestSuitName

@@ -127,6 +127,7 @@
     <Compile Include="DTO%27s\Dto_RunId.cs" />
     <Compile Include="DTO%27s\Dto_TestDetails.cs" />
     <Compile Include="DTO%27s\Dto_TestRunDetails.cs" />
+    <Compile Include="DTO%27s\Dto_TestSteps.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
