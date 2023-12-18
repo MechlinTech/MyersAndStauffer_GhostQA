@@ -28,25 +28,22 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         public bool IsQAA => EnvironmentHelper.Environment == "QA-Auto";
 
         public int EmailTimeoutInSeconds => EnvironmentHelper.SafeParse("EmailTimeoutInSeconds", 120);
-        public static DateTime startDate;
-        public static DateTime endDate;
-        public static string testSuiteName;
-        public static string testCaseName;
-        public static string TestRunName;
+        public static TestData testData;
 
-        public BaseTest() { }
+        public BaseTest()
+        {
+            testData.TestCaseName = TestContext.CurrentContext.Test.Name;
+            var testSuiteName = TestContext.CurrentContext.Test.ClassName.Replace(".", "/");
+            testSuiteName = Directory.GetParent(testSuiteName).Parent.Parent.ToString();
+            string[] directories = testSuiteName.Split("\\");
+            testData.TestSuiteName = directories[directories.Length - 1];
+            testData.TestRunName = DBConfiguration.GetRunId(testSuiteName);
+            setLog_Data.SetDataMain(testData);
+        }
 
         [SetUp]
         public void SetUp()
         {
-            startDate = DateTime.Now;
-            testCaseName = TestContext.CurrentContext.Test.Name;
-            testSuiteName = TestContext.CurrentContext.Test.ClassName.Replace(".", "/");
-            testSuiteName = Directory.GetParent(testSuiteName).Parent.Parent.ToString();
-            string[] directories = testSuiteName.Split("\\");
-            testSuiteName = directories[directories.Length - 1];
-            TestRunName = DBConfiguration.GetRunId(testSuiteName);
-
             StringBuilder logMessage = new StringBuilder();
             test = SetupClass.extent.CreateTest(TestContext.CurrentContext.Test.Name);
 
@@ -91,6 +88,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             var status = TestContext.CurrentContext.Result.Outcome.Status;
             var message = TestContext.CurrentContext.Result.Message;
             var stackTrace = TestContext.CurrentContext.Result.StackTrace;
+            testData.TestCaseStatus = status.ToString();
+            testData.TestFailureMessage = message;
+            setLog_Data.SetDataMain(testData);
 
             DateTime time = DateTime.Now;
             string fileName2 = "Screenshot_" + time.ToString("h_mm_ss") + ".png";
@@ -112,18 +112,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 AttatchLogToTest();
             }
             Browser.Driver.Dispose();
-            endDate = DateTime.Now;
-            TestData testData = new TestData()
-            {
-                TestRunName = TestRunName.ToString(),
-                TestSuiteName = testSuiteName,
-                TestCaseName = testCaseName,
-                TestCaseStatus = status.ToString(),
-                TestFailureMessage = message,
-                TestFailureScreenShot = "",
-                TestRunStartDateTime = startDate,
-                TestRunEndDateTime = endDate,
-            };
+            testData = setLog_Data.GetData();
             DBConfiguration.SaveTestCaseData(testData);
         }
 
@@ -136,6 +125,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             ss.SaveAsFile(screenshotFile, ScreenshotImageFormat.Png);
             TestContext.AddTestAttachment(screenshotFile, fileName + "Screenshot");
             WriteToLogfile("Error screenshot: " + screenshotFile);
+
+            testData.TestFailureScreenShot = screenshotFile;
+            setLog_Data.SetDataMain(testData);
         }
 
         // Helper Methods

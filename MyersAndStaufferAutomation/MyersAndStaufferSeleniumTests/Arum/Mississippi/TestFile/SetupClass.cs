@@ -3,6 +3,7 @@ using AventStack.ExtentReports.Reporter;
 using NUnit.Framework;
 using MyersAndStaufferSeleniumTests.Utils;
 using MyersAndStaufferFramework;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 {
@@ -11,6 +12,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
     {
         public static ExtentTest test;
         public static ExtentReports extent;
+        public static SetLog_data setLog_Data = new SetLog_data();
+
         string reportPath;
 
         [OneTimeSetUp]
@@ -25,6 +28,11 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             extent.AddSystemInfo("Tester Name", "Mukesh");
             extent.AddSystemInfo("Environment", "dev Environemnt");
+
+            TestData testData = new TestData();
+            testData.TesterName = "Mukesh";
+            testData.TestEnvironment = "dev Environment";
+            setLog_Data.SetDataMain(testData);
         }
 
         [OneTimeTearDown]
