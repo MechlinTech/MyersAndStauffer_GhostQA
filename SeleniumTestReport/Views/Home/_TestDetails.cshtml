@@ -30,14 +30,44 @@
         .title {
             background-color: silver;
             padding: 1px;
-            font-weight:600;
+            font-weight: 600;
         }
+
+        .breadcrumbs {
+            display: flex;
+            list-style: none;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .breadcrumb-item {
+            margin-right: 5px;
+        }
+
+            .breadcrumb-item:not(:last-child):after {
+                content: '>';
+                margin-left: 5px;
+                margin-right: 5px;
+                color: #333;
+            }
+
+            .breadcrumb-item a {
+                text-decoration: none;
+                color: #333;
+                font-weight: bold;
+            }
+
+                .breadcrumb-item a:hover {
+                    text-decoration: underline;
+                }
     </style>
 </head>
 <body>
     <div class="float-lg-start">
-        <div class="title">
-            <p>@ViewBag.PageTitle</p>
+        <div class="breadcrumbs">
+            <div class="breadcrumb-item">@ViewBag.TestSuiteName</div>
+            <div class="breadcrumb-item">@ViewBag.TestRunName</div>
         </div>
     </div>
     <div class="float-end outer">

@@ -45,7 +45,8 @@ namespace SeleniumTestReport.Controllers
             Dto_TestDetails _TestDetails = dbHelper.GetDetailsListFromDataTable(TestDetails);
             ViewBag.PassedCase = _TestDetails.PassedTestCases;
             ViewBag.FailedCase = _TestDetails.FailedTestCases;
-            ViewBag.PageTitle = string.Concat(testSuitName, ">", runId, ">");
+            ViewBag.TestSuiteName = testSuitName;
+            ViewBag.TestRunName = runId;
             return PartialView("_TestDetails", _TestRunDetails);
         }
     }

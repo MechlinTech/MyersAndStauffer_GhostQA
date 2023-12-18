@@ -1,5 +1,4 @@
 ﻿using AventStack.ExtentReports;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule;
 using NUnit.Framework;
 
@@ -10,8 +9,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
     public class LoginTest : BaseTest
     {
         [Test, Order(1)]
-
-
         public void VerifyLoginOK()
         {
             var logInPage = new LoginPage();
@@ -26,6 +23,24 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             test.Log(Status.Info, "Enter passoword");
             logInPage.SubmitLogIn();
             test.Log(Status.Info, "Click on LoSubmit button");
+        }
+
+
+        [Test, Order(1)]
+        public void VerifyLoginOK2()
+        {
+            var logInPage = new LoginPage();
+
+            logInPage.WaitForPageLoad();
+            test.Log(Status.Info, "wait for plage to loader");
+            logInPage.ClickonLogin();
+            test.Log(Status.Info, "Click on Login Button ghb");
+            logInPage.SetEmail("Test");
+            test.Log(Status.Info, "Enter Email Test");
+            logInPage.SetPassword("Test");
+            test.Log(Status.Info, "Enter passoword test");
+            logInPage.SubmitLogIn();
+            test.Log(Status.Info, "Click on LoSubmit button Test");
         }
     }
 }
