@@ -1,13 +1,12 @@
-﻿using NUnit.Framework;
-using NUnit.Framework.Interfaces;
-using OpenQA.Selenium;
+﻿using AventStack.ExtentReports;
 using MyersAndStaufferFramework;
-using System.Text;
-using AventStack.ExtentReports;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
 using MyersAndStaufferSeleniumTests.Utils;
-using System.IO;
-using System;
+using Newtonsoft.Json;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+using OpenQA.Selenium;
+using System.Text;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 {
@@ -28,17 +27,15 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         public bool IsQAA => EnvironmentHelper.Environment == "QA-Auto";
 
         public int EmailTimeoutInSeconds => EnvironmentHelper.SafeParse("EmailTimeoutInSeconds", 120);
-        public static TestData testData;
+        public static TestData _testData = TestDataSharedInstance.testData;
 
         public BaseTest()
         {
-            testData.TestCaseName = TestContext.CurrentContext.Test.Name;
             var testSuiteName = TestContext.CurrentContext.Test.ClassName.Replace(".", "/");
             testSuiteName = Directory.GetParent(testSuiteName).Parent.Parent.ToString();
             string[] directories = testSuiteName.Split("\\");
-            testData.TestSuiteName = directories[directories.Length - 1];
-            testData.TestRunName = DBConfiguration.GetRunId(testSuiteName);
-            setLog_Data.SetDataMain(testData);
+            _testData.TestSuiteName = directories[directories.Length - 1];
+            _testData.TestRunName = DBConfiguration.GetRunId(_testData.TestSuiteName);
         }
 
         [SetUp]
@@ -46,6 +43,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         {
             StringBuilder logMessage = new StringBuilder();
             test = SetupClass.extent.CreateTest(TestContext.CurrentContext.Test.Name);
+            _testData.TestCaseName = TestContext.CurrentContext.Test.Name;
 
             // Load runtime configuration settings
             string configName = string.Empty;
@@ -88,9 +86,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             var status = TestContext.CurrentContext.Result.Outcome.Status;
             var message = TestContext.CurrentContext.Result.Message;
             var stackTrace = TestContext.CurrentContext.Result.StackTrace;
-            testData.TestCaseStatus = status.ToString();
-            testData.TestFailureMessage = message;
-            setLog_Data.SetDataMain(testData);
+            _testData.TestCaseStatus = status.ToString();
+            _testData.TestFailureMessage = message;
 
             DateTime time = DateTime.Now;
             string fileName2 = "Screenshot_" + time.ToString("h_mm_ss") + ".png";
@@ -112,8 +109,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 AttatchLogToTest();
             }
             Browser.Driver.Dispose();
-            testData = setLog_Data.GetData();
-            DBConfiguration.SaveTestCaseData(testData);
+            DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
         }
 
         public static void ScreenShot(string fileName = null, bool hasTimeStamp = false)
@@ -126,8 +122,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             TestContext.AddTestAttachment(screenshotFile, fileName + "Screenshot");
             WriteToLogfile("Error screenshot: " + screenshotFile);
 
-            testData.TestFailureScreenShot = screenshotFile;
-            setLog_Data.SetDataMain(testData);
+            _testData.TestFailureScreenShot = screenshotFile;
         }
 
         // Helper Methods

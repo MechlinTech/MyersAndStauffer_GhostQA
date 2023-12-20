@@ -12,8 +12,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
     {
         public static ExtentTest test;
         public static ExtentReports extent;
-        public static SetLog_data setLog_Data = new SetLog_data();
-
+        public static TestData _testData = TestDataSharedInstance.testData;
         string reportPath;
 
         [OneTimeSetUp]
@@ -29,10 +28,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             extent.AddSystemInfo("Tester Name", "Mukesh");
             extent.AddSystemInfo("Environment", "dev Environemnt");
 
-            TestData testData = new TestData();
-            testData.TesterName = "Mukesh";
-            testData.TestEnvironment = "dev Environment";
-            setLog_Data.SetDataMain(testData);
+            _testData.TesterName = "Mukesh";
+            _testData.TestEnvironment = "dev Environment";
         }
 
         [OneTimeTearDown]

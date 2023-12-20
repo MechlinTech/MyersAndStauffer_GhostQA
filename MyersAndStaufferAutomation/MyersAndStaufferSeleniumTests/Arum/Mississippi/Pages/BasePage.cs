@@ -1,13 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MyersAndStaufferFramework;
+using MyersAndStaufferSeleniumTests.Utils;
 using OpenQA.Selenium;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Text;
-using System;
-using MyersAndStaufferFramework;
-using MyersAndStaufferSeleniumTests.Utils;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
 {
@@ -17,11 +12,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
         public static string BaseDomain;
 
         public virtual string PageURL { get; set; } = "/";
-        
+
 
         public IWebDriver driver;
         IWebElement element = null;
-        //Elements el;
 
         public IDictionary<string, object> vars { get; private set; }
 
@@ -32,7 +26,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
             EnvironmentHelper EnvironmentHelper = EnvironmentConfigUtils.GetEnvironmentForConfig();
 
             BaseURL = EnvironmentHelper.GetSetting("BaseURL");
-            
+
             BaseDomain = EnvironmentHelper.GetSetting("BaseDomain");
 
             driver = Browser.Driver;
@@ -40,7 +34,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
             vars = new Dictionary<string, object>();
 
             if (!skipLoad)
+            {
                 Load();
+            }
         }
 
         public void Load()
@@ -85,12 +81,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
             char ch;
             for (int i = 0; i < size; i++)
             {
-                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor((26 * random.NextDouble()) + 65)));
                 builder.Append(ch);
             }
-            if (lowerCase)
-                return builder.ToString().ToLower();
-            return builder.ToString();
+            return lowerCase ? builder.ToString().ToLower() : builder.ToString();
         }
 
         public static int RandomNumber(int min, int max)

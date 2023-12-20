@@ -9,10 +9,6 @@ BEGIN TRY
 		BEGIN
 			SELECT @Count = ISNULL((MAX(CAST(REPLACE([TestRunName],'TestRun-','') AS INT))),0) FROM tbl_TestCase WHERE [TestSuiteName] = @TestSuite
 		END
-		ELSE
-		BEGIN
-			SET @Count = @Count + 1;
-		END
 	END
 	SELECT CONCAT('TestRun-',CAST((@Count + 1) AS VARCHAR(20))) [TestRunName]
 END TRY
