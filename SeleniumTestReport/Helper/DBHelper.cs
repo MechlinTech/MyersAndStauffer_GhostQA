@@ -147,6 +147,7 @@ namespace SeleniumTestReport.Helper
                     TestRun = row["TestRunName"].ToString(),
                     TestCaseName = row["TestCaseName"].ToString(),
                     TestRunStatus = row["TestCaseStatus"].ToString(),
+                    TestRunVideoURL = row["TestCaseVideoURL"].ToString(),
                     TestFailureMessage = row["TestFailureMessage"].ToString(),
                     TestFailureScreenShot = row["TestFailureScreenShot"].ToString(),
                     TestStartDate = Convert.ToDateTime(row["TestRunStartDateTime"]).ToString("MM/dd/yyyy hh:mm:ss tt"),
@@ -167,7 +168,10 @@ namespace SeleniumTestReport.Helper
                 {
                     TestSuiteName = row["TestSuiteName"].ToString(),
                     RunId = row["TestRunName"].ToString(),
-                    RunDateTime = Convert.ToDateTime(row["TestRunStartDateTime"]).ToString("MMMM dd"),
+                    TestRunStatus = row["TestRunStatus"].ToString(),
+                    TotalTestCases = (int)row["TotalTestCases"],
+                    RunStartDateTime = Convert.ToDateTime(row["TestRunStartDateTime"]),
+                    RunEndDateTime = Convert.ToDateTime(row["TestRunEndDateTime"]),
                 };
                 dataList.Add(_RunId);
             }

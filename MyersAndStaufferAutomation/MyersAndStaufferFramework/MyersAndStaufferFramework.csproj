@@ -5,13 +5,21 @@
 	<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
 	<OutputType>Library</OutputType>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
 	  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA|AnyCPU'">
 		  <OutputPath>bin\QA\</OutputPath>
 	  </PropertyGroup>
+
+	  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='QA|x64'">
+	    <OutputPath>bin\QA\</OutputPath>
+	  </PropertyGroup>
 	  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA-Auto|AnyCPU'">
 		  <OutputPath>bin\QA-Auto\</OutputPath>
+	  </PropertyGroup>
+	  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='QA-Auto|x64'">
+	    <OutputPath>bin\QA-Auto\</OutputPath>
 	  </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +37,7 @@
     <PackageReference Include="NLogger" Version="1.1.0" />
     <PackageReference Include="NunitXml.TestLogger" Version="3.0.131" />
     <PackageReference Include="scientist" Version="2.0.0" />
+    <PackageReference Include="ScreenRecorderLib" Version="5.4.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.2" />

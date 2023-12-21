@@ -31,7 +31,7 @@ namespace SeleniumTestReport.Controllers
             DBHelper dbHelper = new DBHelper();
             DataTable TestRunIDs = dbHelper.GetDataRunIDs(testSuitName);
             List<Dto_RunId> _RunIds = dbHelper.GetModelListFromDataTable(TestRunIDs);
-            ViewBag.RunDates = _RunIds.Select(x => x.RunDateTime).Distinct().ToList();
+            ViewBag.RunDates = _RunIds.Select(x => x.RunStartDateTime.ToString("MMMM dd")).Distinct().ToList();
             return PartialView("_RunIds", _RunIds);
         }
 

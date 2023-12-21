@@ -26,16 +26,11 @@ namespace MyersAndStaufferFramework
             return configuration[Key];
         }
 
-        public static void SaveTestCaseData(TestData testData)
+        public static void SaveTestCaseData(string testData)
         {
             try
             {
                 string connectionString = GetDBConnectionString("AppSettings:ConnectionString");
-                string testerName = GetDBConnectionString("AppSettings:TesterName");
-                string env = GetDBConnectionString("AppSettings:TestEnv");
-                testData.TestEnvironment = env;
-                testData.TesterName = testerName;
-                string tableObject = ConvertObjectIntoJson(testData);
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand cmd = new SqlCommand("stp_UpsertTableData", connection)
@@ -44,7 +39,7 @@ namespace MyersAndStaufferFramework
                     };
 
                     connection.Open();
-                    SqlParameter sqlParameter = cmd.Parameters.AddWithValue("@DynamicObject", tableObject);
+                    SqlParameter sqlParameter = cmd.Parameters.AddWithValue("@DynamicObject", testData);
                     cmd.Parameters.AddWithValue("@TableName", "tbl_TestCase");
                     cmd.ExecuteNonQuery();
                 }

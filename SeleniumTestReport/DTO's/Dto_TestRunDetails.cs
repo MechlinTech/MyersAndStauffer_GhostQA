@@ -7,6 +7,7 @@ namespace SeleniumTestReport.DTO_s
         public string TestRun { get; set; }
         public string TestCaseName { get; set; }
         public string TestRunStatus { get; set; }
+        public string TestRunVideoURL { get; set; }
         public string TestFailureMessage { get; set; }
         public string TestFailureScreenShot { get; set; }
         public string TestStartDate { get; set; }
