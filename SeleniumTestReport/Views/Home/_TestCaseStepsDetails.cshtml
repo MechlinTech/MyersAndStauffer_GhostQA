@@ -1,0 +1,56 @@
+﻿<div class="test-content-detail">
+    @{
+        if (Model != null)
+        {
+            var TestCaseDetailObj = Newtonsoft.Json.JsonConvert.DeserializeObject<SeleniumTestReport.DTO_s.Dto_TestCaseSteps>(Model);
+            <div class="p-v-10 d-inline-block">
+                <div class="info">
+                    <h5 class="text-danger">@TestCaseDetailObj.TestCaseName</h5>
+                    <span class="badge text-bg-info">@TestCaseDetailObj.TestCaseStartDate.ToString("dd-MM-yyyy HH:mm:ss")</span>
+                    <span class="badge text-bg-danger">@TestCaseDetailObj.TestCaseEndDate.ToString("dd-MM-yyyy HH:mm:ss")</span>
+                    <span class="badge card text-bg-light">@(TestCaseDetailObj.TestCaseEndDate - TestCaseDetailObj.TestCaseStartDate)</span>
+                </div>
+            </div>
+            <div class="detail-body mt-4">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Status</th>
+                            <th>Timestamp</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var teststeps = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeleniumTestReport.DTO_s.Dto_TestSteps>>(TestCaseDetailObj.TestCaseSteps);
+                            foreach (var item in teststeps)
+                            {
+                                <tr class="event-row">
+                                    <td class="text-center">
+                                        <em class="@(item.Status == "Passed" ? "fa fa-check text-success" : "fa fa-times text-danger" )"></em>
+                                    </td>
+                                    <td>@(Convert.ToDateTime(item.TimeStamp).ToString("HH:mm:ss"))</td>
+                                    <td>
+                                        @{
+                                            if (item.Status != "Passed")
+                                            {
+                                                <div class="d-flex">
+                                                    <div>@item.Details</div>
+                                                    <div>@item.FailureScreenShots </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                @item.Details
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+</div>

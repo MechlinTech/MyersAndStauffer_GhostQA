@@ -3,51 +3,63 @@ using SeleniumTestReport.Helper;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 
 namespace SeleniumTestReport.Controllers
 {
     public class HomeController : Controller
     {
+        private DBHelper dbHelper = new DBHelper();
+
+        /// <summary>
+        /// Get Test Suites Name on Page Load of Report to showcase in Report
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
-            DBHelper dbHelper = new DBHelper();
-            DataTable TestSuits = dbHelper.GetDataTestSuits();
-            ViewBag.TestSuites = dbHelper.GetListFromDataTable(TestSuits);
+            ViewBag.TestSuites = dbHelper.GetDataTestSuits();
             return View();
         }
 
-        public ActionResult GetTestDetails(string testSuitName, string runId)
-        {
-            DBHelper dbHelper = new DBHelper();
-            DataTable TestDetails = dbHelper.GetRunIdDetails(testSuitName, runId);
-            List<Dto_TestRunDetails> _TestRunDetails = dbHelper.GetTestRunListFromDataTable(TestDetails);
-            return View(_TestRunDetails);
-        }
-
+        /// <summary>
+        /// Get Test Run Over All Details by TestSuite Name
+        /// </summary>
+        /// <param name="testSuitName"></param>
+        /// <returns></returns>
         [HttpGet]
-        public ActionResult GetTestRunIDs(string testSuitName)
+        public ActionResult GetRunDetails(string testSuitName)
         {
-            DBHelper dbHelper = new DBHelper();
-            DataTable TestRunIDs = dbHelper.GetDataRunIDs(testSuitName);
-            List<Dto_RunId> _RunIds = dbHelper.GetModelListFromDataTable(TestRunIDs);
-            ViewBag.RunDates = _RunIds.Select(x => x.RunStartDateTime.ToString("MMMM dd")).Distinct().ToList();
-            return PartialView("_RunIds", _RunIds);
+            string RunDetailsJson = dbHelper.GetRunDetails(testSuitName);
+            return PartialView("_RunDetails", RunDetailsJson);
         }
 
+        /// <summary>
+        /// Get Test Case Details By TestSuite and Test Run Name
+        /// </summary>
+        /// <param name="testSuitName"></param>
+        /// <param name="runId"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult GetTestCaseDetails(string testSuitName, string runId)
         {
-            DBHelper dbHelper = new DBHelper();
-            DataTable TestRunDetails = dbHelper.GetRunIdDetails(testSuitName, runId);
-            List<Dto_TestRunDetails> _TestRunDetails = dbHelper.GetTestRunListFromDataTable(TestRunDetails);
-            DataTable TestDetails = dbHelper.GetTestCaseDetails(testSuitName, runId);
-            Dto_TestDetails _TestDetails = dbHelper.GetDetailsListFromDataTable(TestDetails);
-            ViewBag.PassedCase = _TestDetails.PassedTestCases;
-            ViewBag.FailedCase = _TestDetails.FailedTestCases;
-            ViewBag.TestSuiteName = testSuitName;
-            ViewBag.TestRunName = runId;
+            string _TestRunDetails = dbHelper.GetTestCaseDetails(testSuitName, runId);
             return PartialView("_TestDetails", _TestRunDetails);
         }
+
+        /// <summary>
+        /// Get Test Steps Details By TestSuite Name, Test Run Name and Test Case Name
+        /// </summary>
+        /// <param name="testSuitName"></param>
+        /// <param name="runId"></param>
+        /// <param name="testCaseName"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
+        {
+            string _TestCaseStepsDetails = dbHelper.GetTestCaseStepsDetails(testSuitName, runId, testCaseName);
+            return PartialView("_TestCaseStepsDetails", _TestCaseStepsDetails);
+        }
+
     }
 }

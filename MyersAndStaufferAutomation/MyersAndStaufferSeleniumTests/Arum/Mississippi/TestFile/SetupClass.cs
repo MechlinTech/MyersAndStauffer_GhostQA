@@ -1,9 +1,7 @@
 ﻿using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
-using NUnit.Framework;
-using MyersAndStaufferSeleniumTests.Utils;
 using MyersAndStaufferFramework;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
+using NUnit.Framework;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 {
@@ -30,6 +28,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             _testData.TesterName = "Mukesh";
             _testData.TestEnvironment = "dev Environment";
+            _testData.TestSuiteStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
         }
 
         [OneTimeTearDown]

@@ -3,7 +3,7 @@ CREATE OR ALTER PROCEDURE [dbo].[stp_UpsertTableData]
 @TableName				NVARCHAR(100)
 AS
 BEGIN TRY
-	DECLARE @SqlQuery				NVARCHAR(MAX), 
+	DECLARE @SqlQuery				NVARCHAR(MAX) = '',
 			@ColumnsWithType		NVARCHAR(MAX), 
 			@Columns				NVARCHAR(MAX), 
 			@ColumnsJson			NVARCHAR(MAX), 
@@ -16,7 +16,7 @@ BEGIN TRY
 
 	IF OBJECT_ID(@TableName,'U') IS NULL
 	BEGIN
-		SELECT @ColumnsWithType = STRING_AGG('[' + [ColumnName] + '] NVARCHAR(1000)', ', ')
+		SELECT @ColumnsWithType = STRING_AGG('[' + [ColumnName] + '] NVARCHAR(MAX)', ', ')
 			FROM @JsonTable
 		PRINT @ColumnsWithType
 
@@ -26,7 +26,7 @@ BEGIN TRY
 		EXEC sp_executesql @TableCreationQuery
 	END
 
-	SELECT @ColumnsJson = STRING_AGG(CONCAT('[',[ColumnName],']',' NVARCHAR(1000) ''$.' + [ColumnName]) , ''', ')
+	SELECT @ColumnsJson = STRING_AGG(CONCAT('[',[ColumnName],']',' NVARCHAR(MAX) ''$.' + [ColumnName]) , ''', ')
 		FROM @JsonTable
 	SET @ColumnsJson  = @ColumnsJson + ''''
 	PRINT @ColumnsJson
@@ -35,7 +35,7 @@ BEGIN TRY
 		FROM @JsonTable
 	PRINT @Columns
 
-	SELECT @SqlQuery = CONCAT ( 'INSERT INTO ', @TableName ,'(', @Columns ,')','SELECT * FROM OPENJSON (''', @DynamicObject , ''') WITH (', @ColumnsJson , ')')
+	SELECT @SqlQuery = @SqlQuery + CONCAT ( 'INSERT INTO ', @TableName ,'(', @Columns ,')',CHAR(13),'SELECT * FROM OPENJSON (''', @DynamicObject , ''') WITH (', @ColumnsJson , ')')
 	PRINT @SqlQuery
 
 	EXEC sp_executesql @SqlQuery

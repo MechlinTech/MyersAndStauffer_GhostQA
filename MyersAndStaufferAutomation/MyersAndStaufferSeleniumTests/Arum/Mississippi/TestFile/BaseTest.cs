@@ -28,6 +28,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
         public int EmailTimeoutInSeconds => EnvironmentHelper.SafeParse("EmailTimeoutInSeconds", 120);
         public static TestData _testData = TestDataSharedInstance.testData;
+        public static List<TestStepColumns> _testSteps = TestCaseStepsInstance.TestSteps;
 
         public BaseTest()
         {
@@ -87,7 +88,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             var message = TestContext.CurrentContext.Result.Message;
             var stackTrace = TestContext.CurrentContext.Result.StackTrace;
             _testData.TestCaseStatus = status.ToString();
-            _testData.TestFailureMessage = message;
 
             DateTime time = DateTime.Now;
             string fileName2 = "Screenshot_" + time.ToString("h_mm_ss") + ".png";
@@ -97,6 +97,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 test.Fail("Test Failed and here is the screenshot on which test failed", captureScreenShot(driver, fileName2));
                 test.Log(Status.Fail, "Test failed with message " + message);
                 test.Log(Status.Fail, "Test failed with logTrace " + stackTrace);
+
+                _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Failed and here is the screenshot on which test failed" });
+                _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), FailureMessage = "Test failed with message " + message.ToString().Replace("'", "''") });
+                _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), FailureException = "Test failed with logTrace " + stackTrace.ToString() });
             }
             else if (status == TestStatus.Passed)
             {
@@ -108,8 +112,15 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 ScreenShot("Failure", true);
                 AttatchLogToTest();
             }
+
+            _testData.TestRunEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
+            _testData.TestCaseSteps = "-";
+            VideoRecorder.EndRecording();
+
             Browser.Driver.Dispose();
+            _testData.TestSuiteEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
+            DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
         }
 
         public static void ScreenShot(string fileName = null, bool hasTimeStamp = false)
@@ -122,7 +133,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             TestContext.AddTestAttachment(screenshotFile, fileName + "Screenshot");
             WriteToLogfile("Error screenshot: " + screenshotFile);
 
-            _testData.TestFailureScreenShot = screenshotFile;
+            _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), FailureScreenShots = screenshotFile });
         }
 
         // Helper Methods

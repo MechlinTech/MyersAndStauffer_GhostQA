@@ -39,7 +39,7 @@ namespace MyersAndStaufferFramework
                     };
 
                     connection.Open();
-                    SqlParameter sqlParameter = cmd.Parameters.AddWithValue("@DynamicObject", testData);
+                    cmd.Parameters.AddWithValue("@DynamicObject", testData);
                     cmd.Parameters.AddWithValue("@TableName", "tbl_TestCase");
                     cmd.ExecuteNonQuery();
                 }
@@ -50,9 +50,31 @@ namespace MyersAndStaufferFramework
             }
         }
 
-        private static string ConvertObjectIntoJson(TestData testData)
+        public static void UpdateTestStepsJson(string testStepJson, string testSuite, string testRun, string testCase)
         {
-            return JsonSerializer.Serialize(testData);
+            try
+            {
+                string connectionString = GetDBConnectionString("AppSettings:ConnectionString");
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_UpdateTestStepData", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@testStepJson", testStepJson);
+                    cmd.Parameters.AddWithValue("@testSuite", testSuite);
+                    cmd.Parameters.AddWithValue("@testRun", testRun);
+                    cmd.Parameters.AddWithValue("@testCase", testCase);
+                    cmd.Parameters.AddWithValue("@TableName", "tbl_TestCase");
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public static string GetRunId(string testSuite)
@@ -88,5 +110,6 @@ namespace MyersAndStaufferFramework
             }
             return TestRunName;
         }
+
     }
 }

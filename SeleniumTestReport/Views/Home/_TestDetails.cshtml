@@ -1,5 +1,4 @@
-﻿@model IEnumerable<SeleniumTestReport.DTO_s.Dto_TestRunDetails>
-<html>
+﻿<html>
 <head>
     <style>
         .video-frame {
@@ -13,12 +12,12 @@
             width: 50px;
             height: 50px;
             border-radius: 10px;
-            margin-top: 9px;
+            margin-top: 6px;
         }
 
         .outer {
             overflow: hidden;
-            width: 60px;
+            width: 65px;
             height: 70px;
         }
 
@@ -32,6 +31,14 @@
             padding: 1px;
             font-weight: 600;
         }
+
+        .clickable-element {
+            cursor: pointer; /* Default cursor style */
+        }
+            /* Change cursor to hand on hover */
+            .clickable-element:hover {
+                cursor: pointer;
+            }
 
         .breadcrumbs {
             display: flex;
@@ -64,107 +71,216 @@
     </style>
 </head>
 <body>
-    <div class="float-lg-start">
-        <div class="breadcrumbs">
-            <div class="breadcrumb-item">@ViewBag.TestSuiteName</div>
-            <div class="breadcrumb-item">@ViewBag.TestRunName</div>
-        </div>
-    </div>
-    <div class="float-end outer">
-        <div class="float-end inner">
-            <button type="button" class="btn btn_rotate" onclick="Back()">Back</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="card col-md-5" style="margin-left:10px;">
-            <canvas id="testCaseChart"></canvas>
-            <script>
-            var xValues = ["Passed", "Failed"];
-            var yValues = [@ViewBag.PassedCase, @ViewBag.FailedCase];
-            var barColors = [
-                "Green",
-                "Maroon"
-            ];
+    @{
+        if (Model != null)
+        {
+            var TestCaseDetailsObj = Newtonsoft.Json.JsonConvert.DeserializeObject<SeleniumTestReport.DTO_s.Dto_TestCaseDetailsObj>(Model);
+            var percentilePassed = (double)TestCaseDetailsObj.PassedTestCases / (double)TestCaseDetailsObj.TotalTestCases * 100.0;
 
-            new Chart("testCaseChart", {
-                type: "doughnut",
-                data: {
-                    labels: xValues,
-                    datasets: [{
-                        backgroundColor: barColors,
-                        data: yValues
-                    }]
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: "Test Case Details Chart"
-                    }
-                }
-            });
-            </script>
-        </div>
-
-    </div>
-    <div class="row">
-        <div class="accordion">
-            @{
-                if (Model != null)
-                {
-                    <div class="row border font-monospace mt-2 p-2" style="background-color: gainsboro;">
-                        <div class="col-md-2 border p-1">Test Case Name</div>
-                        <div class="col-md-2 border p-1">Status</div>
-                        <div class="col-md-2 border p-1">Failure Message</div>
-                        <div class="col-md-2 border p-1">Failure ScreenShot</div>
-                        <div class="col-md-2 border p-1">Start Date Time</div>
-                        <div class="col-md-2 border p-1">End Date Time</div>
-                    </div>
-                    foreach (var item in Model)
-                    {
-                        <div class="date mb-1 row" onclick="toggleContent('@item.TestCaseName.Replace(" ", "")')">
-                            <div class="col-md-2">@item.TestCaseName</div>
-                            <div class="col-md-2">@item.TestRunStatus</div>
-                            <div class="col-md-2">@item.TestFailureMessage</div>
-                            <div class="col-md-2">@item.TestFailureScreenShot</div>
-                            <div class="col-md-2">@item.TestStartDate</div>
-                            <div class="col-md-2">@item.TestEndDate</div>
+            <div class="row p-2" id="TestRun">
+                <div class="row d-flex">
+                    <div class="col">
+                        <div class="breadcrumbs col-3">
+                            <div class="breadcrumb-item clickable-element" onclick="Back()">@TestCaseDetailsObj.TestSuiteName</div>
+                            <div class="breadcrumb-item">@TestCaseDetailsObj.TestRunName</div>
                         </div>
-                        var teststeps = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeleniumTestReport.DTO_s.Dto_TestSteps>>(item.TestSteps);
-                        <div class="ml-3 row content" id="@item.TestCaseName.Replace(" ","")">
-                            <div class="d-flex">
-                                <div class="col-md-5">
-                                    @{
-                                        if (teststeps != null)
-                                        {
-                                            <div class="row border font-monospace mt-2 p-2" style="background-color: gainsboro;">
-                                                <div class="col-md-3 border p-1">Status</div>
-                                                <div class="col-md-3 border p-1">Time Stamp</div>
-                                                <div class="col-md-5 border p-1">Details</div>
-                                            </div>
-                                            foreach (var steps in teststeps)
-                                            {
-                                                DateTime dateTime = DateTime.Parse(@steps.TimeStamp);
-                                                <div class="mb-1 row">
-                                                    <div class="col-md-3">@steps.Status</div>
-                                                    <div class="col-md-3">@dateTime.ToString("HH:mm:ss")</div>
-                                                    <div class="col-md-5">@steps.Details</div>
-                                                </div>
-                                            }
-                                        }
+                    </div>
+                    <div class="outer">
+                        <div class="inner">
+                            <button type="button" class="btn btn_rotate" onclick="Back()">Back</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex">
+                    <div class="col-md-4 card w-25" style="margin-left:10px;">
+                        <canvas id="testCaseChart"></canvas>
+                        <script>
+                            var xValues = ["Passed", "Failed"];
+                            var yValues = [@TestCaseDetailsObj.PassedTestCases, @TestCaseDetailsObj.FailedTestCases];
+                            var barColors = [
+                                "Green",
+                                "Maroon"
+                            ];
+
+                            new Chart("testCaseChart", {
+                                type: "doughnut",
+                                data: {
+                                    labels: xValues,
+                                    datasets: [{
+                                        backgroundColor: barColors,
+                                        data: yValues
+                                    }]
+                                },
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: "Test Case Details Chart"
                                     }
+                                }
+                            });
+                        </script>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card mb-1 h-50">
+                            <div class="card-title">
+                                <h6 class="card-body">Tests</h6>
+                            </div>
+                            <div class="card-footer h-100">
+                                <div>
+                                    <small>
+                                        <b>@TestCaseDetailsObj.PassedTestCases</b> tests passed
+                                    </small>
                                 </div>
-                                <div class="col-md-6 w-100">
-                                    <div class="video-frame">
-                                        <video id="player2" src="@item.TestRunVideoURL" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></video>
-                                        <iframe id="player2" src="https://www.youtube.com/watch?v=YT8s-90oDC0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                <div>
+                                    <small>
+                                        <b>@TestCaseDetailsObj.FailedTestCases</b> tests failed
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card h-50">
+                            <div class="card-body">
+                                <div class="media justify-content-between">
+                                    <div>
+                                        <h6 class="card-title">Tests</h6>
+                                        <h2 class="font-size-28 font-weight-light">@TestCaseDetailsObj.TotalTestCases</h2>
+                                        <span class="text-semibold text-info font-size-15">
+                                            <i class="ti-arrow-up font-size-11"></i>
+                                            <span>@percentilePassed%</span>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card mb-1 h-50">
+                            <div class="card-title">
+                                <h6 class="card-body">Start</h6>
+                            </div>
+                            <div class="card-footer h-100">
+                                <div>
+                                    <small>
+                                        <b>@TestCaseDetailsObj.TestRunStartDateTime.ToString("dd-MM-yyyy HH:mm:ss")</b>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card h-50">
+                            <div class="card-title">
+                                <h6 class="card-body">Duration</h6>
+                            </div>
+                            <div class="card-footer h-100">
+                                <div>
+                                    <small>
+                                        <b>@(TestCaseDetailsObj.TestRunEndDateTime - TestCaseDetailsObj.TestRunStartDateTime)</b>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="card-title">Environment</h6>
+                            </div>
+                            <div class="table-overflow">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr class="bg-gray">
+                                            <th>Name</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Tester Name</td>
+                                            <td>@TestCaseDetailsObj.TesterName</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Environment</td>
+                                            <td>@TestCaseDetailsObj.TestEnvironment</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card col-md-4 m-2 p-2 shadow-lg">
+                    @{
+                        if (TestCaseDetailsObj.TestCaseDetailsList != null)
+                        {
+                            <div class="border d-flex font-monospace p-2" style="background-color: gainsboro;">
+                                <div class="col-md-2 border p-1">Status</div>
+                                <div class="col-md-4 border p-1">TestCase Name</div>
+                                <div class="col-md-2 border p-1">Video</div>
+                                <div class="col border p-1">Start Time</div>
+                            </div>
+                            foreach (var item in TestCaseDetailsObj.TestCaseDetailsList)
+                            {
+                                TimeSpan duration = item.TestRunEndDateTime - item.TestRunStartDateTime;
+
+                                <button id="caseId_@TestCaseDetailsObj.TestSuiteName@item.TestRunName@item.TestCaseName" type="button" class="btn btn-light card testCaseStepId_Clickable" onclick="GetTestCaseStepsDetails('@TestCaseDetailsObj.TestSuiteName','@item.TestRunName','@item.TestCaseName')">
+                                    <div class="date d-flex w-100">
+                                        <div class="col-md-2">
+                                            <em class="@(item.TestCaseStatus == "Passed" ? "fa fa-check-circle text-bg-success" : item.TestCaseStatus == "Failed" ? "fa fa-times-circle text-bg-danger" : item.TestCaseStatus == "Partially Passed" ? "bg-warning" : "bg-primary")"></em>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <em>@item.TestCaseName</em>
+                                            <em>@duration</em>
+                                        </div>
+                                        <div class="col-md-2 text-center">
+                                            <a href="#" onclick="showVideoPopup('@item.TestCaseName.Replace(" ", "")');">
+                                                <em class="fa fa-video-camera"></em>
+                                            </a>
+                                        </div>
+                                        <div class="col text-end">@item.TestRunStartDateTime.ToString("hh:mm:ss tt")</div>
+                                    </div>
+                                </button>
+
+                                <div id="videoModal-@item.TestCaseName.Replace(" ", "")" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <button type="button" class="close" onclick="closeModal('videoModal-@item.TestCaseName.Replace(" ", "")')" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <div class="video-frame">
+                                                    <video width="100%" height="400" poster="" controls="controls" preload="none" autoplay>
+                                                        <source type="video/webm" src="@item.TestCaseVideoURL" />
+                                                    </video>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
                     }
-                }
-            }
-        </div>
-    </div>
+                </div>
+                <div id="StepsId" class="col card m-2 shadow-lg p-2">
+                    <div id="testCaseListContainer">
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
 </body>
 </html>
+<script>
+    function GetTestCaseStepsDetails(testSuitesName, runId, testCaseName) {
+    $.ajax({
+        url: '@Url.Action("GetTestCaseStepsDetails", "Home")',
+        data: { testSuitName: testSuitesName, runId: runId, testCaseName:testCaseName },
+        Type: "Post",
+        success: function (result) {
+            $('#testCaseListContainer').html(result);
+            $(".testCaseStepId_Clickable").removeClass("bg-success");
+            var selector = '#caseId_' + testSuitesName + runId + testCaseName;
+            $(selector).addClass("bg-success");
+        }
+    });
+};
+</script>

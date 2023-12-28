@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MyersAndStaufferFramework
 {
@@ -10,11 +9,11 @@ namespace MyersAndStaufferFramework
         public string TestCaseName { get; set; }
         public string TestCaseStatus { get; set; }
         public string TestCaseVideoURL { get; set; }
-        public string TestFailureMessage { get; set; }
-        public string TestFailureScreenShot { get; set; }
+        public string TestSuiteStartDateTime { get; set; }
+        public string TestSuiteEndDateTime { get; set; }
+        public string TestRunStartDateTime { get; set; }
+        public string TestRunEndDateTime { get; set; }
         public string TestCaseSteps { get; set; }
-        public DateTime? TestRunStartDateTime { get; set; }
-        public DateTime? TestRunEndDateTime { get; set; }
         public string TesterName { get; set; }
         public string TestEnvironment { get; set; }
     }
@@ -22,12 +21,20 @@ namespace MyersAndStaufferFramework
     public class TestStepColumns
     {
         public string Status { get; set; }
-        public DateTime Timestamp { get; set; }
+        public string Timestamp { get; set; }
         public string Details { get; set; }
+        public string FailureMessage { get; set; }
+        public string FailureException { get; set; }
+        public string FailureScreenShots { get; set; }
     }
 
     public static class TestDataSharedInstance
     {
         public static TestData testData { get; } = new TestData();
+    }
+
+    public static class TestCaseStepsInstance
+    {
+        public static List<TestStepColumns> TestSteps { get; } = new List<TestStepColumns>();
     }
 }
