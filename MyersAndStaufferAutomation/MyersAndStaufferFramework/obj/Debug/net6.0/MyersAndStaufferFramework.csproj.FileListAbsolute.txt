@@ -73,3 +73,6 @@ C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAut
 C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.pdb
 C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.genruntimeconfig.cache
 C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\ref\MyersAndStaufferFramework.dll
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\refint\MyersAndStaufferFramework.dll
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.pdb
