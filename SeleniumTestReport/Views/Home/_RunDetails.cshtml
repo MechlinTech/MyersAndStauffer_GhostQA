@@ -10,11 +10,11 @@
                     <div class="date mb-1" onclick="toggleContent('@runDate.TestRunDateYear.Replace(" ", "")')">@runDate.TestRunDateYear</div>
                     <div class="content" id="@runDate.TestRunDateYear.Replace(" ", "")">
                         @{
-                            <div class="bg-light border card-header col-md-12 d-flex mb-2 pb-2 w-100">
+                            <div class="border card-header col-md-12 d-flex mb-2 fw-bold">
                                 <div class="col-md-2">Run Id</div>
                                 <div class="col-md-2">Start Time</div>
                                 <div class="col-md-2">End Time</div>
-                                <div class="col-md-2">Status</div>
+                                <div class="col">Status</div>
                                 <div class="col-md-1">Total</div>
                                 <div class="col-md-1">Passed</div>
                                 <div class="col-md-1">Failed</div>
@@ -26,7 +26,7 @@
                                         <div class="col-md-2">@runId.TestRunName</div>
                                         <div class="col-md-2">@runId.TestRunStartDateTime.ToString("hh:mm:ss tt")</div>
                                         <div class="col-md-2">@runId.TestRunEndDateTime.ToString("hh:mm:ss tt")</div>
-                                        <div class="col-md-2 badge p-2 @(runId.TestRunStatus == "Passed" ? "bg-success" : runId.TestRunStatus == "Failed" ? "bg-danger" : runId.TestRunStatus == "Partially Passed" ? "bg-warning" : "bg-primary")">@runId.TestRunStatus</div>
+                                        <div class="col badge p-2 @(runId.TestRunStatus == "Passed" ? "bg-success" : runId.TestRunStatus == "Failed" ? "bg-danger" : runId.TestRunStatus == "Partially Passed" ? "bg-warning" : "bg-primary")">@runId.TestRunStatus</div>
                                         <div class="col-md-1 text-center">@runId.TotalTestCases</div>
                                         <div class="col-md-1 text-center">@runId.PassedTestCases</div>
                                         <div class="col-md-1 text-center">@runId.FailedTestCases</div>

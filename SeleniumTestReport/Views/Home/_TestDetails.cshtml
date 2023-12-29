@@ -6,21 +6,6 @@
             margin-bottom: 10px;
         }
 
-        .inner {
-            transform: rotate(45deg);
-            background-color: silver;
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            margin-top: 6px;
-        }
-
-        .outer {
-            overflow: hidden;
-            width: 65px;
-            height: 70px;
-        }
-
         .btn_rotate {
             transform: rotate(315deg);
             font-weight: 600;
@@ -122,10 +107,10 @@
                     </div>
                     <div class="col-md-2">
                         <div class="card mb-1 h-50">
-                            <div class="card-title">
-                                <h6 class="card-body">Tests</h6>
+                            <div class="card-header">
+                                <h6 class="card-title">Tests</h6>
                             </div>
-                            <div class="card-footer h-100">
+                            <div class="card-body h-100">
                                 <div>
                                     <small>
                                         <b>@TestCaseDetailsObj.PassedTestCases</b> tests passed
@@ -139,26 +124,23 @@
                             </div>
                         </div>
                         <div class="card h-50">
-                            <div class="card-body">
-                                <div class="media justify-content-between">
-                                    <div>
-                                        <h6 class="card-title">Tests</h6>
-                                        <h2 class="font-size-28 font-weight-light">@TestCaseDetailsObj.TotalTestCases</h2>
-                                        <span class="text-semibold text-info font-size-15">
-                                            <i class="ti-arrow-up font-size-11"></i>
-                                            <span>@percentilePassed%</span>
-                                        </span>
-                                    </div>
-                                </div>
+                            <div class="card-header">
+                                <h6 class="card-title">Tests</h6>
+                            </div>
+                            <div class="card-body h-100">
+                                <h2>@TestCaseDetailsObj.TotalTestCases</h2>
+                                <span>
+                                    <span class="text-info">@percentilePassed%</span>
+                                </span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="card mb-1 h-50">
-                            <div class="card-title">
-                                <h6 class="card-body">Start</h6>
+                            <div class="card-header">
+                                <h6 class="card-title">Start</h6>
                             </div>
-                            <div class="card-footer h-100">
+                            <div class="card-body h-100">
                                 <div>
                                     <small>
                                         <b>@TestCaseDetailsObj.TestRunStartDateTime.ToString("dd-MM-yyyy HH:mm:ss")</b>
@@ -167,10 +149,10 @@
                             </div>
                         </div>
                         <div class="card h-50">
-                            <div class="card-title">
-                                <h6 class="card-body">Duration</h6>
+                            <div class="card-header">
+                                <h6 class="card-title">Duration</h6>
                             </div>
-                            <div class="card-footer h-100">
+                            <div class="card-body h-100">
                                 <div>
                                     <small>
                                         <b>@(TestCaseDetailsObj.TestRunEndDateTime - TestCaseDetailsObj.TestRunStartDateTime)</b>
@@ -185,9 +167,9 @@
                                 <h6 class="card-title">Environment</h6>
                             </div>
                             <div class="table-overflow">
-                                <table class="table table-sm">
+                                <table class="table">
                                     <thead>
-                                        <tr class="bg-gray">
+                                        <tr class="card-header">
                                             <th>Name</th>
                                             <th>Value</th>
                                         </tr>
