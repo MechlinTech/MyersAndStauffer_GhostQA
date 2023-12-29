@@ -63,16 +63,16 @@
             var percentilePassed = (double)TestCaseDetailsObj.PassedTestCases / (double)TestCaseDetailsObj.TotalTestCases * 100.0;
 
             <div class="row p-2" id="TestRun">
-                <div class="row d-flex">
-                    <div class="col">
-                        <div class="breadcrumbs col-3">
+                <div class="d-flex justify-content-between mb-4">
+                  
+                        <div class="breadcrumbs w-20">
                             <div class="breadcrumb-item clickable-element" onclick="Back()">@TestCaseDetailsObj.TestSuiteName</div>
                             <div class="breadcrumb-item">@TestCaseDetailsObj.TestRunName</div>
                         </div>
-                    </div>
+                   
                     <div class="outer">
                         <div class="inner">
-                            <button type="button" class="btn btn_rotate" onclick="Back()">Back</button>
+                            <button type="button" class="btn " onclick="Back()" style="border:1px solid black;"><i class="fa fa-arrow-left back-arrow" aria-hidden="true"></i>Back</button>
                         </div>
                     </div>
                 </div>
@@ -189,35 +189,37 @@
                         </div>
                     </div>
                 </div>
-                <div class="card col-md-4 m-2 p-2 shadow-lg">
+                <div class="col-md-4 m-2 p-2 shadow-lg">
                     @{
                         if (TestCaseDetailsObj.TestCaseDetailsList != null)
                         {
-                            <div class="border d-flex font-monospace p-2" style="background-color: gainsboro;">
-                                <div class="col-md-2 border p-1">Status</div>
-                                <div class="col-md-4 border p-1">TestCase Name</div>
-                                <div class="col-md-2 border p-1">Video</div>
-                                <div class="col border p-1">Start Time</div>
-                            </div>
+                                        <button type="button" class="btn btn-light card">
+                                            <div class="d-flex date fw-bold">
+                                                <div class="w-80 p-1">Status</div>
+                                                <div class="w-150 p-1">TestCase Name</div>
+                                                <div class="w-80 p-1">Video</div>
+                                                <div class="w-130 p-1">Start Time</div>
+                                            </div>
+                                        </button>
                             foreach (var item in TestCaseDetailsObj.TestCaseDetailsList)
                             {
                                 TimeSpan duration = item.TestRunEndDateTime - item.TestRunStartDateTime;
 
                                 <button id="caseId_@TestCaseDetailsObj.TestSuiteName@item.TestRunName@item.TestCaseName" type="button" class="btn btn-light card testCaseStepId_Clickable" onclick="GetTestCaseStepsDetails('@TestCaseDetailsObj.TestSuiteName','@item.TestRunName','@item.TestCaseName')">
-                                    <div class="date d-flex w-100">
-                                        <div class="col-md-2">
+                                    <div class="date d-flex ">
+                                        <div class="w-80 pl-20">
                                             <em class="@(item.TestCaseStatus == "Passed" ? "fa fa-check-circle text-bg-success" : item.TestCaseStatus == "Failed" ? "fa fa-times-circle text-bg-danger" : item.TestCaseStatus == "Partially Passed" ? "bg-warning" : "bg-primary")"></em>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="w-150">
                                             <em>@item.TestCaseName</em>
                                             <em>@duration</em>
                                         </div>
-                                        <div class="col-md-2 text-center">
-                                            <a href="#" onclick="showVideoPopup('@item.TestCaseName.Replace(" ", "")');">
+                                        <div class="w-80 ">
+                                            <a class="px-3" href="#" onclick="showVideoPopup('@item.TestCaseName.Replace(" ", "")');">
                                                 <em class="fa fa-video-camera"></em>
                                             </a>
                                         </div>
-                                        <div class="col text-end">@item.TestRunStartDateTime.ToString("hh:mm:ss tt")</div>
+                                        <div class="w-130">@item.TestRunStartDateTime.ToString("hh:mm:ss tt")</div>
                                     </div>
                                 </button>
 
@@ -238,6 +240,7 @@
                                     </div>
                                 </div>
                             }
+
                         }
                     }
                 </div>
@@ -259,9 +262,9 @@
         Type: "Post",
         success: function (result) {
             $('#testCaseListContainer').html(result);
-            $(".testCaseStepId_Clickable").removeClass("bg-success");
+            $(".testCaseStepId_Clickable").removeClass("bg-select");
             var selector = '#caseId_' + testSuitesName + runId + testCaseName;
-            $(selector).addClass("bg-success");
+            $(selector).addClass("bg-select");
         }
     });
 };

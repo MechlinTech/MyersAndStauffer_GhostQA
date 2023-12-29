@@ -1173,3 +1173,11 @@ C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAut
 C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.pdb
 C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.genruntimeconfig.cache
 C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\ref\MyersAndStaufferSeleniumTests.dll
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.csproj.AssemblyReference.cache
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.AssemblyInfoInputs.cache
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.AssemblyInfo.cs
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.csproj.CoreCompileInputs.cache
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.dll
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\refint\MyersAndStaufferSeleniumTests.dll
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.pdb

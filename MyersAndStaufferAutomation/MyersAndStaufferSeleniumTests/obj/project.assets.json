@@ -102,6 +102,9 @@
           "lib/netstandard2.0/ExtentReports.dll": {}
         }
       },
+      "FontAwesome/4.7.0": {
+        "type": "package"
+      },
       "HtmlAgilityPack/1.11.46": {
         "type": "package",
         "compile": {
@@ -2119,6 +2122,12 @@
           "lib/netstandard1.1/Scientist.dll": {
             "related": ".pdb"
           }
+        }
+      },
+      "ScreenRecorderLib/5.4.0": {
+        "type": "package",
+        "build": {
+          "build/_._": {}
         }
       },
       "Selenium.Support/4.8.2": {
@@ -4224,6 +4233,7 @@
         "dependencies": {
           "BouncyCastle.NetCore": "1.9.0",
           "EntityFramework": "6.4.4",
+          "FontAwesome": "4.7.0",
           "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
           "Microsoft.CSharp": "4.7.0",
           "Microsoft.Extensions.Configuration": "7.0.0",
@@ -4234,6 +4244,7 @@
           "NLogger": "1.1.0",
           "Newtonsoft.Json": "13.0.3",
           "NunitXml.TestLogger": "3.0.131",
+          "ScreenRecorderLib": "5.4.0",
           "System.Data.DataSetExtensions": "4.5.0",
           "System.Runtime.Caching": "7.0.0",
           "System.ServiceModel.Primitives": "4.10.2",
@@ -4380,6 +4391,27 @@
         "extentreports.4.1.0.nupkg.sha512",
         "extentreports.nuspec",
         "lib/netstandard2.0/ExtentReports.dll"
+      ]
+    },
+    "FontAwesome/4.7.0": {
+      "sha512": "n4H/brfszElyoZ4kmGh8E75uqvLzLvFr3h2PFVdPH1LwUmWIpeqdaW2pcC4oZAhg7sESyObh0IZpAI8COCNeUg==",
+      "type": "package",
+      "path": "fontawesome/4.7.0",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Content/Content/font-awesome.css",
+        "Content/Content/font-awesome.min.css",
+        "Content/fonts/FontAwesome.otf",
+        "Content/fonts/fontawesome-webfont.eot",
+        "Content/fonts/fontawesome-webfont.svg",
+        "Content/fonts/fontawesome-webfont.ttf",
+        "Content/fonts/fontawesome-webfont.woff",
+        "Content/fonts/fontawesome-webfont.woff2",
+        "fontawesome.4.7.0.nupkg.sha512",
+        "fontawesome.nuspec",
+        "tools/install.ps1"
       ]
     },
     "HtmlAgilityPack/1.11.46": {
@@ -6579,6 +6611,22 @@
         "lib/netstandard1.1/Scientist.pdb",
         "scientist.2.0.0.nupkg.sha512",
         "scientist.nuspec"
+      ]
+    },
+    "ScreenRecorderLib/5.4.0": {
+      "sha512": "gvVaDWgaA0dIou7ORBuFevAma1Bnk/V2l2fp1zkQS2LgNhGdK4jWlP3CI05rjWSKFVPVImtvKfFn+qNJzem6uA==",
+      "type": "package",
+      "path": "screenrecorderlib/5.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/ScreenRecorderLib.targets",
+        "build/x64/ScreenRecorderLib.dll",
+        "build/x64/ScreenRecorderLib.xml",
+        "build/x86/ScreenRecorderLib.dll",
+        "build/x86/ScreenRecorderLib.xml",
+        "screenrecorderlib.5.4.0.nupkg.sha512",
+        "screenrecorderlib.nuspec"
       ]
     },
     "Selenium.Support/4.8.2": {
@@ -11739,6 +11787,7 @@
       "DotNetSeleniumExtras.PageObjects >= 3.11.0",
       "DotNetSeleniumExtras.WaitHelpers >= 3.11.0",
       "ExtentReports >= 4.1.0",
+      "FontAwesome >= 4.7.0",
       "HtmlAgilityPack >= 1.11.46",
       "Mailosaur >= 8.6.0",
       "Microsoft.NET.Test.Sdk >= 17.5.0",
@@ -11754,19 +11803,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ermob\\.nuget\\packages\\": {}
+    "C:\\Users\\dhima\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ermob\\Downloads\\MyersAndStauffer 1\\MyersAndStauffer\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
+      "projectUniqueName": "C:\\Users\\dhima\\source\\repos\\MyersAndStauffer_GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
       "projectName": "MyersAndStaufferSeleniumTests",
-      "projectPath": "C:\\Users\\ermob\\Downloads\\MyersAndStauffer 1\\MyersAndStauffer\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
-      "packagesPath": "C:\\Users\\ermob\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ermob\\Downloads\\MyersAndStauffer 1\\MyersAndStauffer\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\obj\\",
+      "projectPath": "C:\\Users\\dhima\\source\\repos\\MyersAndStauffer_GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
+      "packagesPath": "C:\\Users\\dhima\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\dhima\\source\\repos\\MyersAndStauffer_GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ermob\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dhima\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -11780,8 +11829,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\ermob\\Downloads\\MyersAndStauffer 1\\MyersAndStauffer\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
-              "projectPath": "C:\\Users\\ermob\\Downloads\\MyersAndStauffer 1\\MyersAndStauffer\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj"
+            "C:\\Users\\dhima\\source\\repos\\MyersAndStauffer_GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
+              "projectPath": "C:\\Users\\dhima\\source\\repos\\MyersAndStauffer_GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj"
             }
           }
         }
@@ -11790,9 +11839,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "default"
       }
     },
     "frameworks": {
@@ -11810,6 +11856,10 @@
           "ExtentReports": {
             "target": "Package",
             "version": "[4.1.0, )"
+          },
+          "FontAwesome": {
+            "target": "Package",
+            "version": "[4.7.0, )"
           },
           "HtmlAgilityPack": {
             "target": "Package",
@@ -11872,7 +11922,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
       }
     }
   }

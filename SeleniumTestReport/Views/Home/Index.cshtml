@@ -8,11 +8,13 @@
     }
 
     .date {
-        background-color: #f1f1f1;
+        background-color: #ECF0F1;
         padding: 10px;
         cursor: pointer;
-        border: 1px solid #ddd;
+        color: black;
+        border: 1px solid #ECF0F1;
         text-align: left;
+        border-radius: 5px;
     }
 
     .content {
@@ -23,20 +25,20 @@
 </style>
 
 <div class="container-fluid">
-    <div class="row p-2" id="TestRun">
-        <div class="col-md-4 d-flex flex-column card m-2 shadow-lg p-2">
+    <div class="row p-2 test-run-container" id="TestRun">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex flex-column card m-2 shadow-lg p-2">
             @{
                 if (ViewBag.TestSuites != null)
                 {
                     var testSuiteList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeleniumTestReport.DTO_s.Dto_TestSuites>>(ViewBag.TestSuites);
                     foreach (var item in testSuiteList)
                     {
-                        <button id="testSuites_@item.TestSuiteName" type="button" class="btn btn-light mb-2 border-secondary card testSuite_Clickable" onclick="GetRunDetails(this.innerText)">@item.TestSuiteName</button>
+                        <button id="testSuites_@item.TestSuiteName" type="button" class="btn btn-gray mb-2 card testSuite_Clickable" onclick="GetRunDetails(this.innerText)">@item.TestSuiteName</button>
                     }
                 }
             }
         </div>
-        <div id="runId" class="col card m-2 shadow-lg p-2">
+        <div id="runId" class="col card-header m-2 shadow-lg p-2">
             <div id="testRunListContainer">
 
             </div>
@@ -62,9 +64,9 @@
             data: { testSuitName: testSuitesName },
             success: function (result) {
                 $('#testRunListContainer').html(result);
-                $(".testSuite_Clickable").removeClass("bg-warning");
+                $(".testSuite_Clickable").removeClass("");
                 var selector = '#testSuites_' + testSuitesName;
-                $(selector).addClass("bg-warning");
+                $(selector).addClass("btn-gray");
             }
         });
     };
@@ -76,9 +78,9 @@
             Type: "Post",
             success: function (result) {
                 $('#testcaseChartContainer').html(result);
-                $(".testRunId_Clickable").removeClass("bg-primary");
+                $(".testRunId_Clickable").removeClass("bg-select");
                 var selector = '#runId_' + testSuitesName + runId;
-                $(selector).addClass("bg-primary");
+                $(selector).addClass("bg-select");
                 $('#TestRun').hide();
                 $('#TestRunDetails').show();
             }
