@@ -49,7 +49,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 
             VideoRecorder.CreateRecording();
             var logInPage = new LoginPage();
-            _testData.TestCaseVideoURL = VideoRecorder.videoPath.ToString();
+            _testData.TestCaseVideoURL = VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString();
             var dateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestRunStartDateTime = dateTime;
 
