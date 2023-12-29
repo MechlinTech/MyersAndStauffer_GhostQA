@@ -25,27 +25,30 @@
                             var teststeps = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeleniumTestReport.DTO_s.Dto_TestSteps>>(TestCaseDetailObj.TestCaseSteps);
                             foreach (var item in teststeps)
                             {
-                                <tr class="event-row">
-                                    <td class="text-center">
-                                        <em class="@(item.Status == "Passed" ? "fa fa-check text-success" : "fa fa-times text-danger" )"></em>
-                                    </td>
-                                    <td>@(Convert.ToDateTime(item.TimeStamp).ToString("HH:mm:ss"))</td>
-                                    <td>
-                                        @{
-                                            if (item.Status != "Passed")
-                                            {
-                                                <div class="d-flex">
-                                                    <div>@item.Details</div>
-                                                    <div>@item.FailureScreenShots </div>
-                                                </div>
+                                if (item.Status != null && item.TimeStamp != null && @item.Details != null)
+                                {
+                                    <tr class="event-row">
+                                        <td class="text-center">
+                                            <em class="@(item.Status == "Passed" ? "fa fa-check text-success" : "fa fa-times text-danger" )"></em>
+                                        </td>
+                                        <td>@(Convert.ToDateTime(item.TimeStamp).ToString("HH:mm:ss"))</td>
+                                        <td>
+                                            @{
+                                                if (item.Status != "Passed")
+                                                {
+                                                    <div class="d-flex">
+                                                        <div>@item.Details</div>
+                                                        <img alt="" src="@item.FailureScreenShots" />
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    @item.Details
+                                                }
                                             }
-                                            else
-                                            {
-                                                @item.Details
-                                            }
-                                        }
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                }
                             }
                         }
                     </tbody>

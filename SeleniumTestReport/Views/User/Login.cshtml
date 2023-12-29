@@ -1,0 +1,28 @@
+﻿@model SeleniumTestReport.Models.User
+
+@{
+    Layout = null;
+}
+
+<link href="~/Content/loginStyle.css" rel="stylesheet" />
+<div id="login">
+    <div>
+        <img alt="" src="~/Images/GhostQA-Logo.png" />
+    </div>
+    <form id="login_form">
+        @using (Html.BeginForm("Login", "User", FormMethod.Post))
+        {
+            <div class="field_container">
+                <input type="text" name="username" placeholder="User Name" required />
+            </div>
+
+            <div class="field_container">
+                <input type="password" name="password" placeholder="Password" required />
+            </div>
+
+            <button id="sign_in_button" onclick="">
+                <input class="button_text" type="submit" value="Login" />
+            </button>
+        }
+    </form>
+</div>
