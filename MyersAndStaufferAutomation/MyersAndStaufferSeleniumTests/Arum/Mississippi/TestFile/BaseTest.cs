@@ -99,7 +99,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 test.Log(Status.Fail, "Test failed with logTrace " + stackTrace);
 
                 _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Failed and here is the screenshot on which test failed" });
-                _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), FailureMessage = "Test failed with message " + message.ToString().Replace("'", "''") });
+
                 _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), FailureException = "Test failed with logTrace " + stackTrace.ToString() });
             }
             else if (status == TestStatus.Passed)
@@ -109,7 +109,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             if (TestContext.CurrentContext.Result.Outcome != ResultState.Success)
             {
-                ScreenShot("Failure", true);
+                ScreenShot(message.ToString(), "Failure", true);
                 AttatchLogToTest();
             }
 
@@ -123,7 +123,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
         }
 
-        public static void ScreenShot(string fileName = null, bool hasTimeStamp = false)
+        public static void ScreenShot(string FailureMessage, string fileName = null, bool hasTimeStamp = false)
         {
             fileName ??= TestContext.CurrentContext.Test.MethodName;
             Screenshot ss = ((ITakesScreenshot)Browser.Driver).GetScreenshot();
@@ -133,7 +133,15 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             TestContext.AddTestAttachment(screenshotFile, fileName + "Screenshot");
             WriteToLogfile("Error screenshot: " + screenshotFile);
 
-            _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), FailureScreenShots = screenshotFile });
+            var basePath = DBConfiguration.GetDBConnectionString("AppSettings:basePath");
+            var FailureSSPath = Path.Combine(basePath, "FailureScreenShots", DateTime.Now.ToString("MMMM_dd_yyyy"));
+            if (!Directory.Exists(FailureSSPath))
+            {
+                Directory.CreateDirectory(FailureSSPath);
+            }
+            var FailureSSImagePath = Path.Combine(FailureSSPath, fileName + (hasTimeStamp ? timestamp : null) + ".png");
+            ss.SaveAsFile(FailureSSImagePath, ScreenshotImageFormat.Png);
+            _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), FailureMessage = "Test failed with message " + FailureMessage.ToString().Replace("'", "''"), FailureScreenShots = FailureSSImagePath.StartsWith(basePath) ? @"\\" + FailureSSImagePath.Substring(basePath.Length).ToString() : FailureSSImagePath.ToString() });
         }
 
         // Helper Methods

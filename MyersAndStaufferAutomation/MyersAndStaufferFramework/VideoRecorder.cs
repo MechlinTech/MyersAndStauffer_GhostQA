@@ -1,13 +1,12 @@
 ﻿using ScreenRecorderLib;
 using System;
 using System.IO;
-using System.Text;
 
 namespace MyersAndStaufferFramework
 {
-    public class VideoRecorder
+    public class VideoRecorder : DBConfiguration
     {
-        public static string basePath = @"D:\Mechlin Tech\MyersAndStauffer_GhostQA\SeleniumTestReport\";
+        public static string basePath = GetDBConnectionString("AppSettings:basePath");
         public static string videoPath = "";
         private static Recorder _rec;
         public static void CreateRecording()

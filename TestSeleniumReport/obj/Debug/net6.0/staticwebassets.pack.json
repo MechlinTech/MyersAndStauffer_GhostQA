@@ -1,0 +1,365 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\TestSeleniumReport.bundle.scp.css",
+      "PackagePath": "staticwebassets\\TestSeleniumReport.bundle.scp.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-10-24.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-10-24.png"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-11-04.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-11-04.png"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-01.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-01.png"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-43.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-43.png"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-26-55.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-26-55.png"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-27-55.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-27-55.png"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-47-41.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-47-41.png"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-53-22.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-53-22.png"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Images\\GhostQA-Logo.png",
+      "PackagePath": "staticwebassets\\Images\\GhostQA-Logo.png"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2023-12-31\\2023-12-31_02-53-21.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2023-12-31\\2023-12-31_02-53-21.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2023-12-31\\2023-12-31_02-53-43.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2023-12-31\\2023-12-31_02-53-43.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_02-02-21.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_02-02-21.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_02-02-34.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_02-02-34.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_02-05-09.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_02-05-09.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_02-05-27.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_02-05-27.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_03-10-04.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_03-10-04.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_03-10-26.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_03-10-26.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_03-12-39.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_03-12-39.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_03-13-03.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_03-13-03.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_03-17-23.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_03-17-23.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_03-17-39.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_03-17-39.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_03-26-32.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_03-26-32.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_03-27-05.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_03-27-05.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_04-47-28.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_04-47-28.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-01\\2024-01-01_04-53-04.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-01\\2024-01-01_04-53-04.webm"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\css\\loginStyle.css",
+      "PackagePath": "staticwebassets\\css\\loginStyle.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "D:\\Mechlin Tech\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.TestSeleniumReport.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.TestSeleniumReport.props",
+      "PackagePath": "build\\TestSeleniumReport.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.TestSeleniumReport.props",
+      "PackagePath": "buildMultiTargeting\\TestSeleniumReport.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildTransitive.TestSeleniumReport.props",
+      "PackagePath": "buildTransitive\\TestSeleniumReport.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

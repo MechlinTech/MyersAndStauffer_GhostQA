@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="wwwroot\Images\GhostQA-Logo.png" />
+    <None Remove="SqlScript\stp_GetRunDetails.Sql" />
+    <None Remove="SqlScript\stp_GetRunId.Sql" />
+    <None Remove="SqlScript\stp_GetTestCaseDetails.Sql" />
+    <None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
+    <None Remove="SqlScript\stp_GetTestSuites.Sql" />
+    <None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
+    <None Remove="SqlScript\stp_UpsertTableData.Sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SqlScript\stp_GetRunDetails.Sql" />
+    <Content Include="SqlScript\stp_GetRunId.Sql" />
+    <Content Include="SqlScript\stp_GetTestCaseDetails.Sql" />
+    <Content Include="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
+    <Content Include="SqlScript\stp_GetTestSuites.Sql" />
+    <Content Include="SqlScript\stp_UpdateTestStepData.Sql" />
+    <Content Include="SqlScript\stp_UpsertTableData.Sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FontAwesome" Version="4.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.23" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.23" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.23" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.23">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
+
+</Project>

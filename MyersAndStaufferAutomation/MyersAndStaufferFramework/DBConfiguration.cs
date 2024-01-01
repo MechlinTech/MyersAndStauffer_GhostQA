@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Org.BouncyCastle.Ocsp;
 using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Text;
-using System.Text.Json;
 
 namespace MyersAndStaufferFramework
 {
@@ -21,7 +18,7 @@ namespace MyersAndStaufferFramework
 
         }
 
-        private static string GetDBConnectionString(string Key)
+        public static string GetDBConnectionString(string Key)
         {
             return configuration[Key];
         }
