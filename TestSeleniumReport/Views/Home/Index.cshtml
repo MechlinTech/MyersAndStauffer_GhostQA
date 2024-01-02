@@ -22,15 +22,29 @@
         padding: 10px;
         border-top: 1px solid #ddd;
     }
+
+    .tab-content {
+        display: none;
+    }
+
+        .tab-content.active {
+            display: block;
+        }
 </style>
 
 <div class="container-fluid">
     <div class="row p-2 test-run-container" id="TestRun">
         <div class="col-md-4 m-2 p-2 shadow-lg">
+
+           
             @{
                 if (ViewBag.TestSuites != null)
                 {
                     var testSuiteList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeleniumTestReport.DTO_s.Dto_TestSuites>>(ViewBag.TestSuites);
+                    <div>
+                        <h5>Test Suite</h5>
+                        <input id="myInput" type="text" placeholder="Search.." oninput="filterTestSuites()">
+                    </div>
                     foreach (var item in testSuiteList)
                     {
                         <button id="testSuites_@item.TestSuiteName" type="button" class="border-bottom btn col-md-12 mb-2 testSuite_Clickable text-lg-start" onclick="GetRunDetails(this.innerText)">@item.TestSuiteName</button>
@@ -39,15 +53,34 @@
             }
         </div>
         <div id="runId" class="col card-header m-2 shadow-lg p-2">
-            <div id="testRunListContainer">
+            <div>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" onclick="showTab('tab1')">Active</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTab('tab2')">Link</a>
+                    </li>
+                </ul>
 
+                <div id="tab1" class="tab-content active">
+                    <!-- Content for Active tab goes here -->
+                    <p>This is the content for the Active tab.</p>
+                </div>
+
+                <div id="tab2" class="tab-content">
+                    <!-- Content for Link tab goes here -->
+                    <p>This is the content for the Link tab.</p>
+                </div>
+            </div>
+            <div id="testRunListContainer">
             </div>
         </div>
     </div>
     <div id="TestRunDetails">
+
         <div id="CaseId" class="m-2 shadow-lg p-2">
             <div id="testcaseChartContainer">
-
             </div>
         </div>
     </div>
@@ -56,8 +89,33 @@
     $(document).ready(function () {
         $('#TestRun').show();
         $('#TestRunDetails').hide();
+        
     });
+    function showTab(tabId) {
+        // Hide all tab contents
+        var tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(function (tab) {
+            tab.classList.remove('active');
+        });
 
+        // Show the selected tab content
+        document.getElementById(tabId).classList.add('active');
+    }
+    function filterTestSuites() {
+        var input, filter, buttons, i, button;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        buttons = document.querySelectorAll("[id^='testSuites_']");
+
+        for (i = 0; i < buttons.length; i++) {
+            button = buttons[i];
+            if (button.innerText.toUpperCase().indexOf(filter) > -1) {
+                button.style.display = "";
+            } else {
+                button.style.display = "none";
+            }
+        }
+    }
     function GetRunDetails(testSuitesName) {
         $.ajax({
             url: '@Url.Action("GetRunDetails", "Home")',
