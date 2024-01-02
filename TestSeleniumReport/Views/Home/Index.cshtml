@@ -26,14 +26,14 @@
 
 <div class="container-fluid">
     <div class="row p-2 test-run-container" id="TestRun">
-        <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex flex-column card m-2 shadow-lg p-2">
+        <div class="col-md-4 m-2 p-2 shadow-lg">
             @{
                 if (ViewBag.TestSuites != null)
                 {
                     var testSuiteList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeleniumTestReport.DTO_s.Dto_TestSuites>>(ViewBag.TestSuites);
                     foreach (var item in testSuiteList)
                     {
-                        <button id="testSuites_@item.TestSuiteName" type="button" class="btn btn-gray mb-2 card testSuite_Clickable" onclick="GetRunDetails(this.innerText)">@item.TestSuiteName</button>
+                        <button id="testSuites_@item.TestSuiteName" type="button" class="border-bottom btn col-md-12 mb-2 testSuite_Clickable text-lg-start" onclick="GetRunDetails(this.innerText)">@item.TestSuiteName</button>
                     }
                 }
             }
@@ -64,9 +64,9 @@
             data: { testSuitName: testSuitesName },
             success: function (result) {
                 $('#testRunListContainer').html(result);
-                $(".testSuite_Clickable").removeClass("");
+                $(".testSuite_Clickable").removeClass("item-selected");
                 var selector = '#testSuites_' + testSuitesName;
-                $(selector).addClass("btn-gray");
+                $(selector).addClass("item-selected");
             }
         });
     };
@@ -78,9 +78,9 @@
             Type: "Post",
             success: function (result) {
                 $('#testcaseChartContainer').html(result);
-                $(".testRunId_Clickable").removeClass("bg-select");
+                $(".testRunId_Clickable").removeClass("item-selected");
                 var selector = '#runId_' + testSuitesName + runId;
-                $(selector).addClass("bg-select");
+                $(selector).addClass("item-selected");
                 $('#TestRun').hide();
                 $('#TestRunDetails').show();
             }

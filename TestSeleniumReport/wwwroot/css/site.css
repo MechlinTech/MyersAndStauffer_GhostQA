@@ -46,7 +46,7 @@ textarea {
 
 
 .border-bottom {
-    border-bottom-color: #D2D2D2;
+    border-bottom-color: rgb(101, 77, 247);
 }
 
 .nav-link {
@@ -55,8 +55,12 @@ textarea {
 }
 
 .nav-item a:hover {
-    background: #009419;
-    color: white;
+    border-bottom: 4px solid rgb(101, 77, 247) !important;
+    transition: 0.8s,ease-in-out;
+}
+
+.nav-item button:hover {
+    border-bottom: 4px solid rgb(101, 77, 247) !important;
     transition: 0.8s,ease-in-out;
 }
 
@@ -89,4 +93,9 @@ textarea {
 
 .breadcrumb-item::before {
     content: " " !important;
+}
+
+.item-selected {
+    border-bottom: 4px solid rgb(101, 77, 247) !important;
+    transition: 0.8s, ease-in-out;
 }
