@@ -4,10 +4,10 @@
         @{
             if (Model != null)
             {
-                var RunDateGroupsList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeleniumTestReport.DTO_s.Dto_RunDetailsList>>(Model);
+                var RunDateGroupsList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_RunDetailsList>>(Model);
                 foreach (var runDate in RunDateGroupsList)
                 {
-                    <div class="btn-gray mb-1" onclick="toggleContent('@runDate.TestRunDateYear.Replace(" ", "")')">@runDate.TestRunDateYear</div>
+                    <div class="accordion-gray mb-1" onclick="toggleContent('@runDate.TestRunDateYear.Replace(" ", "")')">@runDate.TestRunDateYear</div>
                     <div class="content" id="@runDate.TestRunDateYear.Replace(" ", "")">
                         @{
                             <div class="border card-header col-md-12 d-flex mb-2 fw-bold">

@@ -46,6 +46,37 @@ namespace SeleniumTestReport.Helper
             return TestSuites;
         }
 
+        internal string GetDashboardDetails(string testSuitName)
+        {
+            string DashBoardDetailsJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetDashBoardDetails", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuitName", testSuitName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                DashBoardDetailsJson = reader["DashBoardDetailsJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return DashBoardDetailsJson;
+        }
+
         public string GetRunDetails(string TestSuitName)
         {
             string RunDetailsJson = string.Empty;
@@ -108,6 +139,8 @@ namespace SeleniumTestReport.Helper
             }
             return TestCaseDetailsJson;
         }
+
+
 
         internal string GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
         {

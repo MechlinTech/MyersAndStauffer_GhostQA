@@ -3,7 +3,7 @@
     @{
         if (Model != null)
         {
-            var TestCaseDetailObj = Newtonsoft.Json.JsonConvert.DeserializeObject<SeleniumTestReport.DTO_s.Dto_TestCaseSteps>(Model);
+            var TestCaseDetailObj = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSeleniumReport.DTO_s.Dto_TestCaseSteps>(Model);
             <div class="p-v-10 d-inline-block">
                 <div class="info">
                     <h5 class="text-danger">@TestCaseDetailObj.TestCaseName</h5>
@@ -24,7 +24,7 @@
                     <tbody>
                         @{
                             JArray teststeps = JArray.Parse(TestCaseDetailObj.TestCaseSteps);
-                            List<SeleniumTestReport.DTO_s.Dto_TestSteps> testResults = teststeps.ToString() != string.Empty ? Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeleniumTestReport.DTO_s.Dto_TestSteps>>(teststeps.ToString()) : new List<SeleniumTestReport.DTO_s.Dto_TestSteps>();
+                            List<TestSeleniumReport.DTO_s.Dto_TestSteps> testResults = teststeps.ToString() != string.Empty ? Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_TestSteps>>(teststeps.ToString()) : new List<TestSeleniumReport.DTO_s.Dto_TestSteps>();
                             foreach (var item in testResults)
                             {
                                 if (item.Status != null && item.TimeStamp != null && (@item.Details != null || item.FailureMessage != null || item.FailureException != null))
@@ -35,7 +35,6 @@
                                         </td>
                                         <td class="col-md-3">@(Convert.ToDateTime(item.TimeStamp).ToString("HH:mm:ss"))</td>
                                         <td class="col">
-
                                             <table class="table">
                                                 <tr>
                                                     <td>
@@ -50,7 +49,6 @@
                                                                             <em class="fa fa-camera"></em>
                                                                         </a>
                                                                     </div>
-
                                                                     <div id="imgModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="true">
                                                                         <div class="modal-dialog modal-lg">
                                                                             <div class="modal-content">
@@ -75,10 +73,7 @@
                                                             {
                                                                 <div class="w-20">@item.Details</div>
                                                             }
-
-
                                                         }
-
                                                     </td>
                                                 </tr>
                                             </table>

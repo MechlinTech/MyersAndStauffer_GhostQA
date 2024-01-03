@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
-namespace SeleniumTestReport.DTO_s
+namespace TestSeleniumReport.DTO_s
 {
     public class Dto_TestCaseDetailsObj : Dto_TestSuites
     {

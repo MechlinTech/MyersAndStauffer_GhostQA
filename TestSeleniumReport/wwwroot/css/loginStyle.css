@@ -14,23 +14,7 @@
     background-color: rgb(255, 255, 255);
 }
 
-.style-1 {
-    box-sizing: border-box;
-}
-
-.style-2 {
-    box-sizing: border-box;
-}
-
-.style-3 {
-    box-sizing: border-box;
-}
-
-.style-4 {
-    box-sizing: border-box;
-}
-
-.style-5 {
+.box-border {
     box-sizing: border-box;
 }
 
@@ -78,18 +62,6 @@
     transition: fill 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0s;
     font-size: 24px;
     margin-bottom: 40px;
-    box-sizing: border-box;
-}
-
-.style-9 {
-    box-sizing: border-box;
-}
-
-.style-10 {
-    box-sizing: border-box;
-}
-
-.style-11 {
     box-sizing: border-box;
 }
 
@@ -243,10 +215,6 @@
     box-sizing: border-box;
 }
 
-.style-22 {
-    box-sizing: border-box;
-}
-
 .style-23 {
     margin-top: 20px;
     display: grid;
@@ -285,20 +253,7 @@
     margin: 0px;
 }
 
-.style-27 {
-    display: flex;
-    box-sizing: border-box;
-}
-
-.style-28 {
-    box-sizing: border-box;
-}
-
-.style-29 {
-    box-sizing: border-box;
-}
-
-.style-30 {
+.login-input {
     font: 300 14px / 20.125px 'Lexend Deca', sans-serif, -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     letter-spacing: normal;
     color: rgb(56, 56, 56);
@@ -315,6 +270,15 @@
     border-radius: 5px;
     padding: 10px 10px 10px 7px;
 }
+
+    .login-input:hover {
+        border: 2px solid rgb(101, 77, 247) !important;
+    }
+
+    .login-input:focus {
+        border: 2px solid rgb(101, 77, 247) !important;
+        outline: none;
+    }
 
 .style-31 {
     text-align: left;
@@ -339,18 +303,6 @@
     padding: 0px;
     line-height: 11px;
     transition: width 0.15s cubic-bezier(0, 0, 0.2, 1) 0s;
-    box-sizing: border-box;
-}
-
-.style-33 {
-    box-sizing: border-box;
-}
-
-.style-34 {
-    box-sizing: border-box;
-}
-
-.style-35 {
     box-sizing: border-box;
 }
 
@@ -389,32 +341,6 @@
 .style-39 {
     display: flex;
     box-sizing: border-box;
-}
-
-.style-40 {
-    box-sizing: border-box;
-}
-
-.style-41 {
-    box-sizing: border-box;
-}
-
-.style-42 {
-    font: 300 14px / 20.125px 'Lexend Deca', sans-serif, -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    letter-spacing: normal;
-    color: rgb(56, 56, 56);
-    border: 0px none rgb(56, 56, 56);
-    box-sizing: content-box;
-    height: 20.125px;
-    margin: 0px;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    display: block;
-    min-width: 0px;
-    width: 100%;
-    animation-name: mui-auto-fill-cancel;
-    animation-duration: 0.01s;
-    border-radius: 5px;
-    padding: 10px 10px 10px 7px;
 }
 
 .style-43 {
@@ -472,10 +398,6 @@
     box-sizing: border-box;
 }
 
-.style-46 {
-    box-sizing: border-box;
-}
-
 .style-47 {
     text-align: left;
     position: absolute;
@@ -502,11 +424,7 @@
     box-sizing: border-box;
 }
 
-.style-49 {
-    box-sizing: border-box;
-}
-
-.style-50 {
+.login-button {
     display: flex;
     -webkit-box-align: center;
     align-items: center;

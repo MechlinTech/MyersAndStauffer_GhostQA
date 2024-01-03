@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
 using SeleniumTestReport.Helper;
 using TestSeleniumReport.DBContext;
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +16,8 @@ builder.Services.AddSingleton<DBHelper>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddControllersWithViews().AddRazorPagesOptions(options => {
+builder.Services.AddControllersWithViews().AddRazorPagesOptions(options =>
+{
     options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
 });
 

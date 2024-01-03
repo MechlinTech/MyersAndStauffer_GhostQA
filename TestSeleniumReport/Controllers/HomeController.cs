@@ -29,6 +29,18 @@ namespace TestSeleniumReport.Controllers
         /// <param name="testSuitName"></param>
         /// <returns></returns>
         [HttpGet]
+        public ActionResult GetDashboardDetails(string testSuitName)
+        {
+            string DashBoardDetailsJson = _helper.GetDashboardDetails(testSuitName);
+            return PartialView("_Dashboard", DashBoardDetailsJson);
+        }
+
+        /// <summary>
+        /// Get Test Run Over All Details by TestSuite Name
+        /// </summary>
+        /// <param name="testSuitName"></param>
+        /// <returns></returns>
+        [HttpGet]
         public ActionResult GetRunDetails(string testSuitName)
         {
             string RunDetailsJson = _helper.GetRunDetails(testSuitName);

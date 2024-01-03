@@ -1,76 +1,23 @@
 ﻿<html>
 <head>
-    <style>
-        .video-frame {
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .title {
-            background-color: silver;
-            padding: 1px;
-            font-weight: 600;
-        }
-
-        .clickable-element {
-            cursor: pointer; /* Default cursor style */
-        }
-            /* Change cursor to hand on hover */
-            .clickable-element:hover {
-                cursor: pointer;
-            }
-
-        .breadcrumbs {
-            display: flex;
-            list-style: none;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-        }
-
-        .breadcrumb-item {
-            margin-right: 5px;
-        }
-
-            .breadcrumb-item:not(:last-child):after {
-                content: '>';
-                margin-left: 5px;
-                margin-right: 5px;
-                color: #333;
-            }
-
-            .breadcrumb-item a {
-                text-decoration: none;
-                color: #333;
-                font-weight: bold;
-            }
-
-                .breadcrumb-item a:hover {
-                    text-decoration: underline;
-                }
-    </style>
 </head>
 <body>
     @{
         if (Model != null)
         {
-            var TestCaseDetailsObj = Newtonsoft.Json.JsonConvert.DeserializeObject<SeleniumTestReport.DTO_s.Dto_TestCaseDetailsObj>(Model);
+            var TestCaseDetailsObj = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSeleniumReport.DTO_s.Dto_TestCaseDetailsObj>(Model);
             var percentilePassed = (double)TestCaseDetailsObj.PassedTestCases / (double)TestCaseDetailsObj.TotalTestCases * 100.0;
 
             <div class="row p-2" id="TestRun">
                 <div class="d-flex justify-content-between mb-4">
-
                     <div class="breadcrumbs w-20">
                         <div class="breadcrumb-item clickable-element" onclick="Back()">@TestCaseDetailsObj.TestSuiteName</div>
                         <div class="breadcrumb-item">@TestCaseDetailsObj.TestRunName</div>
                     </div>
-
-                    <div class="outer">
-                        <div class="inner">
-                            <button type="button" class="btn " onclick="Back()" style="border:1px solid black;">
-                                <i class="fa fa-arrow-left back-arrow" aria-hidden="true"></i>Back
-                            </button>
-                        </div>
+                    <div class="inner">
+                        <button type="button" class="btn button" onclick="Back()">
+                            <i class="fa fa-arrow-left back-arrow" aria-hidden="true"></i>Back
+                        </button>
                     </div>
                 </div>
                 <div class="row d-flex">
@@ -200,7 +147,7 @@
                             {
                                 TimeSpan duration = item.TestRunEndDateTime - item.TestRunStartDateTime;
 
-                                <div id="caseId_@TestCaseDetailsObj.TestSuiteName@item.TestRunName@item.TestCaseName" type="button" class="card testCaseStepId_Clickable" onclick="GetTestCaseStepsDetails('@TestCaseDetailsObj.TestSuiteName','@item.TestRunName','@item.TestCaseName')">
+                                <div id="caseId_@TestCaseDetailsObj.TestSuiteName@item.TestRunName@item.TestCaseName" type="button" class="card btn-gray testCaseStepId_Clickable" onclick="GetTestCaseStepsDetails('@TestCaseDetailsObj.TestSuiteName','@item.TestRunName','@item.TestCaseName')">
                                     <div class="d-flex card-body">
                                         <div class="col-md-2 p-1">
                                             <em class="@(item.TestCaseStatus == "Passed" ? "fa fa-check-circle bg-success text-white" : item.TestCaseStatus == "Failed" ? "fa fa-times-circle bg-danger text-white" : item.TestCaseStatus == "Partially Passed" ? "text-warning" : "text-primary")"></em>
@@ -256,9 +203,9 @@
             Type: "Post",
             success: function (result) {
                 $('#testCaseListContainer').html(result);
-                $(".testCaseStepId_Clickable").removeClass("bg-select");
+                $(".testCaseStepId_Clickable").removeClass("item-selected");
                 var selector = '#caseId_' + testSuitesName + runId + testCaseName;
-                $(selector).addClass("bg-select");
+                $(selector).addClass("item-selected");
             }
         });
     };

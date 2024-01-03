@@ -1,84 +1,49 @@
 ﻿<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" crossorigin="anonymous" />
-<style>
-    .accordion {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .date {
-        background-color: #ECF0F1;
-        padding: 10px;
-        cursor: pointer;
-        color: black;
-        border: 1px solid #ECF0F1;
-        text-align: left;
-        border-radius: 5px;
-    }
-
-    .content {
-        display: none;
-        padding: 10px;
-        border-top: 1px solid #ddd;
-    }
-
-    .tab-content {
-        display: none;
-    }
-
-        .tab-content.active {
-            display: block;
-        }
-</style>
-
 <div class="container-fluid">
     <div class="row p-2 test-run-container" id="TestRun">
         <div class="col-md-4 m-2 p-2 shadow-lg">
-
-           
-            @{
-                if (ViewBag.TestSuites != null)
-                {
-                    var testSuiteList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeleniumTestReport.DTO_s.Dto_TestSuites>>(ViewBag.TestSuites);
-                    <div>
-                        <h5>Test Suite</h5>
-                        <input id="myInput" type="text" placeholder="Search.." oninput="filterTestSuites()">
-                    </div>
-                    foreach (var item in testSuiteList)
+            <span class="fw-bold mb-2">Test Suite</span>
+            <input id="testsuitessearch" type="text" class="border col-md-12 input-box" onkeyup="filterTestSuites()" placeholder="Search Test Suite..." />
+            <hr />
+            <div class="testsuites">
+                @{
+                    if (ViewBag.TestSuites != null)
                     {
-                        <button id="testSuites_@item.TestSuiteName" type="button" class="border-bottom btn col-md-12 mb-2 testSuite_Clickable text-lg-start" onclick="GetRunDetails(this.innerText)">@item.TestSuiteName</button>
+                        var testSuiteList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_TestSuites>>(ViewBag.TestSuites);
+                        foreach (var item in testSuiteList)
+                        {
+                            <button id="testSuites_@item.TestSuiteName" type="button" class="btn accordion-gray col-md-12 mb-2 testSuite_Clickable text-lg-start" onclick="GetDashboardDetails(this.innerText)">@item.TestSuiteName</button>
+                        }
                     }
                 }
-            }
+            </div>
         </div>
-        <div id="runId" class="col card-header m-2 shadow-lg p-2">
-            <div>
+        <div id="runId" class="col m-2 shadow-lg p-2">
+            <span class="fw-bold">Test Run</span>
+            <div class="card-header-tabs card-header">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#" onclick="showTab('tab1')">Active</a>
+                        <a class="nav-link text-dark active dash" aria-current="page" href="#" onclick="showTab('dash')">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showTab('tab2')">Link</a>
+                        <a class="nav-link text-dark hist" href="#" onclick="showTab('hist')">History</a>
                     </li>
                 </ul>
-
-                <div id="tab1" class="tab-content active">
-                    <!-- Content for Active tab goes here -->
-                    <p>This is the content for the Active tab.</p>
+                <div id="dash" class="m-2 mt-1 tab-content active">
+                    <div id="testRunChartContainer">
+                    </div>
                 </div>
 
-                <div id="tab2" class="tab-content">
-                    <!-- Content for Link tab goes here -->
-                    <p>This is the content for the Link tab.</p>
+                <div id="hist" class="m-2 mt-1 tab-content">
+                    <div id="testRunListContainer">
+                    </div>
                 </div>
-            </div>
-            <div id="testRunListContainer">
             </div>
         </div>
     </div>
     <div id="TestRunDetails">
-
         <div id="CaseId" class="m-2 shadow-lg p-2">
             <div id="testcaseChartContainer">
             </div>
@@ -89,39 +54,54 @@
     $(document).ready(function () {
         $('#TestRun').show();
         $('#TestRunDetails').hide();
-        
+        $('#runId').hide();
     });
+
     function showTab(tabId) {
-        // Hide all tab contents
         var tabContents = document.querySelectorAll('.tab-content');
-        tabContents.forEach(function (tab) {
-            tab.classList.remove('active');
-        });
+        $(".dash").removeClass("active item-selected");
+        $(".hist").removeClass("active item-selected");
 
-        // Show the selected tab content
-        document.getElementById(tabId).classList.add('active');
+        var selector = '.' + tabId;
+        $(selector).addClass("active item-selected");
+
+        $('.tab-content').hide();
+        $('#' + tabId).show();
     }
-    function filterTestSuites() {
-        var input, filter, buttons, i, button;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        buttons = document.querySelectorAll("[id^='testSuites_']");
 
-        for (i = 0; i < buttons.length; i++) {
-            button = buttons[i];
-            if (button.innerText.toUpperCase().indexOf(filter) > -1) {
-                button.style.display = "";
+    function filterTestSuites(event) {
+        var input = document.getElementById("testsuitessearch");
+        var filter = input.value.toLowerCase();
+        var nodes = document.getElementsByClassName('testsuites');
+
+        for (i = 0; i < nodes.length; i++) {
+            if (nodes[i].innerText.toLowerCase().includes(filter)) {
+                nodes[i].style.display = "block";
             } else {
-                button.style.display = "none";
+                nodes[i].style.display = "none";
             }
         }
     }
+
+    function GetDashboardDetails(testSuitesName) {
+        $.ajax({
+            url: '@Url.Action("GetDashboardDetails", "Home")',
+            data: { testSuitName: testSuitesName },
+            success: function (result) {
+                $('#testRunChartContainer').html(result);
+                $('#runId').show();
+                GetRunDetails(testSuitesName)
+            }
+        });
+    };
+
     function GetRunDetails(testSuitesName) {
         $.ajax({
             url: '@Url.Action("GetRunDetails", "Home")',
             data: { testSuitName: testSuitesName },
             success: function (result) {
                 $('#testRunListContainer').html(result);
+                $('#runId').show();
                 $(".testSuite_Clickable").removeClass("item-selected");
                 var selector = '#testSuites_' + testSuitesName;
                 $(selector).addClass("item-selected");
@@ -149,8 +129,10 @@
         var content = document.getElementById(id);
         if (content.style.display === "block") {
             content.style.display = "none";
+            $("#" + id).removeClass("item-selected");
         } else {
             content.style.display = "block";
+            $("#" + id).addClass("item-selected");
         }
     };
 
