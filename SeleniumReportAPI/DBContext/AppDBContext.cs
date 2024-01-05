@@ -6,9 +6,12 @@ namespace SeleniumReportAPI.DBContext
 {
     public class AppDBContext : IdentityDbContext<IdentityUser>
     {
-        public AppDBContext(DbContextOptions<AppDBContext> options)
-        : base(options)
+        public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
         }
     }
 }
