@@ -29,40 +29,48 @@ namespace SeleniumReportAPI.Controllers
             try
             {
                 var user = await _userManager.FindByNameAsync(loginDTO.Email);
-                if (!string.IsNullOrEmpty(loginDTO.Email) && !string.IsNullOrEmpty(loginDTO.Password))
+                if (await _userManager.CheckPasswordAsync(user, loginDTO.Password))
                 {
-                    string result = _helper.VerifyUser(user.Email, user.PasswordHash);
-                    if (result.Contains("Success"))
+                    if (!string.IsNullOrEmpty(loginDTO.Email) && !string.IsNullOrEmpty(loginDTO.Password))
                     {
-                        //var userRoles = await _userManager.GetRolesAsync(user);
+                        string result = _helper.VerifyUser(user.Email, user.PasswordHash);
+                        if (result.Contains("Success"))
+                        {
+                            var userRoles = await _userManager.GetRolesAsync(user);
 
-                        var authClaims = new List<Claim>
+                            var authClaims = new List<Claim>
                         {
                             new(ClaimTypes.Email,loginDTO.Email),
                             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         };
 
-                        //foreach (var userRole in userRoles)
-                        //{
-                        //    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                        //}
+                            foreach (var userRole in userRoles)
+                            {
+                                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                            }
 
-                        var token = _helper.GetToken(authClaims);
+                            var token = _helper.GetToken(authClaims);
 
-                        return Ok(new
+                            return Ok(new
+                            {
+                                token = new JwtSecurityTokenHandler().WriteToken(token),
+                                expiration = token.ValidTo,
+                                result = result
+                            });
+                        }
+                        else
                         {
-                            token = new JwtSecurityTokenHandler().WriteToken(token),
-                            expiration = token.ValidTo
-                        });
+                            return Ok(new Dto_Response { Status = "false", Message = result });
+                        }
                     }
                     else
                     {
-                        return Ok(new Dto_Response { Status = "false", Message = result });
+                        return Ok(new Dto_Response { Status = "false", Message = "User Name or Password Must not be Blank" });
                     }
                 }
                 else
                 {
-                    return Ok(new Dto_Response { Status = "false", Message = "User Name or Password Must not be Blank" });
+                    return Ok(new Dto_Response { Status = "false", Message = "User Name or Password is Wrong" });
                 }
             }
             catch
