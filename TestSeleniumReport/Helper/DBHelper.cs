@@ -1,5 +1,11 @@
-﻿using System.Data;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
+using System.Data;
 using System.Data.SqlClient;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace SeleniumTestReport.Helper
 {
@@ -11,9 +17,9 @@ namespace SeleniumTestReport.Helper
             _configuration = configuration;
         }
 
-        public string GetConnectionString()
+        public string GetConnectionString(string Key)
         {
-            return _configuration.GetConnectionString("AppDBContextConnection");
+            return _configuration.GetConnectionString(Key);
         }
 
         public string GetDataTestSuits()
@@ -21,7 +27,7 @@ namespace SeleniumTestReport.Helper
             string TestSuites = "";
             try
             {
-                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
                 {
                     connection.Open();
                     using (SqlCommand command = new SqlCommand("stp_GetTestSuits", connection))
@@ -51,7 +57,7 @@ namespace SeleniumTestReport.Helper
             string DashBoardDetailsJson = string.Empty;
             try
             {
-                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
                 {
                     connection.Open();
                     using (SqlCommand command = new SqlCommand("stp_GetDashBoardDetails", connection))
@@ -82,7 +88,7 @@ namespace SeleniumTestReport.Helper
             string RunDetailsJson = string.Empty;
             try
             {
-                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
                 {
                     connection.Open();
                     using (SqlCommand command = new SqlCommand("stp_GetRunDetails", connection))
@@ -113,7 +119,7 @@ namespace SeleniumTestReport.Helper
             string TestCaseDetailsJson = string.Empty;
             try
             {
-                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
                 {
                     connection.Open();
                     using (SqlCommand command = new SqlCommand("stp_GetTestCaseDetails", connection))
@@ -140,14 +146,12 @@ namespace SeleniumTestReport.Helper
             return TestCaseDetailsJson;
         }
 
-
-
         internal string GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
         {
             string testCaseStepDetailsJson = string.Empty;
             try
             {
-                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
                 {
                     connection.Open();
                     using (SqlCommand command = new SqlCommand("stp_GetTestCaseStepsDetails", connection))
@@ -173,6 +177,92 @@ namespace SeleniumTestReport.Helper
                 throw ex;
             }
             return testCaseStepDetailsJson;
+        }
+
+        internal string GetTestCases()
+        {
+            string TestCasesListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestCases", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                TestCasesListJson = reader["TestCasesListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return TestCasesListJson;
+        }
+
+        static void ExtractTestCasesFromProject()
+        {
+            string projectPath = @"D:\Mechlin Tech\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation.sln";
+            // Load the project
+            var workspace = Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.Create();
+            var project = workspace.OpenProjectAsync(projectPath).Result;
+
+            // Traverse the documents in the project
+            foreach (var document in project.Documents)
+            {
+                // Parse the document
+                var syntaxRoot = document.GetSyntaxRootAsync().Result;
+
+                // Traverse the syntax tree
+                ExtractTestCasesFromSyntaxTree(syntaxRoot);
+            }
+        }
+
+        static void ExtractTestCasesFromSyntaxTree(SyntaxNode syntaxNode)
+        {
+            // Use a syntax walker to traverse the syntax tree
+            var walker = new TestCaseSyntaxWalker();
+            walker.Visit(syntaxNode);
+
+            // Retrieve the test cases found by the walker
+            var testCases = walker.TestCases;
+
+            // Process the extracted test cases (e.g., print them)
+            foreach (var testCase in testCases)
+            {
+                Console.WriteLine($"Test Case: {testCase}");
+            }
+        }
+
+        internal class TestCaseSyntaxWalker : CSharpSyntaxWalker
+        {
+            public List<string> TestCases { get; } = new List<string>();
+
+            public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                // Check if the method has a TestMethod attribute
+                var hasTestMethodAttribute = node.AttributeLists
+                    .SelectMany(attrList => attrList.Attributes)
+                    .Any(attribute =>
+                        attribute.Name.ToString() == "TestMethod" || attribute.Name.ToString() == "Test");
+
+                if (hasTestMethodAttribute)
+                {
+                    // Add the method name to the list of test cases
+                    TestCases.Add(node.Identifier.Text);
+                }
+
+                base.VisitMethodDeclaration(node);
+            }
         }
     }
 }

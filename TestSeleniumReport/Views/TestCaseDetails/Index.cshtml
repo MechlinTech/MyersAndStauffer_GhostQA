@@ -1,0 +1,27 @@
+﻿@using Newtonsoft.Json.Linq
+@{
+    if (Model != null)
+    {
+        JArray testCases = JArray.Parse(Model);
+        List<TestSeleniumReport.DTO_s.Dto_TestCase> testCaseList = testCases.ToString() != string.Empty ? Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_TestCase>>(testCases.ToString()) : new List<TestSeleniumReport.DTO_s.Dto_TestCase>();
+
+        <div class="row">
+            <div class="col-md-3 d-flex">
+                <label class="card-header col-md-5 m-1" for="customTestSuiteName">Test Suite Name:</label>
+                <label class="btn-gray col-md-5 m-1">Mississippi</label>
+            </div>
+            <div class="col-md-5 d-flex">
+                <label class="card-header col-md-5 m-1" for="testCaseDropdown">Select Test Case:</label>
+                <select class="btn-gray form-select" id="testCaseDropdown">
+                    <option value="">Select Test Case</option>
+                    @foreach (var testCase in testCaseList)
+                    {
+                        <option value="@testCase.TestCaseName">@testCase.TestCaseName</option>
+                    }
+                </select>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+    }
+}
