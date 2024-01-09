@@ -11,6 +11,7 @@
 		<None Remove="SqlScript\stp_GetRunDetails.Sql" />
 		<None Remove="SqlScript\stp_GetRunId.Sql" />
 		<None Remove="SqlScript\stp_GetTestCaseDetails.Sql" />
+		<None Remove="SqlScript\stp_GetTestCases.sql" />
 		<None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
 		<None Remove="SqlScript\stp_GetTestSuites.Sql" />
 		<None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
@@ -26,6 +27,10 @@
 		<Content Include="SqlScript\stp_GetTestSuites.Sql" />
 		<Content Include="SqlScript\stp_UpdateTestStepData.Sql" />
 		<Content Include="SqlScript\stp_UpsertTableData.Sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="SqlScript\stp_GetTestCases.sql" />
 	</ItemGroup>
 
 	<ItemGroup>
