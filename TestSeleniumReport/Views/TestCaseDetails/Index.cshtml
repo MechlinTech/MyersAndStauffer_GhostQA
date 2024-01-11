@@ -1,27 +1,78 @@
 ﻿@using Newtonsoft.Json.Linq
-@{
-    if (Model != null)
-    {
-        JArray testCases = JArray.Parse(Model);
-        List<TestSeleniumReport.DTO_s.Dto_TestCase> testCaseList = testCases.ToString() != string.Empty ? Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_TestCase>>(testCases.ToString()) : new List<TestSeleniumReport.DTO_s.Dto_TestCase>();
 
-        <div class="row">
-            <div class="col-md-3 d-flex">
-                <label class="card-header col-md-5 m-1" for="customTestSuiteName">Test Suite Name:</label>
-                <label class="btn-gray col-md-5 m-1">Mississippi</label>
-            </div>
-            <div class="col-md-5 d-flex">
-                <label class="card-header col-md-5 m-1" for="testCaseDropdown">Select Test Case:</label>
-                <select class="btn-gray form-select" id="testCaseDropdown">
-                    <option value="">Select Test Case</option>
-                    @foreach (var testCase in testCaseList)
-                    {
-                        <option value="@testCase.TestCaseName">@testCase.TestCaseName</option>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize the Bootstrap Multiselect
+            $('#testCaseDropdown').multiselect();
+
+            // Handle button click
+            $("#submitBtn").click(function () {
+                // Get selected values from multiselect dropdown
+                var selectedValues = $('#testCaseDropdown').val();
+
+                // Create a JSON object to send to the controller
+                var data = { selectedValues: selectedValues };
+
+                // Send data to the controller using AJAX
+                $.ajax({
+                    url: "/TestCaseDetails/RunTestCase",
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        // Handle the success response from the controller
+                        console.log(result);
+                    },
+                    error: function (error) {
+                        // Handle the error response from the controller
+                        console.log(error);
                     }
-                </select>
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    @{
+        if (Model != null)
+        {
+            JArray testCases = JArray.Parse(Model);
+            List<TestSeleniumReport.DTO_s.Dto_TestCase> testCaseList = testCases.ToString() != string.Empty ? Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_TestCase>>(testCases.ToString()) : new List<TestSeleniumReport.DTO_s.Dto_TestCase>();
+
+            <div class="row">
+                <div class="col-md-3 d-flex">
+                    <label class="card-header col-md-5 m-1" for="customTestSuiteName">Test Suite Name:</label>
+                    <label class="btn-gray col-md-5 m-1">Mississippi</label>
+                </div>
+                <div class="col-md-5 d-flex">
+                    <label class="card-header col-md-5 m-1" for="testCaseDropdown">Select Test Case:</label>
+
+                    <!-- Convert the dropdown to multiselect -->
+                    <select class="btn-gray form-select" multiple="multiple" id="testCaseDropdown">
+                        @foreach (var testCase in testCaseList)
+                        {
+                            <option value="@testCase.TestCaseName">@testCase.TestCaseName</option>
+                        }
+                    </select>
+
+                    <!-- Add a button to trigger the action -->
+                    <button type="button" class="btn btn-primary" id="submitBtn">
+                        <em class="fa fa-play"></em>
+                    </button>
+                </div>
+                <div class="col">
+                </div>
             </div>
-            <div class="col">
-            </div>
-        </div>
+        }
     }
-}
+</body>
+</html>
+
+
+

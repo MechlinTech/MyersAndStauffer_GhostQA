@@ -107,7 +107,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 test.Pass("Test Passed");
             }
 
-            if (TestContext.CurrentContext.Result.Outcome != ResultState.Success)
+            if (TestContext.CurrentContext.Result.Outcome == ResultState.Failure)
             {
                 ScreenShot(message.ToString(), "Failure", true);
                 AttatchLogToTest();

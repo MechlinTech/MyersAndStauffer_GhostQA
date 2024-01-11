@@ -74,4 +74,29 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             test.Log(Status.Info, "Click on LoSubmit button Test");
         }
     }
+
+    public class TestExecutor
+    {
+        public static void RunVerifyLoginOK()
+        {
+            var setup = new SetupClass(); // Instantiate SetupClass using the new keyword to perform Initialize Dll
+            setup.Initialize();
+            var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
+            bsTest.SetUp();
+            var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
+            loginTest.VerifyLoginOK();
+            bsTest.TearDown();
+        }
+
+        public static void RunVerifyLoginOK2()
+        {
+            var setup = new SetupClass(); // Instantiate SetupClass using the new keyword to perform Initialize Dll
+            setup.Initialize();
+            var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
+            bsTest.SetUp();
+            var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
+            loginTest.VerifyLoginOK2();
+            bsTest.TearDown();
+        }
+    }
 }

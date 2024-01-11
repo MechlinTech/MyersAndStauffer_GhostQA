@@ -14,7 +14,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         string reportPath;
 
         [OneTimeSetUp]
-        protected void Initialize()
+        public void Initialize()
         {
             string workingDirectory = Environment.CurrentDirectory;
             reportPath = workingDirectory + "//index.html";
@@ -32,7 +32,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         }
 
         [OneTimeTearDown]
-
         protected void TearDown()
         {
             extent.Flush();
