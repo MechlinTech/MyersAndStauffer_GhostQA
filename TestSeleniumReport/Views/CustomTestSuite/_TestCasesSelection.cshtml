@@ -1,32 +1,40 @@
 ﻿@model List<TestSeleniumReport.DTO_s.Dto_TestCaseSelection>
 
 <div class="row">
-    <div class="card-header d-flex">
-        <div class="col-md-10">Test Case</div>
-        <div class="col">Select</div>
-    </div>
-    <div class="">
-        @{
-            if (Model != null)
+
+    @using (Html.BeginForm("ExecuteSelectedTestCases", "CustomTestSuite", FormMethod.Post))
+    {
+        <div class="card-header d-flex">
+            <div class="col-md-10">Test Case</div>
+            <div class="col">Select</div>
+        </div>
+        <div>
+            @for (int i = 0; i < Model.Count; i++)
             {
-                foreach (var item in Model)
-                {
-                    <div class="btn-gray d-flex">
-                        <div class="col-md-8">
-                            @item.TestCaseName
-                        </div>
-                        <div class="col">
-                            <input type="chechbox" />
-                        </div>
+                <div class="btn-gray d-flex mt-1">
+                    <div class="col-md-8">
+                        @Html.HiddenFor(model => model[i].TestCaseName)
+                        @Html.DisplayFor(model => model[i].TestCaseName)
                     </div>
-                }
-            }
-            else
-            {
-                <div class="row text-center mt-2">
-                    <p>No Data Found</p>
+                    <div class="accordion col float-md-end m-1">
+                        @Html.CheckBoxFor(model => model[i].IsSelected)
+                    </div>
                 </div>
             }
-        }
-    </div>
+        </div>
+        <br />
+        <input id="executeButton" class="btn button float-end" type="submit" value="Execute Selected Test Cases" style="display:none;" />
+    }
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('input[type="checkbox"]').change(function () {
+            if ($('input[type="checkbox"]:checked').length > 0) {
+                $('#executeButton').show();
+            } else {
+                $('#executeButton').hide();
+            }
+        });
+    });
+</script>

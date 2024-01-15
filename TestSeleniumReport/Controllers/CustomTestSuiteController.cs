@@ -78,5 +78,14 @@ namespace TestSeleniumReport.Controllers
                 throw;
             }
         }
+
+        [HttpPost]
+        public ActionResult ExecuteSelectedTestCases(List<Dto_TestCaseSelection> selectedTestCases)
+        {
+            // Perform actions with selected test cases (e.g., execute them)
+
+            // For demonstration, let's just redirect to the Index action
+            return RedirectToAction("Index");
+        }
     }
 }

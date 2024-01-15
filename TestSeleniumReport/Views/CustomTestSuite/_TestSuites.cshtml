@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="card-header">
-        <p>Test Suites</p>
+        Test Suite
     </div>
     <div class="">
         @{
@@ -10,7 +10,7 @@
             {
                 foreach (var item in Model)
                 {
-                    <div class="btn-gray d-flex" onclick="GetTestCases()">
+                    <div class="btn-gray d-flex mt-2 testSuite_Clickable" id="testSuite_@item.TestSuiteName" onclick="GetTestCases('@item.TestSuiteName')">
                         <div class="col-md-8">
                             @item.TestSuiteName
                         </div>

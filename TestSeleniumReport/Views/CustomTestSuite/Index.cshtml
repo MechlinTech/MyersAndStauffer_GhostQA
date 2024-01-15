@@ -120,11 +120,15 @@
         }
 
         // Show Test Cases while select a custom Test Suite
-        function GetTestCases() {
+        function GetTestCases(testSuiteName) {
+            debugger;
             $.ajax({
                 url: '@Url.Action("GetTestCases", "CustomTestSuite")',
                 success: function (result) {
                     $('#testCaseContainer').html(result);
+                    $(".testSuite_Clickable").removeClass("item-selected");
+                    var selector = '#testSuite_' + testSuiteName;
+                    $(selector).addClass("item-selected");
                 }
             });
         }
