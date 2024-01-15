@@ -1,6 +1,4 @@
-﻿using GitHub;
-using Microsoft.AspNetCore.Mvc;
-using NUnit.Framework.Internal;
+﻿using Microsoft.AspNetCore.Mvc;
 using SeleniumTestReport.Helper;
 using TestSeleniumReport.DTO_s;
 using TestSeleniumReport.Models;
