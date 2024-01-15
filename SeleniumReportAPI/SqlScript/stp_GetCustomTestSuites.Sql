@@ -1,5 +1,4 @@
 CREATE OR ALTER PROCEDURE stp_GetCustomTestSuites
-@TestSuiteName			VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetCustomTestSuites
