@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
 
 namespace SeleniumReportAPI.Controllers
@@ -70,6 +71,48 @@ namespace SeleniumReportAPI.Controllers
         public ActionResult GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
         {
             return Ok(_helper.GetTestCaseStepsDetails(testSuitName, runId, testCaseName));
+        }
+
+        /// <summary>
+        /// Add / Update Custom Test Suites
+        /// </summary>
+        /// <param name="testSuitName"></param>
+        /// <returns></returns>
+        [HttpGet("AddUpdateTestSuites")]
+        public ActionResult AddUpdateTestSuites(string testSuitName, int? testSuiteId = 0)
+        {
+            return Ok(_helper.AddUpdateTestSuitesJson(testSuitName, testSuiteId));
+        }
+
+        /// <summary>
+        /// Get Test Suites in Json Format
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTestSuites")]
+        public ActionResult GetTestSuites()
+        {
+            return Ok(_helper.GetTestSuitesJson());
+        }
+
+        /// <summary>
+        /// Get Test Cases in Json Format
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTestCases")]
+        public ActionResult GetTestCases()
+        {
+            return Ok(_helper.GetTestCasesJson());
+        }
+
+        /// <summary>
+        /// Delete Test Suite By Test Suite Id
+        /// </summary>
+        /// <param name="TestSuiteId"></param>
+        /// <returns></returns>
+        [HttpGet("DeleteTestSuites")]
+        public ActionResult DeleteTestSuites(int TestSuiteId)
+        {
+            return Ok(_helper.DeleteTestSuites(TestSuiteId));
         }
     }
 }

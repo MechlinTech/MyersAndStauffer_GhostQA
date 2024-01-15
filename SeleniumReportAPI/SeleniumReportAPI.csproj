@@ -8,10 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SqlScript\stp_AddUpdateTestSuites.Sql" />
+    <None Remove="SqlScript\stp_DeleteTestSuites.Sql" />
+    <None Remove="SqlScript\stp_GetCustomTestSuites.Sql" />
     <None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
     <None Remove="SqlScript\stp_GetRunDetails.Sql" />
     <None Remove="SqlScript\stp_GetRunId.Sql" />
     <None Remove="SqlScript\stp_GetTestCaseDetails.Sql" />
+    <None Remove="SqlScript\stp_GetTestCases.sql" />
     <None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
     <None Remove="SqlScript\stp_GetTestSuites.Sql" />
     <None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
@@ -20,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
+    <Content Include="SqlScript\stp_DeleteTestSuites.Sql" />
+    <Content Include="SqlScript\stp_GetCustomTestSuites.Sql" />
     <Content Include="SqlScript\stp_ValidateUser.Sql" />
     <Content Include="SqlScript\stp_GetDashBoardDetails.Sql" />
     <Content Include="SqlScript\stp_GetRunDetails.Sql" />
@@ -29,6 +36,10 @@
     <Content Include="SqlScript\stp_GetTestSuites.Sql" />
     <Content Include="SqlScript\stp_UpdateTestStepData.Sql" />
     <Content Include="SqlScript\stp_UpsertTableData.Sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SqlScript\stp_GetTestCases.sql" />
   </ItemGroup>
 
   <ItemGroup>

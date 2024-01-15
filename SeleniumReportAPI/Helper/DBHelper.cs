@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,7 +16,7 @@ namespace SeleniumReportAPI.Helper
             _configuration = configuration;
         }
 
-        public string GetConnectionString()
+        internal string GetConnectionString()
         {
             return _configuration.GetConnectionString("AppDBContextConnection");
         }
@@ -52,7 +53,7 @@ namespace SeleniumReportAPI.Helper
             return isValidUser;
         }
 
-        public string GetDataTestSuits()
+        internal string GetDataTestSuits()
         {
             string TestSuites = "";
             try
@@ -113,7 +114,7 @@ namespace SeleniumReportAPI.Helper
             return DashBoardDetailsJson;
         }
 
-        public string GetRunDetails(string TestSuitName)
+        internal string GetRunDetails(string TestSuitName)
         {
             string RunDetailsJson = string.Empty;
             try
@@ -144,7 +145,7 @@ namespace SeleniumReportAPI.Helper
             return RunDetailsJson;
         }
 
-        public string GetTestCaseDetails(string TestSuitName, string RunID)
+        internal string GetTestCaseDetails(string TestSuitName, string RunID)
         {
             string TestCaseDetailsJson = string.Empty;
             try
@@ -223,6 +224,127 @@ namespace SeleniumReportAPI.Helper
             return token;
         }
 
+        internal string AddUpdateTestSuitesJson(string testSuiteName, int? testSuiteId = 0)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateTestSuites", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", testSuiteName);
+                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
 
+        internal string GetTestSuitesJson()
+        {
+            string testSuiteListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetCustomTestSuites", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                testSuiteListJson = reader["testSuiteListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return testSuiteListJson;
+        }
+
+        internal string DeleteTestSuites(int testSuiteId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteTestSuites", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal string GetTestCasesJson()
+        {
+            string TestCasesListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestCases", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                TestCasesListJson = reader["TestCasesListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return TestCasesListJson;
+        }
     }
 }

@@ -1,0 +1,58 @@
+﻿@model List<TestSuites>
+
+<div class="row">
+    <div class="card-header">
+        <p>Test Suites</p>
+    </div>
+    <div class="">
+        @{
+            if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="btn-gray d-flex" onclick="GetTestCases()">
+                        <div class="col-md-8">
+                            @item.TestSuiteName
+                        </div>
+                        <div class="col d-flex">
+                            <button class="bg-white border-0 float-end" onclick="openEditModal('@item.TestSuiteId', '@item.TestSuiteName')">
+                                <em class="fa fa-edit text-success"></em>
+                            </button>
+                            <button class="bg-white border-0 float-end" onclick="deleteTestSuites('@item.TestSuiteId')">
+                                <em class="fa fa-trash-alt text-danger"></em>
+                            </button>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row text-center mt-2">
+                    <p>No Data Found</p>
+                </div>
+            }
+        }
+    </div>
+    <div class="modal" id="editTestSuiteModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Test Suite</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form id="editTestSuiteForm">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="editTestSuiteName">Test Suite Name:</label>
+                            <input type="text" class="form-control" id="editTestSuiteName" name="editTestSuiteName" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" onclick="saveEditTestSuite()">Save</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

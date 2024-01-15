@@ -209,60 +209,153 @@ namespace SeleniumTestReport.Helper
             return TestCasesListJson;
         }
 
-        static void ExtractTestCasesFromProject()
+        internal string AddUpdateTestSuitesJson(string testSuiteName, int? testSuiteId = 0)
         {
-            string projectPath = @"D:\Mechlin Tech\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation.sln";
-            // Load the project
-            var workspace = Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.Create();
-            var project = workspace.OpenProjectAsync(projectPath).Result;
-
-            // Traverse the documents in the project
-            foreach (var document in project.Documents)
+            string result = string.Empty;
+            try
             {
-                // Parse the document
-                var syntaxRoot = document.GetSyntaxRootAsync().Result;
-
-                // Traverse the syntax tree
-                ExtractTestCasesFromSyntaxTree(syntaxRoot);
-            }
-        }
-
-        static void ExtractTestCasesFromSyntaxTree(SyntaxNode syntaxNode)
-        {
-            // Use a syntax walker to traverse the syntax tree
-            var walker = new TestCaseSyntaxWalker();
-            walker.Visit(syntaxNode);
-
-            // Retrieve the test cases found by the walker
-            var testCases = walker.TestCases;
-
-            // Process the extracted test cases (e.g., print them)
-            foreach (var testCase in testCases)
-            {
-                Console.WriteLine($"Test Case: {testCase}");
-            }
-        }
-
-        internal class TestCaseSyntaxWalker : CSharpSyntaxWalker
-        {
-            public List<string> TestCases { get; } = new List<string>();
-
-            public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
-            {
-                // Check if the method has a TestMethod attribute
-                var hasTestMethodAttribute = node.AttributeLists
-                    .SelectMany(attrList => attrList.Attributes)
-                    .Any(attribute =>
-                        attribute.Name.ToString() == "TestMethod" || attribute.Name.ToString() == "Test");
-
-                if (hasTestMethodAttribute)
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
                 {
-                    // Add the method name to the list of test cases
-                    TestCases.Add(node.Identifier.Text);
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateTestSuites", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", testSuiteName);
+                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
                 }
-
-                base.VisitMethodDeclaration(node);
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
         }
+
+        internal string GetTestSuitesJson()
+        {
+            string testSuiteListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetCustomTestSuites", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                testSuiteListJson = reader["testSuiteListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return testSuiteListJson;
+        }
+
+        internal string DeleteTestSuites(int testSuiteId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteTestSuites", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        //static void ExtractTestCasesFromProject()
+        //{
+        //    string projectPath = @"D:\Mechlin Tech\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation.sln";
+        //    // Load the project
+        //    var workspace = Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.Create();
+        //    var project = workspace.OpenProjectAsync(projectPath).Result;
+
+        //    // Traverse the documents in the project
+        //    foreach (var document in project.Documents)
+        //    {
+        //        // Parse the document
+        //        var syntaxRoot = document.GetSyntaxRootAsync().Result;
+
+        //        // Traverse the syntax tree
+        //        ExtractTestCasesFromSyntaxTree(syntaxRoot);
+        //    }
+        //}
+
+        //static void ExtractTestCasesFromSyntaxTree(SyntaxNode syntaxNode)
+        //{
+        //    // Use a syntax walker to traverse the syntax tree
+        //    var walker = new TestCaseSyntaxWalker();
+        //    walker.Visit(syntaxNode);
+
+        //    // Retrieve the test cases found by the walker
+        //    var testCases = walker.TestCases;
+
+        //    // Process the extracted test cases (e.g., print them)
+        //    foreach (var testCase in testCases)
+        //    {
+        //        Console.WriteLine($"Test Case: {testCase}");
+        //    }
+        //}
+
+        //internal class TestCaseSyntaxWalker : CSharpSyntaxWalker
+        //{
+        //    public List<string> TestCases { get; } = new List<string>();
+
+        //    public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        //    {
+        //        // Check if the method has a TestMethod attribute
+        //        var hasTestMethodAttribute = node.AttributeLists
+        //            .SelectMany(attrList => attrList.Attributes)
+        //            .Any(attribute =>
+        //                attribute.Name.ToString() == "TestMethod" || attribute.Name.ToString() == "Test");
+
+        //        if (hasTestMethodAttribute)
+        //        {
+        //            // Add the method name to the list of test cases
+        //            TestCases.Add(node.Identifier.Text);
+        //        }
+
+        //        base.VisitMethodDeclaration(node);
+        //    }
+        //}
     }
 }

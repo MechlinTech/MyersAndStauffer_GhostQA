@@ -8,6 +8,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="SqlScript\stp_AddUpdateTestSuites.Sql" />
+		<None Remove="SqlScript\stp_DeleteTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetCustomTestSuites.Sql" />
 		<None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
 		<None Remove="SqlScript\stp_GetRunDetails.Sql" />
 		<None Remove="SqlScript\stp_GetRunId.Sql" />
@@ -20,6 +23,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="SqlScript\stp_DeleteTestSuites.Sql" />
+		<Content Include="SqlScript\stp_GetCustomTestSuites.Sql" />
+		<Content Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
 		<Content Include="SqlScript\stp_GetDashBoardDetails.Sql" />
 		<Content Include="SqlScript\stp_GetRunDetails.Sql" />
 		<Content Include="SqlScript\stp_GetRunId.Sql" />
@@ -67,53 +73,20 @@
 
 	<ItemGroup>
 		<PackageReference Include="FontAwesome" Version="4.7.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.23" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.23" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.23" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.8.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.8.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.23">
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.25" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.25">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-
-		<PackageReference Include="DotNetSeleniumExtras.PageObjects" Version="3.11.0" />
-		<PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
-		<PackageReference Include="ExtentReports" Version="4.1.0" />
-		<PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
-		<PackageReference Include="Mailosaur" Version="8.6.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-		<PackageReference Include="Nancy" Version="2.0.0" />
-		<PackageReference Include="NLogger" Version="1.1.0" />
-		<PackageReference Include="NUnit" Version="3.13.3" />
-		<PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
-		<PackageReference Include="NunitXml.TestLogger" Version="3.0.131" />
-		<PackageReference Include="Selenium.Support" Version="4.8.2" />
-		<PackageReference Include="Selenium.WebDriver" Version="4.8.2" />
-		<PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="119.0.6045.10500" />
-
-		<PackageReference Include="BouncyCastle.NetCore" Version="1.9.0" />
-		<PackageReference Include="EntityFramework" Version="6.4.4" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="NLog" Version="5.1.2" />
-		<PackageReference Include="scientist" Version="2.0.0" />
-		<PackageReference Include="ScreenRecorderLib" Version="5.4.0" />
-		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-		<PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
-		<PackageReference Include="System.ServiceModel.Primitives" Version="4.10.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\MyersAndStaufferSeleniumTests.csproj" />
+	  <ProjectReference Include="..\SeleniumReportAPI\SeleniumReportAPI.csproj" />
 	</ItemGroup>
 
 </Project>

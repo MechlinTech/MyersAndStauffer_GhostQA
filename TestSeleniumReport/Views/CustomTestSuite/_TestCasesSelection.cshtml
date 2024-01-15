@@ -1,0 +1,32 @@
+﻿@model List<TestSeleniumReport.DTO_s.Dto_TestCaseSelection>
+
+<div class="row">
+    <div class="card-header d-flex">
+        <div class="col-md-10">Test Case</div>
+        <div class="col">Select</div>
+    </div>
+    <div class="">
+        @{
+            if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="btn-gray d-flex">
+                        <div class="col-md-8">
+                            @item.TestCaseName
+                        </div>
+                        <div class="col">
+                            <input type="chechbox" />
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row text-center mt-2">
+                    <p>No Data Found</p>
+                </div>
+            }
+        }
+    </div>
+</div>
