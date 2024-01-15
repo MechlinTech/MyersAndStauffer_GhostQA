@@ -1181,3 +1181,9 @@ C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\
 C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.dll
 C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\refint\MyersAndStaufferSeleniumTests.dll
 C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.pdb
+C:\Users\Nitin\Source\Repos\MyersAndStauffer_GhostQA1\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.csproj.AssemblyReference.cache
+C:\Users\Nitin\Source\Repos\MyersAndStauffer_GhostQA1\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nitin\Source\Repos\MyersAndStauffer_GhostQA1\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.AssemblyInfoInputs.cache
+C:\Users\Nitin\Source\Repos\MyersAndStauffer_GhostQA1\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.AssemblyInfo.cs
+C:\Users\Nitin\Source\Repos\MyersAndStauffer_GhostQA1\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.csproj.CoreCompileInputs.cache
+C:\Users\Nitin\Source\Repos\MyersAndStauffer_GhostQA1\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Debug\net6.0\MyersAndStaufferSeleniumTests.sourcelink.json
