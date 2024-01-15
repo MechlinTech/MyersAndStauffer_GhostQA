@@ -78,9 +78,10 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <param name="testSuitName"></param>
         /// <returns></returns>
-        [HttpGet("AddUpdateTestSuites")]
+        [HttpPost("AddUpdateTestSuites")]
         public ActionResult AddUpdateTestSuites(string testSuitName, int? testSuiteId = 0)
         {
+            testSuiteId = testSuiteId ?? 0;
             return Ok(_helper.AddUpdateTestSuitesJson(testSuitName, testSuiteId));
         }
 
@@ -109,7 +110,7 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <param name="TestSuiteId"></param>
         /// <returns></returns>
-        [HttpGet("DeleteTestSuites")]
+        [HttpPost("DeleteTestSuites")]
         public ActionResult DeleteTestSuites(int TestSuiteId)
         {
             return Ok(_helper.DeleteTestSuites(TestSuiteId));
