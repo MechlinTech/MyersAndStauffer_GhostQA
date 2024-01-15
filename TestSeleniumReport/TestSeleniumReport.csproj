@@ -86,7 +86,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\MyersAndStaufferSeleniumTests.csproj" />
-	  <ProjectReference Include="..\SeleniumReportAPI\SeleniumReportAPI.csproj" />
 	</ItemGroup>
 
 </Project>
