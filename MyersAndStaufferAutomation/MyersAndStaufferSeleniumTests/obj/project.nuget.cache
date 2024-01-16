@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "P4PNpGKs42y/VDXhH8OoV4x1ctW/aCWHAKKWJ1+EJCH0Gknh+ikxpncMQX9oEmHe56R3WOQaG7i9Ty+lmkxrlg==",
+  "dgSpecHash": "EWKR8jLIqSyQbqQh7/zVeL2v80eZkhVFtTR6K0BiFFji6yRBi3WpktlsTehKj6NJwcsso9tte/Upd6J7ulrNZQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
+  "projectFilePath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nitin\\.nuget\\packages\\bouncycastle.netcore\\1.9.0\\bouncycastle.netcore.1.9.0.nupkg.sha512",
     "C:\\Users\\Nitin\\.nuget\\packages\\dnsclient\\1.2.0\\dnsclient.1.2.0.nupkg.sha512",

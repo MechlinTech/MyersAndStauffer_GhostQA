@@ -10,7 +10,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
     public class LoginTest : BaseTest
     {
         [Test, Order(0)]
-        [TestCase(null, TestName = "Mississippi")]
+        //[TestCase(null, TestName = "Clocksession")]
         public void VerifyLoginOK()
         {
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
@@ -42,7 +42,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             test.Log(Status.Info, "Click on LoSubmit button Test");
         }
 
-        [TestCase(null, TestName = "Mississippi")]
+        //[TestCase(null, TestName = "Mississippi")]
         [Test, Order(1)]
         public void VerifyLoginOK2()
         {
@@ -75,9 +75,18 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             test.Log(Status.Info, "Click on LoSubmit button Test");
         }
     }
-
+    [TestFixture]
+    [Property("Priority", 0)]
     public class TestExecutor
     {
+        [Test, Order(1)]
+        public static void RunLoginTest() 
+        {
+          var loginTest = new LoginTest();
+            loginTest.VerifyLoginOK();
+        }
+
+        [Test, Order(1)]
         public static void RunVerifyLoginOK()
         {
             var setup = new SetupClass(); // Instantiate SetupClass using the new keyword to perform Initialize Dll
