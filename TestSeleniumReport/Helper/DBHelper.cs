@@ -6,6 +6,8 @@ using System.Data.SqlClient;
 using System;
 using System.Linq;
 using System.Text;
+using System.Collections;
+using TestSeleniumReport.Models;
 
 namespace SeleniumTestReport.Helper
 {
@@ -300,6 +302,66 @@ namespace SeleniumTestReport.Helper
                 throw ex;
             }
             return result;
+        }
+
+        internal string GetApplications()
+        {
+            string ApplicationListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetApplications", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                ApplicationListJson = reader["ApplicationListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ApplicationListJson;
+        }
+
+        internal string GetEnvironments()
+        {
+            string EnvironmentListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetEnvironment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                EnvironmentListJson = reader["EnvironmentListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return EnvironmentListJson;
         }
 
         //static void ExtractTestCasesFromProject()

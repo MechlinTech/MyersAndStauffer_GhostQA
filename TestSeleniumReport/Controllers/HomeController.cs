@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SeleniumTestReport.Helper;
+using TestSeleniumReport.DTO_s;
 
 namespace TestSeleniumReport.Controllers
 {
@@ -72,6 +74,27 @@ namespace TestSeleniumReport.Controllers
         {
             string _TestCaseStepsDetails = _helper.GetTestCaseStepsDetails(testSuitName, runId, testCaseName);
             return PartialView("_TestCaseStepsDetails", _TestCaseStepsDetails);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AddTestSuite()
+        {
+            var ApplicationListJson = _helper.GetApplications();
+            List<Models.Applications> _applicationList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Applications>>(ApplicationListJson);
+            var EnvironmentListJson = _helper.GetEnvironments();
+            List<Models.Environments> _environmentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Environments>>(EnvironmentListJson);
+            var testCases = _helper.GetTestCases();
+            List<Dto_TestCase> _testCaseList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dto_TestCase>>(EnvironmentListJson);
+
+            // Prepare data for dropdowns
+            ViewBag.Applications = new SelectList(_applicationList, "ApplicationId", "ApplicationName");
+            ViewBag.Environments = new SelectList(_environmentList, "EnvironmentId", "EnvironmentName");
+            ViewBag.TestCases = new MultiSelectList(_testCaseList, "TestCaseName", "TestCaseName");
+
+            return View();
         }
 
     }

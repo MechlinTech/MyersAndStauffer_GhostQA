@@ -1,11 +1,13 @@
-﻿<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" crossorigin="anonymous" />
-<div class="container-fluid">
+﻿<div class="container-fluid">
     <div class="row p-2 test-run-container" id="TestRun">
         <div class="col-md-4 m-2 p-2 shadow-lg">
             <span class="fw-bold mb-2">Test Suite</span>
-            <input id="testsuitessearch" type="text" class="border col-md-12 input-box" onkeyup="filterTestSuites()" placeholder="Search Test Suite..." />
+            <div class="row d-flex">
+                <input id="testsuitessearch" type="text" class="border input-box m-2 p-2 w-75" onkeyup="filterTestSuites()" placeholder="Search Test Suite..." />
+                <button type="button" class="button col m-2 rounded-pill" onclick="addTestSuites()">
+                    <em class="fa fa-plus"></em>
+                </button>
+            </div>
             <hr />
             <div class="testsuites">
                 @{
@@ -135,6 +137,10 @@
             $("#" + id).addClass("item-selected");
         }
     };
+
+    function addTestSuites() {
+        window.location.href = '@Url.Action("AddTestSuite", "Home")';
+    }
 
     function Back() {
         $('#TestRun').show();
