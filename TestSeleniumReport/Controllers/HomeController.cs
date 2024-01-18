@@ -129,7 +129,7 @@ namespace TestSeleniumReport.Controllers
             {
                 //Logic to send Email
             }
-            return View("Index");
+            return RedirectToAction("Index");
         }
 
         /// <summary>
@@ -149,6 +149,29 @@ namespace TestSeleniumReport.Controllers
             {
                 throw;
             }
+        }
+
+        public ActionResult EditTestSuite(string testSuiteName)
+        {
+            if(string.IsNullOrEmpty(testSuiteName))
+            {
+                return View("Index");
+            }
+            TestSuites result = _helper.GetTestSuiteByName(testSuiteName);
+
+            var ApplicationListJson = _helper.GetApplications();
+            List<Models.Applications> _applicationList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Applications>>(ApplicationListJson);
+            var EnvironmentListJson = _helper.GetEnvironments();
+            List<Models.Environments> _environmentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Environments>>(EnvironmentListJson);
+            var _TestCasesListJson = _helper.GetTestCases();
+            List<Dto_TestCase> _testCaseList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dto_TestCase>>(_TestCasesListJson);
+            result.AllTestCases = _testCaseList.Select(value => new SelectListItem { Text = value.TestCaseName, Value = value.TestCaseName, Selected = result.SelectedTestCases.Contains(value.TestCaseName) }).ToList();
+            // Prepare data for dropdowns
+            ViewBag.Applications = new SelectList(_applicationList, "ApplicationId", "ApplicationName");
+            ViewBag.Environments = new SelectList(_environmentList, "EnvironmentId", "EnvironmentName");
+            ViewBag.TestCases = new MultiSelectList(_testCaseList, "TestCaseName", "TestCaseName");
+
+            return View(result);
         }
     }
 }

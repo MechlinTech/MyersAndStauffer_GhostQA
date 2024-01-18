@@ -386,6 +386,43 @@ namespace SeleniumTestReport.Helper
             }
         }
 
+        internal TestSuites GetTestSuiteByName(string TestSuiteName)
+        {
+            TestSuites testSuites = new TestSuites();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestSuitsByName", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", TestSuiteName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                testSuites.TestSuiteId = Convert.ToInt32(reader["TestSuiteId"]);
+                                testSuites.TestSuiteName = reader["TestSuiteName"].ToString();
+                                testSuites.SendEmail = Convert.ToBoolean(reader["SendEmail"]);
+                                testSuites.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
+                                testSuites.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
+                                testSuites.TestSuiteType = reader["TestSuiteType"].ToString();
+                                testSuites.SelectedTestCases = reader["SelectedTestCases"].ToString().Split(", ").Select(x => x).ToList();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return testSuites;
+        }
+
         //static void ExtractTestCasesFromProject()
         //{
         //    string projectPath = @"D:\Mechlin Tech\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation.sln";
