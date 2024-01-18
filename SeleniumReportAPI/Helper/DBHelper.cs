@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -345,6 +346,81 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
             return TestCasesListJson;
+        }
+
+        internal string GetApplications()
+        {
+            string ApplicationListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetApplications", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                ApplicationListJson = reader["ApplicationListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ApplicationListJson;
+        }
+
+        internal string GetEnvironments()
+        {
+            string EnvironmentListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetEnvironment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                EnvironmentListJson = reader["EnvironmentListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return EnvironmentListJson;
+        }
+
+        internal void RunTestCase(string testCaseName)
+        {
+            var testExecutor = new TestExecutor();
+            var method = testExecutor.GetType().GetMethod(string.Concat("Run", testCaseName));
+
+            if (method != null)
+            {
+                method.Invoke(testExecutor, null);
+            }
+            else
+            {
+                Console.WriteLine($"Method '{testCaseName}' not found.");
+            }
         }
     }
 }
