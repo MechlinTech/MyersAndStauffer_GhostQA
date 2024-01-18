@@ -3,13 +3,6 @@
 @{
     Layout = "_Layout";
 }
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.0/dist/js/bootstrap-multiselect.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.0/dist/css/bootstrap-multiselect.min.css">
-
 
 @using (Html.BeginForm("AddTestSuite", "Home", FormMethod.Post, new { @class = "form" }))
 {
@@ -20,15 +13,16 @@
 
     <div class="form-group d-flex">
         <label class="control-label">Application Name</label>
-        @Html.DropDownList("ApplicationId", (SelectList)ViewBag.Applications, "Select Application", new { @class = "form-control" })
+        @Html.DropDownListFor(model => model.ApplicationId, (SelectList)ViewBag.Applications, "Select Application", new { @class = "form-control" })
     </div>
 
     <div class="form-group d-flex">
         <label class="control-label">Send Email</label>
         <div class="form-check form-check-inline">
             @Html.RadioButtonFor(model => model.SendEmail, true, new { @class = "form-check-input" })
-            @Html.Label("SendEmail", "Only me", new { @class = "form-check-label" })
-
+            @Html.Label("SendEmail", "Only for me", new { @class = "form-check-label" })
+        </div>
+        <div class="form-check form-check-inline">
             @Html.RadioButtonFor(model => model.SendEmail, false, new { @class = "form-check-input" })
             @Html.Label("SendEmail", "All Users", new { @class = "form-check-label" })
         </div>
@@ -36,17 +30,17 @@
 
     <div class="form-group d-flex">
         <label class="control-label">Environment Name</label>
-        @Html.DropDownList("EnvironmentId", (SelectList)ViewBag.Environments, "Select Environment", new { @class = "form-control" })
+        @Html.DropDownListFor(model => model.EnvironmentId, (SelectList)ViewBag.Environments, "Select Environment", new { @class = "form-control" })
     </div>
 
     <div class="form-group d-flex">
         <label class="control-label">Select Test Cases</label>
-        @Html.DropDownListFor(model => model.SelectedTestCases, (MultiSelectList)ViewBag.TestCases, new { @class = "form-control multiselect", multiple = "multiple" })
+        @Html.ListBoxFor(model => model.SelectedTestCases, (MultiSelectList)ViewBag.TestCases, new { @class = "form-control multiselect", multiple = "multiple" })
     </div>
 
     <div class="form-group d-flex">
-        <button type="submit" class="btn btn-primary">Save</button>
-        <button type="submit" class="btn btn-primary">Save & Execute</button>
-        <button type="submit" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary" name="action" value="Save">Save</button>
+        <button type="submit" class="btn btn-primary" name="action" value="SaveAndExecute">Save & Execute</button>
+        <button type="button" class="btn btn-secondary">Cancel</button>
     </div>
 }

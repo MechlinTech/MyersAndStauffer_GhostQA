@@ -19,6 +19,7 @@ namespace TestSeleniumReport.Models
         [Required(ErrorMessage = "Environment is required.")]
         public int EnvironmentId { get; set; }
 
-        public string SelectedTestCases { get; set; }
+        [NotMapped]
+        public List<string> SelectedTestCases { get; set; }
     }
 }

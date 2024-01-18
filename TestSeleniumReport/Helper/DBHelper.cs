@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using TestSeleniumReport.Models;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 
 namespace SeleniumTestReport.Helper
 {
@@ -211,7 +212,7 @@ namespace SeleniumTestReport.Helper
             return TestCasesListJson;
         }
 
-        internal string AddUpdateTestSuitesJson(string testSuiteName, int? testSuiteId = 0)
+        internal string AddUpdateTestSuitesJson(TestSuites model)
         {
             string result = string.Empty;
             try
@@ -222,8 +223,13 @@ namespace SeleniumTestReport.Helper
                     using (SqlCommand command = new SqlCommand("stp_AddUpdateTestSuites", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestSuiteName", testSuiteName);
-                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        command.Parameters.AddWithValue("@TestSuiteName", model.TestSuiteName);
+                        command.Parameters.AddWithValue("@TestSuiteType", model.TestSuiteType ?? "");
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@SendEmail", model.SendEmail);
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
+                        command.Parameters.AddWithValue("@TestSuiteId", model.TestSuiteId);
+                        command.Parameters.AddWithValue("@SelectedTestCases", string.Join(", ", model.SelectedTestCases));
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -362,6 +368,22 @@ namespace SeleniumTestReport.Helper
                 throw ex;
             }
             return EnvironmentListJson;
+        }
+
+        internal void RunTestCase(string testCaseName)
+        {
+            var testExecutor = new TestExecutor();
+            var method = testExecutor.GetType().GetMethod(string.Concat("Run", testCaseName));
+
+            if (method != null)
+            {
+                method.Invoke(testExecutor, null);
+            }
+            else
+            {
+                // Handle the case where the method with the provided name is not found
+                Console.WriteLine($"Method '{testCaseName}' not found.");
+            }
         }
 
         //static void ExtractTestCasesFromProject()

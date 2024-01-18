@@ -22,16 +22,18 @@ namespace TestSeleniumReport.Controllers
         [HttpPost]
         public ActionResult AddTestSuites(string TestSuite)
         {
-            string result = _helper.AddUpdateTestSuitesJson(TestSuite);
-            Dto_Response _Response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
-            return RedirectToAction(_Response.message, "Index");
+            //string result = _helper.AddUpdateTestSuitesJson(TestSuite);
+            //Dto_Response _Response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
+            //return RedirectToAction(_Response.message, "Index");
+            return View();
         }
 
         public ActionResult GetTestSuites()
         {
-            string _testSuiteListJson = _helper.GetTestSuitesJson();
-            List<TestSuites> TestSuiteList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSuites>>(_testSuiteListJson);
-            return PartialView("_TestSuites", TestSuiteList);
+            //string _testSuiteListJson = _helper.GetTestSuitesJson();
+            //List<TestSuites> TestSuiteList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSuites>>(_testSuiteListJson);
+            //return PartialView("_TestSuites", TestSuiteList);
+            return View();
         }
 
         [HttpPost]
@@ -39,9 +41,10 @@ namespace TestSeleniumReport.Controllers
         {
             try
             {
-                string result = _helper.AddUpdateTestSuitesJson(TestSuiteName, TestSuiteId);
-                Dto_Response _Response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
-                return RedirectToAction(_Response.message, "Index");
+                //string result = _helper.AddUpdateTestSuitesJson(TestSuiteName, TestSuiteId);
+                //Dto_Response _Response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
+                //return RedirectToAction(_Response.message, "Index");
+                return View();
             }
             catch
             {

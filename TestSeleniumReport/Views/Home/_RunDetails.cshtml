@@ -2,7 +2,7 @@
 <body>
     <div class="accordion">
         @{
-            if (Model != null)
+            if (Model != null && Model != string.Empty)
             {
                 var RunDateGroupsList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_RunDetailsList>>(Model);
                 foreach (var runDate in RunDateGroupsList)
