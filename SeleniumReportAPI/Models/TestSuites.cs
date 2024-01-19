@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SeleniumReportAPI.Models
@@ -21,5 +22,8 @@ namespace SeleniumReportAPI.Models
 
         [NotMapped]
         public List<string> SelectedTestCases { get; set; }
+
+        [NotMapped]
+        public List<SelectListItem> AllTestCases { get; set; }
     }
 }

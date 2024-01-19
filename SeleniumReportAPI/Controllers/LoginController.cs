@@ -60,17 +60,17 @@ namespace SeleniumReportAPI.Controllers
                         }
                         else
                         {
-                            return Ok(new Dto_Response { Status = "false", Message = result });
+                            return Ok(new Dto_Response { status = "false", message = result });
                         }
                     }
                     else
                     {
-                        return Ok(new Dto_Response { Status = "false", Message = "User Name or Password Must not be Blank" });
+                        return Ok(new Dto_Response { status = "false", message = "User Name or Password Must not be Blank" });
                     }
                 }
                 else
                 {
-                    return Ok(new Dto_Response { Status = "false", Message = "User Name or Password is Wrong" });
+                    return Ok(new Dto_Response { status = "false", message = "User Name or Password is Wrong" });
                 }
             }
             catch

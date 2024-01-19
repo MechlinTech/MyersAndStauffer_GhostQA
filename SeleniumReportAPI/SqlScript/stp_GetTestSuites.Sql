@@ -3,7 +3,7 @@ AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestSuits
 CREATED BY		:	Mohammad Mobin
-CREATED DATE	:	26 Dec 2023
+CREATED DATE	:	01 Jan 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
 PROC EXEC		:
@@ -11,8 +11,12 @@ PROC EXEC		:
 **************************************************************************************/
 BEGIN TRY
 	SELECT [TestSuites] = JSON_QUERY((
-		SELECT DISTINCT [TestSuiteName] [TestSuiteName]
+		SELECT [TestSuiteName] FROM
+		(SELECT DISTINCT [TestSuiteName] [TestSuiteName]
 		FROM tbl_TestCase
+		UNION
+		SELECT DISTINCT [TestSuiteName] [TestSuiteName]
+		FROM tbl_TestSuites) tbl
 	FOR JSON PATH)) 
 END TRY
 BEGIN CATCH

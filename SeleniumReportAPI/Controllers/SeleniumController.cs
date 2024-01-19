@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
+using SeleniumReportAPI.Models;
 
 namespace SeleniumReportAPI.Controllers
 {
@@ -74,15 +76,57 @@ namespace SeleniumReportAPI.Controllers
         }
 
         /// <summary>
-        /// Add / Update Custom Test Suites
+        /// Add or Update Test Suites on the basis of Test Suite Id
         /// </summary>
-        /// <param name="testSuitName"></param>
+        /// <param name="TestSuiteObject"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
         [HttpPost("AddUpdateTestSuites")]
-        public ActionResult AddUpdateTestSuites(string testSuitName, int? testSuiteId = 0)
+        public ActionResult AddUpdateTestSuites(TestSuites TestSuiteObject, string action)
         {
-            testSuiteId = testSuiteId ?? 0;
-            return Ok(_helper.AddUpdateTestSuitesJson(testSuitName, testSuiteId));
+            Dto_Response _response = new Dto_Response();
+            if (action == "Save")
+            {
+                string result = _helper.AddUpdateTestSuitesJson(TestSuiteObject);
+                _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
+            }
+            else if (action == "SaveAndExecute")
+            {
+                string result = _helper.AddUpdateTestSuitesJson(TestSuiteObject);
+                _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
+                if (!_response.status.Contains("Fail"))
+                {
+                    foreach (var testCases in TestSuiteObject.SelectedTestCases)
+                    {
+                        _helper.RunTestCase(testCases);
+                    }
+                }
+            }
+            if (!_response.status.Contains("Fail"))
+            {
+                //Logic to send Email
+            }
+            return Ok(_response);
+        }
+
+        /// <summary>
+        /// Get Application Data
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetApplication")]
+        public ActionResult GetApplication()
+        {
+            return Ok(_helper.GetApplications());
+        }
+
+        /// <summary>
+        /// Get Environment Data
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetEnvironments")]
+        public ActionResult GetEnvironments()
+        {
+            return Ok(_helper.GetEnvironments());
         }
 
         /// <summary>
@@ -106,14 +150,45 @@ namespace SeleniumReportAPI.Controllers
         }
 
         /// <summary>
-        /// Delete Test Suite By Test Suite Id
+        /// Delete Test Suite By Test Suite Name
         /// </summary>
         /// <param name="TestSuiteId"></param>
         /// <returns></returns>
         [HttpPost("DeleteTestSuites")]
-        public ActionResult DeleteTestSuites(int TestSuiteId)
+        public ActionResult DeleteTestSuites(string TestSuiteName)
         {
-            return Ok(_helper.DeleteTestSuites(TestSuiteId));
+            return Ok(_helper.DeleteTestSuites(TestSuiteName));
+        }
+
+        /// <summary>
+        /// Get Test Suite Details in Json Format by Name
+        /// </summary>
+        /// <param name="TestSuiteName"></param>
+        /// <returns></returns>
+        [HttpGet("GetTestSuiteByName")]
+        public ActionResult GetTestSuiteByName(string TestSuiteName)
+        {
+            return Ok(_helper.GetTestSuiteByName(TestSuiteName));
+        }
+
+        /// <summary>
+        /// Execute a Test Suite by Test Suite Name
+        /// </summary>
+        /// <param name="TestSuiteName"></param>
+        /// <returns></returns>
+        [HttpOptions("ExecuteTestSuite")]
+        public ActionResult ExecuteTestSuite(string TestSuiteName)
+        {
+            string _testSuiteDetailsJson = _helper.GetTestSuiteByName(TestSuiteName);
+            TestSuites _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuites>(_testSuiteDetailsJson);
+            if (_testSuiteDetails.SelectedTestCases.Count > 0)
+            {
+                foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
+                {
+                    _helper.RunTestCase(testCaseName.ToString());
+                }
+            }
+            return Ok();
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
+using Newtonsoft.Json;
+using SeleniumReportAPI.Models;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -225,38 +227,6 @@ namespace SeleniumReportAPI.Helper
             return token;
         }
 
-        internal string AddUpdateTestSuitesJson(string testSuiteName, int? testSuiteId = 0)
-        {
-            string result = string.Empty;
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_AddUpdateTestSuites", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestSuiteName", testSuiteName);
-                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.HasRows)
-                            {
-                                reader.Read();
-                                result = reader["result"].ToString();
-                            }
-                        }
-                    }
-                    connection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
-
         internal string GetTestSuitesJson()
         {
             string testSuiteListJson = string.Empty;
@@ -287,7 +257,7 @@ namespace SeleniumReportAPI.Helper
             return testSuiteListJson;
         }
 
-        internal string DeleteTestSuites(int testSuiteId)
+        internal string AddUpdateTestSuitesJson(TestSuites model)
         {
             string result = string.Empty;
             try
@@ -295,10 +265,16 @@ namespace SeleniumReportAPI.Helper
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_DeleteTestSuites", connection))
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateTestSuites", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        command.Parameters.AddWithValue("@TestSuiteName", model.TestSuiteName);
+                        command.Parameters.AddWithValue("@TestSuiteType", model.TestSuiteType ?? "");
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@SendEmail", model.SendEmail);
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
+                        command.Parameters.AddWithValue("@TestSuiteId", model.TestSuiteId);
+                        command.Parameters.AddWithValue("@SelectedTestCases", string.Join(", ", model.SelectedTestCases));
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -316,6 +292,74 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
             return result;
+        }
+
+        internal string DeleteTestSuites(string TestSuiteName)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteTestSuites", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", TestSuiteName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal string GetTestSuiteByName(string TestSuiteName)
+        {
+            TestSuites testSuites = new TestSuites();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestSuitsByName", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", TestSuiteName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                testSuites.TestSuiteId = Convert.ToInt32(reader["TestSuiteId"]);
+                                testSuites.TestSuiteName = reader["TestSuiteName"].ToString();
+                                testSuites.SendEmail = Convert.ToBoolean(reader["SendEmail"]);
+                                testSuites.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
+                                testSuites.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
+                                testSuites.TestSuiteType = reader["TestSuiteType"].ToString();
+                                testSuites.SelectedTestCases = reader["SelectedTestCases"].ToString().Split(", ").Select(x => x).ToList();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return JsonConvert.SerializeObject(testSuites);
         }
 
         internal string GetTestCasesJson()

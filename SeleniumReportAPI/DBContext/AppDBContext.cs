@@ -12,7 +12,7 @@ namespace SeleniumReportAPI.DBContext
         }
 
         public DbSet<TestSuites> tbl_TestSuites { get; set; }
-        public DbSet<Applications> tbl_Applications { get; set; }
+        public DbSet<Models.Applications> tbl_Applications { get; set; }
         public DbSet<Models.Environments> tbl_Environments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -151,9 +151,14 @@ namespace TestSeleniumReport.Controllers
             }
         }
 
+        /// <summary>
+        /// Edit a Test Suite by Test Suite Name
+        /// </summary>
+        /// <param name="testSuiteName"></param>
+        /// <returns></returns>
         public ActionResult EditTestSuite(string testSuiteName)
         {
-            if(string.IsNullOrEmpty(testSuiteName))
+            if (string.IsNullOrEmpty(testSuiteName))
             {
                 return View("Index");
             }
@@ -172,6 +177,24 @@ namespace TestSeleniumReport.Controllers
             ViewBag.TestCases = new MultiSelectList(_testCaseList, "TestCaseName", "TestCaseName");
 
             return View(result);
+        }
+
+        /// <summary>
+        /// Execute a Test Suite by Test Suite Name
+        /// </summary>
+        /// <param name="TestSuiteName"></param>
+        /// <returns></returns>
+        public ActionResult ExecuteTestSuite(string TestSuiteName)
+        {
+            TestSuites _testSuiteDetails = _helper.GetTestSuiteByName(TestSuiteName);
+            if (_testSuiteDetails.SelectedTestCases.Count > 0)
+            {
+                foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
+                {
+                    _helper.RunTestCase(testCaseName.ToString());
+                }
+            }
+            return RedirectToAction("Index");
         }
     }
 }

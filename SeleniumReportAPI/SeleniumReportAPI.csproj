@@ -20,30 +20,32 @@
     <None Remove="SqlScript\stp_GetTestCases.sql" />
     <None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
     <None Remove="SqlScript\stp_GetTestSuites.Sql" />
+    <None Remove="SqlScript\stp_GetTestSuitsByName.Sql" />
     <None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
     <None Remove="SqlScript\stp_UpsertTableData.Sql" />
     <None Remove="SqlScript\stp_ValidateUser.Sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
-    <Content Include="SqlScript\stp_DeleteTestSuites.Sql" />
-    <Content Include="SqlScript\stp_GetCustomTestSuites.Sql" />
-    <Content Include="SqlScript\stp_ValidateUser.Sql" />
-    <Content Include="SqlScript\stp_GetDashBoardDetails.Sql" />
-    <Content Include="SqlScript\stp_GetRunDetails.Sql" />
-    <Content Include="SqlScript\stp_GetRunId.Sql" />
-    <Content Include="SqlScript\stp_GetTestCaseDetails.Sql" />
-    <Content Include="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
-    <Content Include="SqlScript\stp_GetTestSuites.Sql" />
-    <Content Include="SqlScript\stp_UpdateTestStepData.Sql" />
-    <Content Include="SqlScript\stp_UpsertTableData.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_DeleteTestSuites.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_GetCustomTestSuites.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_ValidateUser.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_GetDashBoardDetails.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_GetRunDetails.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_GetRunId.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_GetTestCaseDetails.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_GetTestSuites.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_UpdateTestStepData.Sql" />
+    <EmbeddedResource Include="SqlScript\stp_UpsertTableData.Sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="SqlScript\stp_GetApplications.sql" />
     <EmbeddedResource Include="SqlScript\stp_GetEnvironment.sql" />
     <EmbeddedResource Include="SqlScript\stp_GetTestCases.sql" />
+    <EmbeddedResource Include="SqlScript\stp_GetTestSuitsByName.Sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,7 +59,7 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
   <ItemGroup>

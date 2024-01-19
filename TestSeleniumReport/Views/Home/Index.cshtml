@@ -16,17 +16,17 @@
                         var testSuiteList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_TestSuites>>(ViewBag.TestSuites);
                         foreach (var item in testSuiteList)
                         {
-                            <button id="testSuites_@item.TestSuiteName" type="button" class="btn accordion-gray col-md-12 mb-2 testSuite_Clickable text-lg-start" onclick="GetDashboardDetails(this.innerText)">
+                            <button id="testSuites_@item.TestSuiteName" type="button" class="btn accordion-gray col-md-12 mb-2 testSuite_Clickable text-lg-start" onclick="GetDashboardDetails('@item.TestSuiteName')">
                                 @item.TestSuiteName
                                 <span class="float-end">
-                                    <a class="bg-white border-0" asp-controller="Home" asp-action="EditTestSuite" asp-route-testSuiteName="@item.TestSuiteName">
+                                    <a class="btn-gray" asp-controller="Home" asp-action="EditTestSuite" asp-route-testSuiteName="@item.TestSuiteName">
                                         <em class="fas fa-edit mx-2 text-success"></em>
                                     </a>
-                                    <a class="bg-white border-0" onclick="deleteTestSuites('@item.TestSuiteName')">
+                                    <a class="btn-gray" onclick="deleteTestSuites('@item.TestSuiteName')">
                                         <em class="fa fa-trash-alt text-danger"></em>
                                     </a>
-                                    <a class="bg-white border-0" onclick="deleteTestSuites('@item.TestSuiteName')">
-                                        <em class="fas fa-play mx-2 text-dark" title="Play"></em>
+                                    <a class="btn-gray" onclick="executeTestSuites('@item.TestSuiteName')">
+                                        <em class="fas fa-play text-dark"></em>
                                     </a>
                                 </span>
                             </button>
@@ -149,6 +149,16 @@
             content.style.display = "block";
             $("#" + id).addClass("item-selected");
         }
+    };
+
+    function executeTestSuites(testSuitesName) {
+        $.ajax({
+            url: '@Url.Action("ExecuteTestSuite", "Home")',
+            data: { TestSuiteName: testSuitesName },
+            success: function (result) {
+                console(result);
+            }
+        });
     };
 
     function addTestSuites() {
