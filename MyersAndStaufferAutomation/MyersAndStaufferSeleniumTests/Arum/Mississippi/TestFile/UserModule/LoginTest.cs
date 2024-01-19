@@ -3,6 +3,7 @@ using MyersAndStaufferFramework;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule;
 using MyersAndStaufferSeleniumTests.Utils;
 using NUnit.Framework;
+using System;
 using System.Linq.Expressions;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
@@ -13,7 +14,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
     {
         public static TestData _testData = TestDataSharedInstance.testData;
         public static String testname;
-        
+        public static string Status; public static string Message; public static string StackTrace;
+        public static string EnvName;
+
         [Test, Order(0)]
         //[TestCase(null, TestName = "Clocksession")]
         //[Category("MyTestCase")]
@@ -34,30 +37,34 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for plage to loader" });
             logInPage.WaitForPageLoad();
-            test.Log(Status.Info, "wait for plage to loader");
+            //test.Log(Status.Info, "wait for plage to loader");
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Login Button" });
             logInPage.ClickonLogin();
-            test.Log(Status.Info, "Click on Login Button ghb");
+            //test.Log(Status.Info, "Click on Login Button ghb");
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
             logInPage.SetEmail("Test");
-            test.Log(Status.Info, "Enter Email Test");
+            //test.Log(Status.Info, "Enter Email Test");
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter passoword test" });
             logInPage.SetPassword("Test");
-            test.Log(Status.Info, "Enter passoword test");
+            //test.Log(Status.Info, "Enter passoword test");
             try
             {
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Submit button Test" });
                logInPage.SubmitLogIn();
-                test.Log(Status.Info, "Click on LoSubmit button Test");
+                //test.Log(Status.Info, "Click on LoSubmit button Test");
                 _testData.TestCaseStatus = "Passed";
 
             }
             catch (Exception ex)
             {
+                StackTrace = ex.StackTrace;
+                Message = ex.Message;
+                Status = "Failed";
                 _testData.TestCaseStatus = "Failed";
+                Console.WriteLine(ex.StackTrace);
             }
 
 
@@ -85,29 +92,30 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for plage to loader" });
             logInPage.WaitForPageLoad();
-            test.Log(Status.Info, "wait for plage to loader");
+            //test.Log(Status.Info, "wait for plage to loader");
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Login Button" });
             logInPage.ClickonLogin();
-            test.Log(Status.Info, "Click on Login Button ghb");
+            //test.Log(Status.Info, "Click on Login Button ghb");
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
             logInPage.SetEmail("Test");
-            test.Log(Status.Info, "Enter Email Test");
+            //test.Log(Status.Info, "Enter Email Test");
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter passoword test" });
             logInPage.SetPassword("Test");
-            test.Log(Status.Info, "Enter passoword test");
+            //test.Log(Status.Info, "Enter passoword test");
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Submit button Test" });
             logInPage.SubmitLogIn();
-            test.Log(Status.Info, "Click on LoSubmit button Test");
+           // test.Log(Status.Info, "Click on LoSubmit button Test");
         }
     }
 
     public class TestExecutor()
     {
         public static string JsonData { get; set; }
+        
         public static string RunVerifyLoginOK(BrowserDriver browserDriver, String EnvironmentName, String TestName)
         {
 
@@ -118,6 +126,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
             loginTest.Verify_User_Is_Able_To_Login();
             bsTest.TearDown();
+            
             return JsonData;
         }
 

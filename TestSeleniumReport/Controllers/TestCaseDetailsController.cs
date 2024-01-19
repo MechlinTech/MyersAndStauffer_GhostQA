@@ -44,6 +44,7 @@ namespace TestSeleniumReport.Controllers
 
         public static void RunTestCase(string testCaseName)
         {
+
             //testCaseName = new LoginTest().getcurrentTestName();
             /* var testExecutor = new TestExecutor();
             var method = testExecutor.GetType().GetMethod(string.Concat("Run", testCaseName));
