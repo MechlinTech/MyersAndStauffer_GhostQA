@@ -176,19 +176,19 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <param name="TestSuiteName"></param>
         /// <returns></returns>
-        [HttpOptions("ExecuteTestSuite")]
-        public ActionResult ExecuteTestSuite(string TestSuiteName)
-        {
-            string _testSuiteDetailsJson = _helper.GetTestSuiteByName(TestSuiteName);
-            TestSuites _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuites>(_testSuiteDetailsJson);
-            if (_testSuiteDetails.SelectedTestCases.Count > 0)
-            {
-                foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
-                {
-                    _helper.RunTestCase(testCaseName.ToString());
-                }
-            }
-            return Ok();
-        }
+        //[HttpOptions("ExecuteTestSuite")]
+        //public ActionResult ExecuteTestSuite(string TestSuiteName)
+        //{
+        //    string _testSuiteDetailsJson = _helper.GetTestSuiteByName(TestSuiteName);
+        //    TestSuites _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuites>(_testSuiteDetailsJson);
+        //    if (_testSuiteDetails.SelectedTestCases.Count > 0)
+        //    {
+        //        foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
+        //        {
+        //            _helper.RunTestCase(testCaseName.ToString());
+        //        }
+        //    }
+        //    return Ok();
+        //}
     }
 }

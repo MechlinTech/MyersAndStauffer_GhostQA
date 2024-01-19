@@ -12,8 +12,8 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240105150547_Initial")]
-    partial class Initial
+    [Migration("20240119164642_New tables")]
+    partial class Newtables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -220,6 +220,76 @@ namespace SeleniumReportAPI.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.Applications", b =>
+                {
+                    b.Property<int>("ApplicationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ApplicationId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationId"), 1000L, 1);
+
+                    b.Property<string>("ApplicationName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("ApplicationName");
+
+                    b.HasKey("ApplicationId");
+
+                    b.ToTable("tbl_Applications");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.Environments", b =>
+                {
+                    b.Property<int>("EnvironmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("EnvironmentId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnvironmentId"), 1000L, 1);
+
+                    b.Property<string>("EnvironmentName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("EnvironmentName");
+
+                    b.HasKey("EnvironmentId");
+
+                    b.ToTable("tbl_Environments");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.TestSuites", b =>
+                {
+                    b.Property<int>("TestSuiteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("TestSuiteId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TestSuiteId"), 1000L, 1);
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EnvironmentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("SendEmail")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TestSuiteName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("TestSuiteName");
+
+                    b.Property<string>("TestSuiteType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TestSuiteId");
+
+                    b.ToTable("tbl_TestSuites");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

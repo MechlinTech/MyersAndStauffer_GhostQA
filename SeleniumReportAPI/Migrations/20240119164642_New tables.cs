@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SeleniumReportAPI.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Newtables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,49 @@ namespace SeleniumReportAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_Applications",
+                columns: table => new
+                {
+                    ApplicationId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1000, 1"),
+                    ApplicationName = table.Column<string>(type: "varchar(100)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_Applications", x => x.ApplicationId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_Environments",
+                columns: table => new
+                {
+                    EnvironmentId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1000, 1"),
+                    EnvironmentName = table.Column<string>(type: "varchar(100)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_Environments", x => x.EnvironmentId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_TestSuites",
+                columns: table => new
+                {
+                    TestSuiteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1000, 1"),
+                    TestSuiteName = table.Column<string>(type: "varchar(100)", nullable: false),
+                    TestSuiteType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApplicationId = table.Column<int>(type: "int", nullable: false),
+                    SendEmail = table.Column<bool>(type: "bit", nullable: false),
+                    EnvironmentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_TestSuites", x => x.TestSuiteId);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,6 +253,15 @@ namespace SeleniumReportAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "tbl_Applications");
+
+            migrationBuilder.DropTable(
+                name: "tbl_Environments");
+
+            migrationBuilder.DropTable(
+                name: "tbl_TestSuites");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
