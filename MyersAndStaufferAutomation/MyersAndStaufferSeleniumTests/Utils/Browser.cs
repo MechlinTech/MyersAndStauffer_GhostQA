@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.IO;
@@ -25,7 +26,7 @@ namespace MyersAndStaufferSeleniumTests.Utils
 
         public static void Start(BrowserDriver driver = BrowserDriver.Chrome, bool isRunHeadless = false, WindowSize windowSize = null)
         {
-            String driverpath = "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\bin\\x64\\Debug\\net6.0";
+            String driverpath = TestExecutor.Driverpath;
             switch (driver)
             {
                 case BrowserDriver.Chrome:

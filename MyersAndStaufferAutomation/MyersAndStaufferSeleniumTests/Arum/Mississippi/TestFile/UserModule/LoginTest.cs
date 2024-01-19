@@ -24,6 +24,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         {
        
             _testData.TestCaseName = "VerifyLoginOK";
+            _testData.TestSuiteName = "ClockSession";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
 
             VideoRecorder.CreateRecording();
@@ -115,9 +116,24 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
     public class TestExecutor()
     {
         public static string JsonData { get; set; }
+        public static string browserName { get; set; }
+        public static string environmentName {  get; set; }
+        public static string testName { get; set; }
+        public static string Baseurl { get; set; }
+        public static string Basepath { get; set; }
+        public static string Driverpath { get; set; }
+        public static string Testername { get; set; }
+
         
-        public static string RunVerifyLoginOK(BrowserDriver browserDriver, String EnvironmentName, String TestName)
+        public static string RunVerifyLoginOK(String browsername, String EnvironmentName, String TestName, String baseurl, String basePath, String driverPath, String testerName)
         {
+            browserName = browsername;
+            environmentName = EnvironmentName;
+            testName = TestName;
+            Baseurl = baseurl;
+            Basepath = basePath;
+            Driverpath = driverPath;
+            Testername = testerName;
 
             var setup = new SetupClass(); // Instantiate SetupClass using the new keyword to perform Initialize Dll
             setup.Initialize();
@@ -125,9 +141,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             bsTest.SetUp();
             var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
             loginTest.Verify_User_Is_Able_To_Login();
-            bsTest.TearDown();
-            
+            bsTest.TearDown();            
             return JsonData;
+
         }
 
         public static void RunVerifyLoginOK2()

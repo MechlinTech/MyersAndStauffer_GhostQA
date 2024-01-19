@@ -16,8 +16,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
     {
         public static ExtentTest test;
         string reportPath;
-        public static string scPath = DBConfiguration.GetDBConnectionString("AppSettings:scpath");
-        public static string basePath = DBConfiguration.GetDBConnectionString("AppSettings:basePath");
+        //public static string basePath = DBConfiguration.GetDBConnectionString("AppSettings:basePath");
+        public static string basePath = TestExecutor.Basepath;
+        public static string EnvironmentName = TestExecutor.environmentName;
 
         public static string mainPath = Directory.GetCurrentDirectory();
 
@@ -42,6 +43,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             string[] directories = testSuiteName.Split("\\");
             _testData.TestSuiteName = directories[directories.Length - 1];
             _testData.TestRunName = DBConfiguration.GetRunId(_testData.TestSuiteName);
+            _testData.TestEnvironment = EnvironmentName;
         }
 
         [SetUp]
@@ -64,7 +66,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             // Get Browser settings
             EnvironmentHelper = EnvironmentConfigUtils.GetEnvironmentForConfig();
 
-            string baseURL = EnvironmentHelper.GetSetting("BaseURL");
+            // string baseURL = EnvironmentHelper.GetSetting("BaseURL");
+            string baseURL = TestExecutor.Baseurl;
             bool isRunningHeadless = bool.Parse(EnvironmentHelper.GetSetting("RunTestHeadless"));
             logMessage.Append($"[BaseURL={baseURL}][IsRunningHeadless={isRunningHeadless.ToString()}]");
 
@@ -187,7 +190,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             {
                 string guid = Guid.NewGuid().ToString();
                 string fileName = "Diagnostic_Logs_" + _testData.TestCaseName.ToString() + guid;
-                LoggingPath = Path.Combine(scPath, fileName + ".txt");
+                LoggingPath = Path.Combine(basePath, fileName + ".txt");
             }
             if (File.Exists(LoggingPath))
             {

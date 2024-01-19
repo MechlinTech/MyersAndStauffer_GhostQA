@@ -15,7 +15,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule
 
         public IWebElement PasswordInput => driver.FindElement(By.XPath("//input[@name='password']"));
 
-        public IWebElement LogInButton => driver.FindElement(By.XPath("//button[contains(text(),'LOGINfail')]"));
+        public IWebElement LogInButton => driver.FindElement(By.XPath("//button[contains(text(),'LOGIN')]"));
 
         // Methods
         public void WaitForPageLoad()

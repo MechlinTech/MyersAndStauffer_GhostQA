@@ -1,6 +1,7 @@
 ﻿using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
 using MyersAndStaufferFramework;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using NUnit.Framework;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
@@ -26,8 +27,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             extent.AddSystemInfo("Tester Name", "Mukesh");
             extent.AddSystemInfo("Environment", "dev Environemnt");
 
-            _testData.TesterName = "Mukesh";
-            _testData.TestEnvironment = "dev Environment";
+            _testData.TesterName = TestExecutor.Testername;
             _testData.TestSuiteStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
         }
 
