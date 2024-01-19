@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj": {}
+    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj": {
+    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
         "projectName": "SeleniumReportAPI",
-        "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
+        "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
         "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\obj\\",
+        "outputPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",

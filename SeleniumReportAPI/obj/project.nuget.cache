@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VBBXGlYM41uH9mibSNhAKEDA66PuAGYMJRrhFHmBG3uUJJTKZv3/HS9q8xaPOzBu6T8+yThJnwJfIo0wWWCA4Q==",
+  "dgSpecHash": "jE9VRKIXhFpQDbcimWU43QF8kuou/1VKiyS7HNwSRg0KRe7fTNACo/oHj/abHYMeYDnuogAF7VNPwrlsOXmQQQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
+  "projectFilePath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nitin\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Nitin\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.0\\microsoft.aspnetcore.authentication.jwtbearer.6.0.0.nupkg.sha512",
@@ -66,5 +66,16 @@
     "C:\\Users\\Nitin\\.nuget\\packages\\system.text.encoding.codepages\\4.7.0\\system.text.encoding.codepages.4.7.0.nupkg.sha512",
     "C:\\Users\\Nitin\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'System.Data.SqlClient' 4.8.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-98g6-xh36-x2p7",
+      "libraryId": "System.Data.SqlClient",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }

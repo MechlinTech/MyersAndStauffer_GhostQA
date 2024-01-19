@@ -1,11 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
+using MyersAndStaufferSeleniumTests.Utils;
 using SeleniumTestReport.Helper;
 
 namespace TestSeleniumReport.Controllers
 {
     public class TestCaseDetailsController : Controller
     {
+        public readonly LoginTest mLoginTest;
+        private string mtestname;
+
+        public enum browser
+        {
+            Chrome,
+            Edge,
+            Firefox,
+            Safari
+        }
+        public enum EnvironmentName
+        {
+            QA,
+            UAT,
+            Staging,
+            Dev,
+            Prod
+        }
         private readonly DBHelper _helper;
         public TestCaseDetailsController(DBHelper helper)
         {
@@ -25,18 +44,21 @@ namespace TestSeleniumReport.Controllers
 
         public void RunTestCase(string testCaseName)
         {
-            var testExecutor = new TestExecutor();
+            testCaseName = new LoginTest().getcurrentTestName();
+            mtestname = testCaseName;
+            ;           /* var testExecutor = new TestExecutor();
             var method = testExecutor.GetType().GetMethod(string.Concat("Run", testCaseName));
 
             if (method != null)
             {
-                method.Invoke(testExecutor, null);
+               method.Invoke(testExecutor, null);
             }
             else
             {
-                // Handle the case where the method with the provided name is not found
+             //Handle the case where the method with the provided name is not found
                 Console.WriteLine($"Method '{testCaseName}' not found.");
-            }
+            }*/
+            string result = TestExecutor.RunVerifyLoginOK(BrowserDriver.Chrome, EnvironmentName.UAT.ToString(), mtestname);
         }
     }
 }

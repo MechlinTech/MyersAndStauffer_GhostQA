@@ -2922,11 +2922,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
       "projectName": "SeleniumReportAPI",
-      "projectPath": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
+      "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\SeleniumReportAPI.csproj",
       "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\obj\\",
+      "outputPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\SeleniumReportAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -3012,5 +3012,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'System.Data.SqlClient' 4.8.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-98g6-xh36-x2p7",
+      "libraryId": "System.Data.SqlClient",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }

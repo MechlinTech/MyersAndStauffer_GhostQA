@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hAyovx4SFDwhsFv/uCtJzu8qvIrp/6B21j6TBI4yfwgQ3osgz63dQGl+Jm725b35/eJpGtbCDJRg+d9UZEC2Kw==",
+  "dgSpecHash": "yVCojXSbS5V1WJ1bbzSKn0/HoeDXc8SEp3rspbxVbnv7PFzZqB1v5RVVEuVYGZBVpw3YobG7lgilKmflL8/APA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
+  "projectFilePath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nitin\\.nuget\\packages\\bouncycastle.netcore\\1.9.0\\bouncycastle.netcore.1.9.0.nupkg.sha512",
     "C:\\Users\\Nitin\\.nuget\\packages\\entityframework\\6.4.4\\entityframework.6.4.4.nupkg.sha512",

@@ -25,6 +25,7 @@ namespace MyersAndStaufferSeleniumTests.Utils
 
         public static void Start(BrowserDriver driver = BrowserDriver.Chrome, bool isRunHeadless = false, WindowSize windowSize = null)
         {
+            String driverpath = "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\bin\\x64\\Debug\\net6.0";
             switch (driver)
             {
                 case BrowserDriver.Chrome:
@@ -44,7 +45,7 @@ namespace MyersAndStaufferSeleniumTests.Utils
                     if (isRunHeadless)
                         chromeOptions.AddArguments("headless");
 
-                    _driver = new ChromeDriver(chromeOptions);
+                    _driver = new ChromeDriver(driverpath, chromeOptions);
                     if (windowSize != null)
                     {
                         _driver.Manage().Window.Size = new System.Drawing.Size(windowSize.Width, windowSize.Height);

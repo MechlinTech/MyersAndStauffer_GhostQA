@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,25 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 {
     public class TestRunnert : BaseTest
     {
-        
-        public void RunMissippi()
+        [Test,Order(0), Category("Clock")]
+        //[TestCase(null,TestName = "Clock")]
+        public void RunLoginTests()
         {
-            LoginTest loginTest = new LoginTest();
+            //string testCaseName = TestContext.CurrentContext.Test.Properties["Category"].ToString();
+            // Console.WriteLine($"Test case name:{ testCaseName}");
+           // var testContext = TestContext.CurrentContext;
 
-            loginTest.VerifyLoginOK();
+            // Get the categories for the current test
+            //var categories = testContext.Test.Properties["Category"];
+
+            // Print the category names
+           // foreach (var category in (string[])categories)
+            //{
+            //    Console.WriteLine("Category: " + category);
+            //}
+            LoginTest loginTest = new LoginTest();
+            loginTest.Verify_User_Is_Able_To_Login();
+
         }
     }
 }

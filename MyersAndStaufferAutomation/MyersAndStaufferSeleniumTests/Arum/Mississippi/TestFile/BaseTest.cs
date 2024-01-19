@@ -1,6 +1,7 @@
 ﻿using AventStack.ExtentReports;
 using MyersAndStaufferFramework;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using MyersAndStaufferSeleniumTests.Utils;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -46,6 +47,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             test = SetupClass.extent.CreateTest(TestContext.CurrentContext.Test.Name);
             _testData.TestCaseName = TestContext.CurrentContext.Test.Name;
 
+
             // Load runtime configuration settings
             string configName = string.Empty;
             if (File.Exists(Path.Join(AppDomain.CurrentDomain.BaseDirectory, EnvironmentConfigUtils.ConfigNameFile)))
@@ -87,7 +89,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             var status = TestContext.CurrentContext.Result.Outcome.Status;
             var message = TestContext.CurrentContext.Result.Message;
             var stackTrace = TestContext.CurrentContext.Result.StackTrace;
-            _testData.TestCaseStatus = status.ToString();
+            //_testData.TestCaseStatus = status.ToString();
 
             DateTime time = DateTime.Now;
             string fileName2 = "Screenshot_" + time.ToString("h_mm_ss") + ".png";
@@ -119,8 +121,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             Browser.Driver.Dispose();
             _testData.TestSuiteEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
-            DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
-            DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
+            _testData.TestCaseSteps = JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty)));
+            TestExecutor.JsonData = JsonConvert.SerializeObject(_testData);
+            // DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
+            // DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
         }
 
         public static void ScreenShot(string FailureMessage, string fileName = null, bool hasTimeStamp = false)

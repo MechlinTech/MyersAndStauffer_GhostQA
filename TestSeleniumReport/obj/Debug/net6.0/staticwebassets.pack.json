@@ -1,323 +1,351 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\TestSeleniumReport.bundle.scp.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\TestSeleniumReport.bundle.scp.css",
       "PackagePath": "staticwebassets\\TestSeleniumReport.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-10-24.png",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-10-24.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-10-24.png"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-11-04.png",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-11-04.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-11-04.png"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-01.png",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-01.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-01.png"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-43.png",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-43.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-13-43.png"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-26-55.png",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-26-55.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-26-55.png"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-27-55.png",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-27-55.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-27-55.png"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-47-41.png",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-47-41.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-47-41.png"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-53-22.png",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-53-22.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-53-22.png"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Images\\GhostQA-Logo.png",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Images\\GhostQA-Logo.png",
       "PackagePath": "staticwebassets\\Images\\GhostQA-Logo.png"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_10-00-23.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_10-00-23.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-16\\2024-01-16_10-00-23.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_10-02-06.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_10-02-06.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-16\\2024-01-16_10-02-06.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-18-35.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-18-35.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-16\\2024-01-16_11-18-35.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-30-01.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-30-01.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-16\\2024-01-16_11-30-01.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-35-55.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-35-55.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-16\\2024-01-16_11-35-55.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-41-55.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-41-55.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-16\\2024-01-16_11-41-55.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-42-26.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-42-26.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-16\\2024-01-16_11-42-26.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-44-12.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-16\\2024-01-16_11-44-12.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-16\\2024-01-16_11-44-12.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-17\\2024-01-17_12-19-27.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-17\\2024-01-17_07-09-03.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-17\\2024-01-17_07-09-03.webm"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-17\\2024-01-17_12-19-27.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-17\\2024-01-17_12-19-27.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-17\\2024-01-17_12-20-18.webm",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-17\\2024-01-17_12-20-18.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-17\\2024-01-17_12-20-18.webm"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\css\\loginStyle.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-17\\2024-01-17_12-22-59.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-17\\2024-01-17_12-22-59.webm"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-18\\2024-01-18_05-18-23.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-18\\2024-01-18_05-18-23.webm"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-18\\2024-01-18_05-22-07.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-18\\2024-01-18_05-22-07.webm"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-18\\2024-01-18_07-18-53.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-18\\2024-01-18_07-18-53.webm"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-18\\2024-01-18_07-25-29.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-18\\2024-01-18_07-25-29.webm"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-18\\2024-01-18_07-34-33.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-18\\2024-01-18_07-34-33.webm"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\css\\loginStyle.css",
       "PackagePath": "staticwebassets\\css\\loginStyle.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\css\\site.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\js\\site.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\LICENSE",
       "PackagePath": "staticwebassets\\lib\\bootstrap"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
       "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery\\LICENSE.txt",
       "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery\\dist\\jquery.js",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
     },
     {
-      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
