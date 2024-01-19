@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SeleniumTestReport.Helper;
+using TestSeleniumReport.DTO_s;
+using TestSeleniumReport.Models;
 
 namespace TestSeleniumReport.Controllers
 {
@@ -74,5 +77,101 @@ namespace TestSeleniumReport.Controllers
             return PartialView("_TestCaseStepsDetails", _TestCaseStepsDetails);
         }
 
+        /// <summary>
+        /// Get All Value and Bind for initial Setup
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AddTestSuite()
+        {
+            var ApplicationListJson = _helper.GetApplications();
+            List<Models.Applications> _applicationList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Applications>>(ApplicationListJson);
+            var EnvironmentListJson = _helper.GetEnvironments();
+            List<Models.Environments> _environmentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Environments>>(EnvironmentListJson);
+            var _TestCasesListJson = _helper.GetTestCases();
+            List<Dto_TestCase> _testCaseList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dto_TestCase>>(_TestCasesListJson);
+
+            // Prepare data for dropdowns
+            ViewBag.Applications = new SelectList(_applicationList, "ApplicationId", "ApplicationName");
+            ViewBag.Environments = new SelectList(_environmentList, "EnvironmentId", "EnvironmentName");
+            ViewBag.TestCases = new MultiSelectList(_testCaseList, "TestCaseName", "TestCaseName");
+
+            return View();
+        }
+
+        /// <summary>
+        /// Add or Update Test Suites on the basis of Test Suite Id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AddTestSuite(TestSuites model, string action)
+        {
+            Dto_Response _response = new Dto_Response();
+            if (action == "Save")
+            {
+                string result = _helper.AddUpdateTestSuitesJson(model);
+                _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
+            }
+            else if (action == "SaveAndExecute")
+            {
+                string result = _helper.AddUpdateTestSuitesJson(model);
+                _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
+                if (!_response.status.Contains("Fail"))
+                {
+                    foreach (var testCases in model.SelectedTestCases)
+                    {
+                        _helper.RunTestCase(testCases);
+                    }
+                }
+            }
+            if (!_response.status.Contains("Fail"))
+            {
+                //Logic to send Email
+            }
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Delete Test Suite but Test Suite Id
+        /// </summary>
+        /// <param name="TestSuiteId"></param>
+        /// <returns></returns>
+        public ActionResult DeleteTestSuites(int TestSuiteId)
+        {
+            try
+            {
+                string result = _helper.DeleteTestSuites(TestSuiteId);
+                Dto_Response _Response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
+                return RedirectToAction(_Response.message, "Index");
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public ActionResult EditTestSuite(string testSuiteName)
+        {
+            if(string.IsNullOrEmpty(testSuiteName))
+            {
+                return View("Index");
+            }
+            TestSuites result = _helper.GetTestSuiteByName(testSuiteName);
+
+            var ApplicationListJson = _helper.GetApplications();
+            List<Models.Applications> _applicationList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Applications>>(ApplicationListJson);
+            var EnvironmentListJson = _helper.GetEnvironments();
+            List<Models.Environments> _environmentList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Environments>>(EnvironmentListJson);
+            var _TestCasesListJson = _helper.GetTestCases();
+            List<Dto_TestCase> _testCaseList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dto_TestCase>>(_TestCasesListJson);
+            result.AllTestCases = _testCaseList.Select(value => new SelectListItem { Text = value.TestCaseName, Value = value.TestCaseName, Selected = result.SelectedTestCases.Contains(value.TestCaseName) }).ToList();
+            // Prepare data for dropdowns
+            ViewBag.Applications = new SelectList(_applicationList, "ApplicationId", "ApplicationName");
+            ViewBag.Environments = new SelectList(_environmentList, "EnvironmentId", "EnvironmentName");
+            ViewBag.TestCases = new MultiSelectList(_testCaseList, "TestCaseName", "TestCaseName");
+
+            return View(result);
+        }
     }
 }

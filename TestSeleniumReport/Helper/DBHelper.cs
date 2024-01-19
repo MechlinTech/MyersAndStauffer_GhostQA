@@ -6,6 +6,9 @@ using System.Data.SqlClient;
 using System;
 using System.Linq;
 using System.Text;
+using System.Collections;
+using TestSeleniumReport.Models;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 
 namespace SeleniumTestReport.Helper
 {
@@ -209,7 +212,7 @@ namespace SeleniumTestReport.Helper
             return TestCasesListJson;
         }
 
-        internal string AddUpdateTestSuitesJson(string testSuiteName, int? testSuiteId = 0)
+        internal string AddUpdateTestSuitesJson(TestSuites model)
         {
             string result = string.Empty;
             try
@@ -220,8 +223,13 @@ namespace SeleniumTestReport.Helper
                     using (SqlCommand command = new SqlCommand("stp_AddUpdateTestSuites", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestSuiteName", testSuiteName);
-                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        command.Parameters.AddWithValue("@TestSuiteName", model.TestSuiteName);
+                        command.Parameters.AddWithValue("@TestSuiteType", model.TestSuiteType ?? "");
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@SendEmail", model.SendEmail);
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
+                        command.Parameters.AddWithValue("@TestSuiteId", model.TestSuiteId);
+                        command.Parameters.AddWithValue("@SelectedTestCases", string.Join(", ", model.SelectedTestCases));
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -300,6 +308,119 @@ namespace SeleniumTestReport.Helper
                 throw ex;
             }
             return result;
+        }
+
+        internal string GetApplications()
+        {
+            string ApplicationListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetApplications", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                ApplicationListJson = reader["ApplicationListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ApplicationListJson;
+        }
+
+        internal string GetEnvironments()
+        {
+            string EnvironmentListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetEnvironment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                EnvironmentListJson = reader["EnvironmentListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return EnvironmentListJson;
+        }
+
+        internal void RunTestCase(string testCaseName)
+        {
+            var testExecutor = new TestExecutor();
+            var method = testExecutor.GetType().GetMethod(string.Concat("Run", testCaseName));
+
+            if (method != null)
+            {
+                method.Invoke(testExecutor, null);
+            }
+            else
+            {
+                // Handle the case where the method with the provided name is not found
+                Console.WriteLine($"Method '{testCaseName}' not found.");
+            }
+        }
+
+        internal TestSuites GetTestSuiteByName(string TestSuiteName)
+        {
+            TestSuites testSuites = new TestSuites();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestSuitsByName", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", TestSuiteName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                testSuites.TestSuiteId = Convert.ToInt32(reader["TestSuiteId"]);
+                                testSuites.TestSuiteName = reader["TestSuiteName"].ToString();
+                                testSuites.SendEmail = Convert.ToBoolean(reader["SendEmail"]);
+                                testSuites.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
+                                testSuites.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
+                                testSuites.TestSuiteType = reader["TestSuiteType"].ToString();
+                                testSuites.SelectedTestCases = reader["SelectedTestCases"].ToString().Split(", ").Select(x => x).ToList();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return testSuites;
         }
 
         //static void ExtractTestCasesFromProject()

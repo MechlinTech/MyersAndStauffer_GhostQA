@@ -1,0 +1,46 @@
+﻿@model TestSeleniumReport.Models.TestSuites
+
+@{
+    Layout = "_Layout";
+}
+
+@using (Html.BeginForm("AddTestSuite", "Home", FormMethod.Post, new { @class = "form" }))
+{
+    <div class="form-group d-flex">
+        <label class="control-label">Test Suite Name</label>
+        @Html.TextBoxFor(model => model.TestSuiteName, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group d-flex">
+        <label class="control-label">Application Name</label>
+        @Html.DropDownListFor(model => model.ApplicationId, (SelectList)ViewBag.Applications, "Select Application", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group d-flex">
+        <label class="control-label">Send Email</label>
+        <div class="form-check form-check-inline">
+            @Html.RadioButtonFor(model => model.SendEmail, true, new { @class = "form-check-input" })
+            @Html.Label("SendEmail", "Only for me", new { @class = "form-check-label" })
+        </div>
+        <div class="form-check form-check-inline">
+            @Html.RadioButtonFor(model => model.SendEmail, false, new { @class = "form-check-input" })
+            @Html.Label("SendEmail", "All Users", new { @class = "form-check-label" })
+        </div>
+    </div>
+
+    <div class="form-group d-flex">
+        <label class="control-label">Environment Name</label>
+        @Html.DropDownListFor(model => model.EnvironmentId, (SelectList)ViewBag.Environments, "Select Environment", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group d-flex">
+        <label class="control-label">Select Test Cases</label>
+        @Html.ListBoxFor(model => model.SelectedTestCases, (MultiSelectList)ViewBag.TestCases, new { @class = "form-control multiselect", multiple = "multiple" })
+    </div>
+
+    <div class="form-group d-flex">
+        <button type="submit" class="btn btn-primary" name="action" value="Save">Save</button>
+        <button type="submit" class="btn btn-primary" name="action" value="SaveAndExecute">Save & Execute</button>
+        <button type="button" class="btn btn-secondary">Cancel</button>
+    </div>
+}

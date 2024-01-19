@@ -10,6 +10,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
     public class LoginTest : BaseTest
     {
         [Test, Order(0)]
+        [TestCase(null, TestName = "Mississippi")]
         public void VerifyLoginOK()
         {
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
@@ -41,7 +42,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             test.Log(Status.Info, "Click on LoSubmit button Test");
         }
 
-
+        [TestCase(null, TestName = "Mississippi")]
         [Test, Order(1)]
         public void VerifyLoginOK2()
         {
