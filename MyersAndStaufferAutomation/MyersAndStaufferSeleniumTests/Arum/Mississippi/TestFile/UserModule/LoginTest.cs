@@ -19,9 +19,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         //[Category("MyTestCase")]
         public void Verify_User_Is_Able_To_Login()
         {
-            testname = TestContext.CurrentContext.Test.Name;
-            Console.WriteLine("test =" + testname);
-            getcurrentTestName();
+       
             _testData.TestCaseName = "VerifyLoginOK";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
 
@@ -52,7 +50,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             try
             {
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Submit button Test" });
-                logInPage.SubmitLogIn();
+               logInPage.SubmitLogIn();
                 test.Log(Status.Info, "Click on LoSubmit button Test");
                 _testData.TestCaseStatus = "Passed";
 
@@ -110,7 +108,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
     public class TestExecutor()
     {
         public static string JsonData { get; set; }
-        public string RunVerifyLoginOK(BrowserDriver browserDriver, String EnvironmentName, String TestName)
+        public static string RunVerifyLoginOK(BrowserDriver browserDriver, String EnvironmentName, String TestName)
         {
 
             var setup = new SetupClass(); // Instantiate SetupClass using the new keyword to perform Initialize Dll

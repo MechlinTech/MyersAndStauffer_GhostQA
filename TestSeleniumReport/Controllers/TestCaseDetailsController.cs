@@ -42,11 +42,10 @@ namespace TestSeleniumReport.Controllers
             return View("Index", TestCasesListJson);
         }
 
-        public void RunTestCase(string testCaseName)
+        public static void RunTestCase(string testCaseName)
         {
-            testCaseName = new LoginTest().getcurrentTestName();
-            mtestname = testCaseName;
-            ;           /* var testExecutor = new TestExecutor();
+            //testCaseName = new LoginTest().getcurrentTestName();
+            /* var testExecutor = new TestExecutor();
             var method = testExecutor.GetType().GetMethod(string.Concat("Run", testCaseName));
 
             if (method != null)
@@ -58,7 +57,7 @@ namespace TestSeleniumReport.Controllers
              //Handle the case where the method with the provided name is not found
                 Console.WriteLine($"Method '{testCaseName}' not found.");
             }*/
-            string result = TestExecutor.RunVerifyLoginOK(BrowserDriver.Chrome, EnvironmentName.UAT.ToString(), mtestname);
+            string result = TestExecutor.RunVerifyLoginOK(BrowserDriver.Chrome, EnvironmentName.UAT.ToString(), testCaseName);
         }
     }
 }
