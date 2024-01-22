@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MyersAndStaufferSeleniumTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+471fa8e34311008396c60a7131c024e5ab3bee94")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb0a4e139424c7a312130f798403f82ce3362c29")]
 [assembly: System.Reflection.AssemblyProductAttribute("MyersAndStaufferSeleniumTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MyersAndStaufferSeleniumTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

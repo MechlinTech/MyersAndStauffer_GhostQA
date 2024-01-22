@@ -13,7 +13,7 @@ namespace TestSeleniumReport.Controllers
         public static string browsername = "Chrome";
         public static string EnvironmentName = "dev";
         public static string baseurl = "https://clocksession.com/";
-        public static string basePath = "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\";
+        public static string basePath = "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\";
         public static string driverPath = "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\bin\\x64\\Debug\\net6.0";
         //public static string basePath = @"D:\MechlinTech\MyersAndStauffer_GhostQA\TestSeleniumReport\wwwroot\\";
         //public static string driverPath = @"D:\MechlinTech\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\bin\x64\Debug\net6.0";

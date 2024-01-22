@@ -5,6 +5,30 @@
       "PackagePath": "staticwebassets\\TestSeleniumReport.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Diagnostic_Logs_VerifyLoginOK526bafa4-0bb5-4b1d-8817-0b593d29ac63.txt",
+      "PackagePath": "staticwebassets\\Diagnostic_Logs_VerifyLoginOK526bafa4-0bb5-4b1d-8817-0b593d29ac63.txt"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Diagnostic_Logs_VerifyLoginOK8d2a60ac-adf6-4347-883f-ab27aff5ea87.txt",
+      "PackagePath": "staticwebassets\\Diagnostic_Logs_VerifyLoginOK8d2a60ac-adf6-4347-883f-ab27aff5ea87.txt"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Diagnostic_Logs_VerifyLoginOK9a1f299e-3bbf-4181-be0b-e0befa4e4f96.txt",
+      "PackagePath": "staticwebassets\\Diagnostic_Logs_VerifyLoginOK9a1f299e-3bbf-4181-be0b-e0befa4e4f96.txt"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Failure24-01-22 10-29-22.png",
+      "PackagePath": "staticwebassets\\Failure24-01-22 10-29-22.png"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Failure24-01-22 10-36-34.png",
+      "PackagePath": "staticwebassets\\Failure24-01-22 10-36-34.png"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Failure24-01-22 10-48-34.png",
+      "PackagePath": "staticwebassets\\Failure24-01-22 10-48-34.png"
+    },
+    {
       "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-10-24.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_03-10-24.png"
     },
@@ -35,6 +59,18 @@
     {
       "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-53-22.png",
       "PackagePath": "staticwebassets\\FailureScreenShots\\January_01_2024\\Failure24-01-01_04-53-22.png"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_22_2024\\Failure24-01-22 10-29-22.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_22_2024\\Failure24-01-22 10-29-22.png"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_22_2024\\Failure24-01-22 10-36-34.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_22_2024\\Failure24-01-22 10-36-34.png"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\FailureScreenShots\\January_22_2024\\Failure24-01-22 10-48-34.png",
+      "PackagePath": "staticwebassets\\FailureScreenShots\\January_22_2024\\Failure24-01-22 10-48-34.png"
     },
     {
       "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Images\\GhostQA-Logo.png",
@@ -107,6 +143,14 @@
     {
       "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-18\\2024-01-18_07-34-33.webm",
       "PackagePath": "staticwebassets\\Recordings\\2024-01-18\\2024-01-18_07-34-33.webm"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-22\\2024-01-22_10-49-53.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-22\\2024-01-22_10-49-53.webm"
+    },
+    {
+      "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\Recordings\\2024-01-22\\2024-01-22_10-52-22.webm",
+      "PackagePath": "staticwebassets\\Recordings\\2024-01-22\\2024-01-22_10-52-22.webm"
     },
     {
       "Id": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\css\\loginStyle.css",

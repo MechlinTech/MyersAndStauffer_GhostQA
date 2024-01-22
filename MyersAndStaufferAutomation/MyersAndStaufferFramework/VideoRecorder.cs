@@ -2,15 +2,17 @@
 using System;
 using System.IO;
 
+
 namespace MyersAndStaufferFramework
 {
     public class VideoRecorder : DBConfiguration
     {
-        public static string basePath = GetDBConnectionString("AppSettings:basePath");
+        public static string basePath = string.Empty;// GetDBConnectionString("AppSettings:basePath");
         public static string videoPath = "";
         private static Recorder _rec;
-        public static void CreateRecording()
+        public static void CreateRecording(string _basePath)
         {
+            basePath = _basePath;
             _rec = Recorder.CreateRecorder();
             _rec.OnRecordingComplete += Rec_OnRecordingComplete;
             _rec.OnRecordingFailed += Rec_OnRecordingFailed;

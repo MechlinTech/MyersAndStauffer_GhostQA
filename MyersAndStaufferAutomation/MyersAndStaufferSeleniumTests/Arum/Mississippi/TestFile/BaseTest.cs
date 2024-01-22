@@ -43,7 +43,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             //string[] directories = testSuiteName.Split("\\");
             //_testData.TestSuiteName = directories[directories.Length - 1];
             // _testData.TestRunName = DBConfiguration.GetRunId(_testData.TestSuiteName);
-            // _testData.TestEnvironment = EnvironmentName;
+            //_testData.TestEnvironment = EnvironmentName;
         }
 
         [SetUp]
@@ -106,9 +106,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             if (status == TestStatus.Failed.ToString())
             {
-                test.Fail("Test Failed and here is the screenshot on which test failed", captureScreenShot(driver, fileName2));
-                test.Log(Status.Fail, "Test failed with message " + message);
-                test.Log(Status.Fail, "Test failed with logTrace " + stackTrace);
+                //test.Fail("Test Failed and here is the screenshot on which test failed", captureScreenShot(driver, fileName2));
+               // test.Log(Status.Fail, "Test failed with message " + message);
+               // test.Log(Status.Fail, "Test failed with logTrace " + stackTrace);
 
                 _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Failed and here is the screenshot on which test failed" });
 
@@ -136,8 +136,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             _testData.TestSuiteEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestCaseSteps = JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty)));
             TestExecutor.JsonData = JsonConvert.SerializeObject(_testData);
-            DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
-            DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
+           //DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
+           //DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
         }
 
         public static void ScreenShot(string FailureMessage, string fileName = null, bool hasTimeStamp = false)

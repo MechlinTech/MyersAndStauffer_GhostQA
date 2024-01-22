@@ -27,7 +27,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             _testData.TestSuiteName = "ClockSession";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
 
-            VideoRecorder.CreateRecording();
+            VideoRecorder.CreateRecording(TestExecutor.Basepath);
             var logInPage = new LoginPage();
             _testData.TestCaseVideoURL = @"\" + (VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString());
             Console.WriteLine(_testData.TestCaseVideoURL);
@@ -83,10 +83,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         public void VerifyLoginOK2()
         {
             _testData.TestCaseName = "VerifyLoginOK";
-            //_testData.TestSuiteName = "ClockSession";
+            _testData.TestSuiteName = "ClockSession";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
 
-            VideoRecorder.CreateRecording();
+            VideoRecorder.CreateRecording(TestExecutor.Basepath);
             var logInPage = new LoginPage();
             _testData.TestCaseVideoURL = @"\" + (VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString());
             var dateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
@@ -107,10 +107,20 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter passoword test" });
             logInPage.SetPassword("Test");
             //test.Log(Status.Info, "Enter passoword test");
-
-            _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Submit button Test" });
-            logInPage.SubmitLogIn();
-            // test.Log(Status.Info, "Click on LoSubmit button Test");
+            try
+            {
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Submit button Test" });
+                logInPage.SubmitLogIn();
+                // test.Log(Status.Info, "Click on LoSubmit button Test");
+            }
+            catch (Exception ex)
+            {
+                StackTrace = ex.StackTrace;
+                Message = ex.Message;
+                Status = "Failed";
+                _testData.TestCaseStatus = "Failed";
+                Console.WriteLine(ex.StackTrace);
+            }
         }
     }
 
