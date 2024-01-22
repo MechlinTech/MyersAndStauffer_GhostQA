@@ -1,6 +1,7 @@
 ﻿using AventStack.ExtentReports;
 using MyersAndStaufferFramework;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using MyersAndStaufferSeleniumTests.Utils;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -15,6 +16,11 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
     {
         public static ExtentTest test;
         string reportPath;
+        //public static string basePath = DBConfiguration.GetDBConnectionString("AppSettings:basePath");
+        public static string basePath = TestExecutor.Basepath;
+        public static string EnvironmentName = TestExecutor.environmentName;
+
+        public static string mainPath = Directory.GetCurrentDirectory();
 
         public Authentication Credentials = new Authentication();
 
@@ -32,11 +38,12 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
         public BaseTest()
         {
-            var testSuiteName = TestContext.CurrentContext.Test.ClassName.Replace(".", "/");
-            testSuiteName = Directory.GetParent(testSuiteName).Parent.Parent.ToString();
-            string[] directories = testSuiteName.Split("\\");
-            _testData.TestSuiteName = directories[directories.Length - 1];
-            _testData.TestRunName = DBConfiguration.GetRunId(_testData.TestSuiteName);
+            //var testSuiteName = TestContext.CurrentContext.Test.ClassName.Replace(".", "/");
+            //testSuiteName = Directory.GetParent(testSuiteName).Parent.Parent.ToString();
+            //string[] directories = testSuiteName.Split("\\");
+            //_testData.TestSuiteName = directories[directories.Length - 1];
+            // _testData.TestRunName = DBConfiguration.GetRunId(_testData.TestSuiteName);
+            //_testData.TestEnvironment = EnvironmentName;
         }
 
         [SetUp]
@@ -45,6 +52,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             StringBuilder logMessage = new StringBuilder();
             test = SetupClass.extent.CreateTest(TestContext.CurrentContext.Test.Name);
             _testData.TestCaseName = TestContext.CurrentContext.Test.Name;
+
 
             // Load runtime configuration settings
             string configName = string.Empty;
@@ -58,9 +66,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             // Get Browser settings
             EnvironmentHelper = EnvironmentConfigUtils.GetEnvironmentForConfig();
 
-            string baseURL = EnvironmentHelper.GetSetting("BaseURL");
-            bool isRunningHeadless = bool.Parse(EnvironmentHelper.GetSetting("RunTestHeadless"));
-            logMessage.Append($"[BaseURL={baseURL}][IsRunningHeadless={isRunningHeadless.ToString()}]");
+            // string baseURL = EnvironmentHelper.GetSetting("BaseURL");
+            string baseURL = TestExecutor.Baseurl;
+            //bool isRunningHeadless = bool.Parse(EnvironmentHelper.GetSetting("RunTestHeadless"));
+            //logMessage.Append($"[BaseURL={baseURL}][IsRunningHeadless={isRunningHeadless.ToString()}]");
 
             WindowSize browserWindowSize = new WindowSize(1280, 720);
             string browserWidthSetting = EnvironmentHelper.GetSetting("BrowserWidth");
@@ -76,7 +85,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             }
             LogMessage(logMessage.ToString());
 
-            Browser.Start(BrowserDriver.Chrome, isRunHeadless: isRunningHeadless, windowSize: browserWindowSize);
+            Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize);
             driver = Browser.Driver;
             driver.Manage().Window.Maximize();
         }
@@ -84,30 +93,36 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         [TearDown]
         public virtual void TearDown()
         {
-            var status = TestContext.CurrentContext.Result.Outcome.Status;
-            var message = TestContext.CurrentContext.Result.Message;
-            var stackTrace = TestContext.CurrentContext.Result.StackTrace;
-            _testData.TestCaseStatus = status.ToString();
+            //var status = TestContext.CurrentContext.Result.Outcome.Status;
+            //var message = TestContext.CurrentContext.Result.Message;
+            //var stackTrace = TestContext.CurrentContext.Result.StackTrace;
+            var status = LoginTest.Status;
+            var message = LoginTest.Message;
+            var stackTrace = LoginTest.StackTrace;
+            //_testData.TestCaseStatus = status.ToString();
 
             DateTime time = DateTime.Now;
             string fileName2 = "Screenshot_" + time.ToString("h_mm_ss") + ".png";
 
-            if (status == TestStatus.Failed)
+            if (status == TestStatus.Failed.ToString())
             {
-                test.Fail("Test Failed and here is the screenshot on which test failed", captureScreenShot(driver, fileName2));
-                test.Log(Status.Fail, "Test failed with message " + message);
-                test.Log(Status.Fail, "Test failed with logTrace " + stackTrace);
+                //test.Fail("Test Failed and here is the screenshot on which test failed", captureScreenShot(driver, fileName2));
+               // test.Log(Status.Fail, "Test failed with message " + message);
+               // test.Log(Status.Fail, "Test failed with logTrace " + stackTrace);
 
                 _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Failed and here is the screenshot on which test failed" });
 
                 _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), FailureException = "Test failed with logTrace " + stackTrace.ToString() });
             }
-            else if (status == TestStatus.Passed)
+            else if (status == TestStatus.Passed.ToString())
             {
                 test.Pass("Test Passed");
+                test.Log(Status.Pass, "Test failed with message " + message);
+                test.Log(Status.Pass, "Test failed with logTrace " + stackTrace);
             }
 
-            if (TestContext.CurrentContext.Result.Outcome == ResultState.Failure)
+            //if (TestContext.CurrentContext.Result.Outcome == ResultState.Failure)
+            if (status == TestStatus.Failed.ToString())
             {
                 ScreenShot(message.ToString(), "Failure", true);
                 AttatchLogToTest();
@@ -119,21 +134,25 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             Browser.Driver.Dispose();
             _testData.TestSuiteEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
-            DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
-            DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
+            _testData.TestCaseSteps = JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty)));
+            TestExecutor.JsonData = JsonConvert.SerializeObject(_testData);
+           //DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
+           //DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
         }
 
         public static void ScreenShot(string FailureMessage, string fileName = null, bool hasTimeStamp = false)
         {
-            fileName ??= TestContext.CurrentContext.Test.MethodName;
+            fileName ??= _testData.TestCaseName.ToString();
             Screenshot ss = ((ITakesScreenshot)Browser.Driver).GetScreenshot();
             string timestamp = DateTime.Now.ToString("yy-MM-dd hh-mm-ss");
-            string screenshotFile = Path.Combine(TestContext.CurrentContext.WorkDirectory, fileName + (hasTimeStamp ? timestamp : null) + ".png");
+
+            string screenshotFile = Path.Combine(basePath, fileName + (hasTimeStamp ? timestamp : null) + ".png");
             ss.SaveAsFile(screenshotFile, ScreenshotImageFormat.Png);
             TestContext.AddTestAttachment(screenshotFile, fileName + "Screenshot");
             WriteToLogfile("Error screenshot: " + screenshotFile);
 
-            var basePath = DBConfiguration.GetDBConnectionString("AppSettings:basePath");
+
+
             var FailureSSPath = Path.Combine(basePath, "FailureScreenShots", DateTime.Now.ToString("MMMM_dd_yyyy"));
             if (!Directory.Exists(FailureSSPath))
             {
@@ -170,8 +189,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             if (string.IsNullOrEmpty(LoggingPath))
             {
                 string guid = Guid.NewGuid().ToString();
-                string fileName = "Diagnostic_Logs_" + TestName + guid;
-                LoggingPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, fileName + ".txt");
+                string fileName = "Diagnostic_Logs_" + _testData.TestCaseName.ToString() + guid;
+                LoggingPath = Path.Combine(basePath, fileName + ".txt");
             }
             if (File.Exists(LoggingPath))
             {

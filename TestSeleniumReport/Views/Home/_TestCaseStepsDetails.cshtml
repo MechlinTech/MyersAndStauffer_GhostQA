@@ -64,9 +64,13 @@
                                                                         </div>
                                                                     </div>
                                                                 }
-                                                                else
+                                                                else if (item.FailureException != null)
                                                                 {
                                                                     <div class="w-20">@item.FailureException</div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="w-20">@item.Details</div>
                                                                 }
                                                             }
                                                             else

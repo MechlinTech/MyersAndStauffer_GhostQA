@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {}
+    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
+    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
+        "projectUniqueName": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
         "projectName": "MyersAndStaufferFramework",
-        "projectPath": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
+        "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
         "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\obj\\",
+        "outputPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -133,14 +133,14 @@
         }
       }
     },
-    "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {
+    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
+        "projectUniqueName": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
         "projectName": "MyersAndStaufferSeleniumTests",
-        "projectPath": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
+        "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
         "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\obj\\",
+        "outputPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -157,8 +157,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
-                "projectPath": "C:\\Users\\Nitin\\Source\\Repos\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj"
+              "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
+                "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj"
               }
             }
           }
@@ -231,7 +231,7 @@
             },
             "Selenium.WebDriver.ChromeDriver": {
               "target": "Package",
-              "version": "[119.0.6045.10500, )"
+              "version": "[120.0.6099.10900, )"
             }
           },
           "imports": [

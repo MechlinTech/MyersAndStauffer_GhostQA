@@ -92,4 +92,8 @@
 	  <ProjectReference Include="..\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\MyersAndStaufferSeleniumTests.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\MyersAndStaufferSeleniumTests.csproj" />
+	</ItemGroup>
+
 </Project>

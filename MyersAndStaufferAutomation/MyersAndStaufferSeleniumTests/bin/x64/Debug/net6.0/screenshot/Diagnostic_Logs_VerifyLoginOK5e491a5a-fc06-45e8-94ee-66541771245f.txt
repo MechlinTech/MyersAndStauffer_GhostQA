@@ -1,0 +1,1 @@
+Error screenshot: C:\Users\Nitin\Source\Repos\MyersAndStauffer_GhostQA1\TestSeleniumReport\wwwroot\Failure24-01-19 11-59-44.png

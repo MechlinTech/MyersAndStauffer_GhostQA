@@ -1,0 +1,2 @@
+Error screenshot: C:\Users\Nitin\Source\Repos\MyersAndStauffer_GhostQA1\TestSeleniumReport\wwwroot\Failure24-01-20 01-22-00.png
+Error screenshot: C:\Users\Nitin\Source\Repos\MyersAndStauffer_GhostQA1\TestSeleniumReport\wwwroot\Failure24-01-20 01-24-02.png

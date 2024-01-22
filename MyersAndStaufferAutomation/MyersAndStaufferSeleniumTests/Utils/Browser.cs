@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.IO;
@@ -25,6 +26,7 @@ namespace MyersAndStaufferSeleniumTests.Utils
 
         public static void Start(BrowserDriver driver = BrowserDriver.Chrome, bool isRunHeadless = false, WindowSize windowSize = null)
         {
+            String driverpath = TestExecutor.Driverpath;
             switch (driver)
             {
                 case BrowserDriver.Chrome:
@@ -44,7 +46,7 @@ namespace MyersAndStaufferSeleniumTests.Utils
                     if (isRunHeadless)
                         chromeOptions.AddArguments("headless");
 
-                    _driver = new ChromeDriver(chromeOptions);
+                    _driver = new ChromeDriver(driverpath, chromeOptions);
                     if (windowSize != null)
                     {
                         _driver.Manage().Window.Size = new System.Drawing.Size(windowSize.Width, windowSize.Height);

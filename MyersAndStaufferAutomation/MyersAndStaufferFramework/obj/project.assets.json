@@ -7106,19 +7106,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dhima\\.nuget\\packages\\": {}
+    "C:\\Users\\Nitin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dhima\\Source\\Repos\\MyersAndStauffer_GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
+      "projectUniqueName": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
       "projectName": "MyersAndStaufferFramework",
-      "projectPath": "C:\\Users\\dhima\\Source\\Repos\\MyersAndStauffer_GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
-      "packagesPath": "C:\\Users\\dhima\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dhima\\Source\\Repos\\MyersAndStauffer_GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\obj\\",
+      "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
+      "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\dhima\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -7233,7 +7233,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
