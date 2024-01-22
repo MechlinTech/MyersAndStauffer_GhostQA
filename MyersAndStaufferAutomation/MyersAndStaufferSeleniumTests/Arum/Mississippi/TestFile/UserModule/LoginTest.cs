@@ -82,7 +82,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         [Test, Order(1)]
         public void VerifyLoginOK2()
         {
-
+            _testData.TestCaseName = "VerifyLoginOK";
+            //_testData.TestSuiteName = "ClockSession";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
 
             VideoRecorder.CreateRecording();
@@ -146,8 +147,16 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 
         }
 
-        public static void RunVerifyLoginOK2()
+        public static string RunVerifyLoginOK2(String browsername, String EnvironmentName, String TestName, String baseurl, String basePath, String driverPath, String testerName)
         {
+            browserName = browsername;
+            environmentName = EnvironmentName;
+            testName = TestName;
+            Baseurl = baseurl;
+            Basepath = basePath;
+            Driverpath = driverPath;
+            Testername = testerName;
+
             var setup = new SetupClass(); // Instantiate SetupClass using the new keyword to perform Initialize Dll
             setup.Initialize();
             var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
@@ -155,6 +164,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
             loginTest.VerifyLoginOK2();
             bsTest.TearDown();
+            return JsonData;
         }
     }
 }

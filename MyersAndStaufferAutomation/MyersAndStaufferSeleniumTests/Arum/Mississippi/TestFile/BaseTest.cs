@@ -38,12 +38,12 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
         public BaseTest()
         {
-            var testSuiteName = TestContext.CurrentContext.Test.ClassName.Replace(".", "/");
-            testSuiteName = Directory.GetParent(testSuiteName).Parent.Parent.ToString();
-            string[] directories = testSuiteName.Split("\\");
-            _testData.TestSuiteName = directories[directories.Length - 1];
-            _testData.TestRunName = DBConfiguration.GetRunId(_testData.TestSuiteName);
-            _testData.TestEnvironment = EnvironmentName;
+            //var testSuiteName = TestContext.CurrentContext.Test.ClassName.Replace(".", "/");
+            //testSuiteName = Directory.GetParent(testSuiteName).Parent.Parent.ToString();
+            //string[] directories = testSuiteName.Split("\\");
+            //_testData.TestSuiteName = directories[directories.Length - 1];
+            // _testData.TestRunName = DBConfiguration.GetRunId(_testData.TestSuiteName);
+            // _testData.TestEnvironment = EnvironmentName;
         }
 
         [SetUp]

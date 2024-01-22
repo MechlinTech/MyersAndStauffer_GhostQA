@@ -49,7 +49,7 @@ namespace TestSeleniumReport.Controllers
         {
 
             //testCaseName = new LoginTest().getcurrentTestName();
-            /* var testExecutor = new TestExecutor();
+             var testExecutor = new TestExecutor();
             var method = testExecutor.GetType().GetMethod(string.Concat("Run", testCaseName));
 
             if (method != null)
@@ -60,7 +60,7 @@ namespace TestSeleniumReport.Controllers
             {
              //Handle the case where the method with the provided name is not found
                 Console.WriteLine($"Method '{testCaseName}' not found.");
-            }*/
+            }
             //string result = TestExecutor.RunVerifyLoginOK(BrowserDriver.Chrome, EnvironmentName.UAT.ToString(), testCaseName);
             string result = TestExecutor.RunVerifyLoginOK(browsername, EnvironmentName, TestName, baseurl, basePath, driverPath, testerName);
         }
