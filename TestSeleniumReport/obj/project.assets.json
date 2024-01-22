@@ -3932,6 +3932,12 @@
           "build/_._": {}
         }
       },
+      "Selenium.WebDriver.MSEdgeDriver/120.0.2210.144": {
+        "type": "package",
+        "build": {
+          "build/_._": {}
+        }
+      },
       "SharpCompress/0.23.0": {
         "type": "package",
         "dependencies": {
@@ -6017,7 +6023,8 @@
           "NunitXml.TestLogger": "3.0.131",
           "Selenium.Support": "4.8.2",
           "Selenium.WebDriver": "4.8.2",
-          "Selenium.WebDriver.ChromeDriver": "120.0.6099.10900"
+          "Selenium.WebDriver.ChromeDriver": "120.0.6099.10900",
+          "Selenium.WebDriver.MSEdgeDriver": "120.0.2210.144"
         },
         "compile": {
           "bin/placeholder/MyersAndStaufferSeleniumTests.dll": {}
@@ -11134,6 +11141,25 @@
         "nupkg-icon.png",
         "selenium.webdriver.chromedriver.120.0.6099.10900.nupkg.sha512",
         "selenium.webdriver.chromedriver.nuspec"
+      ]
+    },
+    "Selenium.WebDriver.MSEdgeDriver/120.0.2210.144": {
+      "sha512": "thJB0cMYF9LcEsPIkqmVAWVIS/Yp0zc4A9518ZkmPuqlZaZhkKCAK7Sg279rl1RuBzEFOrv26yfPDMDpc5hzFw==",
+      "type": "package",
+      "path": "selenium.webdriver.msedgedriver/120.0.2210.144",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "build/DefinePropertiesMSEdgeDriver.targets",
+        "build/Selenium.WebDriver.MSEdgeDriver.targets",
+        "driver/linux64/msedgedriver",
+        "driver/mac64/msedgedriver",
+        "driver/win32/msedgedriver.exe",
+        "driver/win64/msedgedriver.exe",
+        "selenium.webdriver.msedgedriver.120.0.2210.144.nupkg.sha512",
+        "selenium.webdriver.msedgedriver.nuspec"
       ]
     },
     "SharpCompress/0.23.0": {

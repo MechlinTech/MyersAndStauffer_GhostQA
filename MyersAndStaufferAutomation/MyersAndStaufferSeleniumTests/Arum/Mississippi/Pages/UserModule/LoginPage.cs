@@ -1,5 +1,6 @@
 ﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
 using MyersAndStaufferSeleniumTests.Utils;
+using NUnit.Framework;
 using OpenQA.Selenium;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule
@@ -15,7 +16,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule
 
         public IWebElement PasswordInput => driver.FindElement(By.XPath("//input[@name='password']"));
 
-        public IWebElement LogInButton => driver.FindElement(By.XPath("//button[contains(text(),'LOGINtfgr')]"));
+        public IWebElement LogInButton => driver.FindElement(By.XPath("//button[contains(text(),'LOGIN')]"));
+        public IWebElement MechlinHeader => driver.FindElementWhenVisible(() => By.XPath("//div//h1[contains(text(), 'Mechlin Software Technology Pvt. Ltd.')]"));
 
         // Methods
         public void WaitForPageLoad()
@@ -72,9 +74,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule
 
         public bool LoginSuccess()
         {
-            // This could probably be better
-            var elements = driver.FindElements(By.XPath("//strong[contains(text(),'Log Out')]"));
-            return elements.Count > 0;
+            return MechlinHeader.IsElementVisibleAndEnabled();
         }
     }
 }

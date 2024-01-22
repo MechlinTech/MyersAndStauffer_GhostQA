@@ -1,6 +1,8 @@
-﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
+﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Edge;
 using System;
 using System.IO;
 
@@ -10,7 +12,7 @@ namespace MyersAndStaufferSeleniumTests.Utils
     {
         Chrome,
         Firefox,
-        InternetExplorer,
+        Edge,
         Safari
     }
 
@@ -58,9 +60,38 @@ namespace MyersAndStaufferSeleniumTests.Utils
 
                     break;
 
+                case BrowserDriver.Edge: 
+                    
+                    EdgeOptions edgeOptions = new EdgeOptions();
+                    edgeOptions.AddArgument("--allow-incognito");
+                    edgeOptions.AddArgument("test-type");
+
+                    var timestamp1 = DateTime.Now.ToFileTime();
+                    downloadDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SeleniumDownload", timestamp1.ToString());
+                    Directory.CreateDirectory(downloadDirectory);
+
+                    edgeOptions.AddUserProfilePreference("download.default_directory", downloadDirectory);
+                    edgeOptions.AddUserProfilePreference("download.prompt_for_download", false);
+                    edgeOptions.AddUserProfilePreference("disable-popup-blocking", "true");
+
+
+                    _driver = new EdgeDriver(edgeOptions);
+
+                    if (windowSize != null)
+                    {
+                        _driver.Manage().Window.Size = new System.Drawing.Size(windowSize.Width, windowSize.Height);
+                    }
+                    else
+                    {
+                        _driver.Manage().Window.Maximize();
+                    }
+                    break;
+
+                    
+
                 // TODO: Add support for other Browsers
                 case BrowserDriver.Firefox:
-                case BrowserDriver.InternetExplorer:
+                
                 case BrowserDriver.Safari:
                     throw new NotImplementedException();
             }

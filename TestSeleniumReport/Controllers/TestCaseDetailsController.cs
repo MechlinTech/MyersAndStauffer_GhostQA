@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using MyersAndStaufferSeleniumTests.Utils;
 using SeleniumTestReport.Helper;
@@ -19,16 +20,6 @@ namespace TestSeleniumReport.Controllers
         //public static string driverPath = @"D:\MechlinTech\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\bin\x64\Debug\net6.0";
         public static string testerName = "GhostQA";
 
-
-
-        //public enum EnvironmentName
-        //{
-        //    QA,
-        //    UAT,
-        //    Staging,
-        //    Dev,
-        //    Prod
-        //}
         private readonly DBHelper _helper;
         public TestCaseDetailsController(DBHelper helper)
         {
@@ -42,14 +33,13 @@ namespace TestSeleniumReport.Controllers
         public ActionResult Index()
         {
             string TestCasesListJson = _helper.GetTestCases();
-            RunTestCase("VerifyLoginOK2");
+            RunTestCase("Verify_User_is_able_to_Login_Successfully");
             return View("Index", TestCasesListJson);
         }
 
         public static void RunTestCase(string testCaseName)
         {
 
-            //testCaseName = new LoginTest().getcurrentTestName();
             // var testExecutor = new TestExecutor();
             //var method = testExecutor.GetType().GetMethod(string.Concat("Run", testCaseName));
 

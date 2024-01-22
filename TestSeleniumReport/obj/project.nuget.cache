@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bzA352oCZLGhht5LIVKzi86IQFBIV0kbqYWBFgO7leN3215c676bhcc6DdTmVyq8Mmr8wpg9LUa6RtjNJj1vwg==",
+  "dgSpecHash": "CB7LXMCuW8/OzoyaOVmra5e8Rh7+QIkvydRdkUfhBzX4c81il5N0+EcsXOrpnYOBod4tMFq9C7foDopsX7mDsw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\TestSeleniumReport.csproj",
   "expectedPackageFiles": [
@@ -228,6 +228,7 @@
     "C:\\Users\\Nitin\\.nuget\\packages\\selenium.support\\4.8.2\\selenium.support.4.8.2.nupkg.sha512",
     "C:\\Users\\Nitin\\.nuget\\packages\\selenium.webdriver\\4.8.2\\selenium.webdriver.4.8.2.nupkg.sha512",
     "C:\\Users\\Nitin\\.nuget\\packages\\selenium.webdriver.chromedriver\\120.0.6099.10900\\selenium.webdriver.chromedriver.120.0.6099.10900.nupkg.sha512",
+    "C:\\Users\\Nitin\\.nuget\\packages\\selenium.webdriver.msedgedriver\\120.0.2210.144\\selenium.webdriver.msedgedriver.120.0.2210.144.nupkg.sha512",
     "C:\\Users\\Nitin\\.nuget\\packages\\sharpcompress\\0.23.0\\sharpcompress.0.23.0.nupkg.sha512",
     "C:\\Users\\Nitin\\.nuget\\packages\\system.appcontext\\4.1.0\\system.appcontext.4.1.0.nupkg.sha512",
     "C:\\Users\\Nitin\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
