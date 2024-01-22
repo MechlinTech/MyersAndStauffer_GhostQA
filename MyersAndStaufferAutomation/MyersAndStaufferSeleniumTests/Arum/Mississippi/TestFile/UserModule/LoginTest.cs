@@ -22,7 +22,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         //[Category("MyTestCase")]
         public void Verify_User_Is_Able_To_Login()
         {
-       
+
             _testData.TestCaseName = "VerifyLoginOK";
             _testData.TestSuiteName = "ClockSession";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
@@ -54,7 +54,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             try
             {
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Submit button Test" });
-               logInPage.SubmitLogIn();
+                logInPage.SubmitLogIn();
                 //test.Log(Status.Info, "Click on LoSubmit button Test");
                 _testData.TestCaseStatus = "Passed";
 
@@ -110,7 +110,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 
             _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Submit button Test" });
             logInPage.SubmitLogIn();
-           // test.Log(Status.Info, "Click on LoSubmit button Test");
+            // test.Log(Status.Info, "Click on LoSubmit button Test");
         }
     }
 
@@ -118,19 +118,19 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
     {
         public static string JsonData { get; set; }
         public static string browserName { get; set; }
-        public static string environmentName {  get; set; }
-        public static string testName { get; set; }
+        public static string environmentName { get; set; }
+        public static string testCaseName { get; set; }
         public static string Baseurl { get; set; }
         public static string Basepath { get; set; }
         public static string Driverpath { get; set; }
         public static string Testername { get; set; }
 
-        
-        public static string RunVerifyLoginOK(String browsername, String EnvironmentName, String TestName, String baseurl, String basePath, String driverPath, String testerName)
+
+        public static string ExecuteTestCases(string browsername, string EnvironmentName, string TestCaseName, string baseurl, string basePath, string driverPath, string testerName)
         {
             browserName = browsername;
             environmentName = EnvironmentName;
-            testName = TestName;
+            testCaseName = TestCaseName;
             Baseurl = baseurl;
             Basepath = basePath;
             Driverpath = driverPath;
@@ -141,30 +141,40 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
             bsTest.SetUp();
             var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
-            loginTest.Verify_User_Is_Able_To_Login();
-            bsTest.TearDown();            
-            return JsonData;
 
-        }
+            var method = loginTest.GetType().GetMethod(string.Concat(testCaseName));
 
-        public static string RunVerifyLoginOK2(String browsername, String EnvironmentName, String TestName, String baseurl, String basePath, String driverPath, String testerName)
-        {
-            browserName = browsername;
-            environmentName = EnvironmentName;
-            testName = TestName;
-            Baseurl = baseurl;
-            Basepath = basePath;
-            Driverpath = driverPath;
-            Testername = testerName;
-
-            var setup = new SetupClass(); // Instantiate SetupClass using the new keyword to perform Initialize Dll
-            setup.Initialize();
-            var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
-            bsTest.SetUp();
-            var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
-            loginTest.VerifyLoginOK2();
+            if (method != null)
+            {
+                method.Invoke(loginTest, null);
+            }
+            else
+            {
+                Console.WriteLine($"Method '{testCaseName}' not found.");
+            }
             bsTest.TearDown();
             return JsonData;
+
         }
+
+        //public static string RunVerifyLoginOK2(String browsername, String EnvironmentName, String TestCaseName, String baseurl, String basePath, String driverPath, String testerName)
+        //{
+        //    browserName = browsername;
+        //    environmentName = EnvironmentName;
+        //    testName = TestName;
+        //    Baseurl = baseurl;
+        //    Basepath = basePath;
+        //    Driverpath = driverPath;
+        //    Testername = testerName;
+
+        //    var setup = new SetupClass(); // Instantiate SetupClass using the new keyword to perform Initialize Dll
+        //    setup.Initialize();
+        //    var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
+        //    bsTest.SetUp();
+        //    var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
+        //    loginTest.VerifyLoginOK2();
+        //    bsTest.TearDown();
+        //    return JsonData;
+        //}
     }
 }

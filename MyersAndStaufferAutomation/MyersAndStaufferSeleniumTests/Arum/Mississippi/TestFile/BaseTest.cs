@@ -68,8 +68,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             // string baseURL = EnvironmentHelper.GetSetting("BaseURL");
             string baseURL = TestExecutor.Baseurl;
-            bool isRunningHeadless = bool.Parse(EnvironmentHelper.GetSetting("RunTestHeadless"));
-            logMessage.Append($"[BaseURL={baseURL}][IsRunningHeadless={isRunningHeadless.ToString()}]");
+            //bool isRunningHeadless = bool.Parse(EnvironmentHelper.GetSetting("RunTestHeadless"));
+            //logMessage.Append($"[BaseURL={baseURL}][IsRunningHeadless={isRunningHeadless.ToString()}]");
 
             WindowSize browserWindowSize = new WindowSize(1280, 720);
             string browserWidthSetting = EnvironmentHelper.GetSetting("BrowserWidth");
@@ -85,7 +85,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             }
             LogMessage(logMessage.ToString());
 
-            Browser.Start(BrowserDriver.Chrome, isRunHeadless: isRunningHeadless, windowSize: browserWindowSize);
+            Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize);
             driver = Browser.Driver;
             driver.Manage().Window.Maximize();
         }
@@ -145,13 +145,13 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             fileName ??= _testData.TestCaseName.ToString();
             Screenshot ss = ((ITakesScreenshot)Browser.Driver).GetScreenshot();
             string timestamp = DateTime.Now.ToString("yy-MM-dd hh-mm-ss");
-            
+
             string screenshotFile = Path.Combine(basePath, fileName + (hasTimeStamp ? timestamp : null) + ".png");
             ss.SaveAsFile(screenshotFile, ScreenshotImageFormat.Png);
             TestContext.AddTestAttachment(screenshotFile, fileName + "Screenshot");
             WriteToLogfile("Error screenshot: " + screenshotFile);
 
-            
+
 
             var FailureSSPath = Path.Combine(basePath, "FailureScreenShots", DateTime.Now.ToString("MMMM_dd_yyyy"));
             if (!Directory.Exists(FailureSSPath))
