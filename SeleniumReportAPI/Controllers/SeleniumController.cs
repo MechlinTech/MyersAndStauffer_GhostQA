@@ -190,5 +190,45 @@ namespace SeleniumReportAPI.Controllers
         //    }
         //    return Ok();
         //}
+
+        /// <summary>
+        /// Add / Update Environments
+        /// </summary>
+        /// <param Environments=Environments></param>
+        /// <returns></returns>
+        [HttpPost("AddUpdateEnvironment")]
+        public ActionResult AddUpdateEnvironment([FromBody] Models.Environments model)
+        {
+
+            try
+            {
+                var result = _helper.AddUpdateEnvironmentJson(model);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        /// <summary>
+        /// Add / Update Environments
+        /// </summary>
+        /// <param Applications=Applications></param>
+        /// <returns></returns>
+        [HttpPost("AddUpdateApplication")]
+        public ActionResult AddUpdateApplication([FromBody] Models.Applications model)
+        {
+
+            try
+            {
+                var result = _helper.AddUpdateApplicationJson(model);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
     }
 }

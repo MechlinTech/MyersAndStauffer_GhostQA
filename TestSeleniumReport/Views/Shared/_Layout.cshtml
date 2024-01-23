@@ -34,8 +34,9 @@
                             Setting
                         </a>
                         <div class="dropdown-menu" aria-labelledby="settingDropdown">
-                            <a class="dropdown-item btn-gray" href="#">Execution Environment</a>
-                            <a class="dropdown-item btn-gray" href="#">Application Setting</a>
+                            @Html.ActionLink("Environment", "Index", "Environment", new { @area = "" }, new { @class = "nav-link text-dark btn-gray" })
+                            @Html.ActionLink("Application", "Index", "Application", new { @area = "" }, new { @class = "nav-link text-dark btn-gray" })
+                            @Html.ActionLink("Browser", "Index", "Browser", new { @area = "" }, new { @class = "nav-link text-dark btn-gray" })
                             <a class="dropdown-item btn-gray" href="#">Roles Management</a>
                             <a class="dropdown-item btn-gray" href="#">Users Management</a>
                             @Html.ActionLink("Suite category", "Index", "CustomTestSuite", new { @area = "" }, new { @class = "nav-link text-dark btn-gray" })

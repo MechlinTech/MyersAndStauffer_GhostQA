@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestSeleniumReport.DBContext;
 
@@ -11,9 +12,10 @@ using TestSeleniumReport.DBContext;
 namespace TestSeleniumReport.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240122082637_tbl_environment_add_colunms")]
+    partial class tbl_environment_add_colunms
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,24 +245,6 @@ namespace TestSeleniumReport.Migrations
                     b.ToTable("tbl_Applications");
                 });
 
-            modelBuilder.Entity("TestSeleniumReport.Models.Browsers", b =>
-                {
-                    b.Property<int>("BrowserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BrowserId"), 1L, 1);
-
-                    b.Property<string>("BrowserName")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("BrowserName");
-
-                    b.HasKey("BrowserId");
-
-                    b.ToTable("tbl_Browsers");
-                });
-
             modelBuilder.Entity("TestSeleniumReport.Models.Environments", b =>
                 {
                     b.Property<int>("EnvironmentId")
@@ -273,42 +257,15 @@ namespace TestSeleniumReport.Migrations
                     b.Property<int>("ApplicationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("BasePath")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("BasePath");
-
-                    b.Property<string>("Baseurl")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("Baseurl");
-
-                    b.Property<int>("BroswerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DriverPath")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("DriverPath");
-
                     b.Property<string>("EnvironmentName")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
                         .HasColumnName("EnvironmentName");
 
-                    b.Property<string>("ModifiedBy")
+                    b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("Url");
 
                     b.HasKey("EnvironmentId");
 

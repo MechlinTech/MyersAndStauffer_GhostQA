@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using Newtonsoft.Json;
 using SeleniumReportAPI.Models;
@@ -8,6 +9,7 @@ using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Environments = SeleniumReportAPI.Models.Environments;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -465,6 +467,67 @@ namespace SeleniumReportAPI.Helper
             {
                 Console.WriteLine($"Method '{testCaseName}' not found.");
             }
+        }
+
+        internal string AddUpdateEnvironmentJson(Environments model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateEnvironment", connection))
+                    {
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
+                        command.Parameters.AddWithValue("@EnvironmentName", model.EnvironmentName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal string AddUpdateApplicationJson(Applications model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateEnvironment", connection))
+                    {
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@ApplicationName", model.ApplicationName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
         }
     }
 }

@@ -11,6 +11,7 @@ using TestSeleniumReport.Models;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
+using Environments = TestSeleniumReport.Models.Environments;
 
 namespace SeleniumTestReport.Helper
 {
@@ -424,7 +425,177 @@ namespace SeleniumTestReport.Helper
             }
             return testSuites;
         }
+        internal string AddUpdateEnvironmentJson(Environments model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateEnvironment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@EnvironmentName", model.EnvironmentName);
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@BrowserId", model.BroswerId);
+                        command.Parameters.AddWithValue("@Baseurl", model.Baseurl);
+                        command.Parameters.AddWithValue("@BasePath", model.BasePath);
+                        command.Parameters.AddWithValue("@DriverPath", model.DriverPath);
+                        command.Parameters.AddWithValue("@CreatedBy", model.CreatedBy);
+                        command.Parameters.AddWithValue("@ModifiedBy", model.ModifiedBy);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal string AddUpdateApplicationJson(Applications model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateApplication", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@ApplicationName", model.ApplicationName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
 
+        internal string GetBrowsers()
+        {
+            string BrowserListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetBrowsers", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                BrowserListJson = reader["Browsers"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return BrowserListJson;
+        }
+        internal string AddUpdateBrowserJson(Browsers model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateBrowser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@BrowserId", model.BrowserId);
+                        command.Parameters.AddWithValue("@BrowserName", model.BrowserName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal Environments GetEnvironmentById(int Id)
+        {
+            Environments environment = new Environments();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetEnvironmentById", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@EnvironmentId", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                environment.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
+                                environment.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
+                                environment.EnvironmentName = reader["EnvironmentName"].ToString();
+                                environment.DriverPath = reader["DriverPath"].ToString();
+                                environment.BasePath = reader["BasePath"].ToString();
+                                environment.Baseurl = reader["Baseurl"].ToString();
+                                environment.BroswerId = Convert.ToInt32(reader["BroswerId"]);
+                                environment.CreatedBy = reader["CreatedBy"].ToString();
+                                environment.ModifiedBy = reader["ModifiedBy"].ToString();
+                                environment.CreatedOn = Convert.ToDateTime(reader["CreatedOn"]);
+                                environment.ModifiedOn = Convert.ToDateTime(reader["ModifiedOn"]);
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return environment;
+        }
         //static void ExtractTestCasesFromProject()
         //{
         //    string projectPath = @"D:\Mechlin Tech\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation.sln";
