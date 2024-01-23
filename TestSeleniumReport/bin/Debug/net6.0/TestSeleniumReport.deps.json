@@ -2720,6 +2720,7 @@
         }
       },
       "Selenium.WebDriver.ChromeDriver/120.0.6099.10900": {},
+      "Selenium.WebDriver.MSEdgeDriver/120.0.2210.144": {},
       "SharpCompress/0.23.0": {
         "dependencies": {
           "System.Text.Encoding.CodePages": "6.0.0"
@@ -3886,7 +3887,8 @@
           "NunitXml.TestLogger": "3.0.131",
           "Selenium.Support": "4.8.2",
           "Selenium.WebDriver": "4.8.2",
-          "Selenium.WebDriver.ChromeDriver": "120.0.6099.10900"
+          "Selenium.WebDriver.ChromeDriver": "120.0.6099.10900",
+          "Selenium.WebDriver.MSEdgeDriver": "120.0.2210.144"
         },
         "runtime": {
           "MyersAndStaufferSeleniumTests.dll": {}
@@ -5475,6 +5477,13 @@
       "sha512": "sha512-wCOew6C9ABCRK59DdzdJyoQKmVQEUrVQEvoDQdhnLWpW1OkFKG5pd9EK6B3j2vcqdNTBNM6++tAOhBMFezHm3w==",
       "path": "selenium.webdriver.chromedriver/120.0.6099.10900",
       "hashPath": "selenium.webdriver.chromedriver.120.0.6099.10900.nupkg.sha512"
+    },
+    "Selenium.WebDriver.MSEdgeDriver/120.0.2210.144": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-thJB0cMYF9LcEsPIkqmVAWVIS/Yp0zc4A9518ZkmPuqlZaZhkKCAK7Sg279rl1RuBzEFOrv26yfPDMDpc5hzFw==",
+      "path": "selenium.webdriver.msedgedriver/120.0.2210.144",
+      "hashPath": "selenium.webdriver.msedgedriver.120.0.2210.144.nupkg.sha512"
     },
     "SharpCompress/0.23.0": {
       "type": "package",
