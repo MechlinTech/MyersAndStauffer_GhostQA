@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestSeleniumReport.DBContext;
 
@@ -11,9 +12,10 @@ using TestSeleniumReport.DBContext;
 namespace TestSeleniumReport.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240123142425_tbl_changes")]
+    partial class tbl_changes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,12 +277,12 @@ namespace TestSeleniumReport.Migrations
 
                     b.Property<string>("BasePath")
                         .IsRequired()
-                        .HasColumnType("varchar(1000)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("BasePath");
 
                     b.Property<string>("Baseurl")
                         .IsRequired()
-                        .HasColumnType("varchar(1000)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("Baseurl");
 
                     b.Property<int>("BroswerId")
@@ -295,7 +297,7 @@ namespace TestSeleniumReport.Migrations
 
                     b.Property<string>("DriverPath")
                         .IsRequired()
-                        .HasColumnType("varchar(1000)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("DriverPath");
 
                     b.Property<string>("EnvironmentName")
@@ -326,10 +328,6 @@ namespace TestSeleniumReport.Migrations
 
                     b.Property<int>("ApplicationId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EnvironmentId")
                         .HasColumnType("int");

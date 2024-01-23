@@ -22,7 +22,7 @@
                                     <a class="btn-gray" asp-controller="Home" asp-action="EditTestSuite" asp-route-testSuiteName="@item.TestSuiteName">
                                         <em class="fas fa-edit mx-2 text-success"></em>
                                     </a>
-                                    <a class="btn-gray" onclick="deleteTestSuites('@item.TestSuiteName')">
+                                    <a class="btn-gray" asp-controller="Home" asp-action="DeleteTestSuites" asp-route-testSuiteName="@item.TestSuiteName">
                                         <em class="fa fa-trash-alt text-danger"></em>
                                     </a>
                                     <a class="btn-gray" onclick="executeTestSuites('@item.TestSuiteName')">

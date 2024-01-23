@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SeleniumTestReport.Helper;
 using TestSeleniumReport.DTO_s;
-using TestSeleniumReport.Models;
 
 namespace TestSeleniumReport.Controllers
 {
@@ -105,7 +104,7 @@ namespace TestSeleniumReport.Controllers
         /// <param name="action"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult AddTestSuite(TestSuites model, string action)
+        public ActionResult AddTestSuite(Dto_TestSuiteDetailsData model, string action)
         {
             Dto_Response _response = new Dto_Response();
             if (action == "Save")
@@ -119,9 +118,21 @@ namespace TestSeleniumReport.Controllers
                 _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
                 if (!_response.status.Contains("Fail"))
                 {
-                    foreach (var testCases in model.SelectedTestCases)
+                    string _testRunName = _helper.GetRunId(model.TestSuiteName);
+                    Models.Environments _environmentDetails = _helper.GetEnvironmentById(Convert.ToInt32(model.EnvironmentId));
+                    foreach (var testCaseName in model.SelectedTestCases)
                     {
-                        _helper.RunTestCase(testCases);
+                        string _testCaseJsonData = DBHelper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
+                        if (!string.IsNullOrEmpty(_testCaseJsonData))
+                        {
+                            Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
+                            _testSuiteData.TestSuiteName = model.TestSuiteName;
+                            _testSuiteData.TesterName = User.Identity.Name;
+                            _testSuiteData.TestRunName = _testRunName;
+                            _testSuiteData.TestEnvironment = _environmentDetails.BrowserName;
+                            //Save Data into table for custom test suite
+                            string _result = _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
+                        }
                     }
                 }
             }
@@ -137,18 +148,18 @@ namespace TestSeleniumReport.Controllers
         /// </summary>
         /// <param name="TestSuiteId"></param>
         /// <returns></returns>
-        public ActionResult DeleteTestSuites(int TestSuiteId)
+        public ActionResult DeleteTestSuites(string TestSuiteName)
         {
             try
             {
-                string result = _helper.DeleteTestSuites(TestSuiteId);
+                string result = _helper.DeleteTestSuites(TestSuiteName);
                 Dto_Response _Response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
-                return RedirectToAction(_Response.message, "Index");
             }
             catch
             {
                 throw;
             }
+            return RedirectToAction("Index");
         }
 
         /// <summary>
@@ -162,7 +173,7 @@ namespace TestSeleniumReport.Controllers
             {
                 return View("Index");
             }
-            TestSuites result = _helper.GetTestSuiteByName(testSuiteName);
+            Dto_TestSuiteDetailsData result = _helper.GetTestSuiteByName(testSuiteName);
 
             var ApplicationListJson = _helper.GetApplications();
             List<Models.Applications> _applicationList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Applications>>(ApplicationListJson);
@@ -186,12 +197,26 @@ namespace TestSeleniumReport.Controllers
         /// <returns></returns>
         public ActionResult ExecuteTestSuite(string TestSuiteName)
         {
-            TestSuites _testSuiteDetails = _helper.GetTestSuiteByName(TestSuiteName);
+            string _testRunName = _helper.GetRunId(TestSuiteName);
+            Dto_TestSuiteDetailsData _testSuiteDetails = _helper.GetTestSuiteByName(TestSuiteName);
+            Models.Environments _environmentDetails = _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteDetails.EnvironmentId));
+
             if (_testSuiteDetails.SelectedTestCases.Count > 0)
             {
                 foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
                 {
-                    _helper.RunTestCase(testCaseName.ToString());
+                    string _testCaseJsonData = DBHelper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
+                    if (!string.IsNullOrEmpty(_testCaseJsonData))
+                    {
+                        Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
+                        _testSuiteData.TestSuiteName = TestSuiteName;
+                        _testSuiteData.TesterName = User.Identity.Name;
+                        _testSuiteData.TestRunName = _testRunName;
+                        _testSuiteData.TestEnvironment = _environmentDetails.BrowserName;
+                        _testSuiteData.TestCaseName = testCaseName.ToString();
+                        //Save Data into table for custom test suite
+                        string _result = _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
+                    }
                 }
             }
             return RedirectToAction("Index");

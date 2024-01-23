@@ -12,7 +12,7 @@ PROC EXEC		:  EXEC stp_AddUpdateApplication 0
 				
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS( SELECT 1 FROM tbl_Applications WHERE [ApplicationName] = @ApplicationName)
+	IF EXISTS( SELECT 1 FROM tbl_Applications WHERE [ApplicationName] = @ApplicationName AND [ApplicationId] <> @ApplicationId)
 	BEGIN
 		SELECT [result] = JSON_QUERY((
 			SELECT 'fail' [status], 'Duplicate Application Name' [message]

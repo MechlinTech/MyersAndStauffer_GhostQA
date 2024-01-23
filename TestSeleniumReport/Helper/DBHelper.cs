@@ -12,12 +12,14 @@ using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using Environments = TestSeleniumReport.Models.Environments;
+using TestSeleniumReport.DTO_s;
 
 namespace SeleniumTestReport.Helper
 {
     public class DBHelper
     {
         private readonly IConfiguration _configuration;
+
         public DBHelper(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -215,7 +217,7 @@ namespace SeleniumTestReport.Helper
             return TestCasesListJson;
         }
 
-        internal string AddUpdateTestSuitesJson(TestSuites model)
+        internal string AddUpdateTestSuitesJson(Dto_TestSuiteDetailsData model)
         {
             string result = string.Empty;
             try
@@ -282,7 +284,7 @@ namespace SeleniumTestReport.Helper
             return testSuiteListJson;
         }
 
-        internal string DeleteTestSuites(int testSuiteId)
+        internal string DeleteTestSuites(string TestSuiteName)
         {
             string result = string.Empty;
             try
@@ -293,7 +295,7 @@ namespace SeleniumTestReport.Helper
                     using (SqlCommand command = new SqlCommand("stp_DeleteTestSuites", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        command.Parameters.AddWithValue("@TestSuiteName", TestSuiteName);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -373,25 +375,9 @@ namespace SeleniumTestReport.Helper
             return EnvironmentListJson;
         }
 
-        internal void RunTestCase(string testCaseName)
+        internal Dto_TestSuiteDetailsData GetTestSuiteByName(string TestSuiteName)
         {
-            var testExecutor = new TestExecutor();
-            var method = testExecutor.GetType().GetMethod(string.Concat("Run", testCaseName));
-
-            if (method != null)
-            {
-                method.Invoke(testExecutor, null);
-            }
-            else
-            {
-                // Handle the case where the method with the provided name is not found
-                Console.WriteLine($"Method '{testCaseName}' not found.");
-            }
-        }
-
-        internal TestSuites GetTestSuiteByName(string TestSuiteName)
-        {
-            TestSuites testSuites = new TestSuites();
+            Dto_TestSuiteDetailsData testSuites = new Dto_TestSuiteDetailsData();
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
@@ -425,6 +411,7 @@ namespace SeleniumTestReport.Helper
             }
             return testSuites;
         }
+
         internal string AddUpdateEnvironmentJson(Environments model)
         {
             string result = string.Empty;
@@ -463,6 +450,7 @@ namespace SeleniumTestReport.Helper
             }
             return result;
         }
+
         internal string AddUpdateApplicationJson(Applications model)
         {
             string result = string.Empty;
@@ -524,6 +512,7 @@ namespace SeleniumTestReport.Helper
             }
             return BrowserListJson;
         }
+
         internal string AddUpdateBrowserJson(Browsers model)
         {
             string result = string.Empty;
@@ -596,60 +585,84 @@ namespace SeleniumTestReport.Helper
             }
             return environment;
         }
-        //static void ExtractTestCasesFromProject()
-        //{
-        //    string projectPath = @"D:\Mechlin Tech\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation.sln";
-        //    // Load the project
-        //    var workspace = Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.Create();
-        //    var project = workspace.OpenProjectAsync(projectPath).Result;
 
-        //    // Traverse the documents in the project
-        //    foreach (var document in project.Documents)
-        //    {
-        //        // Parse the document
-        //        var syntaxRoot = document.GetSyntaxRootAsync().Result;
+        internal string SaveTestCaseData(string testSuiteJsonData)
+        {
+            string _result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_SaveCustomTestSuiteExecutionData", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
 
-        //        // Traverse the syntax tree
-        //        ExtractTestCasesFromSyntaxTree(syntaxRoot);
-        //    }
-        //}
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@TestSuiteJson", testSuiteJsonData);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            _result = reader["result"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _result = ex.Message;
+            }
+            return _result;
+        }
 
-        //static void ExtractTestCasesFromSyntaxTree(SyntaxNode syntaxNode)
-        //{
-        //    // Use a syntax walker to traverse the syntax tree
-        //    var walker = new TestCaseSyntaxWalker();
-        //    walker.Visit(syntaxNode);
+        internal string GetRunId(string testSuiteName)
+        {
+            string TestRunName = "";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_GetRunId", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
 
-        //    // Retrieve the test cases found by the walker
-        //    var testCases = walker.TestCases;
+                    connection.Open();
+                    SqlParameter sqlParameter = cmd.Parameters.AddWithValue("@TestSuite", testSuiteName);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Access data from the result set
+                            TestRunName = reader["TestRunName"].ToString();
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                TestRunName = "Error";
+                throw ex;
+            }
+            return TestRunName;
+        }
 
-        //    // Process the extracted test cases (e.g., print them)
-        //    foreach (var testCase in testCases)
-        //    {
-        //        Console.WriteLine($"Test Case: {testCase}");
-        //    }
-        //}
+        internal static string RunTestCase(string testCaseName, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
+        {
+            string TestCaseJsonData = string.Empty;
+            try
+            {
+                TestCaseJsonData = TestExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
+            }
+            catch (Exception)
+            {
 
-        //internal class TestCaseSyntaxWalker : CSharpSyntaxWalker
-        //{
-        //    public List<string> TestCases { get; } = new List<string>();
-
-        //    public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
-        //    {
-        //        // Check if the method has a TestMethod attribute
-        //        var hasTestMethodAttribute = node.AttributeLists
-        //            .SelectMany(attrList => attrList.Attributes)
-        //            .Any(attribute =>
-        //                attribute.Name.ToString() == "TestMethod" || attribute.Name.ToString() == "Test");
-
-        //        if (hasTestMethodAttribute)
-        //        {
-        //            // Add the method name to the list of test cases
-        //            TestCases.Add(node.Identifier.Text);
-        //        }
-
-        //        base.VisitMethodDeclaration(node);
-        //    }
-        //}
+                throw;
+            }
+            return TestCaseJsonData;
+        }
     }
 }

@@ -1,11 +1,4 @@
-USE [SeleniumTest]
-GO
-/****** Object:  StoredProcedure [dbo].[stp_GetEnvironment]    Script Date: 1/23/2024 5:50:52 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER   PROCEDURE [dbo].[stp_GetEnvironment]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetEnvironment]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetEnvironment

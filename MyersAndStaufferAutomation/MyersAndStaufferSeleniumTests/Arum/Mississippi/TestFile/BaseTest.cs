@@ -14,12 +14,12 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
     [TestFixture]
     public class BaseTest
     {
-        
+
         public static string basePath = TestExecutor.Basepath;
         public static string EnvironmentName = TestExecutor.environmentName;
         public Authentication Credentials = new Authentication();
         public IWebDriver driver;
-        private static string LoggingPath { get; set; }       
+        private static string LoggingPath { get; set; }
         public static TestData _testData = TestDataSharedInstance.testData;
         public static List<TestStepColumns> _testSteps = TestCaseStepsInstance.TestSteps;
 
@@ -33,12 +33,12 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         public void SetUp()
         {
             StringBuilder logMessage = new StringBuilder();
-            _testData.TestCaseName = TestContext.CurrentContext.Test.Name;          
+            _testData.TestCaseName = TestContext.CurrentContext.Test.Name;
             // Get Browser settings
             string baseURL = TestExecutor.Baseurl;
             WindowSize browserWindowSize = new WindowSize(1280, 720);
             LogMessage(logMessage.ToString());
-            Browser.Start(BrowserDriver.Edge, windowSize: browserWindowSize);
+            Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize);
             driver = Browser.Driver;
             driver.Manage().Window.Maximize();
         }
@@ -49,7 +49,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             var status = LoginTest.Status;
             var message = LoginTest.Message;
             var stackTrace = LoginTest.StackTrace;
-           
+
             DateTime time = DateTime.Now;
             string fileName2 = "Screenshot_" + time.ToString("h_mm_ss") + ".png";
 
@@ -77,7 +77,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             _testData.TestSuiteEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestCaseSteps = JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty)));
             TestExecutor.JsonData = JsonConvert.SerializeObject(_testData);
-           
+            // This is required to execute test cases very first time
+            //DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
+            //DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
         }
 
         public static void ScreenShot(string FailureMessage, string fileName = null, bool hasTimeStamp = false)
@@ -99,7 +101,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             }
             var FailureSSImagePath = Path.Combine(FailureSSPath, fileName + (hasTimeStamp ? timestamp : null) + ".png");
             ss.SaveAsFile(FailureSSImagePath, ScreenshotImageFormat.Png);
-            _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Failed and here is the screenshot on which test failed", FailureMessage = "Test failed with message " + FailureMessage.ToString().Replace("'", "''"), FailureScreenShots = FailureSSImagePath.StartsWith(basePath) ? @"\\" + FailureSSImagePath.Substring(basePath.Length).ToString() : FailureSSImagePath.ToString() });
+            _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Failed and here is the screenshot on which test failed", FailureMessage = "Test failed with message " + FailureMessage.ToString().Replace("'", "''"), FailureScreenShots = FailureSSImagePath.StartsWith(basePath) ? @"\" + FailureSSImagePath.Substring(basePath.Length).ToString() : FailureSSImagePath.ToString() });
         }
 
         // Helper Methods

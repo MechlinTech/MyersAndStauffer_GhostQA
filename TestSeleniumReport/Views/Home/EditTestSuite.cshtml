@@ -1,4 +1,4 @@
-﻿@model TestSeleniumReport.Models.TestSuites
+﻿@model TestSeleniumReport.DTO_s.Dto_TestSuiteDetailsData
 
 @{
     Layout = "_Layout";
@@ -6,7 +6,7 @@
 
 @using (Html.BeginForm("AddTestSuite", "Home", FormMethod.Post, new { @class = "form" }))
 {
-    <input asp-for="TestSuiteId" hidden/>
+    <input asp-for="TestSuiteId" hidden />
     <div class="form-group d-flex">
         <label class="control-label">Test Suite Name</label>
         @Html.TextBoxFor(model => model.TestSuiteName, new { @class = "form-control" })
@@ -36,8 +36,8 @@
 
     <div class="form-group d-flex">
         <label class="control-label">Select Test Cases</label>
-        @Html.ListBoxFor(model => model.SelectedTestCases,Model.AllTestCases)
-    
+        @Html.ListBoxFor(model => model.SelectedTestCases, Model.AllTestCases)
+
     </div>
 
     <div class="form-group d-flex">

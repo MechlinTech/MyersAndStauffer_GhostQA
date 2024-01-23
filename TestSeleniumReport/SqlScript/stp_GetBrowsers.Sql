@@ -1,12 +1,4 @@
-USE [SeleniumTest]
-GO
-/****** Object:  StoredProcedure [dbo].[stp_GetBrowsers]    Script Date: 1/23/2024 4:10:55 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-ALTER    PROCEDURE [dbo].[stp_GetBrowsers]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetBrowsers]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetBrowsers

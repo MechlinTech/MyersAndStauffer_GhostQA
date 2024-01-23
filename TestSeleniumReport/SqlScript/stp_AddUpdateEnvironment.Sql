@@ -1,18 +1,11 @@
-USE [SeleniumTest]
-GO
-/****** Object:  StoredProcedure [dbo].[stp_AddUpdateEnvironment]    Script Date: 1/23/2024 5:48:08 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER   PROCEDURE [dbo].[stp_AddUpdateEnvironment]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateEnvironment]
 @EnvironmentName		VARCHAR(100),
 @EnvironmentId			INT = 0,
 @ApplicationId          INT,
 @BrowserId              INT,
-@Baseurl                VARCHAR(100),
-@BasePath				VARCHAR(100),
-@DriverPath				VARCHAR(100),
+@Baseurl                NVARCHAR(1000),
+@BasePath				NVARCHAR(1000),
+@DriverPath				NVARCHAR(1000),
 @CreatedBy				VARCHAR(100) = 'Admin',
 @ModifiedBy				VARCHAR(100) = 'Admin'
 AS
@@ -26,7 +19,7 @@ PROC EXEC		:  EXEC stp_AddUpdateEnvironment 0
 				
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS( SELECT 1 FROM tbl_Environments WHERE [EnvironmentName] = @EnvironmentName)
+	IF EXISTS( SELECT 1 FROM tbl_Environments WHERE [EnvironmentName] = @EnvironmentName AND [EnvironmentId] <> @EnvironmentId)
 	BEGIN
 		SELECT [result] = JSON_QUERY((
 			SELECT 'fail' [status], 'Duplicate Environment Name' [message]
@@ -35,8 +28,8 @@ BEGIN TRY
 	END
 	ELSE IF @EnvironmentId = 0
 	BEGIN
-		INSERT INTO tbl_Environments (EnvironmentName, ApplicationId, DriverPath, BroswerId, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn, BasePath, Baseurl) 
-		VALUES (@EnvironmentName, @ApplicationId, @DriverPath, @BrowserId, @CreatedBy, GETDATE(), @ModifiedBy, GETDATE(), @BasePath, @Baseurl)
+		INSERT INTO tbl_Environments (EnvironmentName, ApplicationId, DriverPath, BroswerId, CreatedBy, CreatedOn, BasePath, Baseurl) 
+		VALUES (@EnvironmentName, @ApplicationId, @DriverPath, @BrowserId, @CreatedBy, GETDATE(), @BasePath, @Baseurl)
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -59,8 +52,6 @@ BEGIN TRY
                [ApplicationId]	   = @ApplicationId,
 			   [DriverPath]		   = @DriverPath,
                [BroswerId]		   = @BrowserId,
-			   [CreatedBy]		   = @CreatedBy,
-               [CreatedOn]		   = GETDATE(),
                [ModifiedBy]		   = @ModifiedBy,
 			   [ModifiedOn]        = GETDATE(),
                [BasePath]          = @BasePath,
