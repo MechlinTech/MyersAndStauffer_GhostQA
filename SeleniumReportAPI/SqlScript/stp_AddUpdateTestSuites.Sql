@@ -17,7 +17,7 @@ PROC EXEC		:
 				EXEC stp_AddUpdateTestSuites 'Mississippi', 0
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS( SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName)
+	IF EXISTS( SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId)
 	BEGIN
 		SELECT [result] = JSON_QUERY((
 			SELECT 'fail' [status], 'Duplicate Custom Test Suite Name' [message]

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
 using SeleniumReportAPI.Models;
+using TestSeleniumReport.DTO_s;
 
 namespace SeleniumReportAPI.Controllers
 {
@@ -82,23 +83,35 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="action"></param>
         /// <returns></returns>
         [HttpPost("AddUpdateTestSuites")]
-        public ActionResult AddUpdateTestSuites(TestSuites TestSuiteObject, string action)
+        public ActionResult AddTestSuite(Dto_TestSuiteDetailsData model, string action)
         {
             Dto_Response _response = new Dto_Response();
             if (action == "Save")
             {
-                string result = _helper.AddUpdateTestSuitesJson(TestSuiteObject);
+                string result = _helper.AddUpdateTestSuitesJson(model);
                 _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
             }
             else if (action == "SaveAndExecute")
             {
-                string result = _helper.AddUpdateTestSuitesJson(TestSuiteObject);
+                string result = _helper.AddUpdateTestSuitesJson(model);
                 _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
                 if (!_response.status.Contains("Fail"))
                 {
-                    foreach (var testCases in TestSuiteObject.SelectedTestCases)
+                    string _testRunName = _helper.GetRunId(model.TestSuiteName);
+                    Models.Environments _environmentDetails = _helper.GetEnvironmentById(Convert.ToInt32(model.EnvironmentId));
+                    foreach (var testCaseName in model.SelectedTestCases)
                     {
-                        _helper.RunTestCase(testCases);
+                        string _testCaseJsonData = DBHelper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
+                        if (!string.IsNullOrEmpty(_testCaseJsonData))
+                        {
+                            Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
+                            _testSuiteData.TestSuiteName = model.TestSuiteName;
+                            _testSuiteData.TesterName = User.Identity.Name;
+                            _testSuiteData.TestRunName = _testRunName;
+                            _testSuiteData.TestEnvironment = _environmentDetails.BrowserName;
+                            //Save Data into table for custom test suite
+                            string _result = _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
+                        }
                     }
                 }
             }
@@ -106,7 +119,7 @@ namespace SeleniumReportAPI.Controllers
             {
                 //Logic to send Email
             }
-            return Ok(_response);
+            return RedirectToAction("Index");
         }
 
         /// <summary>
@@ -229,6 +242,78 @@ namespace SeleniumReportAPI.Controllers
             {
                 return StatusCode(500, "Internal Server Error");
             }
+        }
+
+        /// <summary>
+        /// Add / Update Environments
+        /// </summary>
+        /// <param Browser=Browser></param>
+        /// <returns></returns>
+        [HttpPost("AddUpdateBrowser")]
+        public ActionResult AddUpdateBrowser([FromBody] Models.Browsers model)
+        {
+
+            try
+            {
+                var result = _helper.AddUpdateBrowserJson(model);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        /// <summary>
+        /// Get Browser in Json Format
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetBrowsers")]
+        public ActionResult GetBrowsers()
+        {
+            return Ok(_helper.GetBrowsers());
+        }
+
+        /// <summary>
+        /// Get Environment in Json Format by Id
+        /// </summary>
+        /// <param Id="Id"></param>
+        /// <returns></returns>
+        [HttpGet("GetEnvironmentById")]
+        public ActionResult GetEnvironmentById(int Id)
+        {
+            return Ok(_helper.GetEnvironmentById(Id));
+        }
+
+        /// <summary>
+        /// Execute Test Case
+        /// </summary>
+        /// <param TestCaseData=TestCaseData></param>
+        /// <returns></returns>
+        [HttpPost("SaveTestCaseData")]
+        public ActionResult SaveTestCaseData(string testSuiteJsonData)
+        {
+
+            try
+            {
+                var result = _helper.SaveTestCaseData(testSuiteJsonData);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        /// <summary>
+        /// Get Test Suite Name
+        /// </summary>
+        /// <param Name="Name"></param>
+        /// <returns></returns>
+        [HttpGet("GetRunId")]
+        public ActionResult GetRunId(string testSuiteName)
+        {
+            return Ok(_helper.GetRunId(testSuiteName));
         }
     }
 }

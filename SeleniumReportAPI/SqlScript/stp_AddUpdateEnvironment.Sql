@@ -26,7 +26,7 @@ PROC EXEC		:  EXEC stp_AddUpdateEnvironment 0
 				
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS( SELECT 1 FROM tbl_Environments WHERE [EnvironmentName] = @EnvironmentName)
+	IF EXISTS( SELECT 1 FROM tbl_Environments WHERE [EnvironmentName] = @EnvironmentName AND [EnvironmentId] <> @EnvironmentId)
 	BEGIN
 		SELECT [result] = JSON_QUERY((
 			SELECT 'fail' [status], 'Duplicate Environment Name' [message]
@@ -59,8 +59,6 @@ BEGIN TRY
                [ApplicationId]	   = @ApplicationId,
 			   [DriverPath]		   = @DriverPath,
                [BroswerId]		   = @BrowserId,
-			   [CreatedBy]		   = @CreatedBy,
-               [CreatedOn]		   = GETDATE(),
                [ModifiedBy]		   = @ModifiedBy,
 			   [ModifiedOn]        = GETDATE(),
                [BasePath]          = @BasePath,

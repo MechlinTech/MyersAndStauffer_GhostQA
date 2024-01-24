@@ -12,7 +12,7 @@ PROC EXEC		:  EXEC stp_AddUpdateBrowser 0
 				
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS( SELECT 1 FROM tbl_Browsers WHERE [BrowserName] = @BrowserName)
+	IF EXISTS( SELECT 1 FROM tbl_Browsers WHERE [BrowserName] = @BrowserName AND [BrowserId] <> @BrowserId)
 	BEGIN
 		SELECT [result] = JSON_QUERY((
 			SELECT 'fail' [status], 'Duplicate Browser Name' [message]
