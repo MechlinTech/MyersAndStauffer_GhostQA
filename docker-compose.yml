@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  testseleniumreport:
+    image: ${DOCKER_REGISTRY-}testseleniumreport
+    build:
+      context: .
+      dockerfile: TestSeleniumReport/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__DefaultConnection=Server=database,1433;Database=master;User=sa;Password=YourPasswordHere
+    ports:
+      - "80"
+      - "443"
+    depends_on:
+      - database
+
+  # SQL Server database
+  database:
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      SA_PASSWORD: "YourPasswordHere"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - database_data:/var/opt/mssql/data
+
+volumes:
+  database_data:
