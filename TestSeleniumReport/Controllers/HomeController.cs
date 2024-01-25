@@ -31,9 +31,9 @@ namespace TestSeleniumReport.Controllers
         /// <param name="testSuitName"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult GetDashboardDetails(string testSuitName)
+        public ActionResult GetDashboardDetails(string TestSuiteName, string Filtertype, int FilterValue)
         {
-            string DashBoardDetailsJson = _helper.GetDashboardDetails(testSuitName);
+            string DashBoardDetailsJson = _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue);
             return PartialView("_Dashboard", DashBoardDetailsJson);
         }
 

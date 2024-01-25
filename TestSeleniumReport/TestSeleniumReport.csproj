@@ -16,7 +16,7 @@
 		<None Remove="SqlScript\stp_GetApplications.sql" />
 		<None Remove="SqlScript\stp_GetBrowsers.Sql" />
 		<None Remove="SqlScript\stp_GetCustomTestSuites.Sql" />
-		<None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
+		<None Remove="SqlScript\stp_GetDashBoardChartDetails.Sql" />
 		<None Remove="SqlScript\stp_GetEnvironment.sql" />
 		<None Remove="SqlScript\stp_GetEnvironmentById.sql" />
 		<None Remove="SqlScript\stp_GetRunDetails.Sql" />
@@ -39,7 +39,7 @@
 		<EmbeddedResource Include="SqlScript\stp_GetBrowsers.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetCustomTestSuites.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
-		<EmbeddedResource Include="SqlScript\stp_GetDashBoardDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetDashBoardChartDetails.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetEnvironmentById.sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetRunDetails.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetRunId.Sql" />

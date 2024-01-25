@@ -101,7 +101,7 @@
     function GetDashboardDetails(testSuitesName) {
         $.ajax({
             url: '@Url.Action("GetDashboardDetails", "Home")',
-            data: { testSuitName: testSuitesName },
+            data: { TestSuiteName: testSuitesName, FilterType: "runs", FilterValue: 7 },
             success: function (result) {
                 $('#testRunChartContainer').html(result);
                 $('#runId').show();
@@ -109,6 +109,23 @@
             }
         });
     };
+
+    function GetDashboardChartDetails(testSuiteName) {
+        debugger;
+        var type = document.querySelector('input[name="chartType"]:checked').value;
+        var num = document.getElementById('selectDays').value;
+        $.ajax({
+            url: '@Url.Action("GetDashboardDetails", "Home")',
+            data: {
+                TestSuiteName: testSuiteName,
+                FilterType: type,
+                FilterValue: num
+            },
+            success: function (result) {
+                $('#testRunChartContainer').html(result);
+            }
+        });
+    }
 
     function GetRunDetails(testSuitesName) {
         $.ajax({

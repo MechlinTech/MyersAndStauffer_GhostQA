@@ -60,7 +60,7 @@ namespace SeleniumTestReport.Helper
             return TestSuites;
         }
 
-        internal string GetDashboardDetails(string testSuitName)
+        internal string GetDashboardDetails(string testSuitName, string filterType, int filterValue)
         {
             string DashBoardDetailsJson = string.Empty;
             try
@@ -68,10 +68,12 @@ namespace SeleniumTestReport.Helper
                 using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_GetDashBoardDetails", connection))
+                    using (SqlCommand command = new SqlCommand("stp_GetDashBoardChartDetails", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuitName", testSuitName);
+                        command.Parameters.AddWithValue("@FilterType", filterType);
+                        command.Parameters.AddWithValue("@FilterValue", filterValue);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
