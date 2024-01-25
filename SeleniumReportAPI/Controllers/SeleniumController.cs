@@ -115,11 +115,11 @@ namespace SeleniumReportAPI.Controllers
                     }
                 }
             }
-            if (!_response.status.Contains("Fail"))
+            if (_response.status.Contains("fail"))
             {
-                //Logic to send Email
+                return StatusCode(409, _response);
             }
-            return RedirectToAction("Index");
+            return Ok(_response);
         }
 
         /// <summary>
