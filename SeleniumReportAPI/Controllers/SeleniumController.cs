@@ -189,20 +189,36 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <param name="TestSuiteName"></param>
         /// <returns></returns>
-        //[HttpOptions("ExecuteTestSuite")]
-        //public ActionResult ExecuteTestSuite(string TestSuiteName)
-        //{
-        //    string _testSuiteDetailsJson = _helper.GetTestSuiteByName(TestSuiteName);
-        //    TestSuites _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuites>(_testSuiteDetailsJson);
-        //    if (_testSuiteDetails.SelectedTestCases.Count > 0)
-        //    {
-        //        foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
-        //        {
-        //            _helper.RunTestCase(testCaseName.ToString());
-        //        }
-        //    }
-        //    return Ok();
-        //}
+        [HttpOptions("ExecuteTestSuite")]
+        public ActionResult ExecuteTestSuite(string TestSuiteName)
+        {
+            string _result = string.Empty;
+            string _testRunName = _helper.GetRunId(TestSuiteName);
+            string _testSuiteDetailsJson = _helper.GetTestSuiteByName(TestSuiteName);
+            Dto_TestSuiteDetailsData _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestSuiteDetailsData>(_testSuiteDetailsJson);
+
+            Models.Environments _environmentDetails = _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteDetails.EnvironmentId));
+
+            if (_testSuiteDetails.SelectedTestCases.Count > 0)
+            {
+                foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
+                {
+                    string _testCaseJsonData = DBHelper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
+                    if (!string.IsNullOrEmpty(_testCaseJsonData))
+                    {
+                        Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
+                        _testSuiteData.TestSuiteName = TestSuiteName;
+                        _testSuiteData.TesterName = User.Identity.Name;
+                        _testSuiteData.TestRunName = _testRunName;
+                        _testSuiteData.TestEnvironment = _environmentDetails.BrowserName;
+                        _testSuiteData.TestCaseName = testCaseName.ToString();
+                        //Save Data into table for custom test suite
+                        _result = _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
+                    }
+                }
+            }
+            return Ok(_result);
+        }
 
         /// <summary>
         /// Add / Update Environments
