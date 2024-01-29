@@ -25,7 +25,8 @@ BEGIN TRY
 				[SendEmail],
 				[EnvironmentId],
 				[SelectedTestCases],
-		        [TestSuiteId] 
+		        [TestSuiteId],
+				[Description]
 		FROM tbl_TestSuites
 		WHERE TestSuiteName = @TestSuiteName
 END TRY

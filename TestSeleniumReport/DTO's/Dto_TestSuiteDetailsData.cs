@@ -13,5 +13,6 @@ namespace TestSeleniumReport.DTO_s
         public int EnvironmentId { get; set; }
         public List<string> SelectedTestCases { get; set; }
         public List<SelectListItem> AllTestCases { get; set; }
+        public string Description { get; set; }
     }
 }
