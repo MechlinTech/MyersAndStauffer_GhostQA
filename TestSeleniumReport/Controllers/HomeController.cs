@@ -34,6 +34,7 @@ namespace TestSeleniumReport.Controllers
         public ActionResult GetDashboardDetails(string TestSuiteName, string Filtertype, int FilterValue)
         {
             string DashBoardDetailsJson = _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue);
+            ViewBag.TestSuites = TestSuiteName;
             return PartialView("_Dashboard", DashBoardDetailsJson);
         }
 

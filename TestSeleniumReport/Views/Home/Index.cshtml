@@ -106,12 +106,12 @@
                 $('#testRunChartContainer').html(result);
                 $('#runId').show();
                 GetRunDetails(testSuitesName)
+                document.getElementById('runBased').checked = true;
             }
         });
     };
 
     function GetDashboardChartDetails(testSuiteName) {
-        debugger;
         var type = document.querySelector('input[name="chartType"]:checked').value;
         var num = document.getElementById('selectDays').value;
         $.ajax({
@@ -123,6 +123,17 @@
             },
             success: function (result) {
                 $('#testRunChartContainer').html(result);
+               if(num != null)
+               {
+                    document.getElementById('selectDays').value = num;
+               }
+                if(type == 'days')
+                {
+                    document.getElementById('daysBased').checked = true;
+                }
+                else{
+                    document.getElementById('runBased').checked = true;
+                }
             }
         });
     }

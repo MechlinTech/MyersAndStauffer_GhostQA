@@ -1,88 +1,177 @@
 ﻿<html>
+
 <body>
+
     @{
+
         List<TestSeleniumReport.DTO_s.Dto_DashboardChartDetail> DashboardChartList = null;
+ 
         if (Model != null)
+
         {
+
             DashboardChartList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_DashboardChartDetail>>(Model);
+
         }
+
     }
-    @if (DashboardChartList != null)
-    {
-        <div class="card col-md-10">
-            <div class="card-header mb-2">
-                <input type="radio" id="runBased" name="chartType" onchange="GetDashboardChartDetails('@DashboardChartList[0].TestSuitename')" value="runs" checked>
-                <label class="m-2 p-2" for="runBased">Run Based</label>
+ 
+    <div class="card col-md-10">
 
-                <input type="radio" id="daysBased" name="chartType" onchange="GetDashboardChartDetails('@DashboardChartList[0].TestSuitename')" value="days">
-                <label class="m2 p-2" for="daysBased">Days Based</label>
-            </div>
-            <div class="d-flex">
-                <label for="selectDays">Select Number of Days:</label>
-                <select class="dropdown-header dropdown-item w-25" onchange="GetDashboardChartDetails('@DashboardChartList[0].TestSuitename')" id="selectDays">
-                    <option value="7">7</option>
-                    <option value="15">15</option>
-                    <option value="30">30</option>
-                    <option value="45">45</option>
-                    <option value="60">60</option>
-                    <option value="90">90</option>
-                </select>
-            </div>
-            <hr />
-            <canvas id="dashBoardChart" width="800" height="400"></canvas>
-            <script>
-                var dates = @Json.Serialize(DashboardChartList.Select(item => item.TestRunStartDate.ToString("dd/MM")));
-                var totalTestCases = @Json.Serialize(DashboardChartList.Select(item => item.TotalTestCase));
-                var passedTestCases = @Json.Serialize(DashboardChartList.Select(item => item.TotalPassedTestCase));
-                var failedTestCases = @Json.Serialize(DashboardChartList.Select(item => item.TotalFailedTestCase));
+        <div class="card-header mb-2">
 
-                var ctx = document.getElementById('dashBoardChart').getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: dates,
-                        datasets: [{
-                            label: 'Total Test Cases',
-                            backgroundColor: 'blue',
-                            data: totalTestCases
-                        },
-                        {
-                            label: 'Passed Test Cases',
-                            backgroundColor: 'green',
-                            data: passedTestCases
-                        },
-                        {
-                            label: 'Failed Test Cases',
-                            backgroundColor: 'red',
-                            data: failedTestCases
-                        }
-                        ]
-                    },
-                    options: {
-                        title: {
-                            display: true,
-                            text: 'Test Cases Execution Trend'
-                        },
-                        scales: {
-                            xAxes: [{
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Timeline'
-                                }
-                            }],
-                            yAxes: [{
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Test Cases Count'
-                                }
-                            }]
-                        }
-                    }
-                });
+            <input type="radio" id="runBased" name="chartType" onchange="GetDashboardChartDetails('@ViewBag.TestSuites')" value="runs">
 
-                
-            </script>
+            <label class="m-2 p-2" for="runBased">Run Based</label>
+
+            <input type="radio" id="daysBased" name="chartType" onchange="GetDashboardChartDetails('@ViewBag.TestSuites')" value="days">
+
+            <label class="m2 p-2" for="daysBased">Days Based</label>
+
         </div>
-    }
+
+        <div class="d-flex">
+
+            <label for="selectDays">Select Number To Show Report:</label>
+
+            <select class="dropdown-header dropdown-item w-25" onchange="GetDashboardChartDetails('@ViewBag.TestSuites')" id="selectDays">
+
+                <option value="7">7</option>
+
+                <option value="15">15</option>
+
+                <option value="30">30</option>
+
+                <option value="45">45</option>
+
+                <option value="60">60</option>
+
+                <option value="90">90</option>
+
+            </select>
+
+        </div>
+
+        <hr />
+
+        <canvas id="dashBoardChart" width="800" height="400"></canvas>
+
+        <script>
+
+            var dates = [];
+
+            var totalTestCases = [];
+
+            var passedTestCases = [];
+
+            var failedTestCases = [];
+ 
+            @if (DashboardChartList != null)
+
+            {
+
+                @:dates = JSON.parse('@Html.Raw(Json.Serialize(DashboardChartList.Select(item => item.TestRunStartDate.ToString("dd/MM"))))');
+
+                @:totalTestCases = JSON.parse('@Html.Raw(Json.Serialize(DashboardChartList.Select(item => item.TotalTestCase)))');
+
+                @:passedTestCases = JSON.parse('@Html.Raw(Json.Serialize(DashboardChartList.Select(item => item.TotalPassedTestCase)))');
+
+                @:failedTestCases = JSON.parse('@Html.Raw(Json.Serialize(DashboardChartList.Select(item => item.TotalFailedTestCase)))');
+
+            }
+ 
+            var ctx = document.getElementById('dashBoardChart').getContext('2d');
+ 
+            var myChart = new Chart(ctx, {
+
+                type: 'bar',
+
+                data: {
+
+                    labels: dates,
+
+                    datasets: [
+
+                        {
+
+                            label: 'Total Test Cases',
+
+                            backgroundColor: 'blue',
+
+                            data: totalTestCases
+
+                        },
+
+                        {
+
+                            label: 'Passed Test Cases',
+
+                            backgroundColor: 'green',
+
+                            data: passedTestCases
+
+                        },
+
+                        {
+
+                            label: 'Failed Test Cases',
+
+                            backgroundColor: 'red',
+
+                            data: failedTestCases
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    title: {
+
+                        display: true,
+
+                        text: 'Test Cases Execution Trend'
+
+                    },
+
+                    scales: {
+
+                        xAxes: [{
+
+                            scaleLabel: {
+
+                                display: true,
+
+                                labelString: 'Timeline'
+
+                            }
+
+                        }],
+
+                        yAxes: [{
+
+                            scaleLabel: {
+
+                                display: true,
+
+                                labelString: 'Test Cases Count'
+
+                            }
+
+                        }]
+
+                    }
+
+                }
+
+            });
+
+        </script>
+
+    </div>
+
 </body>
+
 </html>
