@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSeleniumReport", "TestS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeleniumReportAPI", "SeleniumReportAPI\SeleniumReportAPI.csproj", "{305EB4E4-3640-4750-BD72-09BB4768DCA9}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "seleniumreact_app", "seleniumreact_app\seleniumreact_app.esproj", "{50462AD7-F977-4E0E-AE34-FEA63434C207}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,30 @@ Global
 		{305EB4E4-3640-4750-BD72-09BB4768DCA9}.Release|ARM64.Build.0 = Release|Any CPU
 		{305EB4E4-3640-4750-BD72-09BB4768DCA9}.Release|x64.ActiveCfg = Release|Any CPU
 		{305EB4E4-3640-4750-BD72-09BB4768DCA9}.Release|x64.Build.0 = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|ARM32.ActiveCfg = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|ARM32.Build.0 = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|ARM32.Deploy.0 = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|ARM64.Deploy.0 = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|x64.Build.0 = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|ARM32.ActiveCfg = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|ARM32.Build.0 = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|ARM32.Deploy.0 = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|ARM64.Build.0 = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|ARM64.Deploy.0 = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|x64.ActiveCfg = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|x64.Build.0 = Release|Any CPU
+		{50462AD7-F977-4E0E-AE34-FEA63434C207}.Release|x64.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
