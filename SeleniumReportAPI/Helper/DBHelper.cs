@@ -351,6 +351,7 @@ namespace SeleniumReportAPI.Helper
                                 testSuites.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
                                 testSuites.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
                                 testSuites.TestSuiteType = reader["TestSuiteType"].ToString();
+                                testSuites.Description = reader["Description"].ToString();
                                 testSuites.SelectedTestCases = reader["SelectedTestCases"].ToString().Split(", ").Select(x => x).ToList();
                             }
                         }

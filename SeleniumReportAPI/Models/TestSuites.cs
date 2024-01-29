@@ -25,5 +25,7 @@ namespace SeleniumReportAPI.Models
 
         [NotMapped]
         public List<SelectListItem> AllTestCases { get; set; }
+
+        public string Description { get; set; }
     }
 }
