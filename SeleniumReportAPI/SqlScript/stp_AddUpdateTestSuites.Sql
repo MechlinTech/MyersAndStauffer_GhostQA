@@ -5,7 +5,7 @@ CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateTestSuites]
 @SendEmail				BIT,
 @EnvironmentId			INT,
 @SelectedTestCases		NVARCHAR(MAX),
-@Description			NVARCHAR(MAX),
+@Description			NVARCHAR(MAX) = '',
 @TestSuiteId			INT = 0
 AS
 /**************************************************************************************
