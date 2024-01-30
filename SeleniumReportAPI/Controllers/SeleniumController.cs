@@ -8,7 +8,7 @@ using TestSeleniumReport.DTO_s;
 
 namespace SeleniumReportAPI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SeleniumController : ControllerBase

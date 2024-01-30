@@ -6,6 +6,7 @@ import BasicAccordion from "../../comman/Accordion";
 import {
   getTestCaseRundetailsByTestName,
   getTestSuites,
+  ExecuteTestCasesByTestSuite,
   GetApplication
 } from "../../redux/actions/seleniumAction";
 import { useDispatch, useSelector } from "react-redux";
@@ -82,6 +83,12 @@ export default function Dashboard() {
     console.log("Edit clicked for suite:", suite);
     navigate('/edit-suite')
     // getsuitebyname api will give you detail
+  };
+
+  const handleExecuteClick = (suite) => {
+    let data = suite.TestSuiteName;
+    setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
+    dispatch(ExecuteTestCasesByTestSuite(data));
   };
 
   const handleDeleteClick = (suite) => {
@@ -194,6 +201,10 @@ export default function Dashboard() {
                               style={{
                                 marginRight: "8px",
                                 color: "rgb(101, 77, 247)",
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleExecuteClick(suite);
                               }}
                             />
                             <EditIcon
