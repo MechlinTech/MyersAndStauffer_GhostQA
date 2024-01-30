@@ -20,13 +20,15 @@
 
         <div class="card-header mb-2">
 
+            <label class="m-2 p-2" for="Result">Results</label>
+
             <input type="radio" id="runBased" name="chartType" onchange="GetDashboardChartDetails('@ViewBag.TestSuites')" value="runs">
 
-            <label class="m-2 p-2" for="runBased">Run Based</label>
+            <label class="m-2 p-2" for="runBased">Runs</label>
 
             <input type="radio" id="daysBased" name="chartType" onchange="GetDashboardChartDetails('@ViewBag.TestSuites')" value="days">
 
-            <label class="m2 p-2" for="daysBased">Days Based</label>
+            <label class="m2 p-2" for="daysBased">Days</label>
 
         </div>
 

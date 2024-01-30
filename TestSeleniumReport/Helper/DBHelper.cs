@@ -237,6 +237,7 @@ namespace SeleniumTestReport.Helper
                         command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
                         command.Parameters.AddWithValue("@TestSuiteId", model.TestSuiteId);
                         command.Parameters.AddWithValue("@SelectedTestCases", string.Join(", ", model.SelectedTestCases));
+                        command.Parameters.AddWithValue("@Description", model.Description);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
