@@ -5,6 +5,7 @@ CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateTestSuites]
 @SendEmail				BIT,
 @EnvironmentId			INT,
 @SelectedTestCases		NVARCHAR(MAX),
+@Description			NVARCHAR(MAX),
 @TestSuiteId			INT = 0
 AS
 /**************************************************************************************
@@ -26,8 +27,8 @@ BEGIN TRY
 	END
 	ELSE IF @TestSuiteId = 0
 	BEGIN
-		INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases) 
-		VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases)
+		INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, Description) 
+		VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description)
 
 		IF @@ERROR = 0
 		BEGIN
@@ -52,7 +53,8 @@ BEGIN TRY
 				[ApplicationId]		= @ApplicationId,
 				[SendEmail]			= @SendEmail,
 				[EnvironmentId]		= @EnvironmentId,
-				[SelectedTestCases] = @SelectedTestCases
+				[SelectedTestCases] = @SelectedTestCases,
+				[Description]		= @Description
 		WHERE [TestSuiteId] = @TestSuiteId
 
 		IF @@ERROR = 0
