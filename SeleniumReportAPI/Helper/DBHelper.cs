@@ -278,6 +278,7 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
                         command.Parameters.AddWithValue("@TestSuiteId", model.TestSuiteId);
                         command.Parameters.AddWithValue("@SelectedTestCases", string.Join(", ", model.SelectedTestCases));
+                        command.Parameters.AddWithValue("@Description", model.Description);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -704,6 +705,39 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
             return BrowserListJson;
+        }
+
+        internal string GetDashboardDetails(string testSuitName, string filterType, int filterValue)
+        {
+            string DashBoardDetailsJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetDashBoardChartDetails", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuitName", testSuitName);
+                        command.Parameters.AddWithValue("@FilterType", filterType);
+                        command.Parameters.AddWithValue("@FilterValue", filterValue);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                DashBoardDetailsJson = reader["DashBoardDetailsJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return DashBoardDetailsJson;
         }
 
     }

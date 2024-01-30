@@ -1,3 +1,4 @@
+using Mailosaur.Operations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -26,7 +27,18 @@ builder.Services.AddSpaStaticFiles(configuration =>
 {
     configuration.RootPath = "../seleniumreact_app/build"; // Update with your React app's build folder
 });
-builder.Services.AddCors();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddMvc(x => x.EnableEndpointRouting = false);
 
 builder.Services.AddAuthentication(options =>
@@ -125,4 +137,3 @@ app.UseSpa(spa =>
 });
 
 app.Run();
-

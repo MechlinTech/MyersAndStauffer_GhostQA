@@ -69,6 +69,22 @@ export const getTestCaseRundetailsByTestName = (data) => {
   };
 };
 
+export const ExecuteTestCasesByTestSuite = (data) => {
+  // let data = "Mississippi";
+  return async (dispatch) => {
+    try {
+      const response = await axios.options(
+        `${BASE_URL}/Selenium/ExecuteTestSuite?testSuitName=${data}`,
+        header()
+      );
+      console.log("ExecuteTestCasesByTestSuite", response.data);
+    } catch (error) {
+      console.error(error);
+      toast.error("NETWORK ERROR");
+    }
+  };
+};
+
 export const GetTestCaseDetails = (data) => {
   return async (dispatch) => {
     try {
