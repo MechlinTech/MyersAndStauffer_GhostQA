@@ -8,7 +8,7 @@ using TestSeleniumReport.DTO_s;
 
 namespace SeleniumReportAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SeleniumController : ControllerBase
@@ -330,6 +330,25 @@ namespace SeleniumReportAPI.Controllers
         public ActionResult GetRunId(string testSuiteName)
         {
             return Ok(_helper.GetRunId(testSuiteName));
+        }
+
+        /// <summary>
+        /// Get Test Run Over All Details by TestSuite Name
+        /// </summary>
+        /// <param name="testSuitName"></param>
+        /// <returns></returns>
+        [HttpGet("GetChartDetails")]
+        public ActionResult GetDashboardDetails(string TestSuiteName, string Filtertype, int FilterValue)
+        { 
+            try
+            {
+                string result = _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
         }
     }
 }
