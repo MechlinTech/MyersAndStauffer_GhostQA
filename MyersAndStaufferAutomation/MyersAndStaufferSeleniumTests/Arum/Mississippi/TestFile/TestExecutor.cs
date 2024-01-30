@@ -33,21 +33,21 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
             bsTest.SetUp();
             var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
-            
 
-            var method = loginTest.GetType().GetMethod(string.Concat(testCaseName));
+
+            var method = loginTest.GetType().GetMethod(testCaseName);
 
             if (method != null)
             {
-                method.Invoke(loginTest,null);              
+                method.Invoke(loginTest, null);
+                bsTest.TearDown();
             }
             else
             {
                 Console.WriteLine($"Method '{testCaseName}' not found.");
             }
-            bsTest.TearDown();
-            return JsonData;
 
+            return JsonData;
         }
     }
 }

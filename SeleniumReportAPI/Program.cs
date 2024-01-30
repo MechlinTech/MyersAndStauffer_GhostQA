@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -21,7 +22,10 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddSpaStaticFiles(configuration =>
+{
+    configuration.RootPath = "../seleniumreact_app/build"; // Update with your React app's build folder
+});
 builder.Services.AddCors();
 builder.Services.AddMvc(x => x.EnableEndpointRouting = false);
 
@@ -80,21 +84,45 @@ builder.Services.AddSingleton<DBHelper>();
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseSpaStaticFiles();
+
+app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
-app.UseHttpsRedirection();
-app.UseCors(builder => builder
-     .AllowAnyOrigin()
-     .AllowAnyMethod()
-     .AllowAnyHeader());
 
-app.UseMvc();
+app.UseCors(builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller}/{action=Index}/{id?}");
+    endpoints.MapFallbackToFile("index.html");
+});
+
+app.UseSpa(spa =>
+{
+    spa.Options.SourcePath = "../seleniumreact_app"; // Update with your React app's folder name
+
+    if (app.Environment.IsDevelopment())
+    {
+        spa.UseReactDevelopmentServer(npmScript: "start");
+    }
+});
+
 app.Run();
+
