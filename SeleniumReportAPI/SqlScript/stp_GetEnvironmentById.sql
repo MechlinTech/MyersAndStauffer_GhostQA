@@ -1,4 +1,3 @@
-
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetEnvironmentById]
 @EnvironmentId int
 AS
@@ -13,18 +12,21 @@ PROC EXEC		:
 **************************************************************************************/
 BEGIN TRY
 		SELECT
-		        [EnvironmentId],
-				[EnvironmentName],
-				[ApplicationId],
-				[DriverPath],
-		        [BroswerId],
-				[CreatedBy],
-				[CreatedOn],
-				[ModifiedBy],
-				[ModifiedOn],
-				[BasePath],
-				[Baseurl]
-		FROM tbl_Environments
+		        E.[EnvironmentId],
+				E.[EnvironmentName],
+				E.[ApplicationId],
+				(SELECT TOP 1 [ApplicationName] FROM tbl_Applications A WHERE A.[ApplicationId] = E.[ApplicationId]) [ApplicationName],
+				E.[DriverPath],
+		        E.[BroswerId],
+				(SELECT TOP 1 [BrowserName] FROM tbl_Browsers B WHERE B.[BrowserId] = E.[BroswerId]) [BrowserName],
+				E.[CreatedBy],
+				E.[CreatedOn],
+				E.[ModifiedBy],
+				E.[ModifiedOn],
+				E.[BasePath],
+				E.[Baseurl],
+				E.[Description]
+		FROM tbl_Environments E
 		WHERE EnvironmentId = @EnvironmentId
 END TRY
 BEGIN CATCH

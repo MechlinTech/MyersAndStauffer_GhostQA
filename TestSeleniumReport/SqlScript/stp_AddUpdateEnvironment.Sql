@@ -8,6 +8,7 @@ CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateEnvironment]
 @DriverPath				NVARCHAR(1000),
 @CreatedBy				VARCHAR(100) = 'Admin',
 @ModifiedBy				VARCHAR(100) = 'Admin'
+@Description            VARCHAR(100) = ''
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_AddUpdateEnvironment
@@ -28,8 +29,8 @@ BEGIN TRY
 	END
 	ELSE IF @EnvironmentId = 0
 	BEGIN
-		INSERT INTO tbl_Environments (EnvironmentName, ApplicationId, DriverPath, BroswerId, CreatedBy, CreatedOn, BasePath, Baseurl) 
-		VALUES (@EnvironmentName, @ApplicationId, @DriverPath, @BrowserId, @CreatedBy, GETDATE(), @BasePath, @Baseurl)
+		INSERT INTO tbl_Environments (EnvironmentName, ApplicationId, DriverPath, BroswerId, CreatedBy, CreatedOn, BasePath, Baseurl, Description) 
+		VALUES (@EnvironmentName, @ApplicationId, @DriverPath, @BrowserId, @CreatedBy, GETDATE(), @BasePath, @Baseurl, @Description)
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -55,7 +56,8 @@ BEGIN TRY
                [ModifiedBy]		   = @ModifiedBy,
 			   [ModifiedOn]        = GETDATE(),
                [BasePath]          = @BasePath,
-			   [Baseurl]           = @Baseurl
+			   [Baseurl]           = @Baseurl,
+			   [Description]	   = @Description
 		WHERE [EnvironmentId]	   = @EnvironmentId
 
 		IF @@ERROR = 0

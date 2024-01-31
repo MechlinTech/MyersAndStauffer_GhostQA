@@ -30,7 +30,8 @@ BEGIN TRY
 			   [ModifiedBy],
 			   [ModifiedOn],
 			   [BasePath],
-			   [Baseurl]
+			   [Baseurl],
+			   [Description]
 		FROM tbl_Environments as env
 	   LEFT JOIN tbl_Applications as app
 		ON env.ApplicationId = app.ApplicationId
