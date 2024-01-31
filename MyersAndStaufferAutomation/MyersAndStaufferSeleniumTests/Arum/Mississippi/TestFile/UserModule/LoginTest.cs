@@ -1,10 +1,6 @@
-﻿using AventStack.ExtentReports;
-using MyersAndStaufferFramework;
+﻿using MyersAndStaufferFramework;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule;
-using MyersAndStaufferSeleniumTests.Utils;
 using NUnit.Framework;
-using System;
-using System.Linq.Expressions;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 {
@@ -58,7 +54,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             }
         }
 
-      
         [Test, Order(1)]
         public void VerifyLoginOK2()
         {
@@ -130,7 +125,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 _testData.TestCaseStatus = "Failed";
                 Assert.IsTrue(logInPage.LoginSuccess());
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Login Success" });
-
             }
             catch (Exception ex)
             {

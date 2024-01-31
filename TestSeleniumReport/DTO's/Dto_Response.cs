@@ -6,6 +6,7 @@ namespace TestSeleniumReport.DTO_s
     {
         [JsonProperty("status")]
         public string? status { get; set; }
+
         [JsonProperty("message")]
         public string? message { get; set; }
     }

@@ -187,7 +187,6 @@ export default function EditTestSuite() {
           "value": "string"
         }
       ]
-    
     };
     let error = {};
     if (!name.trim()) {
@@ -214,7 +213,6 @@ export default function EditTestSuite() {
       console.log("no error ", payload);
       dispatch(AddUpdateTestSuites(payload,action))
       navigate('/')
-      
     }else
     console.log("handleSubmit error", error, payload);
   };

@@ -14,5 +14,3 @@ export const StyledDashBoardIcon = styled(({ className, isActive, color }) => (
   display: flex;
   color: ${(props) => (props.isActive ? props.color : 'inherit')};
 `;
-
-

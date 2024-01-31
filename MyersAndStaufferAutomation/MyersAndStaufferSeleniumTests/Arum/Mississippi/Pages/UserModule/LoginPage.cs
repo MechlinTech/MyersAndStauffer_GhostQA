@@ -1,6 +1,5 @@
 ﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.Data;
 using MyersAndStaufferSeleniumTests.Utils;
-using NUnit.Framework;
 using OpenQA.Selenium;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule
@@ -23,12 +22,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule
         public void WaitForPageLoad()
         {
             driver.WaitUntilElementIsDisplayed(() => Login, timeoutInSeconds: 120);
-            
         }
 
         public void ClickonLogin()
         {
-            
             Login.Click();
         }
 

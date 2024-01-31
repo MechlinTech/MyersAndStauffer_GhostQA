@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyersAndStaufferFramework
 {
@@ -19,6 +16,7 @@ namespace MyersAndStaufferFramework
 
         //other types
         private static readonly byte[] BMP = { 66, 77 };
+
         private static readonly byte[] DOC = { 208, 207, 17, 224, 161, 177, 26, 225 };
         private static readonly byte[] EXE_DLL = { 77, 90 };
         private static readonly byte[] MP3 = { 255, 251, 48 };
@@ -50,7 +48,8 @@ namespace MyersAndStaufferFramework
         /// <param name="file">The file byte array</param>
         /// <param name="fileName">The file name</param>
         /// <returns>A boolean indicating validity and a string with the actual MIME type</returns>
-        public static (bool, string) IsValidImageType(byte[] file, string fileName) {
+        public static (bool, string) IsValidImageType(byte[] file, string fileName)
+        {
             string mime = "application/octet-stream"; //DEFAULT UNKNOWN MIME TYPE
             bool isValid = false;
 
@@ -80,7 +79,8 @@ namespace MyersAndStaufferFramework
                 isValid = true;
                 mime = "image/webp";
             }
-            else {
+            else
+            {
                 mime = TrytoGetMimeType(file, fileName);
             }
 
@@ -217,6 +217,5 @@ namespace MyersAndStaufferFramework
             stream.CopyTo(ms);
             return ms.ToArray();
         }
-
     }
 }

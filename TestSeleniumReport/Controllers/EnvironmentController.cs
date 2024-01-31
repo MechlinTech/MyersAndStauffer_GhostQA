@@ -1,5 +1,4 @@
-﻿using GitHub;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SeleniumTestReport.Helper;
 using TestSeleniumReport.DTO_s;
@@ -9,10 +8,12 @@ namespace TestSeleniumReport.Controllers
     public class EnvironmentController : Controller
     {
         private readonly DBHelper _helper;
+
         public EnvironmentController(DBHelper helper)
         {
             _helper = helper;
         }
+
         public IActionResult Index()
         {
             try
@@ -26,6 +27,7 @@ namespace TestSeleniumReport.Controllers
                 throw;
             }
         }
+
         public ActionResult Add()
         {
             var ApplicationListJson = _helper.GetApplications();
@@ -43,7 +45,7 @@ namespace TestSeleniumReport.Controllers
         public IActionResult Add(Models.Environments model, string action)
         {
             Dto_Response _response = new Dto_Response();
-            if (model != null )
+            if (model != null)
             {
                 string result = _helper.AddUpdateEnvironmentJson(model);
                 _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
@@ -65,7 +67,5 @@ namespace TestSeleniumReport.Controllers
             ViewBag.AddOrEditPage = "Add";
             return View("AddEditEnvironment", environments);
         }
-
-       
     }
 }

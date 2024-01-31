@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
-using SeleniumReportAPI.Models;
 using TestSeleniumReport.DTO_s;
 
 namespace SeleniumReportAPI.Controllers
@@ -14,6 +12,7 @@ namespace SeleniumReportAPI.Controllers
     public class SeleniumController : ControllerBase
     {
         private readonly DBHelper _helper;
+
         public SeleniumController(DBHelper helper)
         {
             _helper = helper;
@@ -228,7 +227,6 @@ namespace SeleniumReportAPI.Controllers
         [HttpPost("AddUpdateEnvironment")]
         public ActionResult AddUpdateEnvironment([FromBody] Models.Environments model)
         {
-
             try
             {
                 var result = _helper.AddUpdateEnvironmentJson(model);
@@ -248,7 +246,6 @@ namespace SeleniumReportAPI.Controllers
         [HttpPost("AddUpdateApplication")]
         public ActionResult AddUpdateApplication([FromBody] Models.Applications model)
         {
-
             try
             {
                 var result = _helper.AddUpdateApplicationJson(model);
@@ -268,7 +265,6 @@ namespace SeleniumReportAPI.Controllers
         [HttpPost("AddUpdateBrowser")]
         public ActionResult AddUpdateBrowser([FromBody] Models.Browsers model)
         {
-
             try
             {
                 var result = _helper.AddUpdateBrowserJson(model);
@@ -309,7 +305,6 @@ namespace SeleniumReportAPI.Controllers
         [HttpPost("SaveTestCaseData")]
         public ActionResult SaveTestCaseData(string testSuiteJsonData)
         {
-
             try
             {
                 var result = _helper.SaveTestCaseData(testSuiteJsonData);
@@ -339,7 +334,7 @@ namespace SeleniumReportAPI.Controllers
         /// <returns></returns>
         [HttpGet("GetChartDetails")]
         public ActionResult GetDashboardDetails(string TestSuiteName, string Filtertype, int FilterValue)
-        { 
+        {
             try
             {
                 string result = _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue);

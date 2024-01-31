@@ -1,9 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using Newtonsoft.Json;
 using SeleniumReportAPI.Models;
-using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
@@ -466,7 +464,6 @@ namespace SeleniumReportAPI.Helper
             }
             catch (Exception)
             {
-
                 throw;
             }
             return TestCaseJsonData;
@@ -739,7 +736,5 @@ namespace SeleniumReportAPI.Helper
             }
             return DashBoardDetailsJson;
         }
-
     }
-
 }

@@ -167,10 +167,12 @@ namespace SeleniumReportAPI.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -207,10 +209,12 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -239,6 +243,24 @@ namespace SeleniumReportAPI.Migrations
                     b.ToTable("tbl_Applications");
                 });
 
+            modelBuilder.Entity("SeleniumReportAPI.Models.Browsers", b =>
+                {
+                    b.Property<int>("BrowserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BrowserId"), 1L, 1);
+
+                    b.Property<string>("BrowserName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("BrowserName");
+
+                    b.HasKey("BrowserId");
+
+                    b.ToTable("tbl_Browsers");
+                });
+
             modelBuilder.Entity("SeleniumReportAPI.Models.Environments", b =>
                 {
                     b.Property<int>("EnvironmentId")
@@ -248,10 +270,45 @@ namespace SeleniumReportAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnvironmentId"), 1000L, 1);
 
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BasePath")
+                        .IsRequired()
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("BasePath");
+
+                    b.Property<string>("Baseurl")
+                        .IsRequired()
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("Baseurl");
+
+                    b.Property<int>("BroswerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DriverPath")
+                        .IsRequired()
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("DriverPath");
+
                     b.Property<string>("EnvironmentName")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
                         .HasColumnName("EnvironmentName");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("EnvironmentId");
 
@@ -270,8 +327,15 @@ namespace SeleniumReportAPI.Migrations
                     b.Property<int>("ApplicationId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("EnvironmentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("SelectedTestCases")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("SendEmail")
                         .HasColumnType("bit");

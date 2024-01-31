@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,7 +12,7 @@ namespace MyersAndStaufferFramework
             string link = str.ToLower();
 
             link = Regex.Replace(link, @"[^a-z0-9\s-]", "");
-            // convert multiple spaces/hyphens into one space       
+            // convert multiple spaces/hyphens into one space
             link = Regex.Replace(link, @"[\s-]+", " ").Trim();
             // hyphens
             link = Regex.Replace(link, @"\s", "-");
@@ -26,7 +25,7 @@ namespace MyersAndStaufferFramework
             string fileName = str.ToLower();
 
             fileName = Regex.Replace(fileName, @"[^a-z0-9\s-.]", "");
-            // convert multiple spaces/hyphens into one space       
+            // convert multiple spaces/hyphens into one space
             fileName = Regex.Replace(fileName, @"[\s-]+", " ").Trim();
             // hyphens
             fileName = Regex.Replace(fileName, @"\s", "-");
@@ -72,7 +71,6 @@ namespace MyersAndStaufferFramework
 
             return $"{firstChar}{str.Substring(1)}";
         }
-
 
         /// <summary>
         /// Turn a string into a CSV cell output, only quoting values if necessary

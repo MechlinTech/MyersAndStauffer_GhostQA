@@ -6,12 +6,16 @@ namespace TestSeleniumReport.DTO_s
     {
         [JsonProperty("TestSuitename")]
         public string TestSuitename { get; set; }
+
         [JsonProperty("TestRunStartDate")]
         public DateTime TestRunStartDate { get; set; }
+
         [JsonProperty("TotalTestCase")]
         public int TotalTestCase { get; set; }
+
         [JsonProperty("TotalPassedTestCase")]
         public int TotalPassedTestCase { get; set; }
+
         [JsonProperty("TotalFailedTestCase")]
         public int TotalFailedTestCase { get; set; }
     }

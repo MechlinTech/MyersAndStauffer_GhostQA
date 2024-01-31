@@ -1,9 +1,4 @@
 ﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 {
@@ -18,7 +13,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         public static string Driverpath { get; set; }
         public static string Testername { get; set; }
 
-
         public static string ExecuteTestCases(string browsername, string EnvironmentName, string TestCaseName, string baseurl, string basePath, string driverPath, string testerName)
         {
             browserName = browsername;
@@ -29,11 +23,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             Driverpath = driverPath;
             Testername = testerName;
 
-
             var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
             bsTest.SetUp();
             var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
-
 
             var method = loginTest.GetType().GetMethod(testCaseName);
 
@@ -51,4 +43,3 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         }
     }
 }
-

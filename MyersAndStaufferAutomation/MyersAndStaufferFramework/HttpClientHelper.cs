@@ -25,7 +25,9 @@ namespace MyersAndStaufferFramework
             Url = url;
         }
 
-        public HttpClientHelper(string url) : this(new Uri(url)) { }
+        public HttpClientHelper(string url) : this(new Uri(url))
+        {
+        }
 
         private HttpClientHandler _handler = null;
 

@@ -8,8 +8,10 @@ namespace SeleniumReportAPI.Models
     {
         [Key]
         public int TestSuiteId { get; set; }
+
         [Required(ErrorMessage = "Test Suite Name is required."), Column("TestSuiteName", TypeName = "varchar(100)")]
         public string TestSuiteName { get; set; }
+
         public string TestSuiteType { get; set; } // "BuiltIn" or "Custom"
 
         [Required(ErrorMessage = "Application is required.")]

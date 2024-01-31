@@ -16,9 +16,6 @@ export default function BasicAccordion() {
     setExpandedAccord(isExpanded ? panel : "");
   };
 
-
-
-
   return (
     <Box sx={{ }}>
       {testSuiteLists?.map((item, index) => (
@@ -31,7 +28,7 @@ export default function BasicAccordion() {
             border: "1px solid rgb(217, 217, 217)",
             marginBottom: "3px",
             // '&:hover': {
-            //   border: "2px solid rgb(101, 77, 247)", 
+            //   border: "2px solid rgb(101, 77, 247)",
             // },
           }}
         >

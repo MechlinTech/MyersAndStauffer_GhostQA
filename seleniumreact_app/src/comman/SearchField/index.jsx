@@ -34,4 +34,3 @@ const SearchField = forwardRef(({ onChange, ...props }, ref) => {
 });
 
 export default SearchField;
-

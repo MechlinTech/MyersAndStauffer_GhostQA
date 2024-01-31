@@ -9,6 +9,7 @@ namespace TestSeleniumReport.Controllers
     public class HomeController : Controller
     {
         private readonly DBHelper _helper;
+
         public HomeController(DBHelper helper)
         {
             _helper = helper;

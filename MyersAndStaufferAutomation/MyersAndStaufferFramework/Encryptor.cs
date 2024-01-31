@@ -23,9 +23,9 @@ namespace MyersAndStaufferFramework
         {
             if (string.IsNullOrWhiteSpace(plainText))
                 return "";
-            
+
             // Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
-            // so that the same Salt and IV values can be used when decrypting.  
+            // so that the same Salt and IV values can be used when decrypting.
             byte[] saltStringBytes = saltBytes ?? Generate256BitsOfRandomEntropy();
             byte[] ivStringBytes = ivBytes ?? Generate256BitsOfRandomEntropy();
             byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -89,7 +89,6 @@ namespace MyersAndStaufferFramework
                     nullIndex--;
                 comparisonBytes = comparisonBytes.Take(nullIndex + 1).ToArray();
 
-
                 var result = Encoding.UTF8.GetString(comparisonBytes, 0, comparisonBytes.Length);
 
                 return result;
@@ -109,13 +108,13 @@ namespace MyersAndStaufferFramework
 
         public static string GetSha256Hash(string text)
         {
-            // Create a SHA256   
+            // Create a SHA256
             using (SHA256 sha256Hash = SHA256.Create())
             {
-                // ComputeHash - returns byte array  
+                // ComputeHash - returns byte array
                 byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(text));
 
-                // Convert byte array to a string   
+                // Convert byte array to a string
                 StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < bytes.Length; i++)
                 {

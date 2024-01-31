@@ -97,7 +97,7 @@ const AddSuite = ({ open, onClose, hookProps }) => {
                       className={classes.radioButtonLabel}
                     >
                       Custom Suites
-                      
+
                     </Typography>
                   }
                   className={clsx(classes.radioLabel, classes.customFontSize)}

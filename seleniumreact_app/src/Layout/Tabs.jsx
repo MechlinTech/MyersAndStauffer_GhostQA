@@ -1,4 +1,3 @@
-
 import { Tab, Tabs as MuiTabs } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,8 +6,6 @@ export const Tabs = styled((props) => {
 	const { className } = props;
 	const navigate = useNavigate();
 	const location = useLocation();
-
-	
 
 	return (
 		<div className={className}>

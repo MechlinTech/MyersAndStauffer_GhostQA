@@ -40,7 +40,6 @@ export default function Navigations() {
           <Route path="api2" element={<Box m={10} component={'h1'}>api2</Box>} />
         </Route>
 
-
         <Route path="/accordian" element={<BasicAccordion />} />
         <Route path="/:testSuiteName/:testRunName" element={<TestSuitsDetails />} />
         <Route path="/add-suite" element={<AddTestSuite />} />

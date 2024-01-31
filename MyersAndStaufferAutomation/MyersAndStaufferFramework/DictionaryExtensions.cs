@@ -28,7 +28,6 @@ namespace MyersAndStaufferFramework
             return defaultValue;
         }
 
-
         public static void SafeAdd<Tkey, TValue>(this Dictionary<Tkey, decimal> dict, Tkey key, decimal amount)
         {
             if (dict.ContainsKey(key))

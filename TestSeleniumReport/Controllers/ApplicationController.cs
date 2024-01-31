@@ -1,5 +1,4 @@
-﻿using GitHub;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SeleniumTestReport.Helper;
 
 namespace TestSeleniumReport.Controllers
@@ -7,10 +6,12 @@ namespace TestSeleniumReport.Controllers
     public class ApplicationController : Controller
     {
         private readonly DBHelper _helper;
+
         public ApplicationController(DBHelper helper)
         {
             _helper = helper;
         }
+
         public IActionResult Index()
         {
             try
@@ -32,7 +33,5 @@ namespace TestSeleniumReport.Controllers
             var result = _helper.AddUpdateApplicationJson(model);
             return Ok(result);
         }
-
-
     }
 }

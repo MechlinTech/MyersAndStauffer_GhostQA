@@ -7,11 +7,11 @@ namespace MyersAndStaufferFramework
     /// Outputs a string with a name and elapsed time since last logged message to your specified function
     /// </summary>
     /// <remarks>
-    /// Example: 
+    /// Example:
     ///     PerformanceLogger pl = new PerformanceLogger("BulkPrint", true, logger.Debug);
     ///     pl.Log("step 1");
     ///     pl.Log("step 2");
-    ///     
+    ///
     /// Output:
     ///     BulkPrint [-]: step 1
     ///     BulkPrint [234 ms]: step 2

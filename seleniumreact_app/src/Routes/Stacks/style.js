@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles((theme) => ({
-
 linkStyle:{
     textDecoration: 'none',
     color: 'black',

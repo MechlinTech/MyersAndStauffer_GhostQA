@@ -12,8 +12,8 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240119164642_New tables")]
-    partial class Newtables
+    [Migration("20240116123430_initial-setup")]
+    partial class initialsetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -169,10 +169,12 @@ namespace SeleniumReportAPI.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -209,10 +211,12 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -274,6 +278,10 @@ namespace SeleniumReportAPI.Migrations
 
                     b.Property<int>("EnvironmentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("SelectedTestCases")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("SendEmail")
                         .HasColumnType("bit");

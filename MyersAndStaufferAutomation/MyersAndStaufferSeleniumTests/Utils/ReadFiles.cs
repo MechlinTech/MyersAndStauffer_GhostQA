@@ -1,10 +1,5 @@
-﻿using Newtonsoft.Json;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
+﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
+using Newtonsoft.Json;
 
 namespace MyersAndStaufferSeleniumTests.Utils
 {
@@ -59,7 +54,6 @@ namespace MyersAndStaufferSeleniumTests.Utils
             if (File.Exists(jsonFileIn))
             {
                 jsonFile = JsonConvert.DeserializeObject(File.ReadAllText(jsonFileIn));
-
             }
             else
             {

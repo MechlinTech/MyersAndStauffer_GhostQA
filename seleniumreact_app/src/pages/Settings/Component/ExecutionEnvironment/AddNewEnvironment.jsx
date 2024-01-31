@@ -43,7 +43,6 @@ export default function AddNewEnvironment({ onBack }) {
   });
 
   const handleSubmit = () => {
-   
     let error = {};
     if (!formData.environmentName.trim()) {
       error.name = "Environment Name is required";
@@ -75,7 +74,6 @@ export default function AddNewEnvironment({ onBack }) {
 
     console.log("handleSubmit", error, formData);
   };
-  
 
   const handleFieldChange = (fieldName, value) => {
     setFormData({
@@ -83,8 +81,6 @@ export default function AddNewEnvironment({ onBack }) {
       [fieldName]: value,
     });
   };
-
-
 
   return (
     <>

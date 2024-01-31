@@ -1,4 +1,3 @@
-using Mailosaur.Operations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -18,7 +17,6 @@ builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(conn
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AppDBContext>();
-
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -62,7 +60,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
     };
 });
-
 
 builder.Services.AddSwaggerGen(option =>
 {

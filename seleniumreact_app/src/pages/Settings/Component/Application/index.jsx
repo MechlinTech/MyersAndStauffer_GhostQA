@@ -18,7 +18,7 @@ const staticData = [
     email:"test@gmail.com",
     runnerPath:'D://test/'
   },
- 
+
 ];
 
 export default function Application() {
@@ -32,7 +32,6 @@ export default function Application() {
   const filteredData = staticData?.filter((data) =>
     data?.projectName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
-
 
   return (
     <>

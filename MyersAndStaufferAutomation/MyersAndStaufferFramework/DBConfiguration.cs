@@ -9,13 +9,13 @@ namespace MyersAndStaufferFramework
     public class DBConfiguration
     {
         public static IConfiguration configuration { get; }
+
         static DBConfiguration()
         {
             configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
-
         }
 
         public static string GetDBConnectionString(string Key)
@@ -107,6 +107,5 @@ namespace MyersAndStaufferFramework
             }
             return TestRunName;
         }
-
     }
 }

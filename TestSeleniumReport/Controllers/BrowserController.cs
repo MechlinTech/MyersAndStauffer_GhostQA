@@ -6,10 +6,12 @@ namespace TestSeleniumReport.Controllers
     public class BrowserController : Controller
     {
         private readonly DBHelper _helper;
+
         public BrowserController(DBHelper helper)
         {
             _helper = helper;
         }
+
         public IActionResult Index()
         {
             try
@@ -24,9 +26,10 @@ namespace TestSeleniumReport.Controllers
                 throw;
             }
         }
+
         public IActionResult AddBrowser(Models.Browsers model)
         {
-            if(model != null)
+            if (model != null)
             {
                 var result = _helper.AddUpdateBrowserJson(model);
                 return Ok(result);
@@ -34,6 +37,5 @@ namespace TestSeleniumReport.Controllers
 
             return RedirectToAction("Index");
         }
-
     }
 }

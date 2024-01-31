@@ -15,8 +15,8 @@ export const login = (data, setLoading) => {
       if (res.status === 200) {
         toast.info('Successfully logged in', {
           style: {
-            background: 'rgb(101, 77, 247)', 
-            color: 'rgb(255, 255, 255)', 
+            background: 'rgb(101, 77, 247)',
+            color: 'rgb(255, 255, 255)',
           },
         });
         sessionStorage.setItem(

@@ -29,7 +29,6 @@ export const getTestSuites = () => {
     };
 };
 
-
 export const getListByTestSuitsName = (data) => {
     return async (dispatch) => {
         try {

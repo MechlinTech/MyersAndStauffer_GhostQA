@@ -5,7 +5,7 @@ namespace MyersAndStaufferFramework
 {
     public static class CrossPlatformHelpers
     {
-        static char[] pathSplitCharacters = new char[] { '/', '\\' };
+        private static char[] pathSplitCharacters = new char[] { '/', '\\' };
 
         public static string PathCombine(string basePath, params string[] additional)
         {
@@ -24,6 +24,5 @@ namespace MyersAndStaufferFramework
             }
             return Path.Join(segments);
         }
-
     }
 }

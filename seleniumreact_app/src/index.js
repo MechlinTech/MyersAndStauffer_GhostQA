@@ -14,7 +14,7 @@ const theme = createMuiTheme({
       'sans-serif'
     ].join(','),
   },});
- 
+
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
@@ -27,4 +27,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-

@@ -10,7 +10,6 @@ import { Edit as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
 export function EnvironmentTable({ rows }) {
   const classes = useTableStyles();
 
-
   const handleDelete = (row) => {
     console.log(`Deleting environment: ${row.EnvironmentName}`);
   };

@@ -17,7 +17,7 @@ namespace MyersAndStaufferFramework
     public static class Extensions
     {
         private static Random random = new Random();
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        private const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
         public static string FullExceptionMessage(this Exception ex)
         {
@@ -104,7 +104,7 @@ namespace MyersAndStaufferFramework
 
             return s;
         }
-        
+
         public static string RandomString(int length)
         {
             return new string(Enumerable.Repeat(chars, length)
@@ -177,6 +177,7 @@ namespace MyersAndStaufferFramework
             {
                 case SortOrder.Descending:
                     return source.OrderByDescending(keySelector);
+
                 case SortOrder.Ascending:
                 default:
                     return source.OrderBy(keySelector);
@@ -192,6 +193,7 @@ namespace MyersAndStaufferFramework
             {
                 case SortOrder.Descending:
                     return source.ThenByDescending(keySelector);
+
                 case SortOrder.Ascending:
                 default:
                     return source.ThenBy(keySelector);
@@ -317,7 +319,7 @@ namespace MyersAndStaufferFramework
         /// <param name="path">The path to the object to grab</param>
         /// <returns>The object</returns>
         /// <remarks>
-        /// Use this if you have JSON deserialized into a dynamic variable but someone decided that using hyphens in a name 
+        /// Use this if you have JSON deserialized into a dynamic variable but someone decided that using hyphens in a name
         /// would be a good idea (e.g."event-id")
         /// </remarks>
         public static object GrabFromObjectGraph(dynamic source, params string[] path)
@@ -376,7 +378,7 @@ namespace MyersAndStaufferFramework
                 AreaCode = phoneNumber.SafeSubstring(1, 3);
                 Number = phoneNumber.SafeSubstring(4, 7);
             }
-            
+
             return (CountryCode, AreaCode, Number);
         }
 
@@ -411,7 +413,7 @@ namespace MyersAndStaufferFramework
 
                 cfi.AbbreviatedMonthNames = fixedAmns;
 
-                // Fix these... other ones too... because reasons. 
+                // Fix these... other ones too... because reasons.
                 cfi.AbbreviatedMonthGenitiveNames = fixedAmns;
             }
 

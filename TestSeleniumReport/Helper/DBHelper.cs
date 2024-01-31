@@ -1,18 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CSharp;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using System.Data;
 using System.Data.SqlClient;
-using System;
-using System.Linq;
-using System.Text;
-using System.Collections;
-using TestSeleniumReport.Models;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
-using Newtonsoft.Json;
-using Environments = TestSeleniumReport.Models.Environments;
 using TestSeleniumReport.DTO_s;
+using TestSeleniumReport.Models;
+using Environments = TestSeleniumReport.Models.Environments;
 
 namespace SeleniumTestReport.Helper
 {
@@ -663,7 +655,6 @@ namespace SeleniumTestReport.Helper
             }
             catch (Exception)
             {
-
                 throw;
             }
             return TestCaseJsonData;

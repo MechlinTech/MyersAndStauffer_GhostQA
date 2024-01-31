@@ -6,6 +6,7 @@ namespace SeleniumReportAPI.DTO_s
     {
         [JsonProperty("TestCaseName")]
         public string TestCaseName { get; set; }
+
         [JsonProperty("IsSelected")]
         public bool IsSelected { get; set; }
     }

@@ -14,7 +14,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
     [TestFixture]
     public class BaseTest
     {
-
         public static string basePath = TestExecutor.Basepath;
         public static string EnvironmentName = TestExecutor.environmentName;
         public Authentication Credentials = new Authentication();
@@ -60,7 +59,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             else if (status == TestStatus.Passed.ToString())
             {
                 _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Passed" });
-
             }
 
             if (status == TestStatus.Failed.ToString())
@@ -92,7 +90,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             ss.SaveAsFile(screenshotFile, ScreenshotImageFormat.Png);
             TestContext.AddTestAttachment(screenshotFile, fileName + "Screenshot");
             WriteToLogfile("Error screenshot: " + screenshotFile);
-
 
             var FailureSSPath = Path.Combine(basePath, "FailureScreenShots", DateTime.Now.ToString("MMMM_dd_yyyy"));
             if (!Directory.Exists(FailureSSPath))
@@ -142,6 +139,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 File.WriteAllText(LoggingPath, logInstanceMessage + Environment.NewLine);
             }
         }
+
         public static void AttatchLogToTest()
         {
             if (File.Exists(LoggingPath))

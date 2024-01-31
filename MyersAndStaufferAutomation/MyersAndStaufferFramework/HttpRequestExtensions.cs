@@ -5,8 +5,8 @@ namespace MyersAndStaufferFramework
     public static class HttpRequestExtensions
     {
         ///// <summary>
-        ///// Gets the IP address from "REMOTE_ADDR" or from "HTTP_CF_CONNECTING_IP" if it exists. 
-        ///// If a client in production uses Cloudflare, the request comes from cloudflare so REMOTE_ADDR is no longer the user's IP. 
+        ///// Gets the IP address from "REMOTE_ADDR" or from "HTTP_CF_CONNECTING_IP" if it exists.
+        ///// If a client in production uses Cloudflare, the request comes from cloudflare so REMOTE_ADDR is no longer the user's IP.
         ///// Cloudflare adds the "HTTP_CF_CONNECTING_IP" header for the user's IP, so if this exists on the request we want to use that instead.
         ///// Since CloudFlare Pesudo IPv4 is enabled, we can grab the ipaddress from HTTP_CF_PSEUDO_IPV4
         ///// </summary>

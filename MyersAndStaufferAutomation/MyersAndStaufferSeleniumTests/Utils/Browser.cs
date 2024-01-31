@@ -1,10 +1,7 @@
 ﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
-using System;
-using System.IO;
 
 namespace MyersAndStaufferSeleniumTests.Utils
 {
@@ -21,6 +18,7 @@ namespace MyersAndStaufferSeleniumTests.Utils
         private static IWebDriver _driver;
         public static string _preloader = null;
         public static string downloadDirectory { get; set; }
+
         public static IWebDriver Driver
         {
             get { return _driver; }
@@ -60,8 +58,8 @@ namespace MyersAndStaufferSeleniumTests.Utils
 
                     break;
 
-                case BrowserDriver.Edge: 
-                    
+                case BrowserDriver.Edge:
+
                     EdgeOptions edgeOptions = new EdgeOptions();
                     edgeOptions.AddArgument("--allow-incognito");
                     edgeOptions.AddArgument("test-type");
@@ -73,7 +71,6 @@ namespace MyersAndStaufferSeleniumTests.Utils
                     edgeOptions.AddUserProfilePreference("download.default_directory", downloadDirectory);
                     edgeOptions.AddUserProfilePreference("download.prompt_for_download", false);
                     edgeOptions.AddUserProfilePreference("disable-popup-blocking", "true");
-
 
                     _driver = new EdgeDriver(edgeOptions);
 
@@ -87,11 +84,9 @@ namespace MyersAndStaufferSeleniumTests.Utils
                     }
                     break;
 
-                    
-
                 // TODO: Add support for other Browsers
                 case BrowserDriver.Firefox:
-                
+
                 case BrowserDriver.Safari:
                     throw new NotImplementedException();
             }

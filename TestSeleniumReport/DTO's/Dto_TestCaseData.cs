@@ -15,6 +15,7 @@
         public string TesterName { get; set; }
         public string TestEnvironment { get; set; }
     }
+
     //public class TestCaseStep
     //{
     //    public string Status { get; set; }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SeleniumReportAPI.DTO_s
+﻿namespace SeleniumReportAPI.DTO_s
 {
     public class Dto_TestCaseSteps
     {

@@ -85,7 +85,7 @@ export default function SignIn() {
           <Box
             sx={{ display: "flex", alignItems: "center", marginBottom: "40px" }}
           >
-            
+
             <img src={"/images/GhostQA-Logo.png"} alt="logo" />{" "}
             {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
@@ -222,7 +222,7 @@ export default function SignIn() {
                   variant="contained"
                   sx={{ margin: "10px" }}
                   // sx={{ mt: 3, mb: 2 }}
-                  
+
                   onClick={() => handleLogin()}
                   endIcon={loading && <CircularProgress size={20} color="inherit" />}
                 >

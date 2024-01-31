@@ -22,7 +22,6 @@ namespace SeleniumReportAPI.Controllers
             _helper = helper;
         }
 
-
         [HttpPost]
         public async Task<IActionResult> LoginAsync(Dto_Login loginDTO)
         {

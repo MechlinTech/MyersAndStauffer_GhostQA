@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 
-
 namespace MyersAndStaufferFramework
 {
     public class VideoRecorder : DBConfiguration
@@ -10,6 +9,7 @@ namespace MyersAndStaufferFramework
         public static string basePath = string.Empty;// GetDBConnectionString("AppSettings:basePath");
         public static string videoPath = "";
         private static Recorder _rec;
+
         public static void CreateRecording(string _basePath)
         {
             basePath = _basePath;
@@ -21,7 +21,7 @@ namespace MyersAndStaufferFramework
             GenerateRecodingFileandStartrecoding();
         }
 
-        static string GetRecordingFolderPath(string folderName)
+        private static string GetRecordingFolderPath(string folderName)
         {
             videoPath = basePath;
             // Create a "Recording" subfolder
@@ -35,6 +35,7 @@ namespace MyersAndStaufferFramework
             // Get the directory of the assembly
             return recordingFolderPath;
         }
+
         public static void EndRecording()
         {
             _rec.Stop();
@@ -56,7 +57,7 @@ namespace MyersAndStaufferFramework
             RecorderStatus status = e.Status;
         }
 
-        static void GenerateRecodingFileandStartrecoding()
+        private static void GenerateRecodingFileandStartrecoding()
         {
             try
             {

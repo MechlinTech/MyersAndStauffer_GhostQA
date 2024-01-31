@@ -30,7 +30,7 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [tabNo, setTabNo] = useState("2");
   const [openModal, setOpenModal] = useState(false);
-  
+
   const handleAddSuite = () => {
     //  setOpenModal(true);
     navigate("/add-suite");
