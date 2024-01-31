@@ -33,5 +33,6 @@ namespace SeleniumReportAPI.Models
 
         [NotMapped]
         public string BrowserName { get; set; }
+        public string? Description { get; set; }
     }
 }

@@ -428,6 +428,7 @@ namespace SeleniumTestReport.Helper
                         command.Parameters.AddWithValue("@DriverPath", model.DriverPath);
                         command.Parameters.AddWithValue("@CreatedBy", model.CreatedBy);
                         command.Parameters.AddWithValue("@ModifiedBy", model.ModifiedBy);
+                        command.Parameters.AddWithValue("@Description", model.Description);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -569,6 +570,7 @@ namespace SeleniumTestReport.Helper
                                 environment.ModifiedBy = reader["ModifiedBy"].ToString();
                                 environment.CreatedOn = Convert.ToDateTime(reader["CreatedOn"]);
                                 environment.ModifiedOn = Convert.ToDateTime(reader["ModifiedOn"]);
+                                environment.Description = reader["Description"].ToString();
                             }
                         }
                     }

@@ -35,8 +35,8 @@ BEGIN TRY
 	END
 	ELSE IF @EnvironmentId = 0
 	BEGIN
-		INSERT INTO tbl_Environments (EnvironmentName, ApplicationId, DriverPath, BroswerId, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn, BasePath, Baseurl) 
-		VALUES (@EnvironmentName, @ApplicationId, @DriverPath, @BrowserId, @CreatedBy, GETDATE(), @ModifiedBy, GETDATE(), @BasePath, @Baseurl)
+		INSERT INTO tbl_Environments (EnvironmentName, ApplicationId, DriverPath, BroswerId, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn, BasePath, Baseurl, Description) 
+		VALUES (@EnvironmentName, @ApplicationId, @DriverPath, @BrowserId, @CreatedBy, GETDATE(), @ModifiedBy, GETDATE(), @BasePath, @Baseurl, @Description)
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -62,7 +62,8 @@ BEGIN TRY
                [ModifiedBy]		   = @ModifiedBy,
 			   [ModifiedOn]        = GETDATE(),
                [BasePath]          = @BasePath,
-			   [Baseurl]           = @Baseurl
+			   [Baseurl]           = @Baseurl,
+			   [Description]	   = @Description
 		WHERE [EnvironmentId]	   = @EnvironmentId
 
 		IF @@ERROR = 0

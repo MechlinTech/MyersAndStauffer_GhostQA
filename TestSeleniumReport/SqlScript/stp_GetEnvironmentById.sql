@@ -24,7 +24,8 @@ BEGIN TRY
 				E.[ModifiedBy],
 				E.[ModifiedOn],
 				E.[BasePath],
-				E.[Baseurl]
+				E.[Baseurl],
+				E.[Description]
 		FROM tbl_Environments E
 		WHERE EnvironmentId = @EnvironmentId
 END TRY
