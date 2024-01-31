@@ -21,7 +21,8 @@ const browserOptions = [
   { value: "chrome", label: "chrome" },
   { value: "edge", label: "edge" },
 ];
-export default function AddNewEnvironment({ onBack }) {
+export default function EditNewEnvironment({ onBack ,rowData}) {
+    console.log("row",rowData);
   const classes = useStyles();
   // const [selectedApplication, setSelectedApplication] = useState(null);
   // const [name, setName] = useState("");
@@ -49,6 +50,7 @@ export default function AddNewEnvironment({ onBack }) {
   });
 
   const handleSubmit = () => {
+   
     let error = {};
     if (!formData.environmentName.trim()) {
       error.name = "Environment Name is required";
@@ -82,6 +84,7 @@ export default function AddNewEnvironment({ onBack }) {
 
     console.log("handleSubmit", error, formData);
   };
+  
 
   const handleFieldChange = (fieldName, value) => {
     setFormData({
@@ -89,6 +92,7 @@ export default function AddNewEnvironment({ onBack }) {
       [fieldName]: value,
     });
   };
+
 
   return (
     <>
@@ -100,7 +104,7 @@ export default function AddNewEnvironment({ onBack }) {
         spacing={2}
       >
         <Grid item xs={6} className={classes.header}>
-          Add New Environment
+          Edit Environment
         </Grid>
         {/* <Grid item>
           <Button
