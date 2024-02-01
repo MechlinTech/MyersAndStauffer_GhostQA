@@ -7,39 +7,40 @@ import TableRow from "@mui/material/TableRow";
 import { useTableStyles, StyledTableCell } from "./styles";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
 
-export function CustomTable({ rows,handleEditApplication}) {
+export function CustomTable({ rows,handleEditBrowser }) {
   const classes = useTableStyles();
 
   const handleDelete = (row) => {
-    console.log(`Deleting environment: ${row.ApplicationName}`);
+    console.log(`Deleting Brwoser: ${row.BrowserName}`);
   };
 
   const handleEdit = (row) => {
-    handleEditApplication(row)
-    console.log(`Editing environment: ${row.ApplicationName}`);
+    handleEditBrowser(row)
+    console.log(`Editing Browser `,row);
   };
   return (
     <TableContainer sx={{ marginBottom: "8vh" }}>
       <Table>
         <TableHead>
           <TableRow>
-            {/* <StyledTableCell>Project Name</StyledTableCell> */}
-            <StyledTableCell>Application Name</StyledTableCell>
+            <StyledTableCell>Browser Name</StyledTableCell>
+            {/* <StyledTableCell>Application Name</StyledTableCell> */}
+            {/* <StyledTableCell>E-Mail</StyledTableCell>
+            <StyledTableCell>Runner Path</StyledTableCell> */}
             <StyledTableCell>Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow
-              key={row.ApplicationName}
+              key={row.BrowserId}
               className={`${classes.tableRow}`}
-              style={{ height: "10px"}}
-              spacing='3'
+              style={{ height: "10px" }}
             >
-              {/* <StyledTableCell component="th" scope="row">
-                {row.projectName}
-              </StyledTableCell> */}
-              <StyledTableCell>{row.ApplicationName}</StyledTableCell>
+              <StyledTableCell component="th" scope="row">
+                {row.BrowserName}
+              </StyledTableCell>
+              {/* <StyledTableCell>{row.applicationName}</StyledTableCell> */}
               {/* <StyledTableCell component="th" scope="row">
                 {row.email}
               </StyledTableCell>

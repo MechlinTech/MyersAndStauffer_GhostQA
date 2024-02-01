@@ -10,23 +10,18 @@ import {
   StyledDashBoardIcon,
   UserManagementIcon,
 } from "../../comman/icons";
-import Application from "./Component/Application";
-import ExecutionEnvironment from "./Component/ExecutionEnvironment";
-import RoleManagement from "./Component/RoleManagement";
-import UserManagement from "./Component/UserManagement";
 import { Link, Outlet } from "react-router-dom";
-
+import { GetApplication,GetBrowser } from "../../redux/actions/seleniumAction";
+// import { BrowserIcon } from "../../comman/icons/BrowserIcon";
 export default function Settings() {
   const classess = useStyles();
   const dispatch = useDispatch();
-  const [selectedItem, setSelectedItem] = useState({
-    title: "Environment",
-    icon: <StyledDashBoardIcon />,
-    path: "/",
-  });
+  const [selectedItem, setSelectedItem] = useState({});
 
   useEffect(() => {
     dispatch(getTestSuitesList());
+    dispatch(GetApplication())
+    dispatch(GetBrowser())
   }, []);
 
   const handleItemClick = (index) => {
@@ -50,6 +45,11 @@ export default function Settings() {
       title: "Application",
       icon: <Environment />,
       path: "/accordian",
+    },
+    {
+      title: "Browser",
+      icon: <Environment />,
+      path: "/bbbbbb",
     },
     {
       title: "Roles",

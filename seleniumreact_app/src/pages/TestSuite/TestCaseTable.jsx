@@ -62,7 +62,11 @@ export function TestCaseTable({
               <StyledTableCell component="th" scope="row">
                 <Checkbox
                   onChange={(event) => handleCheckboxChange(event, row)}
-                  checked={selectedRows.includes(row)}
+                  // checked={selectedRows.includes(row)}
+                  checked={selectedRows.some(
+                    (selectedRow) =>
+                      selectedRow.TestCaseName === row.TestCaseName
+                  )}
                   style={{
                     color: selectedRows.includes(row) && 'rgb(101, 77, 247)' ,
                   }}
