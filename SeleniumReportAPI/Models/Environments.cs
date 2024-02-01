@@ -23,10 +23,10 @@ namespace SeleniumReportAPI.Models
         public string DriverPath { get; set; }
 
         public int BroswerId { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime ModifiedOn { get; set; }
+        public string? CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string? ModifiedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
 
         [NotMapped]
         public string ApplicationName { get; set; }

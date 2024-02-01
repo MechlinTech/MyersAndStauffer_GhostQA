@@ -329,7 +329,7 @@ namespace SeleniumReportAPI.Helper
 
         internal string GetTestSuiteByName(string TestSuiteName)
         {
-            TestSuites testSuites = new TestSuites();
+            Dto_TestSuiteDetailsData testSuites = new Dto_TestSuiteDetailsData();
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -518,6 +518,7 @@ namespace SeleniumReportAPI.Helper
                     connection.Open();
                     using (SqlCommand command = new SqlCommand("stp_AddUpdateApplication", connection))
                     {
+                        command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
                         command.Parameters.AddWithValue("@ApplicationName", model.ApplicationName);
                         using (SqlDataReader reader = command.ExecuteReader())
