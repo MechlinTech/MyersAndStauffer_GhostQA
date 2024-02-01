@@ -7,6 +7,8 @@ import TableRow from "@mui/material/TableRow";
 import { useTableStyles, StyledTableCell } from "./styles";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
 import { useState } from "react";
+import Tooltip from "@mui/material/Tooltip";
+import { Typography } from "@mui/material";
 import EditNewEnvironment from "./EditNewEnvironment";
 export function EnvironmentTable({ rows,handleEditEnvironment}) {
   const classes = useTableStyles();
@@ -57,20 +59,24 @@ export function EnvironmentTable({ rows,handleEditEnvironment}) {
               </StyledTableCell>
               <StyledTableCell>{row.EnvironmentDescription}</StyledTableCell>
               <StyledTableCell component="th" scope="row">
-                {row.application}
+                {row.ApplicationName}
               </StyledTableCell>
               <StyledTableCell component="th" scope="row">
-                {row.browser}
+                {row.BrowserName}
               </StyledTableCell>
               <StyledTableCell component="th" scope="row">
-                {row.baseUrl}
+                {row.Baseurl}
               </StyledTableCell>
-              <StyledTableCell component="th" scope="row">
-                {row.DriverPath}
-              </StyledTableCell>
-              <StyledTableCell component="th" scope="row">
-                {row.BasePath}
-              </StyledTableCell>
+              <StyledTableCell component="th" scope="row" style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <Tooltip title={row.DriverPath}>
+                    {row.DriverPath}
+                  </Tooltip>
+                </StyledTableCell>
+                <StyledTableCell component="th" scope="row" style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <Tooltip title={row.DriverPath}>
+                    {row.BasePath}
+                  </Tooltip>
+                </StyledTableCell>
               <StyledTableCell>
                 <EditIcon
                   onClick={() => handleEditEnvironment(row)}

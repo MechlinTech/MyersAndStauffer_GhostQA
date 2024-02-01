@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useStyles } from "./styles";
 import clsx from "clsx";
 import Select from "react-select";
@@ -11,17 +12,25 @@ import {
   Box,
   Card,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { GetApplication, GetBrowser } from "../../../../redux/actions/seleniumAction";
 
-const applicationOptions = [
-  { value: "clocksession", label: "Clocksession" },
-  { value: "whuups", label: "Whuups" },
-  { value: "whuups", label: "Whuups" },
-];
-const browserOptions = [
-  { value: "chrome", label: "chrome" },
-  { value: "edge", label: "edge" },
-];
+// const applicationOptions = [
+//   { value: "clocksession", label: "Clocksession" },
+//   { value: "whuups", label: "Whuups" },
+//   { value: "whuups", label: "Whuups" },
+// ];
+// const browserOptions = [
+//   { value: "chrome", label: "chrome" },
+//   { value: "edge", label: "edge" },
+// ];
 export default function AddNewEnvironment({ onBack }) {
+  const dispatch=useDispatch();
+  useEffect(() => {
+    dispatch(GetApplication());
+    dispatch(GetBrowser());
+    
+  }, []);
   const classes = useStyles();
   // const [selectedApplication, setSelectedApplication] = useState(null);
   // const [name, setName] = useState("");
@@ -29,6 +38,7 @@ export default function AddNewEnvironment({ onBack }) {
   // const [driverPath, setDriverPath] = useState("");
   // const [basePath, setBasePath] = useState("");
   // const [description, setDescription] = useState("");
+  const { applicationList,  browserList,  } =useSelector((state) => state.selenium);
   const [formData, setFormData] = useState({
     environmentName: "",
     environmentDescription: "",
@@ -47,7 +57,14 @@ export default function AddNewEnvironment({ onBack }) {
     basePath: "",
     browser:"",
   });
-
+  const applicationOptions = applicationList.map((app) => ({
+    value: app.ApplicationId,
+    label: app.ApplicationName,
+  }));
+  const browserOptions = browserList.map((app) => ({
+    value: app.BrowserId,
+    label: app.BrowserName,
+  }));
   const handleSubmit = () => {
     let error = {};
     if (!formData.environmentName.trim()) {
@@ -78,6 +95,7 @@ export default function AddNewEnvironment({ onBack }) {
     if (Object.keys(error).length === 0) {
       // Proceed with form submission
       console.log("handleSubmit", formData);
+      dispatch()
     }
 
     console.log("handleSubmit", error, formData);
