@@ -18,17 +18,38 @@ import { GetApplication, GetBrowser } from "../../../../redux/actions/seleniumAc
 export default function EditNewEnvironment({ onBack ,rowData}) {
     console.log("row",rowData);
   const dispatch=useDispatch();
+  const [selectedApplication, setSelectedApplication] = useState(() => {
+    return rowData
+      ? { value: rowData.ApplicationId, label: rowData.ApplicationName }
+      : null;
+  });
+  const [selectedBrowser, setSelectedBrowser] = useState(() => {
+    return rowData
+      ? { value: rowData.BrowserId, label: rowData.BrowserName }
+      : null;
+  });
+  
+  const { applicationList,  browserList,  } =useSelector((state) => state.selenium);
+  console.log("applist",applicationList);
+
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetBrowser());
-    
+   
   }, []);
+  useEffect(() => {
+    if (rowData) {
+      setSelectedApplication({
+        value: rowData.ApplicationId,
+        label: rowData.ApplicationName,
+      });
+    }
+  }, [rowData]);
   const classes = useStyles();
-  const { applicationList,  browserList,  } =useSelector((state) => state.selenium);
   
   const [formData, setFormData] = useState({
     environmentName: rowData ? rowData.EnvironmentName : "",
-    environmentDescription: rowData ? rowData.environmentDescription : "",
+    Description: rowData ? rowData.Description : "",
     selectedApplication: rowData ? rowData.ApplicationName : null,
     Baseurl: rowData ? rowData.Baseurl : "",
     DriverPath: rowData ? rowData.DriverPath : "",
@@ -36,6 +57,7 @@ export default function EditNewEnvironment({ onBack ,rowData}) {
     selectedBrowser: rowData ? rowData.BrowserName : null,
   });
   console.log("formdata",formData);
+  console.log("selectedapp",selectedApplication);
   const [Error, setError] = useState({
     name: "",
     description: "",
@@ -224,12 +246,9 @@ console.log("selectdapp",formData.selectedApplication);
                     type="text"
                     fullWidth
                     error={Error.description ? true : false}
-                    value={formData.environmentDescription}
+                    value={formData.Description}
                     onChange={(e) =>
-                      handleFieldChange(
-                        "environmentDescription",
-                        e.target.value
-                      )
+                      handleFieldChange("Description", e.target.value)
                     }
                     className={clsx(
                       classes.customheight,
@@ -253,11 +272,12 @@ console.log("selectdapp",formData.selectedApplication);
               </Grid>
               <Grid item xs={8}>
                 <Select
-                  options={applicationOptions}
-                  value={formData.selectedApplication}
-                  onChange={(selectedOption) =>
-                    handleFieldChange("selectedApplication", selectedOption)
-                  }
+               
+               options={applicationOptions}
+               value={selectedApplication}
+               onChange={(newValue) => {
+                 setSelectedApplication(newValue);
+               }}
                   styles={{
                     container: (provided) => ({
                       ...provided,
@@ -299,10 +319,10 @@ console.log("selectdapp",formData.selectedApplication);
               <Grid item xs={8}>
                 <Select
                   options={browserOptions}
-                  value={formData.browserName}
-                  onChange={(selectedOption) =>
-                    handleFieldChange("selectedBrowser", selectedOption)
-                  }
+                  value={selectedBrowser}
+                  onChange={(newValue) => {
+                    setSelectedBrowser(newValue);
+                  }}
                   styles={{
                     container: (provided) => ({
                       ...provided,
