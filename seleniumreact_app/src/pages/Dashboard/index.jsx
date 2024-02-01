@@ -7,6 +7,7 @@ import {
   getTestCaseRundetailsByTestName,
   getTestSuites,
   ExecuteTestCasesByTestSuite,
+  Getsuitebyname,
   GetApplication
 } from "../../redux/actions/seleniumAction";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,11 +15,12 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Add } from "@mui/icons-material";
+import { Add, CookieSharp } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import AddSuite from "./Modal/AddSuite";
+import DeleteSuite from "./Modal/DeleteSuite";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Dashboard() {
@@ -30,32 +32,33 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [tabNo, setTabNo] = useState("2");
   const [openModal, setOpenModal] = useState(false);
-
+  const [openDelModal, setopenDelModal] = useState(false)
+  const [suitToDelete, setsuitToDelete] = useState('')
   const handleAddSuite = () => {
     //  setOpenModal(true);
     navigate("/add-suite");
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
 
-  const handleTabChange = (event, newValue) => {
-    setTabNo(newValue);
-  };
+    const handleTabChange = (event, newValue) => {
+        setTabNo(newValue);
+    };
 
-  const tabLableStyle = {
-    fontWeight: "400",
-    fontSize: "14px",
-    lineHeight: "21px",
-    padding: "10px 22px",
-  };
+    const tabLableStyle = {
+        fontWeight: "400",
+        fontSize: "14px",
+        lineHeight: "21px",
+        padding: "10px 22px",
+    };
 
-  const tabHeaderStyle = {
-    fontSize: "14px",
-    fontWeight: "400",
-    fontFamily: "Lexend Deca",
-  };
+    const tabHeaderStyle = {
+        fontSize: "14px",
+        fontWeight: "400",
+        fontFamily: "Lexend Deca",
+    };
 
   useEffect(() => {
     dispatch(getTestSuites());
@@ -80,7 +83,7 @@ export default function Dashboard() {
     }
   };
   const handleEditClick = (suite) => {
-    console.log("Edit clicked for suite:", suite);
+    dispatch(Getsuitebyname(suite.TestSuiteName))
     navigate('/edit-suite')
     // getsuitebyname api will give you detail
   };
@@ -92,7 +95,8 @@ export default function Dashboard() {
   };
 
   const handleDeleteClick = (suite) => {
-    console.log("Delete clicked for suite:", suite);
+    setopenDelModal(true)
+    setsuitToDelete(suite.TestSuiteName)
   };
 
   return (
@@ -131,7 +135,11 @@ export default function Dashboard() {
           onClose={() => setOpenModal(false)}
           hookProps={{}}
         />
-
+        <DeleteSuite
+        open={openDelModal}
+        onClose={() => setopenDelModal(false)}
+        suitToDelete={suitToDelete}
+        />
         <Grid container spacing={2}>
           {/* Left side for Search and Results */}
           <Grid item xs={12} sm={4}>
@@ -189,6 +197,7 @@ export default function Dashboard() {
                         >
                           <Typography className={classess.infoHeader}>
                             {suite.TestSuiteName}
+                       
                           </Typography>
 
                           <div
@@ -197,7 +206,7 @@ export default function Dashboard() {
                               alignItems: "center",
                             }}
                           >
-                            <PlayCircleIcon
+                             {suite.TestSuiteFlag == "Custom" && (<><PlayCircleIcon
                               style={{
                                 marginRight: "8px",
                                 color: "rgb(101, 77, 247)",
@@ -223,7 +232,7 @@ export default function Dashboard() {
                                 e.stopPropagation();
                                 handleDeleteClick(suite);
                               }}
-                            />
+                            /></>)}
                           </div>
                         </div>
                       </Grid>
@@ -234,53 +243,53 @@ export default function Dashboard() {
             </Card>
           </Grid>
 
-          {/* Right side for Test Cases */}
-          {selectedSuite !== null && (
-            <Grid item xs={12} sm={8}>
-              <Card style={{ paddingBottom: "30px", minHeight: "84vh" }}>
-                <Box style={tabLableStyle}>Test Run</Box>
-                <Grid container>
-                  <Grid item xs={12} style={{ padding: "20px" }}>
-                    <TabContext value={tabNo}>
-                      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                        <TabList
-                          onChange={handleTabChange}
-                          textColor="black"
-                          sx={{
-                            "& .Mui-selected": {
-                              color: "#654DF7",
-                            },
-                            "& .MuiTabs-indicator": {
-                              backgroundColor: "#654DF7",
-                            },
-                          }}
-                        >
-                          <Tab
-                            label="Dashboard"
-                            value="1"
-                            style={tabHeaderStyle}
-                          />
-                          <Tab
-                            label="History"
-                            value="2"
-                            style={tabHeaderStyle}
-                          />
-                        </TabList>
-                      </Box>
-                      <TabPanel value="1">Dashboard</TabPanel>
-                      <TabPanel value="2">
-                        <Box sx={{ padding: "0 !important" }}>
-                          <BasicAccordion />
-                        </Box>
-                      </TabPanel>
-                    </TabContext>
-                  </Grid>
+                    {/* Right side for Test Cases */}
+                    {selectedSuite !== null && (
+                        <Grid item xs={12} sm={8}>
+                            <Card style={{ paddingBottom: "30px", minHeight: "84vh" }}>
+                                <Box style={tabLableStyle}>Test Run</Box>
+                                <Grid container>
+                                    <Grid item xs={12} style={{ padding: "20px" }}>
+                                        <TabContext value={tabNo}>
+                                            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                                                <TabList
+                                                    onChange={handleTabChange}
+                                                    textColor="black"
+                                                    sx={{
+                                                        "& .Mui-selected": {
+                                                            color: "#654DF7",
+                                                        },
+                                                        "& .MuiTabs-indicator": {
+                                                            backgroundColor: "#654DF7",
+                                                        },
+                                                    }}
+                                                >
+                                                    <Tab
+                                                        label="Dashboard"
+                                                        value="1"
+                                                        style={tabHeaderStyle}
+                                                    />
+                                                    <Tab
+                                                        label="History"
+                                                        value="2"
+                                                        style={tabHeaderStyle}
+                                                    />
+                                                </TabList>
+                                            </Box>
+                                            <TabPanel value="1">Dashboard</TabPanel>
+                                            <TabPanel value="2">
+                                                <Box sx={{ padding: "0 !important" }}>
+                                                    <BasicAccordion />
+                                                </Box>
+                                            </TabPanel>
+                                        </TabContext>
+                                    </Grid>
+                                </Grid>
+                            </Card>
+                        </Grid>
+                    )}
                 </Grid>
-              </Card>
-            </Grid>
-          )}
-        </Grid>
-      </div>
-    </>
-  );
+            </div>
+        </>
+    );
 }

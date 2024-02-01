@@ -25,7 +25,7 @@ namespace SeleniumReportAPI.Helper
             return _configuration.GetConnectionString("AppDBContextConnection");
         }
 
-        internal string VerifyUser(string email, string password)
+        internal async Task<string> VerifyUser(string email, string password)
         {
             string isValidUser = string.Empty;
             try
@@ -57,7 +57,7 @@ namespace SeleniumReportAPI.Helper
             return isValidUser;
         }
 
-        internal string GetDataTestSuits()
+        internal async Task<string> GetDataTestSuits()
         {
             string TestSuites = "";
             try
@@ -87,7 +87,7 @@ namespace SeleniumReportAPI.Helper
             return TestSuites;
         }
 
-        internal string GetDashboardDetails(string testSuitName)
+        internal async Task<string> GetDashboardDetails(string testSuitName)
         {
             string DashBoardDetailsJson = string.Empty;
             try
@@ -118,7 +118,7 @@ namespace SeleniumReportAPI.Helper
             return DashBoardDetailsJson;
         }
 
-        internal string GetRunDetails(string TestSuitName)
+        internal async Task<string> GetRunDetails(string TestSuitName)
         {
             string RunDetailsJson = string.Empty;
             try
@@ -149,7 +149,7 @@ namespace SeleniumReportAPI.Helper
             return RunDetailsJson;
         }
 
-        internal string GetTestCaseDetails(string TestSuitName, string RunID)
+        internal async Task<string> GetTestCaseDetails(string TestSuitName, string RunID)
         {
             string TestCaseDetailsJson = string.Empty;
             try
@@ -181,7 +181,7 @@ namespace SeleniumReportAPI.Helper
             return TestCaseDetailsJson;
         }
 
-        internal string GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
+        internal async Task<string> GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
         {
             string testCaseStepDetailsJson = string.Empty;
             try
@@ -228,7 +228,7 @@ namespace SeleniumReportAPI.Helper
             return token;
         }
 
-        internal string GetTestSuitesJson()
+        internal async Task<string> GetTestSuitesJson()
         {
             string testSuiteListJson = string.Empty;
             try
@@ -258,7 +258,7 @@ namespace SeleniumReportAPI.Helper
             return testSuiteListJson;
         }
 
-        internal string AddUpdateTestSuitesJson(Dto_TestSuiteDetailsData model)
+        internal async Task<string> AddUpdateTestSuitesJson(Dto_TestSuiteDetailsData model)
         {
             string result = string.Empty;
             try
@@ -296,7 +296,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal string DeleteTestSuites(string TestSuiteName)
+        internal async Task<string> DeleteTestSuites(string TestSuiteName)
         {
             string result = string.Empty;
             try
@@ -327,9 +327,9 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal string GetTestSuiteByName(string TestSuiteName)
+        internal async Task<string> GetTestSuiteByName(string TestSuiteName)
         {
-            TestSuites testSuites = new TestSuites();
+            Dto_TestSuiteDetailsData testSuites = new Dto_TestSuiteDetailsData();
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -365,7 +365,7 @@ namespace SeleniumReportAPI.Helper
             return JsonConvert.SerializeObject(testSuites);
         }
 
-        internal string GetTestCasesJson()
+        internal async Task<string> GetTestCasesJson()
         {
             string TestCasesListJson = string.Empty;
             try
@@ -395,7 +395,7 @@ namespace SeleniumReportAPI.Helper
             return TestCasesListJson;
         }
 
-        internal string GetApplications()
+        internal async Task<string> GetApplications()
         {
             string ApplicationListJson = string.Empty;
             try
@@ -425,7 +425,7 @@ namespace SeleniumReportAPI.Helper
             return ApplicationListJson;
         }
 
-        internal string GetEnvironments()
+        internal async Task<string> GetEnvironments()
         {
             string EnvironmentListJson = string.Empty;
             try
@@ -469,7 +469,7 @@ namespace SeleniumReportAPI.Helper
             return TestCaseJsonData;
         }
 
-        internal string AddUpdateEnvironmentJson(Environments model)
+        internal async Task<string> AddUpdateEnvironmentJson(Environments model)
         {
             string result = string.Empty;
             try
@@ -508,7 +508,8 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
-        internal string AddUpdateApplicationJson(Applications model)
+
+        internal async Task<string> AddUpdateApplicationJson(Applications model)
         {
             string result = string.Empty;
             try
@@ -516,8 +517,9 @@ namespace SeleniumReportAPI.Helper
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_AddUpdateEnvironment", connection))
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateApplication", connection))
                     {
+                        command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
                         command.Parameters.AddWithValue("@ApplicationName", model.ApplicationName);
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -539,7 +541,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal string GetRunId(string testSuiteName)
+        internal async Task<string> GetRunId(string testSuiteName)
         {
             string TestRunName = "";
             try
@@ -572,7 +574,7 @@ namespace SeleniumReportAPI.Helper
             return TestRunName;
         }
 
-        internal string SaveTestCaseData(string testSuiteJsonData)
+        internal async Task<string> SaveTestCaseData(string testSuiteJsonData)
         {
             string _result = string.Empty;
             try
@@ -602,7 +604,8 @@ namespace SeleniumReportAPI.Helper
             }
             return _result;
         }
-        internal Environments GetEnvironmentById(int Id)
+
+        internal async Task<Environments> GetEnvironmentById(int Id)
         {
             Environments environment = new Environments();
             try
@@ -644,7 +647,7 @@ namespace SeleniumReportAPI.Helper
             return environment;
         }
 
-        internal string AddUpdateBrowserJson(Browsers model)
+        internal async Task<string> AddUpdateBrowserJson(Browsers model)
         {
             string result = string.Empty;
             try
@@ -676,7 +679,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal string GetBrowsers()
+        internal async Task<string> GetBrowsers()
         {
             string BrowserListJson = string.Empty;
             try
@@ -706,7 +709,7 @@ namespace SeleniumReportAPI.Helper
             return BrowserListJson;
         }
 
-        internal string GetDashboardDetails(string testSuitName, string filterType, int filterValue)
+        internal async Task<string> GetDashboardDetails(string testSuitName, string filterType, int filterValue)
         {
             string DashBoardDetailsJson = string.Empty;
             try

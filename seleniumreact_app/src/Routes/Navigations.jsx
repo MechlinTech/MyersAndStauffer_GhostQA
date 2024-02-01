@@ -9,6 +9,7 @@ import AddNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() => import("../pages/Settings/Component/ExecutionEnvironment/index"));
 const Application = lazy(() => import("../pages/Settings/Component/Application/index"));
+const Browser = lazy(() => import("../pages/Settings/Component/Browser/index"));
 const RoleManagement = lazy(() => import("../pages/Settings/Component/RoleManagement/index"));
 const UserManagement = lazy(() => import("../pages/Settings/Component/UserManagement/index"));
 const BasicAccordion = lazy(() => import("../comman/Accordion/index"));
@@ -32,6 +33,7 @@ export default function Navigations() {
           <Route path="settings" element={<Settings/>} >
             <Route path="Environment" element={<Environment/> }/>
             <Route path="Application" element={<Application/>} />
+            <Route path="Browser" element={<Browser/>} />
             <Route path="Roles" element={<RoleManagement/>} />
             <Route path="User" element={<UserManagement/>} />
           </Route>

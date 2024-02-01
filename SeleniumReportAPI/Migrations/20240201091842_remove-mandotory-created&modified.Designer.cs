@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeleniumReportAPI.DBContext;
 
@@ -11,9 +12,10 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240201091842_remove-mandotory-created&modified")]
+    partial class removemandotorycreatedmodified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -325,13 +327,11 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EnvironmentId")
                         .HasColumnType("int");
-
-                    b.Property<string>("SelectedTestCases")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("SendEmail")
                         .HasColumnType("bit");
@@ -342,6 +342,7 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnName("TestSuiteName");
 
                     b.Property<string>("TestSuiteType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TestSuiteId");
