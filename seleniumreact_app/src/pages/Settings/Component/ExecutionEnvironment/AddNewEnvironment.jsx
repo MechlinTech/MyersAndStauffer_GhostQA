@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { GetApplication, GetBrowser } from "../../../../redux/actions/seleniumAction";
+import { AddUpdateEnvironment } from "../../../../redux/actions/settingAction";
 
 // const applicationOptions = [
 //   { value: "clocksession", label: "Clocksession" },
@@ -66,6 +67,16 @@ export default function AddNewEnvironment({ onBack }) {
     label: app.BrowserName,
   }));
   const handleSubmit = () => {
+    let payload = {
+      environmentName: formData.environmentName,
+      environmentdes: formData.environmentDescription,
+      applicationName:formData.selectedApplication.label,
+      browserName:formData.selectedBrowser.label,
+      driverPath:formData.driverPath,
+      basePath:formData.basePath,
+      baseurl:formData.baseUrl
+    }
+
     let error = {};
     if (!formData.environmentName.trim()) {
       error.name = "Environment Name is required";
@@ -95,7 +106,8 @@ export default function AddNewEnvironment({ onBack }) {
     if (Object.keys(error).length === 0) {
       // Proceed with form submission
       console.log("handleSubmit", formData);
-      dispatch()
+      console.log("payload", payload);
+      dispatch(AddUpdateEnvironment(payload));
     }
 
     console.log("handleSubmit", error, formData);

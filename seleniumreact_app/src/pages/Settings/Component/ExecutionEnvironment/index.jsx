@@ -55,9 +55,11 @@ export default function ExecutionEnvironment() {
   
   
   console.log("listenv",environementList);
-  const filteredData = environementList?.filter((data) =>
-    data?.EnvironmentName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
-  );
+  const filteredData = environementList
+  ? environementList.filter((data) =>
+      data?.EnvironmentName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+    )
+  : [];
 
   return (
     <>

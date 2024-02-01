@@ -19,3 +19,27 @@ export const getTestSuitesList = () => {
     }
   };
 };
+
+export const AddUpdateEnvironment = (data) => {
+  return async (dispatch) => {
+      try {
+          const res = await axios.post(
+              `${BASE_URL}/Selenium/AddUpdateEnvironment`,
+              data,
+              header())
+          console.log('response ', res)
+          if (res.status === 200) {
+              toast.info('Successfully saved', {
+                  style: {
+                      background: 'rgb(101, 77, 247)',
+                      color: 'rgb(255, 255, 255)',
+                  },
+              });
+          }
+          console.log("saved ", res)
+      } catch (error) {
+          console.log("error sending ", error);
+          toast('Posting error')
+      }
+  }
+}
