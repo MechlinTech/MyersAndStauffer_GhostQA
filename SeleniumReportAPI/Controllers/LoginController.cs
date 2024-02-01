@@ -32,7 +32,7 @@ namespace SeleniumReportAPI.Controllers
                 {
                     if (!string.IsNullOrEmpty(loginDTO.Email) && !string.IsNullOrEmpty(loginDTO.Password))
                     {
-                        string result = _helper.VerifyUser(user.Email, user.PasswordHash);
+                        string result = await _helper.VerifyUser(user.Email, user.PasswordHash);
                         if (result.Contains("Success"))
                         {
                             var userRoles = await _userManager.GetRolesAsync(user);

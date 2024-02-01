@@ -23,9 +23,9 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetDataTestSuits")]
-        public ActionResult GetDataTestSuits()
+        public async Task<ActionResult> GetDataTestSuits()
         {
-            return Ok(_helper.GetDataTestSuits());
+            return Ok(await _helper.GetDataTestSuits());
         }
 
         /// <summary>
@@ -34,9 +34,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="testSuitName"></param>
         /// <returns></returns>
         [HttpGet("GetDashboardDetails")]
-        public ActionResult GetDashboardDetails(string testSuitName)
+        public async Task<ActionResult> GetDashboardDetails(string testSuitName)
         {
-            return Ok(_helper.GetDashboardDetails(testSuitName));
+            return Ok(await _helper.GetDashboardDetails(testSuitName));
         }
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="testSuitName"></param>
         /// <returns></returns>
         [HttpGet("GetRunDetails")]
-        public ActionResult GetRunDetails(string testSuitName)
+        public async Task<ActionResult> GetRunDetails(string testSuitName)
         {
-            return Ok(_helper.GetRunDetails(testSuitName));
+            return Ok(await _helper.GetRunDetails(testSuitName));
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="runId"></param>
         /// <returns></returns>
         [HttpGet("GetTestCaseDetails")]
-        public ActionResult GetTestCaseDetails(string testSuitName, string runId)
+        public async Task<ActionResult> GetTestCaseDetails(string testSuitName, string runId)
         {
-            return Ok(_helper.GetTestCaseDetails(testSuitName, runId));
+            return Ok(await _helper.GetTestCaseDetails(testSuitName, runId));
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="testCaseName"></param>
         /// <returns></returns>
         [HttpGet("GetTestCaseStepsDetails")]
-        public ActionResult GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
+        public async Task<ActionResult> GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
         {
-            return Ok(_helper.GetTestCaseStepsDetails(testSuitName, runId, testCaseName));
+            return Ok(await _helper.GetTestCaseStepsDetails(testSuitName, runId, testCaseName));
         }
 
         /// <summary>
@@ -82,22 +82,22 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="action"></param>
         /// <returns></returns>
         [HttpPost("AddUpdateTestSuites")]
-        public ActionResult AddTestSuite(Dto_TestSuiteDetailsData model, string action)
+        public async Task<ActionResult> AddTestSuite(Dto_TestSuiteDetailsData model, string action)
         {
             Dto_Response _response = new Dto_Response();
             if (action == "Save")
             {
-                string result = _helper.AddUpdateTestSuitesJson(model);
+                string result = await _helper.AddUpdateTestSuitesJson(model);
                 _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
             }
             else if (action == "SaveAndExecute")
             {
-                string result = _helper.AddUpdateTestSuitesJson(model);
+                string result = await _helper.AddUpdateTestSuitesJson(model);
                 _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
                 if (!_response.status.Contains("Fail"))
                 {
-                    string _testRunName = _helper.GetRunId(model.TestSuiteName);
-                    Models.Environments _environmentDetails = _helper.GetEnvironmentById(Convert.ToInt32(model.EnvironmentId));
+                    string _testRunName = await _helper.GetRunId(model.TestSuiteName);
+                    Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(model.EnvironmentId));
                     foreach (var testCaseName in model.SelectedTestCases)
                     {
                         string _testCaseJsonData = DBHelper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
@@ -109,7 +109,7 @@ namespace SeleniumReportAPI.Controllers
                             _testSuiteData.TestRunName = _testRunName;
                             _testSuiteData.TestEnvironment = _environmentDetails.BrowserName;
                             //Save Data into table for custom test suite
-                            string _result = _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
+                            string _result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
                         }
                     }
                 }
@@ -126,9 +126,9 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetApplication")]
-        public ActionResult GetApplication()
+        public async Task<ActionResult> GetApplication()
         {
-            return Ok(_helper.GetApplications());
+            return Ok(await _helper.GetApplications());
         }
 
         /// <summary>
@@ -136,9 +136,9 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetEnvironments")]
-        public ActionResult GetEnvironments()
+        public async Task<ActionResult> GetEnvironments()
         {
-            return Ok(_helper.GetEnvironments());
+            return Ok(await _helper.GetEnvironments());
         }
 
         /// <summary>
@@ -146,9 +146,9 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetTestSuites")]
-        public ActionResult GetTestSuites()
+        public async Task<ActionResult> GetTestSuites()
         {
-            return Ok(_helper.GetTestSuitesJson());
+            return Ok(await _helper.GetTestSuitesJson());
         }
 
         /// <summary>
@@ -156,9 +156,9 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetTestCases")]
-        public ActionResult GetTestCases()
+        public async Task<ActionResult> GetTestCases()
         {
-            return Ok(_helper.GetTestCasesJson());
+            return Ok(await _helper.GetTestCasesJson());
         }
 
         /// <summary>
@@ -167,9 +167,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="TestSuiteId"></param>
         /// <returns></returns>
         [HttpPost("DeleteTestSuites")]
-        public ActionResult DeleteTestSuites(string TestSuiteName)
+        public async Task<ActionResult> DeleteTestSuites(string TestSuiteName)
         {
-            return Ok(_helper.DeleteTestSuites(TestSuiteName));
+            return Ok(await _helper.DeleteTestSuites(TestSuiteName));
         }
 
         /// <summary>
@@ -178,9 +178,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="TestSuiteName"></param>
         /// <returns></returns>
         [HttpGet("GetTestSuiteByName")]
-        public ActionResult GetTestSuiteByName(string TestSuiteName)
+        public async Task<ActionResult> GetTestSuiteByName(string TestSuiteName)
         {
-            return Ok(_helper.GetTestSuiteByName(TestSuiteName));
+            return Ok(await _helper.GetTestSuiteByName(TestSuiteName));
         }
 
         /// <summary>
@@ -189,14 +189,14 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="TestSuiteName"></param>
         /// <returns></returns>
         [HttpOptions("ExecuteTestSuite")]
-        public ActionResult ExecuteTestSuite(string TestSuiteName)
+        public async Task<ActionResult> ExecuteTestSuite(string TestSuiteName)
         {
             string _result = string.Empty;
-            string _testRunName = _helper.GetRunId(TestSuiteName);
-            string _testSuiteDetailsJson = _helper.GetTestSuiteByName(TestSuiteName);
+            string _testRunName = await _helper.GetRunId(TestSuiteName);
+            string _testSuiteDetailsJson = await _helper.GetTestSuiteByName(TestSuiteName);
             Dto_TestSuiteDetailsData _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestSuiteDetailsData>(_testSuiteDetailsJson);
 
-            Models.Environments _environmentDetails = _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteDetails.EnvironmentId));
+            Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteDetails.EnvironmentId));
 
             if (_testSuiteDetails.SelectedTestCases.Count > 0)
             {
@@ -212,7 +212,7 @@ namespace SeleniumReportAPI.Controllers
                         _testSuiteData.TestEnvironment = _environmentDetails.BrowserName;
                         _testSuiteData.TestCaseName = testCaseName.ToString();
                         //Save Data into table for custom test suite
-                        _result = _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
+                        _result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
                     }
                 }
             }
@@ -225,11 +225,11 @@ namespace SeleniumReportAPI.Controllers
         /// <param Environments=Environments></param>
         /// <returns></returns>
         [HttpPost("AddUpdateEnvironment")]
-        public ActionResult AddUpdateEnvironment([FromBody] Models.Environments model)
+        public async Task<ActionResult> AddUpdateEnvironment([FromBody] Models.Environments model)
         {
             try
             {
-                var result = _helper.AddUpdateEnvironmentJson(model);
+                var result = await _helper.AddUpdateEnvironmentJson(model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -244,11 +244,11 @@ namespace SeleniumReportAPI.Controllers
         /// <param Applications=Applications></param>
         /// <returns></returns>
         [HttpPost("AddUpdateApplication")]
-        public ActionResult AddUpdateApplication([FromBody] Models.Applications model)
+        public async Task<ActionResult> AddUpdateApplication([FromBody] Models.Applications model)
         {
             try
             {
-                var result = _helper.AddUpdateApplicationJson(model);
+                var result = await _helper.AddUpdateApplicationJson(model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -263,11 +263,11 @@ namespace SeleniumReportAPI.Controllers
         /// <param Browser=Browser></param>
         /// <returns></returns>
         [HttpPost("AddUpdateBrowser")]
-        public ActionResult AddUpdateBrowser([FromBody] Models.Browsers model)
+        public async Task<ActionResult> AddUpdateBrowser([FromBody] Models.Browsers model)
         {
             try
             {
-                var result = _helper.AddUpdateBrowserJson(model);
+                var result = await _helper.AddUpdateBrowserJson(model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -281,9 +281,9 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetBrowsers")]
-        public ActionResult GetBrowsers()
+        public async Task<ActionResult> GetBrowsers()
         {
-            return Ok(_helper.GetBrowsers());
+            return Ok(await _helper.GetBrowsers());
         }
 
         /// <summary>
@@ -292,9 +292,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param Id="Id"></param>
         /// <returns></returns>
         [HttpGet("GetEnvironmentById")]
-        public ActionResult GetEnvironmentById(int Id)
+        public async Task<ActionResult> GetEnvironmentById(int Id)
         {
-            return Ok(_helper.GetEnvironmentById(Id));
+            return Ok(await _helper.GetEnvironmentById(Id));
         }
 
         /// <summary>
@@ -303,11 +303,11 @@ namespace SeleniumReportAPI.Controllers
         /// <param TestCaseData=TestCaseData></param>
         /// <returns></returns>
         [HttpPost("SaveTestCaseData")]
-        public ActionResult SaveTestCaseData(string testSuiteJsonData)
+        public async Task<ActionResult> SaveTestCaseData(string testSuiteJsonData)
         {
             try
             {
-                var result = _helper.SaveTestCaseData(testSuiteJsonData);
+                var result = await _helper.SaveTestCaseData(testSuiteJsonData);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -322,9 +322,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param Name="Name"></param>
         /// <returns></returns>
         [HttpGet("GetRunId")]
-        public ActionResult GetRunId(string testSuiteName)
+        public async Task<ActionResult> GetRunId(string testSuiteName)
         {
-            return Ok(_helper.GetRunId(testSuiteName));
+            return Ok(await _helper.GetRunId(testSuiteName));
         }
 
         /// <summary>
@@ -333,11 +333,11 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="testSuitName"></param>
         /// <returns></returns>
         [HttpGet("GetChartDetails")]
-        public ActionResult GetDashboardDetails(string TestSuiteName, string Filtertype, int FilterValue)
+        public async Task<ActionResult> GetDashboardDetails(string TestSuiteName, string Filtertype, int FilterValue)
         {
             try
             {
-                string result = _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue);
+                string result = await _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue);
                 return Ok(result);
             }
             catch (Exception ex)
