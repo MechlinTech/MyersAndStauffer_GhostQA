@@ -516,7 +516,7 @@ namespace SeleniumReportAPI.Helper
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_AddUpdateEnvironment", connection))
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateApplication", connection))
                     {
                         command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
                         command.Parameters.AddWithValue("@ApplicationName", model.ApplicationName);
