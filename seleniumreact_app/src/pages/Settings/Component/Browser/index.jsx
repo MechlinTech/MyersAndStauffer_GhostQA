@@ -1,69 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Grid, Card } from "@material-ui/core";
 import { useStyles } from "./styles";
 import { Button } from "@mui/material";
 import SearchField from "../../../../comman/SearchField";
 import { CustomTable } from "./CustomTable";
-import AddNewApplication from "./AddNewApplication";
-import { useDispatch, useSelector } from "react-redux";
-import { GetApplication } from "../../../../redux/actions/seleniumAction";
-const staticData = [
-  {
-    projectName: "ClockSession",
-    applicationName: "Test App",
-    email: "test@gmail.com",
-    runnerPath: "D://test/",
-  },
-  {
-    projectName: "Ghost Qa",
-    applicationName: "Test App",
-    email: "test@gmail.com",
-    runnerPath: "D://test/",
-  },
-];
+import AddNewBrowser from "./AddNewBrowser";
+import { useSelector } from "react-redux";
 
-export default function Application() {
+export default function Browser() {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [addOredit, setaddOredit] = useState("");
-  const [applicationToEdit, setApplicationToEdit] = useState({});
-  const [showAddNewApplication, setShowAddNewApplication] = useState(false);
-  const { applicationList } = useSelector((state) => state.selenium);
+  const [showAddNewBrowser, setShowAddNewBrowser] = useState(false);
+  const [browserToEdit, setBrowserToEdit] = useState({});
+  const { browserList } = useSelector((state) => state.selenium);
 
-  // useEffect(() => {
-  //   dispatch(GetApplication())
-  // }, [])
-
-  const handleAddApplication = () => {
-    setShowAddNewApplication(true);
+  const handleAddBrowser = () => {
+    setShowAddNewBrowser(true);
     setaddOredit("Add");
-    console.log("Adding Environment...");
   };
 
-  const handleEditApplication = (row) => {
+  const handleEditBrowser = (row) => {
+    setBrowserToEdit(row)
     setaddOredit("Edit");
-    setApplicationToEdit(row);
-    setShowAddNewApplication(true);
+    setShowAddNewBrowser(true);
   };
 
   const handleBackFromAddNew = () => {
-    setShowAddNewApplication(false);
-    setApplicationToEdit({})
+    setShowAddNewBrowser(false);
+    setBrowserToEdit({})
   };
 
-  const filteredData = applicationList?.filter((data) =>
-    data?.ApplicationName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+
+  const filteredData = browserList?.filter((data) =>
+    data?.BrowserName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
-  console.log("filtered : ", filteredData);
+
   return (
     <>
-      {showAddNewApplication ? (
-        <AddNewApplication
+      {showAddNewBrowser ? (
+        <AddNewBrowser
           onBack={handleBackFromAddNew}
           addOredit={addOredit}
-          applicationToEdit={applicationToEdit}
-          setApplicationToEdit={setApplicationToEdit}
+          browserToEdit={browserToEdit}
+          setBrowserToEdit={setBrowserToEdit}
         />
       ) : (
         <Grid
@@ -74,12 +54,12 @@ export default function Application() {
           spacing={2}
         >
           <Grid item xs={6} className={classes.header}>
-            Application
+            Browser
           </Grid>
           <Grid item>
             <Button
               className={classes.button}
-              onClick={handleAddApplication}
+              onClick={handleAddBrowser}
               sx={{
                 backgroundColor: "rgb(101, 77, 247)",
                 "&:hover": {
@@ -94,7 +74,7 @@ export default function Application() {
                 color: "#fff",
               }}
             >
-              Add New Application
+              Add New Browser
             </Button>
           </Grid>
         </Grid>
@@ -102,20 +82,20 @@ export default function Application() {
 
       {/* Body */}
 
-      {!showAddNewApplication && (
+      {!showAddNewBrowser && (
         <Grid container justifyContent="center" alignItems="center" spacing={2}>
           <Grid item xs={12}>
             <Card style={{ textAlign: "center", margin: "20px" }}>
               <Grid item style={{ margin: "8px 20px" }}>
                 <SearchField
-                  placeholder="Search application..."
+                  placeholder="Search Browser..."
                   onChange={(value) => setSearchTerm(value)}
                 />
               </Grid>
               <Grid item>
                 <CustomTable
                   rows={filteredData}
-                  handleEditApplication={handleEditApplication}
+                  handleEditBrowser={handleEditBrowser}
                 />
               </Grid>
             </Card>
