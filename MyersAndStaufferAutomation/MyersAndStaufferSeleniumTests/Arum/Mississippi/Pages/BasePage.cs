@@ -1,4 +1,5 @@
 ﻿using MyersAndStaufferFramework;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using MyersAndStaufferSeleniumTests.Utils;
 using OpenQA.Selenium;
 using System.Collections.ObjectModel;
@@ -25,9 +26,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
         {
             EnvironmentHelper EnvironmentHelper = EnvironmentConfigUtils.GetEnvironmentForConfig();
 
-            BaseURL = EnvironmentHelper.GetSetting("BaseURL");
-
-            BaseDomain = EnvironmentHelper.GetSetting("BaseDomain");
+            BaseURL = TestExecutor.Baseurl;
 
             driver = Browser.Driver;
             js = (IJavaScriptExecutor)driver;
