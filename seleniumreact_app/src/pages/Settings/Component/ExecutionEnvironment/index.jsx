@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { Grid, Card } from "@material-ui/core";
 import { useStyles } from "./styles";
 import { EnvironmentTable } from "./EnvironmentTable";
@@ -7,6 +6,7 @@ import { Button } from "@mui/material";
 import SearchField from "../../../../comman/SearchField";
 import AddNewEnvironment from "./AddNewEnvironment";
 import EditNewEnvironment from "./EditNewEnvironment";
+import useEnvironment from "../../../../hooks/useEnvironment";
 
 const staticData = [
   {
@@ -15,7 +15,7 @@ const staticData = [
     application: "clocksession",
     browser:"chrome",
     baseUrl: "https://codearrest.dyndns.org/",
-    DriverPath:"C:\\GhostQA\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\",
+    DriverPath:"C:\\GhostQA\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\trgveyjrhntbgvfdcfegtrvfbhbgfvdssaz",
     BasePath:"C:\\GhostQA\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\"
   },
   {
@@ -39,29 +39,23 @@ const staticData = [
 ];
 
 export default function ExecutionEnvironment() {
+    const{
+      searchTerm,
+       showAddNewEnvironment,
+       handleBackFromAddNew,
+       showEditNewEnvironment,
+       editEnvironmentData,
+       handleAddEnvironment,
+       setSearchTerm,
+       handleEditEnvironment,
+       environementList
+    }=useEnvironment();
   const classes = useStyles();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAddNewEnvironment, setShowAddNewEnvironment] = useState(false);
-  const [showEditNewEnvironment, setShowEditNewEnvironment] = useState(false);
-  const [editEnvironmentData, setEditEnvironmentData] = useState(null);
-  const { environementList} =useSelector((state) => state.selenium);
-  console.log("environments",environementList);
-  const handleAddEnvironment = () => {
-    setShowAddNewEnvironment(true);
-    console.log("Adding Environment...");
-  };
-
-  const handleEditEnvironment = (rowData) => {
-    setShowEditNewEnvironment(true);
-    setEditEnvironmentData(rowData);
-  };
-
-  const handleBackFromAddNew = () => {
-    setShowAddNewEnvironment(false);
-    setShowEditNewEnvironment(false);
-  };
-
-  const filteredData = staticData?.filter((data) =>
+  
+  
+  
+  console.log("listenv",environementList);
+  const filteredData = environementList?.filter((data) =>
     data?.EnvironmentName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
 
