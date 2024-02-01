@@ -27,90 +27,25 @@ import {
   GetEnvironment,
   GetTestCases,
   AddUpdateTestSuites,
+  Getsuitebyname,
 } from "../../redux/actions/seleniumAction";
 
-const applicationOptions = [
-  { applicationId: 5667, ApplicationName: "ClockSession" },
-  { value: 12233, ApplicationName: "Whuups" },
-];
-
-const environmentOptions = [
-  { value: "dev", label: "Dev" },
-  { value: "stage", label: "Stage" },
-  { value: "prod", label: "Prod" },
-];
-
-const browserOptions = [
-  { value: "chrome", label: "Chrome" },
-  { value: "FireFox", label: "FireFox" },
-  { value: "edge", label: "Edge" },
-];
-
-const staticData = [
-  {
-    TestCaseName: "Run1",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "TestCase1",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "Run2",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "TestCase2",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "Run3",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "TestCase3",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "Run4",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "TestCase4",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-];
 
 export default function EditTestSuite() {
+  
+  const { applicationList, environementList, suiteToEdit, testCasesList } =
+    useSelector((state) => state.selenium);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(GetApplication());
-    dispatch(GetEnvironment());
-    dispatch(GetTestCases());
-  }, []);
+  
   const classes = useStyles();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [selectedSuiteValue, setSelectedSuiteValue] = useState("custom-Suites");
   const [selectedRecepentValue, setSelectedRecepentValue] =
-    useState("only-for-me");
-  const [name, setName] = useState("");
-  const { applicationList, environementList, browserList, testCasesList } =
-    useSelector((state) => state.selenium);
-
-  // console.log("environment",environementList)
-  // console.log("browser",browserList)
-  // console.log("testcases",testCasesList)
+    useState("");
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [selectedEnvironment, setSelectedEnvironment] = useState(null);
-  const [selectedBrowser, setSelectedBrowser] = useState(null);
+  const [name, setName] = useState("");
+
   const [description, setDescription] = useState("");
   const [Error, setError] = useState({
     name: "",
@@ -123,6 +58,30 @@ export default function EditTestSuite() {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
+  
+  
+  useEffect(() => {
+    dispatch(GetApplication());
+    dispatch(GetEnvironment());
+    dispatch(GetTestCases());
+    setName(suiteToEdit.TestSuiteName);
+    setSelectedApplication(()=>{
+     const x =  applicationList.find((app)=> app.ApplicationId === suiteToEdit.ApplicationId)
+     console.log("x:",applicationList)
+     return x;
+    })
+    //work on all-user
+    setSelectedRecepentValue(suiteToEdit.SendEmail?'only-for-me':'all-users')
+    setSelectedEnvironment(()=>{
+      return environementList.find((env)=>env.EnvironmentId === suiteToEdit.EnvironmentId)
+    })
+    setDescription(suiteToEdit.Description)
+    setSelectedRows(()=>{
+      return testCasesList.filter((test)=> suiteToEdit.SelectedTestCases?.includes(test.TestCaseName))
+    })
+  }, [suiteToEdit]);
+  console.log("suite to edit : ",suiteToEdit)
+  console.log("application :",applicationList)
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -155,38 +114,37 @@ export default function EditTestSuite() {
   //   }
   // }
 
-  const getTestcaseNameOnly = ()=>{
-    let testCaseArrName = []
-    selectedRows.map((testCase) => testCaseArrName.push(testCase.TestCaseName))
+  const getTestcaseNameOnly = () => {
+    let testCaseArrName = [];
+    selectedRows.map((testCase) => testCaseArrName.push(testCase.TestCaseName));
     // .join(",");
-
-    return testCaseArrName
-  }
+    return testCaseArrName;
+  };
 
   const handleSubmit = (action) => {
-    const testCaseNames= getTestcaseNameOnly()
+    const testCaseNames = getTestcaseNameOnly();
     let payload = {
       TestSuiteName: name,
       Description: description,
-      TestSuiteId: 0,
+      TestSuiteId: suiteToEdit.TestSuiteId,
       TestSuiteType: selectedSuiteValue,
       ApplicationId: selectedApplication?.ApplicationId,
       SendEmail: selectedRecepentValue === "only-for-me" ? true : false,
       EnvironmentId: selectedEnvironment?.EnvironmentId,
       // browser: selectedBrowser.BrowserId,
       SelectedTestCases: testCaseNames,
-      AllTestCases:[
+      AllTestCases: [
         {
-          "disabled": true,
-          "group": {
-            "disabled": true,
-            "name": "string"
+          disabled: true,
+          group: {
+            disabled: true,
+            name: "string",
           },
-          "selected": true,
-          "text": "string",
-          "value": "string"
-        }
-      ]
+          selected: true,
+          text: "string",
+          value: "string",
+        },
+      ],
     };
     let error = {};
     if (!name.trim()) {
@@ -231,13 +189,19 @@ export default function EditTestSuite() {
     setSelectAll(checked);
     setSelectedRows(checked ? testCasesList : []);
   };
+  // const filteredTestCaseData = testCasesList.filter((data) =>
+  //   data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+  // );
 
-  const filteredTestCaseData = testCasesList.filter((data) =>
+  const filteredTestCaseData = testCasesList.map((data) => ({
+    ...data,
+    isChecked: selectedRows.find((selectedRow) => selectedRow.TestCaseName === data.TestCaseName) !== undefined,
+  })).filter((data) =>
     data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
-
   return (
     <>
+      
       <div className={classes.main}>
         <Grid container style={{ height: "100vh" }}>
           {/* First Section */}
@@ -281,12 +245,14 @@ export default function EditTestSuite() {
                               height: "40px",
                             }}
                           >
+                            
                             <OutlinedInput
                               id="outlined-adornment-name"
                               type="text"
-                              placeholder="Enter your name"
+                              placeholder="name here"
                               value={name}
                               error={Error.name ? true : false}
+                              disabled={false}
                               onChange={handleNameChange}
                               className={clsx(
                                 classes.customheight,
@@ -677,6 +643,7 @@ export default function EditTestSuite() {
                     <TestCaseTable
                       rows={filteredTestCaseData}
                       selectedRows={selectedRows}
+                      // selectedRows={testCasesList.filter((test)=> suiteToEdit.SelectedTestCases.includes(test.TestCaseName))}
                       handleSelectAllChange={handleSelectAllChange}
                       handleCheckboxChange={handleCheckboxChange}
                       selectAll={selectAll}
@@ -700,7 +667,7 @@ export default function EditTestSuite() {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    onClick={()=>handleSubmit('Save')}
+                    onClick={() => handleSubmit("Save")}
                     sx={{
                       backgroundColor: "rgb(101, 77, 247)",
                       "&:hover": {
@@ -716,7 +683,7 @@ export default function EditTestSuite() {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    onClick={()=>handleSubmit('SaveAndExecute')}
+                    onClick={() => handleSubmit("SaveAndExecute")}
                     sx={{
                       backgroundColor: "rgb(101, 77, 247)",
                       "&:hover": {
@@ -731,13 +698,13 @@ export default function EditTestSuite() {
                   <Button
                     color="primary"
                     className={classes.button}
-                    onClick={()=> navigate('/')}
+                    onClick={() => navigate("/")}
                     sx={{
                       backgroundColor: "rgb(108, 117, 125)",
                       color: "#f1f1f1",
-                      '&:hover':{
-                        backgroundColor:'rgb(101, 77, 247)'
-                      }
+                      "&:hover": {
+                        backgroundColor: "rgb(101, 77, 247)",
+                      },
                     }}
                   >
                     Cancel
