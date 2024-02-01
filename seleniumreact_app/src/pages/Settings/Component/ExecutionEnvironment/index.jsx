@@ -8,35 +8,7 @@ import AddNewEnvironment from "./AddNewEnvironment";
 import EditNewEnvironment from "./EditNewEnvironment";
 import useEnvironment from "../../../../hooks/useEnvironment";
 
-const staticData = [
-  {
-    EnvironmentName: "Dev",
-    EnvironmentDescription: "Development",
-    application: "clocksession",
-    browser:"chrome",
-    baseUrl: "https://codearrest.dyndns.org/",
-    DriverPath:"C:\\GhostQA\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\trgveyjrhntbgvfdcfegtrvfbhbgfvdssaz",
-    BasePath:"C:\\GhostQA\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\"
-  },
-  {
-    EnvironmentName: "QA",
-    EnvironmentDescription: "QA For Test",
-    application: "Ghost-Qa",
-    browser:"chrome",
-    baseUrl: "https://codearrest.dyndns.org/",
-    DriverPath:"C:\\GhostQA\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\",
-    BasePath:"C:\\GhostQA\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\"
-  },
-  {
-    EnvironmentName: "PROD",
-    EnvironmentDescription: "Production",
-    application: "clocksession-prod",
-    browser:"chrome",
-    baseUrl: "https://codearrest.dyndns.org/",
-    DriverPath:"C:\\GhostQA\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\",
-    BasePath:"C:\\GhostQA\\MyersAndStauffer_GhostQA\\TestSeleniumReport\\wwwroot\\"
-  },
-];
+
 
 export default function ExecutionEnvironment() {
     const{

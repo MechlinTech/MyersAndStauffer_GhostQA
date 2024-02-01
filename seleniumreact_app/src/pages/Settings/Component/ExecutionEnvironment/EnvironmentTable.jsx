@@ -57,16 +57,20 @@ export function EnvironmentTable({ rows,handleEditEnvironment}) {
               <StyledTableCell component="th" scope="row">
                 {row.EnvironmentName}
               </StyledTableCell>
-              <StyledTableCell>{row.EnvironmentDescription}</StyledTableCell>
+              <StyledTableCell component="th" scope="row" >
+                {row.Description}
+                </StyledTableCell>
               <StyledTableCell component="th" scope="row">
                 {row.ApplicationName}
               </StyledTableCell>
               <StyledTableCell component="th" scope="row">
                 {row.BrowserName}
               </StyledTableCell>
-              <StyledTableCell component="th" scope="row">
-                {row.Baseurl}
-              </StyledTableCell>
+              <StyledTableCell component="th" scope="row" style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <Tooltip title={row.DriverPath}>
+                    {row.Baseurl}
+                  </Tooltip>
+                </StyledTableCell>
               <StyledTableCell component="th" scope="row" style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   <Tooltip title={row.DriverPath}>
                     {row.DriverPath}
