@@ -11,12 +11,12 @@ export function CustomTable({ rows,handleEditApplication}) {
   const classes = useTableStyles();
 
   const handleDelete = (row) => {
-    console.log(`Deleting environment: ${row.ApplicationName}`);
+    console.log(`Deleting ApplicationName: ${row.ApplicationName}`);
   };
 
   const handleEdit = (row) => {
     handleEditApplication(row)
-    console.log(`Editing environment: ${row.ApplicationName}`);
+    console.log(`Editing ApplicationName: ${row.ApplicationName}`);
   };
   return (
     <TableContainer sx={{ marginBottom: "8vh" }}>

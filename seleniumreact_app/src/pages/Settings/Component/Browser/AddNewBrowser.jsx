@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useStyles } from "./styles";
 import clsx from "clsx";
-import Select from "react-select";
 import {
   Button,
   FormControl,
@@ -10,12 +9,9 @@ import {
   OutlinedInput,
   Box,
   Card,
-  FormControlLabel,
-  RadioGroup,
-  Radio,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { AddUpdateBrowser } from "../../../../redux/actions/seleniumAction";
+import { AddUpdateBrowser, GetBrowser } from "../../../../redux/actions/seleniumAction";
 
 
 export default function AddNewBrowser({ onBack,addOredit,browserToEdit,setBrowserToEdit }) {
@@ -28,13 +24,12 @@ export default function AddNewBrowser({ onBack,addOredit,browserToEdit,setBrowse
   const [Error, setError] = useState({
     BrowserNameErrMsg: ""
   });
-
+  
   const handleSubmit = () => {
     let payload = {
       "BrowserId": browserToEdit?browserToEdit.BrowserId:0,
       "BrowserName": formData.BrowserName
     }
-    console.log('inside browser submit',formData)
     let error = {};
     if (!formData.BrowserName.trim()) {
       error.BrowserNameErrMsg = "browser Name is required";
@@ -47,7 +42,7 @@ export default function AddNewBrowser({ onBack,addOredit,browserToEdit,setBrowse
     if (Object.keys(error).length === 0) {
       // Proceed with form submission
       dispatch(AddUpdateBrowser(payload))
-      setBrowserToEdit({}) //clear browser to edit after saving
+      setBrowserToEdit(null) //clear browser to edit after saving
       onBack()
     }else
       console.log("handleSubmit", error, formData);
