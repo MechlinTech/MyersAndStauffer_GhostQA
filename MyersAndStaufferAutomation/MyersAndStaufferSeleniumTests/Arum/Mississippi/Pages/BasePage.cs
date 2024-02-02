@@ -24,11 +24,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
         public BasePage(bool skipLoad = false)
         {
             EnvironmentHelper EnvironmentHelper = EnvironmentConfigUtils.GetEnvironmentForConfig();
-
-            BaseURL = TestExecutor.Baseurl;//EnvironmentHelper.GetSetting("BaseURL");
-
-            BaseDomain = EnvironmentHelper.GetSetting("BaseDomain");
-
+            BaseURL = TestExecutor.Baseurl;
             driver = Browser.Driver;
             js = (IJavaScriptExecutor)driver;
             vars = new Dictionary<string, object>();
