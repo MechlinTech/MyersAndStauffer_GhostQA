@@ -17,7 +17,7 @@ const BasicAccordion = lazy(() => import("../comman/Accordion/index"));
 const TestSuitsDetails = lazy(() => import("../pages/TestSuitsDetails"));
 const Settings = lazy(() => import("../pages/Settings"));
 const AddTestSuite = lazy(() => import("../pages/TestSuite/AddTestSuite"));
-const NotFound = lazy(() => import("../pages/NotFound"));
+const NotFound = lazy(() =>  import("../pages/NotFound"));
 
 export default function Navigations() {
   return (
