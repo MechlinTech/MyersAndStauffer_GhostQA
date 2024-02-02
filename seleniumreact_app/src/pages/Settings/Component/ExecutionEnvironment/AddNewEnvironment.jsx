@@ -105,8 +105,8 @@ export default function AddNewEnvironment({ onBack }) {
       // Proceed with form submission
       console.log("handleSubmit", formData);
       console.log("payload", payload);
-      dispatch(AddUpdateEnvironment(payload));
-      navigate('/settings/environment')
+      dispatch(AddUpdateEnvironment(payload,navigate,onBack));
+      // navigate('/settings/environment')
     }
 
     console.log("handleSubmit", error, formData);

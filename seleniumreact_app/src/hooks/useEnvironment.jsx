@@ -22,15 +22,15 @@ export default function  useEnvironment ()  {
       console.log("environments",environementList);
       const handleAddEnvironment = () => {
         setShowAddNewEnvironment(true);
-        navigate("/setting/add-environment");
+        // navigate("/setting/add-environment");
         console.log("Adding Environment...");
       };
     
       const handleEditEnvironment = (rowData) => {
         setEditEnvironmentData(rowData);
-        // setShowEditNewEnvironment(true);
+        setShowEditNewEnvironment(true);
         console.log("editdate",editEnvironmentData);
-        navigate("/setting/edit-environment", { state: { editEnvironmentData: rowData } });
+        // navigate("/setting/edit-environment", { state: { editEnvironmentData: rowData } });
         console.log("editdata",editEnvironmentData);
     
     

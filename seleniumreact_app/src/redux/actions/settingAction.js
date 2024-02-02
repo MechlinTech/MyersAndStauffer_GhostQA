@@ -21,7 +21,7 @@ export const getTestSuitesList = () => {
   };
 };
 
-export const AddUpdateEnvironment = (data) => {
+export const AddUpdateEnvironment = (data,navigate,onBack) => {
 
 
   return async (dispatch) => {
@@ -33,21 +33,24 @@ export const AddUpdateEnvironment = (data) => {
           console.log('response ', res)
           if (res.data.status === "success") {
                dispatch(GetEnvironment());
-              toast.info('Successfully saved', {
+              toast.info(res.data.message, {
                   style: {
                       background: 'rgb(101, 77, 247)',
                       color: 'rgb(255, 255, 255)',
                   },
               });
+              onBack();
             }
             else if (res.data.status === "fail") { 
                 toast.error(res.data.message); 
+                onBack();
+                // navigate('/settings/environment')
             }
           
           console.log("saved ", res)
       } catch (error) {
           console.log("error sending ", error);
-          toast('Posting error')
+          // toast('Posting error')
       }
   }
 }

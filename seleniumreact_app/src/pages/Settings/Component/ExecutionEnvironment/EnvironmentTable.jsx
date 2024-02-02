@@ -86,10 +86,10 @@ export function EnvironmentTable({ rows,handleEditEnvironment}) {
                   onClick={() => handleEditEnvironment(row)}
                   style={{ cursor: "pointer", marginRight: "10px",  color: "rgb(101, 77, 247)", }}
                 />
-                <DeleteIcon
+                {/* <DeleteIcon
                   onClick={() => handleDelete(row)}
                   style={{ cursor: "pointer", marginRight: "10px", color: "#F64E4E"}}
-                />
+                /> */}
               </StyledTableCell>
             </TableRow>
             

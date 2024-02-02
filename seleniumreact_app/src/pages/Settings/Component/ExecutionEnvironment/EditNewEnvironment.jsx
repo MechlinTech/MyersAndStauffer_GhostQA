@@ -17,9 +17,9 @@ import { GetApplication, GetBrowser } from "../../../../redux/actions/seleniumAc
 import { useNavigate,useLocation } from "react-router-dom";
 
 
-export default function EditNewEnvironment({ onBack }) {
+export default function EditNewEnvironment({ onBack ,rowData}) {
   const location = useLocation();
-  const rowData = location.state.editEnvironmentData;
+  // const rowData = location.state.editEnvironmentData;
 
 
     console.log("row",rowData);
@@ -64,6 +64,8 @@ export default function EditNewEnvironment({ onBack }) {
     DriverPath: rowData ? rowData.DriverPath : "",
     BasePath: rowData ? rowData.BasePath : "",
     selectedBrowser: rowData ? rowData.BrowserName : null,
+    ApplicationId:rowData?rowData.ApplicationId:0,
+    BrowserId:rowData?rowData.BroswerId:0
   });
   console.log("formdata",formData);
   console.log("selectedapp",selectedApplication);
@@ -86,6 +88,9 @@ export default function EditNewEnvironment({ onBack }) {
   }));
   const handleSubmit = () => {
     let payload = {
+      environmentId:rowData.EnvironmentId,
+      applicationId:formData.ApplicationId,
+      broswerId:formData.BrowserId,
       environmentName: formData.environmentName,
       description: formData.Description,
       applicationName:formData.selectedApplication,
@@ -100,7 +105,7 @@ export default function EditNewEnvironment({ onBack }) {
     
         
       console.log("handleSubmit", formData);
-      dispatch(AddUpdateEnvironment(payload));
+      dispatch(AddUpdateEnvironment(payload,navigate,onBack));
     
 
     
@@ -108,11 +113,33 @@ export default function EditNewEnvironment({ onBack }) {
   
 
   const handleFieldChange = (fieldName, value) => {
-    setFormData({
-      ...formData,
-      [fieldName]: value,
-    });
+    // If changing selectedApplication, update both selectedApplication state and ApplicationId in formData
+    if (fieldName === "selectedApplication") {
+      const selectedApp = applicationOptions.find(app => app.label === value);
+      setFormData({
+        ...formData,
+        selectedApplication: value,
+        ApplicationId: selectedApp ? selectedApp.value : 0 // Update ApplicationId based on selected label
+      });
+    } 
+    // If changing selectedBrowser, update both selectedBrowser state and BrowserId in formData
+    else if (fieldName === "selectedBrowser") {
+      const selectedBrw = browserOptions.find(brw => brw.label === value);
+      setFormData({
+        ...formData,
+        selectedBrowser: value,
+        BrowserId: selectedBrw ? selectedBrw.value : 0 // Update BrowserId based on selected label
+      });
+    }
+    else {
+      setFormData({
+        ...formData,
+        [fieldName]: value,
+      });
+    }
   };
+  
+  
 
 console.log("selectdapp",formData.selectedApplication);
   return (
@@ -262,8 +289,10 @@ console.log("selectdapp",formData.selectedApplication);
                options={applicationOptions}
                value={selectedApplication}
                onChange={(newValue) => {
-                 setSelectedApplication(newValue);
-               }}
+                setSelectedApplication(newValue); // Update selectedApplication state
+                handleFieldChange("selectedApplication", newValue.label);
+                
+              }}
                   styles={{
                     container: (provided) => ({
                       ...provided,
@@ -307,7 +336,9 @@ console.log("selectdapp",formData.selectedApplication);
                   options={browserOptions}
                   value={selectedBrowser}
                   onChange={(newValue) => {
-                    setSelectedBrowser(newValue);
+                    setSelectedBrowser(newValue); 
+                    handleFieldChange("selectedBrowser", newValue.label);
+                    
                   }}
                   styles={{
                     container: (provided) => ({
