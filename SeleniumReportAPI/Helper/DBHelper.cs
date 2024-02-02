@@ -15,9 +15,11 @@ namespace SeleniumReportAPI.Helper
     public class DBHelper
     {
         private readonly IConfiguration _configuration;
-        public DBHelper(IConfiguration configuration)
+        private readonly TestExecutor _testExecutor;
+        public DBHelper(IConfiguration configuration, TestExecutor testExecutor)
         {
             _configuration = configuration;
+            _testExecutor = testExecutor;
         }
 
         internal string GetConnectionString()
@@ -455,12 +457,12 @@ namespace SeleniumReportAPI.Helper
             return EnvironmentListJson;
         }
 
-        internal static string RunTestCase(string testCaseName, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
+        internal async Task<string> RunTestCase(string testCaseName, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
         {
             string TestCaseJsonData = string.Empty;
             try
             {
-                TestCaseJsonData = TestExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
+                TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
             }
             catch (Exception)
             {
