@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStyles } from "./styles";
 import clsx from "clsx";
 import {
@@ -11,27 +11,29 @@ import {
   Card,
 } from "@mui/material";
 
-import { AddUpdateApplication } from "../../../../redux/actions/seleniumAction";
+import { AddUpdateApplication, GetApplication } from "../../../../redux/actions/seleniumAction";
 import { useDispatch } from "react-redux";
 
 export default function AddNewApplication({ onBack,addOredit,applicationToEdit,
   setApplicationToEdit }) {
-
+  console.log("application to edit ", applicationToEdit)
   const classes = useStyles();
   const dispatch = useDispatch()
   const [formData, setFormData] = useState(applicationToEdit?applicationToEdit:{
     ApplicationName:""
   });
+  console.log('form data : ', formData)
   const [Error, setError] = useState({
     ApplicationNameErrMsg: ""
   });
-
+  
   const handleSubmit = () => {
     let payload = {
       ApplicationId:applicationToEdit?applicationToEdit.ApplicationId:0,
       ApplicationName:formData.ApplicationName
     }
     let error = {};
+    console.log("formData",formData)
     if (!formData.ApplicationName.trim()) {
       error.ApplicationNameErrMsg = "Application Name is required";
     }
@@ -43,7 +45,7 @@ export default function AddNewApplication({ onBack,addOredit,applicationToEdit,
       // Proceed with form submission
       dispatch(AddUpdateApplication(payload))
       onBack()
-      setApplicationToEdit({})
+      setApplicationToEdit(null)
       console.log("submitted Data : ", formData);
     }else
       console.log("handleSubmit", error,"sumitted data", formData);
@@ -52,7 +54,7 @@ export default function AddNewApplication({ onBack,addOredit,applicationToEdit,
   const handleFieldChange = (fieldName, value) => {
     setFormData({
       ...formData,
-      [fieldName]: value,
+      [fieldName] : value,
     });
   };
 

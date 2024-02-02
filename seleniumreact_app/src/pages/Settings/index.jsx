@@ -12,11 +12,25 @@ import {
 } from "../../comman/icons";
 import { Link, Outlet } from "react-router-dom";
 import { GetApplication,GetBrowser } from "../../redux/actions/seleniumAction";
+
+//JSON is showing circular reference error
+import * as flatted from 'flatted';
+
 // import { BrowserIcon } from "../../comman/icons/BrowserIcon";
 export default function Settings() {
   const classess = useStyles();
   const dispatch = useDispatch();
-  const [selectedItem, setSelectedItem] = useState({});
+  const [selectedItem, setSelectedItem] = useState(() => {
+    // Initialize with the value from localStorage or a default value
+    const storedItem = localStorage.getItem("selectedCategory");
+    return storedItem
+      ? flatted.parse(storedItem)
+      : {
+          title: "Environment",
+          icon: <StyledDashBoardIcon />,
+          path: "/",
+        };
+  });
 
   useEffect(() => {
     dispatch(getTestSuitesList());
@@ -24,8 +38,9 @@ export default function Settings() {
     dispatch(GetBrowser())
   }, []);
 
-  const handleItemClick = (index) => {
-    setSelectedItem(index);
+  const handleItemClick = (category) => {
+    localStorage.setItem("selectedCategory", flatted.stringify(category));
+    setSelectedItem(category);
   };
 
   const tabLableStyle = {
