@@ -4,6 +4,8 @@ import Functional from "./Stacks/Functional";
 import Api from "./Stacks/Api";
 import { Box } from "@material-ui/core";
 import EditTestSuite from "../pages/TestSuite/EditTestSuite";
+import AddNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/AddNewEnvironment";
+import EditNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/EditNewEnvironment";
 
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() => import("../pages/Settings/Component/ExecutionEnvironment/index"));
@@ -45,6 +47,8 @@ export default function Navigations() {
         <Route path="/accordian" element={<BasicAccordion />} />
         <Route path="/:testSuiteName/:testRunName" element={<TestSuitsDetails />} />
         <Route path="/add-suite" element={<AddTestSuite />} />
+        <Route path="/setting/add-environment" element={<AddNewEnvironment/>} />
+        <Route path="/setting/edit-environment" element={<EditNewEnvironment/>} />
         <Route path="/edit-suite" element={<EditTestSuite />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

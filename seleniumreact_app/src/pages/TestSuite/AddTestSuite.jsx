@@ -435,7 +435,7 @@ export default function AddTestSuite() {
                                 container: (provided) => ({
                                   ...provided,
                                   backgroundColor: "rgb(242, 242, 242)",
-                                  zIndex: 9999, // Adjust the zIndex value
+                                  zIndex: 999, // Adjust the zIndex value
                                 }),
                                 control: (provided, state) => ({
                                   ...provided,
@@ -546,7 +546,7 @@ export default function AddTestSuite() {
                                 container: (provided) => ({
                                   ...provided,
                                   backgroundColor: "rgb(242, 242, 242)",
-                                  zIndex: 9999, // Adjust the zIndex value
+                                  zIndex: 999, // Adjust the zIndex value
                                 }),
                                 control: (provided, state) => ({
                                   ...provided,
