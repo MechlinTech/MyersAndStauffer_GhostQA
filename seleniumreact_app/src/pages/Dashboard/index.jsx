@@ -64,6 +64,9 @@ export default function Dashboard() {
     dispatch(getTestSuites());
   }, []);
 
+  useEffect(() => {
+    dispatch(getTestSuites());
+  }, [testSuits]);
   const filteredTestSuiteData = testSuits?.filter((suite) =>
     suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
