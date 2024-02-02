@@ -527,7 +527,7 @@ console.log("selectdapp",formData.selectedApplication);
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={()=> navigate('/settings/environment')}
+              onClick={()=> onBack()}
               sx={{
                 backgroundColor: "rgb(101, 77, 247)",
                 "&:hover": {
