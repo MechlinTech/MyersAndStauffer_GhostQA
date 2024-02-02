@@ -21,7 +21,7 @@ export default function Functional() {
           </Grid>
           <Grid item>
             <Link
-              to="/settings"
+              to="/settings/Environment"
               className={`${classes.linkStyle} ${
                 location.pathname.slice(0,9) === "/settings" && classes.activeLink
               }`}
