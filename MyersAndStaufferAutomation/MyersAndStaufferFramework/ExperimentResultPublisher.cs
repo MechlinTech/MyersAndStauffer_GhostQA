@@ -20,10 +20,9 @@ namespace MyersAndStaufferFramework
                 sb.AppendLine($"Context: {item.Key} = {item.Value}");
             }
 
-
             sb.AppendLine($"Control value: {result.Control.Value}");
             sb.AppendLine($"Control duration: {result.Control.Duration}");
-            
+
             foreach (var observation in result.Candidates)
             {
                 sb.AppendLine($"Candidate name: {observation.Name}");

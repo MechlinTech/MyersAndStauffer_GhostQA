@@ -66,6 +66,7 @@ namespace MyersAndStaufferFramework
         }
 
         #region Private Methods
+
         private static void LoadVariables(Dictionary<string, string> serverVariables, Func<object> getObject, string prefix)
         {
             object obj;
@@ -140,6 +141,7 @@ namespace MyersAndStaufferFramework
                 }
             }
         }
-        #endregion
+
+        #endregion Private Methods
     }
 }

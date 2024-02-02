@@ -1,20 +1,21 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CSharp;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using System.Data;
 using System.Data.SqlClient;
-using System;
-using System.Linq;
-using System.Text;
+using TestSeleniumReport.DTO_s;
+using TestSeleniumReport.Models;
+using Environments = TestSeleniumReport.Models.Environments;
 
 namespace SeleniumTestReport.Helper
 {
     public class DBHelper
     {
         private readonly IConfiguration _configuration;
-        public DBHelper(IConfiguration configuration)
+        private readonly TestExecutor _testExecutor;
+        public DBHelper(IConfiguration configuration, TestExecutor testExecutor)
         {
             _configuration = configuration;
+            _testExecutor = testExecutor;
         }
 
         public string GetConnectionString(string Key)
@@ -52,7 +53,7 @@ namespace SeleniumTestReport.Helper
             return TestSuites;
         }
 
-        internal string GetDashboardDetails(string testSuitName)
+        internal string GetDashboardDetails(string testSuitName, string filterType, int filterValue)
         {
             string DashBoardDetailsJson = string.Empty;
             try
@@ -60,10 +61,12 @@ namespace SeleniumTestReport.Helper
                 using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_GetDashBoardDetails", connection))
+                    using (SqlCommand command = new SqlCommand("stp_GetDashBoardChartDetails", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuitName", testSuitName);
+                        command.Parameters.AddWithValue("@FilterType", filterType);
+                        command.Parameters.AddWithValue("@FilterValue", filterValue);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -209,7 +212,7 @@ namespace SeleniumTestReport.Helper
             return TestCasesListJson;
         }
 
-        internal string AddUpdateTestSuitesJson(string testSuiteName, int? testSuiteId = 0)
+        internal string AddUpdateTestSuitesJson(Dto_TestSuiteDetailsData model)
         {
             string result = string.Empty;
             try
@@ -220,8 +223,14 @@ namespace SeleniumTestReport.Helper
                     using (SqlCommand command = new SqlCommand("stp_AddUpdateTestSuites", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestSuiteName", testSuiteName);
-                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        command.Parameters.AddWithValue("@TestSuiteName", model.TestSuiteName);
+                        command.Parameters.AddWithValue("@TestSuiteType", model.TestSuiteType ?? "");
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@SendEmail", model.SendEmail);
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
+                        command.Parameters.AddWithValue("@TestSuiteId", model.TestSuiteId);
+                        command.Parameters.AddWithValue("@SelectedTestCases", string.Join(", ", model.SelectedTestCases));
+                        command.Parameters.AddWithValue("@Description", model.Description);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -271,7 +280,7 @@ namespace SeleniumTestReport.Helper
             return testSuiteListJson;
         }
 
-        internal string DeleteTestSuites(int testSuiteId)
+        internal string DeleteTestSuites(string TestSuiteName)
         {
             string result = string.Empty;
             try
@@ -282,7 +291,7 @@ namespace SeleniumTestReport.Helper
                     using (SqlCommand command = new SqlCommand("stp_DeleteTestSuites", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        command.Parameters.AddWithValue("@TestSuiteName", TestSuiteName);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -302,60 +311,356 @@ namespace SeleniumTestReport.Helper
             return result;
         }
 
-        //static void ExtractTestCasesFromProject()
-        //{
-        //    string projectPath = @"D:\Mechlin Tech\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation.sln";
-        //    // Load the project
-        //    var workspace = Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.Create();
-        //    var project = workspace.OpenProjectAsync(projectPath).Result;
+        internal string GetApplications()
+        {
+            string ApplicationListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetApplications", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                ApplicationListJson = reader["ApplicationListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ApplicationListJson;
+        }
 
-        //    // Traverse the documents in the project
-        //    foreach (var document in project.Documents)
-        //    {
-        //        // Parse the document
-        //        var syntaxRoot = document.GetSyntaxRootAsync().Result;
+        internal string GetEnvironments()
+        {
+            string EnvironmentListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetEnvironment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                EnvironmentListJson = reader["EnvironmentListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return EnvironmentListJson;
+        }
 
-        //        // Traverse the syntax tree
-        //        ExtractTestCasesFromSyntaxTree(syntaxRoot);
-        //    }
-        //}
+        internal Dto_TestSuiteDetailsData GetTestSuiteByName(string TestSuiteName)
+        {
+            Dto_TestSuiteDetailsData testSuites = new Dto_TestSuiteDetailsData();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestSuitsByName", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", TestSuiteName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                testSuites.TestSuiteId = Convert.ToInt32(reader["TestSuiteId"]);
+                                testSuites.TestSuiteName = reader["TestSuiteName"].ToString();
+                                testSuites.SendEmail = Convert.ToBoolean(reader["SendEmail"]);
+                                testSuites.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
+                                testSuites.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
+                                testSuites.TestSuiteType = reader["TestSuiteType"].ToString();
+                                testSuites.Description = reader["Description"].ToString();
+                                testSuites.SelectedTestCases = reader["SelectedTestCases"].ToString().Split(", ").Select(x => x).ToList();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return testSuites;
+        }
 
-        //static void ExtractTestCasesFromSyntaxTree(SyntaxNode syntaxNode)
-        //{
-        //    // Use a syntax walker to traverse the syntax tree
-        //    var walker = new TestCaseSyntaxWalker();
-        //    walker.Visit(syntaxNode);
+        internal string AddUpdateEnvironmentJson(Environments model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateEnvironment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@EnvironmentName", model.EnvironmentName);
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@BrowserId", model.BroswerId);
+                        command.Parameters.AddWithValue("@Baseurl", model.Baseurl);
+                        command.Parameters.AddWithValue("@BasePath", model.BasePath);
+                        command.Parameters.AddWithValue("@DriverPath", model.DriverPath);
+                        command.Parameters.AddWithValue("@CreatedBy", model.CreatedBy);
+                        command.Parameters.AddWithValue("@ModifiedBy", model.ModifiedBy);
+                        command.Parameters.AddWithValue("@Description", model.Description);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
 
-        //    // Retrieve the test cases found by the walker
-        //    var testCases = walker.TestCases;
+        internal string AddUpdateApplicationJson(Applications model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateApplication", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@ApplicationName", model.ApplicationName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
 
-        //    // Process the extracted test cases (e.g., print them)
-        //    foreach (var testCase in testCases)
-        //    {
-        //        Console.WriteLine($"Test Case: {testCase}");
-        //    }
-        //}
+        internal string GetBrowsers()
+        {
+            string BrowserListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetBrowsers", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                BrowserListJson = reader["Browsers"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return BrowserListJson;
+        }
 
-        //internal class TestCaseSyntaxWalker : CSharpSyntaxWalker
-        //{
-        //    public List<string> TestCases { get; } = new List<string>();
+        internal string AddUpdateBrowserJson(Browsers model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateBrowser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@BrowserId", model.BrowserId);
+                        command.Parameters.AddWithValue("@BrowserName", model.BrowserName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
 
-        //    public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
-        //    {
-        //        // Check if the method has a TestMethod attribute
-        //        var hasTestMethodAttribute = node.AttributeLists
-        //            .SelectMany(attrList => attrList.Attributes)
-        //            .Any(attribute =>
-        //                attribute.Name.ToString() == "TestMethod" || attribute.Name.ToString() == "Test");
+        internal Environments GetEnvironmentById(int Id)
+        {
+            Environments environment = new Environments();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetEnvironmentById", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@EnvironmentId", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                environment.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
+                                environment.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
+                                environment.EnvironmentName = reader["EnvironmentName"].ToString();
+                                environment.DriverPath = reader["DriverPath"].ToString();
+                                environment.BasePath = reader["BasePath"].ToString();
+                                environment.Baseurl = reader["Baseurl"].ToString();
+                                environment.BroswerId = Convert.ToInt32(reader["BroswerId"]);
+                                environment.CreatedBy = reader["CreatedBy"].ToString();
+                                environment.ModifiedBy = reader["ModifiedBy"].ToString();
+                                environment.CreatedOn = Convert.ToDateTime(reader["CreatedOn"]);
+                                environment.ModifiedOn = Convert.ToDateTime(reader["ModifiedOn"]);
+                                environment.Description = reader["Description"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return environment;
+        }
 
-        //        if (hasTestMethodAttribute)
-        //        {
-        //            // Add the method name to the list of test cases
-        //            TestCases.Add(node.Identifier.Text);
-        //        }
+        internal string SaveTestCaseData(string testSuiteJsonData)
+        {
+            string _result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_SaveCustomTestSuiteExecutionData", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
 
-        //        base.VisitMethodDeclaration(node);
-        //    }
-        //}
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@TestSuiteJson", testSuiteJsonData);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            _result = reader["result"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _result = ex.Message;
+            }
+            return _result;
+        }
+
+        internal string GetRunId(string testSuiteName)
+        {
+            string TestRunName = "";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString("AppDBContextConnection")))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_GetRunId", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    connection.Open();
+                    SqlParameter sqlParameter = cmd.Parameters.AddWithValue("@TestSuite", testSuiteName);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Access data from the result set
+                            TestRunName = reader["TestRunName"].ToString();
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                TestRunName = "Error";
+                throw ex;
+            }
+            return TestRunName;
+        }
+
+        internal string RunTestCase(string testCaseName, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
+        {
+            string TestCaseJsonData = string.Empty;
+            try
+            {
+                TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return TestCaseJsonData;
+        }
     }
 }

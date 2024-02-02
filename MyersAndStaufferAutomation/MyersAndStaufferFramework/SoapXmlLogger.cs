@@ -78,7 +78,7 @@ namespace MyersAndStaufferFramework
         /// <returns></returns>
         private System.ServiceModel.Channels.Message LogMessage(string sendType, ref System.ServiceModel.Channels.Message message)
         {
-            // Messages can only be read once, at which point they are practically useless and need to be disposed 
+            // Messages can only be read once, at which point they are practically useless and need to be disposed
 
             using (MessageBuffer bufferedCopy = message.CreateBufferedCopy(Int32.MaxValue))
             {

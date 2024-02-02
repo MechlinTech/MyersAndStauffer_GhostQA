@@ -15,7 +15,6 @@ namespace MyersAndStaufferSeleniumTests.Utils
             string Subject = "Execution Report✓";
             string contentBody = "<h3> Execution Summary from your last test execution </h3>";
 
-
             mail.From = new MailAddress(UserEmail);
             mail.To.Add(ToEmail);
             mail.Subject = Subject;

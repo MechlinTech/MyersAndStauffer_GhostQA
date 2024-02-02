@@ -1,7 +1,7 @@
 ﻿/* Set padding to keep content from hitting the edges */
 
 body {
-    font-family: Arial, Helvetica, sans-serif !important;
+    font: 300 14px / 20.125px 'Lexend Deca', sans-serif, -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif
 }
 
 .body-content {
@@ -10,21 +10,14 @@ body {
     padding-right: 15px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
+/* Override the default bootstrap behavior where horizontal description lists
+   will truncate terms that are too long to fit in the left column
 */
 .dl-horizontal dt {
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
-
-.btn-gray {
+.accordion-gray {
     background-color: #ECF0F1;
     padding: 10px;
     cursor: pointer;
@@ -34,19 +27,82 @@ textarea {
     border-radius: 5px;
 }
 
-    .btn-gray:hover {
-        background: #ECF0F1;
-        border: 1px solid black;
-        color: black;
+    .accordion-gray:hover {
+        border: 2px solid rgb(101, 77, 247) !important;
+        outline: none;
     }
 
-.bg-select {
-    border: 1px solid black;
+.btn-gray {
+    padding: 10px;
+    cursor: pointer;
+    color: black;
+    border: 1px solid #ECF0F1;
+    text-align: left;
+    border-radius: 5px;
 }
 
+    .btn-gray:hover {
+        border: 2px solid rgb(101, 77, 247) !important;
+        outline: none;
+    }
 
-.border-bottom {
-    border-bottom-color: #D2D2D2;
+.input-box {
+    letter-spacing: normal;
+    color: rgb(56, 56, 56);
+    border: 0px none rgb(56, 56, 56);
+    box-sizing: content-box;
+    height: 20.125px;
+    margin: 0px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    display: block;
+    min-width: 0px;
+    width: 100%;
+    animation-name: mui-auto-fill-cancel;
+    animation-duration: 0.01s;
+    border-radius: 5px;
+    padding: 10px 0px 10px 0px;
+}
+
+    .input-box:hover {
+        border: 1px solid rgb(101, 77, 247) !important;
+    }
+
+    .input-box:focus {
+        border: 2px solid rgb(101, 77, 247) !important;
+        outline: none;
+    }
+
+.button {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    outline: rgb(255, 255, 255) none 0px;
+    border: 0px none rgb(255, 255, 255);
+    margin: 0px;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    text-decoration: none solid rgb(255, 255, 255);
+    font-family: 'Lexend Deca', sans-serif, -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    min-width: 64px;
+    background-color: rgb(101, 77, 247);
+    color: rgb(255, 255, 255);
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0s, border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    text-transform: none;
+    border-radius: 3px;
+    box-shadow: none;
+    padding: 11px 22px;
+    height: 40px;
+    line-height: 21px;
+    white-space: nowrap;
+    font-weight: 400;
 }
 
 .nav-link {
@@ -55,8 +111,12 @@ textarea {
 }
 
 .nav-item a:hover {
-    background: #009419;
-    color: white;
+    border-bottom: 4px solid rgb(101, 77, 247) !important;
+    transition: 0.8s,ease-in-out;
+}
+
+.nav-item button:hover {
+    border-bottom: 4px solid rgb(101, 77, 247) !important;
     transition: 0.8s,ease-in-out;
 }
 
@@ -77,9 +137,38 @@ textarea {
 }
 
 .breadcrumbs {
+    display: flex;
+    list-style: none;
+    padding: 10px;
     background-color: #ECF0F1 !important;
     border: 1px solid #ECF0F1;
+    border-radius: 5px;
 }
+
+.breadcrumb-item {
+    margin-right: 5px;
+}
+
+    .breadcrumb-item:not(:last-child):after {
+        content: '>';
+        margin-left: 5px;
+        margin-right: 5px;
+        color: #333;
+    }
+
+    .breadcrumb-item::before {
+        content: " " !important;
+    }
+
+    .breadcrumb-item a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+    }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
 
 .back-arrow {
     font-size: 10px;
@@ -87,6 +176,76 @@ textarea {
     vertical-align: middle;
 }
 
-.breadcrumb-item::before {
-    content: " " !important;
+.item-selected {
+    border-bottom: 4px solid rgb(101, 77, 247) !important;
+    transition: 0.8s, ease-in-out;
+}
+
+.accordion {
+    display: flex;
+    flex-direction: column;
+}
+
+.date {
+    background-color: #ECF0F1;
+    padding: 10px;
+    cursor: pointer;
+    color: black;
+    border: 1px solid #ECF0F1;
+    text-align: left;
+    border-radius: 5px;
+}
+
+.content {
+    display: none;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.tab-content {
+    display: none;
+}
+
+    .tab-content.active {
+        display: block;
+    }
+
+.video-frame {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.title {
+    background-color: silver;
+    padding: 1px;
+    font-weight: 600;
+}
+
+.clickable-element {
+    cursor: pointer;
+}
+
+    .clickable-element:hover {
+        cursor: pointer;
+        border-bottom: 4px solid rgb(101, 77, 247) !important;
+        transition: 0.8s,ease-in-out;
+    }
+
+.error {
+    border-bottom: 2px solid rgb(101, 77, 247) !important; /* Change this to your desired border style */
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-10px);
+    }
+
+    20%, 40%, 60%, 80% {
+        transform: translateX(10px);
+    }
 }

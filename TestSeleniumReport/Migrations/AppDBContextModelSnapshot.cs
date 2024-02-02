@@ -17,7 +17,7 @@ namespace TestSeleniumReport.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.23")
+                .HasAnnotation("ProductVersion", "6.0.25")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -222,6 +222,139 @@ namespace TestSeleniumReport.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("TestSeleniumReport.Models.Applications", b =>
+                {
+                    b.Property<int>("ApplicationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ApplicationId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationId"), 1000L, 1);
+
+                    b.Property<string>("ApplicationName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("ApplicationName");
+
+                    b.HasKey("ApplicationId");
+
+                    b.ToTable("tbl_Applications");
+                });
+
+            modelBuilder.Entity("TestSeleniumReport.Models.Browsers", b =>
+                {
+                    b.Property<int>("BrowserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BrowserId"), 1L, 1);
+
+                    b.Property<string>("BrowserName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("BrowserName");
+
+                    b.HasKey("BrowserId");
+
+                    b.ToTable("tbl_Browsers");
+                });
+
+            modelBuilder.Entity("TestSeleniumReport.Models.Environments", b =>
+                {
+                    b.Property<int>("EnvironmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("EnvironmentId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnvironmentId"), 1000L, 1);
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BasePath")
+                        .IsRequired()
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("BasePath");
+
+                    b.Property<string>("Baseurl")
+                        .IsRequired()
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("Baseurl");
+
+                    b.Property<int>("BroswerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DriverPath")
+                        .IsRequired()
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("DriverPath");
+
+                    b.Property<string>("EnvironmentName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("EnvironmentName");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("EnvironmentId");
+
+                    b.ToTable("tbl_Environments");
+                });
+
+            modelBuilder.Entity("TestSeleniumReport.Models.TestSuites", b =>
+                {
+                    b.Property<int>("TestSuiteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("TestSuiteId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TestSuiteId"), 1000L, 1);
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EnvironmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SelectedTestCases")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("SendEmail")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TestSuiteName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("TestSuiteName");
+
+                    b.Property<string>("TestSuiteType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TestSuiteId");
+
+                    b.ToTable("tbl_TestSuites");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MyersAndStaufferFramework
 {
@@ -7,7 +7,8 @@ namespace MyersAndStaufferFramework
     {
         public CommandLineArgsHelper(string[] args)
         {
-            args.ToList().ForEach(a => {
+            args.ToList().ForEach(a =>
+            {
                 string[] components = a.Split(new char[] { '=' }, 2);
                 this.Add(components[0], components.Length > 1 ? components[1] : null);
             });

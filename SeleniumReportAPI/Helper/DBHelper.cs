@@ -1,19 +1,25 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
+using Newtonsoft.Json;
+using SeleniumReportAPI.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using TestSeleniumReport.DTO_s;
+using Environments = SeleniumReportAPI.Models.Environments;
 
 namespace SeleniumReportAPI.Helper
 {
     public class DBHelper
     {
         private readonly IConfiguration _configuration;
-        public DBHelper(IConfiguration configuration)
+        private readonly TestExecutor _testExecutor;
+        public DBHelper(IConfiguration configuration, TestExecutor testExecutor)
         {
             _configuration = configuration;
+            _testExecutor = testExecutor;
         }
 
         internal string GetConnectionString()
@@ -21,7 +27,7 @@ namespace SeleniumReportAPI.Helper
             return _configuration.GetConnectionString("AppDBContextConnection");
         }
 
-        internal string VerifyUser(string email, string password)
+        internal async Task<string> VerifyUser(string email, string password)
         {
             string isValidUser = string.Empty;
             try
@@ -53,7 +59,7 @@ namespace SeleniumReportAPI.Helper
             return isValidUser;
         }
 
-        internal string GetDataTestSuits()
+        internal async Task<string> GetDataTestSuits()
         {
             string TestSuites = "";
             try
@@ -83,7 +89,7 @@ namespace SeleniumReportAPI.Helper
             return TestSuites;
         }
 
-        internal string GetDashboardDetails(string testSuitName)
+        internal async Task<string> GetDashboardDetails(string testSuitName)
         {
             string DashBoardDetailsJson = string.Empty;
             try
@@ -114,7 +120,7 @@ namespace SeleniumReportAPI.Helper
             return DashBoardDetailsJson;
         }
 
-        internal string GetRunDetails(string TestSuitName)
+        internal async Task<string> GetRunDetails(string TestSuitName)
         {
             string RunDetailsJson = string.Empty;
             try
@@ -145,7 +151,7 @@ namespace SeleniumReportAPI.Helper
             return RunDetailsJson;
         }
 
-        internal string GetTestCaseDetails(string TestSuitName, string RunID)
+        internal async Task<string> GetTestCaseDetails(string TestSuitName, string RunID)
         {
             string TestCaseDetailsJson = string.Empty;
             try
@@ -177,7 +183,7 @@ namespace SeleniumReportAPI.Helper
             return TestCaseDetailsJson;
         }
 
-        internal string GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
+        internal async Task<string> GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
         {
             string testCaseStepDetailsJson = string.Empty;
             try
@@ -224,39 +230,7 @@ namespace SeleniumReportAPI.Helper
             return token;
         }
 
-        internal string AddUpdateTestSuitesJson(string testSuiteName, int? testSuiteId = 0)
-        {
-            string result = string.Empty;
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_AddUpdateTestSuites", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestSuiteName", testSuiteName);
-                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.HasRows)
-                            {
-                                reader.Read();
-                                result = reader["result"].ToString();
-                            }
-                        }
-                    }
-                    connection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
-
-        internal string GetTestSuitesJson()
+        internal async Task<string> GetTestSuitesJson()
         {
             string testSuiteListJson = string.Empty;
             try
@@ -286,7 +260,7 @@ namespace SeleniumReportAPI.Helper
             return testSuiteListJson;
         }
 
-        internal string DeleteTestSuites(int testSuiteId)
+        internal async Task<string> AddUpdateTestSuitesJson(Dto_TestSuiteDetailsData model)
         {
             string result = string.Empty;
             try
@@ -294,10 +268,17 @@ namespace SeleniumReportAPI.Helper
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_DeleteTestSuites", connection))
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateTestSuites", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestSuiteId", testSuiteId);
+                        command.Parameters.AddWithValue("@TestSuiteName", model.TestSuiteName);
+                        command.Parameters.AddWithValue("@TestSuiteType", model.TestSuiteType ?? "");
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@SendEmail", model.SendEmail);
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
+                        command.Parameters.AddWithValue("@TestSuiteId", model.TestSuiteId);
+                        command.Parameters.AddWithValue("@SelectedTestCases", string.Join(", ", model.SelectedTestCases));
+                        command.Parameters.AddWithValue("@Description", model.Description);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -317,7 +298,76 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal string GetTestCasesJson()
+        internal async Task<string> DeleteTestSuites(string TestSuiteName)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteTestSuites", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", TestSuiteName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> GetTestSuiteByName(string TestSuiteName)
+        {
+            Dto_TestSuiteDetailsData testSuites = new Dto_TestSuiteDetailsData();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestSuitsByName", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", TestSuiteName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                testSuites.TestSuiteId = Convert.ToInt32(reader["TestSuiteId"]);
+                                testSuites.TestSuiteName = reader["TestSuiteName"].ToString();
+                                testSuites.SendEmail = Convert.ToBoolean(reader["SendEmail"]);
+                                testSuites.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
+                                testSuites.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
+                                testSuites.TestSuiteType = reader["TestSuiteType"].ToString();
+                                testSuites.Description = reader["Description"].ToString();
+                                testSuites.SelectedTestCases = reader["SelectedTestCases"].ToString().Split(", ").Select(x => x).ToList();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return JsonConvert.SerializeObject(testSuites);
+        }
+
+        internal async Task<string> GetTestCasesJson()
         {
             string TestCasesListJson = string.Empty;
             try
@@ -345,6 +395,353 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
             return TestCasesListJson;
+        }
+
+        internal async Task<string> GetApplications()
+        {
+            string ApplicationListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetApplications", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                ApplicationListJson = reader["ApplicationListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ApplicationListJson;
+        }
+
+        internal async Task<string> GetEnvironments()
+        {
+            string EnvironmentListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetEnvironment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                EnvironmentListJson = reader["EnvironmentListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return EnvironmentListJson;
+        }
+
+        internal async Task<string> RunTestCase(string testCaseName, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
+        {
+            string TestCaseJsonData = string.Empty;
+            try
+            {
+                TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return TestCaseJsonData;
+        }
+
+        internal async Task<string> AddUpdateEnvironmentJson(Environments model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateEnvironment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
+                        command.Parameters.AddWithValue("@EnvironmentName", model.EnvironmentName);
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@BrowserId", model.BroswerId);
+                        command.Parameters.AddWithValue("@Baseurl", model.Baseurl);
+                        command.Parameters.AddWithValue("@BasePath", model.BasePath);
+                        command.Parameters.AddWithValue("@DriverPath", model.DriverPath);
+                        command.Parameters.AddWithValue("@CreatedBy", model.CreatedBy);
+                        command.Parameters.AddWithValue("@ModifiedBy", model.ModifiedBy);
+                        command.Parameters.AddWithValue("@Description", model.Description);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> AddUpdateApplicationJson(Applications model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateApplication", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
+                        command.Parameters.AddWithValue("@ApplicationName", model.ApplicationName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> GetRunId(string testSuiteName)
+        {
+            string TestRunName = "";
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_GetRunId", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    connection.Open();
+                    SqlParameter sqlParameter = cmd.Parameters.AddWithValue("@TestSuite", testSuiteName);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Access data from the result set
+                            TestRunName = reader["TestRunName"].ToString();
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                TestRunName = "Error";
+                throw ex;
+            }
+            return TestRunName;
+        }
+
+        internal async Task<string> SaveTestCaseData(string testSuiteJsonData)
+        {
+            string _result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_SaveCustomTestSuiteExecutionData", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@TestSuiteJson", testSuiteJsonData);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            _result = reader["result"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _result = ex.Message;
+            }
+            return _result;
+        }
+
+        internal async Task<Environments> GetEnvironmentById(int Id)
+        {
+            Environments environment = new Environments();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetEnvironmentById", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@EnvironmentId", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                environment.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
+                                environment.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
+                                environment.EnvironmentName = reader["EnvironmentName"].ToString();
+                                environment.DriverPath = reader["DriverPath"].ToString();
+                                environment.BasePath = reader["BasePath"].ToString();
+                                environment.Baseurl = reader["Baseurl"].ToString();
+                                environment.BroswerId = Convert.ToInt32(reader["BroswerId"]);
+                                environment.CreatedBy = reader["CreatedBy"].ToString();
+                                environment.ModifiedBy = reader["ModifiedBy"].ToString();
+                                environment.CreatedOn = Convert.ToDateTime(reader["CreatedOn"]);
+                                environment.ModifiedOn = Convert.ToDateTime(reader["ModifiedOn"]);
+                                environment.Description = reader["Description"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return environment;
+        }
+
+        internal async Task<string> AddUpdateBrowserJson(Browsers model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateBrowser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@BrowserId", model.BrowserId);
+                        command.Parameters.AddWithValue("@BrowserName", model.BrowserName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> GetBrowsers()
+        {
+            string BrowserListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetBrowsers", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                BrowserListJson = reader["Browsers"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return BrowserListJson;
+        }
+
+        internal async Task<string> GetDashboardDetails(string testSuitName, string filterType, int filterValue)
+        {
+            string DashBoardDetailsJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetDashBoardChartDetails", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuitName", testSuitName);
+                        command.Parameters.AddWithValue("@FilterType", filterType);
+                        command.Parameters.AddWithValue("@FilterValue", filterValue);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                DashBoardDetailsJson = reader["DashBoardDetailsJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return DashBoardDetailsJson;
         }
     }
 }

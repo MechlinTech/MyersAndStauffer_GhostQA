@@ -9,7 +9,8 @@ namespace MyersAndStaufferFramework
 {
     public class XmlUtil
     {
-        public XmlUtil() { }
+        public XmlUtil()
+        { }
 
         public string Serialize(object dataToSerialize, string defaultNamespace = "", string header = "")
         {
@@ -59,6 +60,5 @@ namespace MyersAndStaufferFramework
                 return xml;
             }
         };
-
     }
 }

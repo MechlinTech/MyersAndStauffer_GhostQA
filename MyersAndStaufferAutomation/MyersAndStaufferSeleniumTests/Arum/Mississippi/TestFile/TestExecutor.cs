@@ -1,9 +1,4 @@
 ﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 {
@@ -43,8 +38,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         }
         public static string Testername { get; set; }
 
-        
-        public static string ExecuteTestCases(string browsername, string EnvironmentName, string TestCaseName, string baseurl, string basePath, string driverPath, string testerName)
+        public string ExecuteTestCases(string browsername, string EnvironmentName, string TestCaseName, string baseurl, string basePath, string driverPath, string testerName)
         {
             browserName = browsername;
             environmentName = EnvironmentName;
@@ -54,26 +48,23 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             Driverpath = driverPath;
             Testername = testerName;
 
-
             var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
             bsTest.SetUp();
             var loginTest = new LoginTest(); // Instantiate LoginTest using the new keyword to perform Test Case Operation
-            
 
-            var method = loginTest.GetType().GetMethod(string.Concat(testCaseName));
+            var method = loginTest.GetType().GetMethod(testCaseName);
 
             if (method != null)
             {
-                method.Invoke(loginTest,null);              
+                method.Invoke(loginTest, null);
+                bsTest.TearDown();
             }
             else
             {
                 Console.WriteLine($"Method '{testCaseName}' not found.");
             }
-            bsTest.TearDown();
-            return JsonData;
 
+            return JsonData;
         }
     }
 }
-

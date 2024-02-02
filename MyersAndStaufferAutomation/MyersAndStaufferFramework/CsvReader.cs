@@ -139,7 +139,6 @@ namespace MyersAndStaufferFramework
                         // it was doubled (escaped) quotation mark;
                         // do nothing -- we've already skipped first quotation mark
                     }
-
                 }
                 sb.Append(line[i]);
                 i++;

@@ -1,5 +1,5 @@
-CREATE OR ALTER PROCEDURE stp_DeleteTestSuites
-@TestSuiteId			INT
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteTestSuites]
+@TestSuiteName			VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_DeleteTestSuites
@@ -11,8 +11,21 @@ PROC EXEC		:
 				EXEC stp_DeleteTestSuites 1001
 **************************************************************************************/
 BEGIN TRY
-	DELETE FROM tbl_TestSuites
-	WHERE [TestSuiteId] = @TestSuiteId
+	IF EXISTS(SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName)
+	BEGIN
+		IF EXISTS(SELECT 1 FROM tbl_TestCase WHERE [TestSuiteName] = @TestSuiteName)
+		BEGIN
+			DELETE FROM tbl_TestCase WHERE [TestSuiteName] = @TestSuiteName
+		END
+		DELETE FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'This is not a Custom Test Suite' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
 
 	IF @@ERROR = 0
 	BEGIN

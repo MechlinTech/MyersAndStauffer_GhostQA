@@ -1,0 +1,129 @@
+﻿@model List<Browsers>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Application List</title>
+    <!-- Add necessary styles and scripts, such as Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <div class="container mt-4">
+        <h2>Browser List</h2>
+
+        <button type="button" class="btn btn-primary float-end" data-toggle="modal" data-target="#addModal">
+            Add Browser
+        </button>
+        <!-- Table to display the list of items -->
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Browser Id</th>
+                    <th>Browser Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    @foreach (var Browser in Model)
+                    {
+                        <tr>
+                            <td>@Browser.BrowserId</td>
+                            <td>@Browser.BrowserName</td>
+                            <td>
+                                <span data-toggle="modal" data-target="#editModal_@Browser.BrowserId">
+                                    <em class="fas fa-edit mx-2 text-success"></em>
+                                </span>
+                            </td>
+                        </tr>
+
+                        <!-- Edit Modal for each item -->
+                        <div class="modal fade" id="editModal_@Browser.BrowserId" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel">Edit Browser</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="editAppName">Browser Name</label>
+                                            <input type="text" class="form-control" id="@Browser.BrowserId" value="@Browser.BrowserName" />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary float-end" onclick="editBrowser(@Browser.BrowserId)">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Modal for adding new item -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Add Browser</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="newAppName">Browser Name</label>
+                        <input type="text" class="form-control" id="newName" />
+                    </div>
+                    <button type="submit" class="btn btn-primary float-end" onclick="addBrowser()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    function addBrowser() {
+        var _browserName = document.getElementById('newName').value;
+        const model = { BrowserId: 0, BrowserName: _browserName };
+        $.ajax({
+            url: '@Url.Action("AddBrowser", "Browser")',
+            type: "POST",
+            data: model,
+            success: function (result) {
+                if (result.includes("success")) {
+                    location.reload();
+                }
+            }
+        });
+
+
+    }
+
+    function editBrowser(id) {
+        debugger;
+        var _browserName = document.getElementById(id).value;
+        const model = { BrowserId: id, BrowserName: _browserName };
+        $.ajax({
+            url: '@Url.Action("AddBrowser", "Browser")',
+            type: "POST",
+            data: model,
+            success: function (result) {
+                if (result.includes("success")) {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+</script>

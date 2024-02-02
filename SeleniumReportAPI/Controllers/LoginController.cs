@@ -22,7 +22,6 @@ namespace SeleniumReportAPI.Controllers
             _helper = helper;
         }
 
-
         [HttpPost]
         public async Task<IActionResult> LoginAsync(Dto_Login loginDTO)
         {
@@ -33,7 +32,7 @@ namespace SeleniumReportAPI.Controllers
                 {
                     if (!string.IsNullOrEmpty(loginDTO.Email) && !string.IsNullOrEmpty(loginDTO.Password))
                     {
-                        string result = _helper.VerifyUser(user.Email, user.PasswordHash);
+                        string result = await _helper.VerifyUser(user.Email, user.PasswordHash);
                         if (result.Contains("Success"))
                         {
                             var userRoles = await _userManager.GetRolesAsync(user);
@@ -60,17 +59,17 @@ namespace SeleniumReportAPI.Controllers
                         }
                         else
                         {
-                            return Ok(new Dto_Response { Status = "false", Message = result });
+                            return Ok(new Dto_Response { status = "false", message = result });
                         }
                     }
                     else
                     {
-                        return Ok(new Dto_Response { Status = "false", Message = "User Name or Password Must not be Blank" });
+                        return Ok(new Dto_Response { status = "false", message = "User Name or Password Must not be Blank" });
                     }
                 }
                 else
                 {
-                    return Ok(new Dto_Response { Status = "false", Message = "User Name or Password is Wrong" });
+                    return Ok(new Dto_Response { status = "false", message = "User Name or Password is Wrong" });
                 }
             }
             catch

@@ -1,0 +1,49 @@
+﻿@model TestSeleniumReport.Models.Environments
+
+@{
+    Layout = "_Layout";
+    var addOrEditPage = ViewBag.AddOrEditPage.ToString();
+}
+
+
+
+<form asp-action="@(addOrEditPage == "Add" ? "Add" : "Edit" )" method="post">
+    <input asp-for="EnvironmentId" hidden />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <table>
+        <tr>
+            <td><label class="control-label">Environment Name</label></td>
+            <td> @Html.TextBoxFor(model => model.EnvironmentName, new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td> <label class="control-label">Application Name</label></td>
+            <td> @Html.DropDownListFor(model => model.ApplicationId, (SelectList)ViewBag.Applications, "Select Application", new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td> <label class="control-label">Browser Name</label></td>
+            <td> @Html.DropDownListFor(model => model.BroswerId, (SelectList)ViewBag.Browsers, "Select Browser", new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td><label class="control-label">Baseurl</label></td>
+            <td> @Html.TextBoxFor(model => model.Baseurl, new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td><label class="control-label">BasePath</label></td>
+            <td> @Html.TextBoxFor(model => model.BasePath, new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td><label class="control-label">DriverPath</label></td>
+            <td> @Html.TextBoxFor(model => model.DriverPath, new { @class = "form-control" })</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a type="button" class="btn btn-secondary" asp-action="Index">Cancel</a>
+            </td>
+        </tr>
+    </table>
+</form>
+@section Scripts
+    {
+    <partial name="_ValidationScriptsPartial" />;
+    }

@@ -14,9 +14,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
 
         public virtual string PageURL { get; set; } = "/";
 
-
         public IWebDriver driver;
-        IWebElement element = null;
+        private IWebElement element = null;
 
         public IDictionary<string, object> vars { get; private set; }
 
@@ -25,9 +24,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
         public BasePage(bool skipLoad = false)
         {
             EnvironmentHelper EnvironmentHelper = EnvironmentConfigUtils.GetEnvironmentForConfig();
-
             BaseURL = TestExecutor.Baseurl;
-
             driver = Browser.Driver;
             js = (IJavaScriptExecutor)driver;
             vars = new Dictionary<string, object>();
@@ -98,7 +95,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages
             int randomInt = randomGenerator.Next(10000);
             string email = username + randomInt + "@gmail.com";
             return email;
-
         }
     }
 }

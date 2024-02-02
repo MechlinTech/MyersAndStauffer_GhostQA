@@ -35,12 +35,13 @@ namespace MyersAndStaufferFramework
             { AzureConnectionStringType.Custom, "CUSTOMCONNSTR_" },
         };
 
-        public IConfiguration FullConfiguration {  get { return _fullConfiguration; } }
+        public IConfiguration FullConfiguration
+        { get { return _fullConfiguration; } }
 
         public string ConnectionStringTypeToPrefix(AzureConnectionStringType t) => connStringPrefixes[t];
 
         /// <summary>
-        /// Initialize the helper with your collection 
+        /// Initialize the helper with your collection
         /// </summary>
         /// <param name="appSettings">Your AppSettings as defined in Environment vars, CLI args or appSettings.json</param>
         public EnvironmentHelper(NameValueCollection appSettings) : this(appSettings, new NameValueCollection(), null) { }
@@ -154,7 +155,7 @@ namespace MyersAndStaufferFramework
         }
 
         /// <summary>
-        /// Get an app setting for any environment. Precedence: 1) command line, 2) Azure setting (APPSETTING_ prefixed), 3) normal env variable, 
+        /// Get an app setting for any environment. Precedence: 1) command line, 2) Azure setting (APPSETTING_ prefixed), 3) normal env variable,
         /// 4) app.config or web.config file
         /// </summary>
         /// <param name="key"></param>
@@ -183,7 +184,7 @@ namespace MyersAndStaufferFramework
         }
 
         /// <summary>
-        /// Get a connection string for worker environment. Precedence: 1) Azure setting (type prefixed), 2) normal env variable, 
+        /// Get a connection string for worker environment. Precedence: 1) Azure setting (type prefixed), 2) normal env variable,
         /// 3) local config file
         /// </summary>
         /// <param name="key"></param>
@@ -200,7 +201,7 @@ namespace MyersAndStaufferFramework
             IConfiguration config = EnvironmentHelperUtils.GetCurrentConfiguration();
 
             EnvironmentHelper environment = new EnvironmentHelper(new NameValueCollection(), new NameValueCollection(), config);
-            
+
             NameValueCollection connStrings = EnvironmentHelperUtils.GetConnectionStrings(config);
             environment._connectionStrings = connStrings;
 
@@ -293,7 +294,6 @@ namespace MyersAndStaufferFramework
             string cacheKey = $"EnvironmentHelper-GetCurrentConfiguration{configName}";
 
             return GetOrAddItem(cacheKey, DateTime.UtcNow.AddMinutes(60), buildConfig);
-
         }
 
         private static NameValueCollection ReadSectionFromConfig(IConfiguration config, string name)

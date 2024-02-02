@@ -1,79 +1,179 @@
 ﻿<html>
+
 <body>
-    <div class="accordion">
-        @{
-            if (Model != null)
-            {
-                var DashboardChartList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_DashboardChartDetail>>(Model);
 
-                <div class="col-md-5 card w-25" style="margin-left:10px;">
-                    <canvas id="dashBoardChart" width="800" height="400"></canvas>
-                    <script>
-                        var dates = DashboardChartList.map(item => item.TestRunStartDateTime);
-                        var totalTestCases = DashboardChartList.map(item => item.TotalTestCase);
-                        var passedTestCases = DashboardChartList.map(item => item.TotalPassedTestCase);
-                        var failedTestCases = DashboardChartList.map(item => item.TotalFailedTestCase);
+    @{
 
+        List<TestSeleniumReport.DTO_s.Dto_DashboardChartDetail> DashboardChartList = null;
+ 
+        if (Model != null)
 
+        {
 
-                        var ctx = document.getElementById('dashBoardChart').getContext('2d');
-                        var myChart = new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: dates,
-                                datasets: [
-                                    {
-                                        label: 'Total Test Cases',
-                                        borderColor: 'blue',
-                                        data: totalTestCases,
-                                        fill: false
-                                    },
-                                    {
-                                        label: 'Passed Test Cases',
-                                        borderColor: 'green',
-                                        data: passedTestCases,
-                                        fill: false
-                                    },
-                                    {
-                                        label: 'Failed Test Cases',
-                                        borderColor: 'red',
-                                        data: failedTestCases,
-                                        fill: false
-                                    }
-                                ]
-                            },
-                            options: {
-                                title: {
-                                    display: true,
-                                    text: 'Test Cases Over Time'
-                                },
-                                scales: {
-                                    xAxes: [{
-                                        type: 'time',
-                                        time: {
-                                            unit: 'day',
-                                            displayFormats: {
-                                                day: 'MMM DD'
-                                            }
-                                        },
-                                        scaleLabel: {
-                                            display: true,
-                                            labelString: 'Date'
-                                        }
-                                    }],
-                                    yAxes: [{
-                                        scaleLabel: {
-                                            display: true,
-                                            labelString: 'Number of Test Cases'
-                                        }
-                                    }]
-                                }
-                            }
-                        });
-                    </script>
-                </div>
-            }
+            DashboardChartList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_DashboardChartDetail>>(Model);
+
         }
+
+    }
+ 
+    <div class="card col-md-10">
+
+        <div class="card-header mb-2">
+
+            <label class="m-2 p-2" for="Result">Results</label>
+
+            <input type="radio" id="runBased" name="chartType" onchange="GetDashboardChartDetails('@ViewBag.TestSuites')" value="runs">
+
+            <label class="m-2 p-2" for="runBased">Runs</label>
+
+            <input type="radio" id="daysBased" name="chartType" onchange="GetDashboardChartDetails('@ViewBag.TestSuites')" value="days">
+
+            <label class="m2 p-2" for="daysBased">Days</label>
+
+        </div>
+
+        <div class="d-flex">
+
+            <label for="selectDays">Select Number To Show Report:</label>
+
+            <select class="dropdown-header dropdown-item w-25" onchange="GetDashboardChartDetails('@ViewBag.TestSuites')" id="selectDays">
+
+                <option value="7">7</option>
+
+                <option value="15">15</option>
+
+                <option value="30">30</option>
+
+                <option value="45">45</option>
+
+                <option value="60">60</option>
+
+                <option value="90">90</option>
+
+            </select>
+
+        </div>
+
+        <hr />
+
+        <canvas id="dashBoardChart" width="800" height="400"></canvas>
+
+        <script>
+
+            var dates = [];
+
+            var totalTestCases = [];
+
+            var passedTestCases = [];
+
+            var failedTestCases = [];
+ 
+            @if (DashboardChartList != null)
+
+            {
+
+                @:dates = JSON.parse('@Html.Raw(Json.Serialize(DashboardChartList.Select(item => item.TestRunStartDate.ToString("dd/MM"))))');
+
+                @:totalTestCases = JSON.parse('@Html.Raw(Json.Serialize(DashboardChartList.Select(item => item.TotalTestCase)))');
+
+                @:passedTestCases = JSON.parse('@Html.Raw(Json.Serialize(DashboardChartList.Select(item => item.TotalPassedTestCase)))');
+
+                @:failedTestCases = JSON.parse('@Html.Raw(Json.Serialize(DashboardChartList.Select(item => item.TotalFailedTestCase)))');
+
+            }
+ 
+            var ctx = document.getElementById('dashBoardChart').getContext('2d');
+ 
+            var myChart = new Chart(ctx, {
+
+                type: 'bar',
+
+                data: {
+
+                    labels: dates,
+
+                    datasets: [
+
+                        {
+
+                            label: 'Total Test Cases',
+
+                            backgroundColor: 'blue',
+
+                            data: totalTestCases
+
+                        },
+
+                        {
+
+                            label: 'Passed Test Cases',
+
+                            backgroundColor: 'green',
+
+                            data: passedTestCases
+
+                        },
+
+                        {
+
+                            label: 'Failed Test Cases',
+
+                            backgroundColor: 'red',
+
+                            data: failedTestCases
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    title: {
+
+                        display: true,
+
+                        text: 'Test Cases Execution Trend'
+
+                    },
+
+                    scales: {
+
+                        xAxes: [{
+
+                            scaleLabel: {
+
+                                display: true,
+
+                                labelString: 'Timeline'
+
+                            }
+
+                        }],
+
+                        yAxes: [{
+
+                            scaleLabel: {
+
+                                display: true,
+
+                                labelString: 'Test Cases Count'
+
+                            }
+
+                        }]
+
+                    }
+
+                }
+
+            });
+
+        </script>
+
     </div>
+
 </body>
+
 </html>

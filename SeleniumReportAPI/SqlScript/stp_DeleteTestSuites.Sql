@@ -1,5 +1,5 @@
 CREATE OR ALTER PROCEDURE stp_DeleteTestSuites
-@TestSuiteId			INT
+@TestSuiteName			VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_DeleteTestSuites
@@ -12,7 +12,7 @@ PROC EXEC		:
 **************************************************************************************/
 BEGIN TRY
 	DELETE FROM tbl_TestSuites
-	WHERE [TestSuiteId] = @TestSuiteId
+	WHERE [TestSuiteName] = @TestSuiteName
 
 	IF @@ERROR = 0
 	BEGIN

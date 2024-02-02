@@ -16,7 +16,7 @@ namespace MyersAndStaufferFramework
         public string TestCaseSteps { get; set; }
         public string TesterName { get; set; }
         public string TestEnvironment { get; set; }
-        //public string TestFeature { get; set; } 
+        //public string TestFeature { get; set; }
     }
 
     public class TestStepColumns

@@ -1,10 +1,6 @@
-﻿using AventStack.ExtentReports;
-using MyersAndStaufferFramework;
+﻿using MyersAndStaufferFramework;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule;
-using MyersAndStaufferSeleniumTests.Utils;
 using NUnit.Framework;
-using System;
-using System.Linq.Expressions;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 {
@@ -21,13 +17,12 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         [Test, Order(0)]
         public void Verify_User_Is_Able_To_Login()
         {
-
-            _testData.TestCaseName = "VerifyLoginOK";
+            _testData.TestCaseName = "Verify_User_Is_Able_To_Login";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
-            VideoRecorder.CreateRecording(TestExecutor.Basepath);
+           // VideoRecorder.CreateRecording(TestExecutor.Basepath);
             var logInPage = new LoginPage();
-            _testData.TestCaseVideoURL = @"\" + (VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString());
-            Console.WriteLine(_testData.TestCaseVideoURL);
+            //_testData.TestCaseVideoURL = @"\" + (VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString());
+           // Console.WriteLine(_testData.TestCaseVideoURL);
 
             var dateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestRunStartDateTime = dateTime;
@@ -59,17 +54,15 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             }
         }
 
-      
         [Test, Order(1)]
         public void VerifyLoginOK2()
         {
-            _testData.TestCaseName = "VerifyLoginOK";
-            _testData.TestSuiteName = "ClockSession";
+            _testData.TestCaseName = "VerifyLoginOK2";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
 
-            VideoRecorder.CreateRecording(TestExecutor.Basepath);
+           // VideoRecorder.CreateRecording(TestExecutor.Basepath);
             var logInPage = new LoginPage();
-            _testData.TestCaseVideoURL = @"\" + (VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString());
+            //_testData.TestCaseVideoURL = @"\" + (VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString());
             var dateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestRunStartDateTime = dateTime;
 
@@ -86,6 +79,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             logInPage.SetPassword("Test");
             try
             {
+                _testData.TestCaseStatus = "Passed";
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Submit button Test" });
                 logInPage.SubmitLogIn();
             }
@@ -103,12 +97,11 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         public void Verify_User_is_able_to_Login_Successfully()
         {
             _testData.TestCaseName = "Verify_User_is_able_to_Login_Successfully";
-            _testData.TestSuiteName = "ClockSession";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
 
-            VideoRecorder.CreateRecording(TestExecutor.Basepath);
+            //VideoRecorder.CreateRecording(TestExecutor.Basepath);
             var logInPage = new LoginPage();
-            _testData.TestCaseVideoURL = @"\" + (VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString());
+           // _testData.TestCaseVideoURL = @"\" + (VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString());
             var dateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestRunStartDateTime = dateTime;
 
@@ -129,9 +122,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 
             try
             {
+                _testData.TestCaseStatus = "Failed";
                 Assert.IsTrue(logInPage.LoginSuccess());
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Login Success" });
-
             }
             catch (Exception ex)
             {

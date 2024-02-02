@@ -9,20 +9,20 @@ namespace MyersAndStaufferFramework
     /// Helper to simulate errors in various places of the code based on if the helper contains a specific magic string
     /// </summary>
     /// <remarks>
-    /// For example, lets say you have a function with many codepaths, and you want to simulate what happens if there's an 
+    /// For example, lets say you have a function with many codepaths, and you want to simulate what happens if there's an
     /// error in a specific place.  A good example is if during checkout the server has an error inserting into the db (e.g. fatal error selling seats).
-    /// 
+    ///
     /// To simulate this, you could for example add a special string to the order notes and have the
     /// checkout procedure use this class to help it generate a sample exception right at that exact place.
-    /// 
+    ///
     /// Order note:  fgen=nliven-db-fail
-    /// 
+    ///
     /// In code right before saving an order: fgen.ExecuteScenarioIfSpecified("nliven-db-fail", () => throw new Exception("fgen: simulating Nliven db nlvn_CheckOut failure"));
     /// </remarks>
     public class QAFailureGenerator
     {
-        Action<string> _logger = null;
-        List<string> _scenariosToTest = null;
+        private Action<string> _logger = null;
+        private List<string> _scenariosToTest = null;
 
         public static readonly string FGEN_TOKEN = "fgen";
 
@@ -70,7 +70,7 @@ namespace MyersAndStaufferFramework
         public static IEnumerable<string> ScanTextForScenarios(string inputText)
         {
             var ms = Regex.Matches(inputText ?? "", $"{FGEN_TOKEN}=(.*)", RegexOptions.IgnoreCase & RegexOptions.Multiline);
-            foreach(Match m in ms)
+            foreach (Match m in ms)
             {
                 string scenario = m.Groups.Count == 2 ? m.Groups[1].Value : "[err]";
                 yield return scenario;

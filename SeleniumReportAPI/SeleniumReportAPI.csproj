@@ -1,59 +1,261 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>0900b981-f067-41f1-9ad8-7577741b5e82</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>0900b981-f067-41f1-9ad8-7577741b5e82</UserSecretsId>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="SqlScript\stp_AddUpdateTestSuites.Sql" />
-    <None Remove="SqlScript\stp_DeleteTestSuites.Sql" />
-    <None Remove="SqlScript\stp_GetCustomTestSuites.Sql" />
-    <None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
-    <None Remove="SqlScript\stp_GetRunDetails.Sql" />
-    <None Remove="SqlScript\stp_GetRunId.Sql" />
-    <None Remove="SqlScript\stp_GetTestCaseDetails.Sql" />
-    <None Remove="SqlScript\stp_GetTestCases.sql" />
-    <None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
-    <None Remove="SqlScript\stp_GetTestSuites.Sql" />
-    <None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
-    <None Remove="SqlScript\stp_UpsertTableData.Sql" />
-    <None Remove="SqlScript\stp_ValidateUser.Sql" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Content Remove="wwwroot\selenium_react_app\.env" />
+	  <Content Remove="wwwroot\selenium_react_app\package-lock.json" />
+	  <Content Remove="wwwroot\selenium_react_app\package.json" />
+	  <Content Remove="wwwroot\selenium_react_app\public\favicon.ico" />
+	  <Content Remove="wwwroot\selenium_react_app\public\images\dummyImage.png" />
+	  <Content Remove="wwwroot\selenium_react_app\public\images\GhostQA-Logo.png" />
+	  <Content Remove="wwwroot\selenium_react_app\public\index.html" />
+	  <Content Remove="wwwroot\selenium_react_app\public\logo192.png" />
+	  <Content Remove="wwwroot\selenium_react_app\public\logo512.png" />
+	  <Content Remove="wwwroot\selenium_react_app\public\manifest.json" />
+	  <Content Remove="wwwroot\selenium_react_app\public\robots.txt" />
+	  <Content Remove="wwwroot\selenium_react_app\src\App.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\Accordion\CustomStatusCell.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\Accordion\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\Accordion\style.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\Accordion\TableData.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\BrowserIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\DashBoardIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\DeleteIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\DocumentIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\Environment.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\index.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\LockIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\LogoIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\LogoutIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\MenuIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\RoleIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\StyledDashBoardIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\UserIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\icons\UserManagementIcon.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\comman\SearchField\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\index.css" />
+	  <Content Remove="wwwroot\selenium_react_app\src\index.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\Layout\Footer.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\Layout\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\Layout\NavBar.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\Layout\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\Layout\Tabs.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Auth\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Auth\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Dashboard\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Dashboard\Modal\AddSuite.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Dashboard\Modal\DeleteSuite.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Dashboard\Modal\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Dashboard\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\NotFound.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\Application\AddNewApplication.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\Application\CustomTable.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\Application\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\Application\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\Browser\AddNewBrowser.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\Browser\CustomTable.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\Browser\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\Browser\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\ExecutionEnvironment\AddNewEnvironment.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\ExecutionEnvironment\EnvironmentTable.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\ExecutionEnvironment\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\ExecutionEnvironment\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\RoleManagement\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\RoleManagement\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\UserManagement\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\Component\UserManagement\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\Settings\styles.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\TestSuite\AddTestSuite.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\TestSuite\EditTestSuite.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\TestSuite\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\TestSuite\TestCaseTable.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\CustomeTableChell.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\CustomVideoChell.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\DonutChart.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\index.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\styles.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\redux\actions\authActions.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\redux\actions\seleniumAction.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\redux\actions\settingAction.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\redux\redusers\authReduser.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\redux\redusers\seleniumReduser.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\redux\redusers\settingsReduser.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\redux\store.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\Routes\Navigations.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\Routes\Stacks\Api.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\Routes\Stacks\Functional.jsx" />
+	  <Content Remove="wwwroot\selenium_react_app\src\Routes\Stacks\style.js" />
+	  <Content Remove="wwwroot\selenium_react_app\src\utils\authheader.js" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
-    <Content Include="SqlScript\stp_DeleteTestSuites.Sql" />
-    <Content Include="SqlScript\stp_GetCustomTestSuites.Sql" />
-    <Content Include="SqlScript\stp_ValidateUser.Sql" />
-    <Content Include="SqlScript\stp_GetDashBoardDetails.Sql" />
-    <Content Include="SqlScript\stp_GetRunDetails.Sql" />
-    <Content Include="SqlScript\stp_GetRunId.Sql" />
-    <Content Include="SqlScript\stp_GetTestCaseDetails.Sql" />
-    <Content Include="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
-    <Content Include="SqlScript\stp_GetTestSuites.Sql" />
-    <Content Include="SqlScript\stp_UpdateTestStepData.Sql" />
-    <Content Include="SqlScript\stp_UpsertTableData.Sql" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="SqlScript\stp_AddUpdateTestSuites.Sql" />
+		<None Remove="SqlScript\stp_DeleteTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetApplications.sql" />
+		<None Remove="SqlScript\stp_GetCustomTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
+		<None Remove="SqlScript\stp_GetEnvironment.sql" />
+		<None Remove="SqlScript\stp_GetRunDetails.Sql" />
+		<None Remove="SqlScript\stp_GetRunId.Sql" />
+		<None Remove="SqlScript\stp_GetTestCaseDetails.Sql" />
+		<None Remove="SqlScript\stp_GetTestCases.sql" />
+		<None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
+		<None Remove="SqlScript\stp_GetTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetTestSuitsByName.Sql" />
+		<None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
+		<None Remove="SqlScript\stp_UpsertTableData.Sql" />
+		<None Remove="SqlScript\stp_ValidateUser.Sql" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="SqlScript\stp_GetTestCases.sql" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeleteTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetCustomTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_ValidateUser.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetDashBoardDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetRunDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetRunId.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestCaseDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_UpdateTestStepData.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_UpsertTableData.Sql" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.25" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.25" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.25" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.25">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="SqlScript\stp_GetApplications.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetEnvironment.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestCases.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestSuitsByName.Sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.25">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.1" />
+
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\MyersAndStaufferSeleniumTests.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\selenium_react_app\.env" />
+	  <None Include="wwwroot\selenium_react_app\package-lock.json" />
+	  <None Include="wwwroot\selenium_react_app\package.json" />
+	  <None Include="wwwroot\selenium_react_app\public\favicon.ico" />
+	  <None Include="wwwroot\selenium_react_app\public\images\dummyImage.png" />
+	  <None Include="wwwroot\selenium_react_app\public\images\GhostQA-Logo.png" />
+	  <None Include="wwwroot\selenium_react_app\public\index.html" />
+	  <None Include="wwwroot\selenium_react_app\public\logo192.png" />
+	  <None Include="wwwroot\selenium_react_app\public\logo512.png" />
+	  <None Include="wwwroot\selenium_react_app\public\manifest.json" />
+	  <None Include="wwwroot\selenium_react_app\public\robots.txt" />
+	  <None Include="wwwroot\selenium_react_app\src\App.js" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\Accordion\CustomStatusCell.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\Accordion\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\Accordion\style.js" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\Accordion\TableData.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\BrowserIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\DashBoardIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\DeleteIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\DocumentIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\Environment.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\index.js" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\LockIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\LogoIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\LogoutIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\MenuIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\RoleIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\StyledDashBoardIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\UserIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\icons\UserManagementIcon.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\comman\SearchField\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\index.css" />
+	  <None Include="wwwroot\selenium_react_app\src\index.js" />
+	  <None Include="wwwroot\selenium_react_app\src\Layout\Footer.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\Layout\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\Layout\NavBar.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\Layout\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\Layout\Tabs.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Auth\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Auth\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Dashboard\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Dashboard\Modal\AddSuite.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Dashboard\Modal\DeleteSuite.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Dashboard\Modal\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Dashboard\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\NotFound.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\Application\AddNewApplication.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\Application\CustomTable.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\Application\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\Application\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\Browser\AddNewBrowser.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\Browser\CustomTable.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\Browser\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\Browser\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\ExecutionEnvironment\AddNewEnvironment.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\ExecutionEnvironment\EnvironmentTable.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\ExecutionEnvironment\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\ExecutionEnvironment\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\RoleManagement\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\RoleManagement\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\UserManagement\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\Component\UserManagement\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\Settings\styles.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\TestSuite\AddTestSuite.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\TestSuite\EditTestSuite.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\TestSuite\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\TestSuite\TestCaseTable.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\CustomeTableChell.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\CustomVideoChell.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\DonutChart.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\index.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\pages\TestSuitsDetails\styles.js" />
+	  <None Include="wwwroot\selenium_react_app\src\redux\actions\authActions.js" />
+	  <None Include="wwwroot\selenium_react_app\src\redux\actions\seleniumAction.js" />
+	  <None Include="wwwroot\selenium_react_app\src\redux\actions\settingAction.js" />
+	  <None Include="wwwroot\selenium_react_app\src\redux\redusers\authReduser.js" />
+	  <None Include="wwwroot\selenium_react_app\src\redux\redusers\seleniumReduser.js" />
+	  <None Include="wwwroot\selenium_react_app\src\redux\redusers\settingsReduser.js" />
+	  <None Include="wwwroot\selenium_react_app\src\redux\store.js" />
+	  <None Include="wwwroot\selenium_react_app\src\Routes\Navigations.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\Routes\Stacks\Api.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\Routes\Stacks\Functional.jsx" />
+	  <None Include="wwwroot\selenium_react_app\src\Routes\Stacks\style.js" />
+	  <None Include="wwwroot\selenium_react_app\src\utils\authheader.js" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\linux\selenium-manager" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\macos\selenium-manager" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\windows\selenium-manager.exe" />
+	</ItemGroup>
 
 </Project>
