@@ -299,7 +299,7 @@ export const AddUpdateApplication = (data)=>{
 }
 
 export const AddUpdateBrowser = (data)=>{
-  console.log("inside addupdate browser")
+  
   return async ()=>{
     try {
       const res = await axios.post(
