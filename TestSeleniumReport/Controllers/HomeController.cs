@@ -124,7 +124,7 @@ namespace TestSeleniumReport.Controllers
                     Models.Environments _environmentDetails = _helper.GetEnvironmentById(Convert.ToInt32(model.EnvironmentId));
                     foreach (var testCaseName in model.SelectedTestCases)
                     {
-                        string _testCaseJsonData = DBHelper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
+                        string _testCaseJsonData = _helper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
                         if (!string.IsNullOrEmpty(_testCaseJsonData))
                         {
                             Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
@@ -207,7 +207,7 @@ namespace TestSeleniumReport.Controllers
             {
                 foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
                 {
-                    string _testCaseJsonData = DBHelper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
+                    string _testCaseJsonData = _helper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
                     if (!string.IsNullOrEmpty(_testCaseJsonData))
                     {
                         Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);

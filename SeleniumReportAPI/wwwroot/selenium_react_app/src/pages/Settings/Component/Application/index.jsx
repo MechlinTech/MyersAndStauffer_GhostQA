@@ -7,38 +7,23 @@ import { CustomTable } from "./CustomTable";
 import AddNewApplication from "./AddNewApplication";
 import { useDispatch, useSelector } from "react-redux";
 import { GetApplication } from "../../../../redux/actions/seleniumAction";
-const staticData = [
-  {
-    projectName: "ClockSession",
-    applicationName: "Test App",
-    email: "test@gmail.com",
-    runnerPath: "D://test/",
-  },
-  {
-    projectName: "Ghost Qa",
-    applicationName: "Test App",
-    email: "test@gmail.com",
-    runnerPath: "D://test/",
-  },
-];
 
 export default function Application() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [addOredit, setaddOredit] = useState("");
-  const [applicationToEdit, setApplicationToEdit] = useState({});
+  const [applicationToEdit, setApplicationToEdit] = useState();
   const [showAddNewApplication, setShowAddNewApplication] = useState(false);
   const { applicationList } = useSelector((state) => state.selenium);
 
-  // useEffect(() => {
-  //   dispatch(GetApplication())
-  // }, [])
+  useEffect(() => {
+    dispatch(GetApplication())
+  }, [applicationList])
 
   const handleAddApplication = () => {
     setShowAddNewApplication(true);
     setaddOredit("Add");
-    console.log("Adding Environment...");
   };
 
   const handleEditApplication = (row) => {
@@ -49,13 +34,13 @@ export default function Application() {
 
   const handleBackFromAddNew = () => {
     setShowAddNewApplication(false);
-    setApplicationToEdit({})
+    setApplicationToEdit(null)
   };
 
   const filteredData = applicationList?.filter((data) =>
     data?.ApplicationName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
-  console.log("filtered : ", filteredData);
+  
   return (
     <>
       {showAddNewApplication ? (

@@ -1,25 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Card } from "@material-ui/core";
 import { useStyles } from "./styles";
 import { Button } from "@mui/material";
 import SearchField from "../../../../comman/SearchField";
 import { CustomTable } from "./CustomTable";
 import AddNewBrowser from "./AddNewBrowser";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { GetBrowser } from "../../../../redux/actions/seleniumAction";
 
 export default function Browser() {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const [searchTerm, setSearchTerm] = useState("");
   const [addOredit, setaddOredit] = useState("");
   const [showAddNewBrowser, setShowAddNewBrowser] = useState(false);
-  const [browserToEdit, setBrowserToEdit] = useState({});
+  const [browserToEdit, setBrowserToEdit] = useState(null);
   const { browserList } = useSelector((state) => state.selenium);
 
+  useEffect(()=>{
+    dispatch(GetBrowser())
+  })
   const handleAddBrowser = () => {
     setShowAddNewBrowser(true);
     setaddOredit("Add");
   };
-
+ 
   const handleEditBrowser = (row) => {
     setBrowserToEdit(row)
     setaddOredit("Edit");
@@ -28,7 +33,7 @@ export default function Browser() {
 
   const handleBackFromAddNew = () => {
     setShowAddNewBrowser(false);
-    setBrowserToEdit({})
+    setBrowserToEdit(null)
   };
 
 
