@@ -22,7 +22,7 @@ export default function Settings() {
   const dispatch = useDispatch();
   const [selectedItem, setSelectedItem] = useState(() => {
     // Initialize with the value from localStorage or a default value
-    const storedItem = localStorage.getItem("selectedCategory");
+    const storedItem = sessionStorage.getItem("selectedCategory");
     return storedItem
       ? flatted.parse(storedItem)
       : {
@@ -39,7 +39,7 @@ export default function Settings() {
   }, []);
 
   const handleItemClick = (category) => {
-    localStorage.setItem("selectedCategory", flatted.stringify(category));
+    sessionStorage.setItem("selectedCategory", flatted.stringify(category));
     setSelectedItem(category);
   };
 
