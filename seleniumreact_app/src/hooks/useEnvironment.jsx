@@ -27,8 +27,13 @@ export default function  useEnvironment ()  {
       };
     
       const handleEditEnvironment = (rowData) => {
-        setShowEditNewEnvironment(true);
         setEditEnvironmentData(rowData);
+        // setShowEditNewEnvironment(true);
+        console.log("editdate",editEnvironmentData);
+        navigate("/setting/edit-environment", { state: { editEnvironmentData: rowData } });
+        console.log("editdata",editEnvironmentData);
+    
+    
       };
     
       const handleBackFromAddNew = () => {

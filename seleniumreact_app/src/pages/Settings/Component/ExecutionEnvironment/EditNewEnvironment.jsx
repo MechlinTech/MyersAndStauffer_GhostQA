@@ -14,10 +14,19 @@ import {
 import { useDispatch ,useSelector} from "react-redux";
 import { AddUpdateEnvironment } from "../../../../redux/actions/settingAction";
 import { GetApplication, GetBrowser } from "../../../../redux/actions/seleniumAction";
+import { useNavigate,useLocation } from "react-router-dom";
 
-export default function EditNewEnvironment({ onBack ,rowData}) {
+
+export default function EditNewEnvironment({ onBack }) {
+  const location = useLocation();
+  const rowData = location.state.editEnvironmentData;
+
+
     console.log("row",rowData);
+   
   const dispatch=useDispatch();
+  const navigate=useNavigate();
+
   const [selectedApplication, setSelectedApplication] = useState(() => {
     return rowData
       ? { value: rowData.ApplicationId, label: rowData.ApplicationName }
@@ -78,46 +87,23 @@ export default function EditNewEnvironment({ onBack ,rowData}) {
   const handleSubmit = () => {
     let payload = {
       environmentName: formData.environmentName,
-      description: formData.environmentDescription,
-      applicationName:formData.selectedApplication.label,
-      browserName:formData.selectedBrowser.label,
+      description: formData.Description,
+      applicationName:formData.selectedApplication,
+      browserName:formData.selectedBrowser,
       driverPath:formData.DriverPath,
       basePath:formData.BasePath,
       baseurl:formData.Baseurl
     }
-    let error = {};
-    if (!formData.environmentName.trim()) {
-      error.name = "Environment Name is required";
-    }
-    if (!formData.selectedApplication) {
-      error.application = "Application is required";
-    }
-    if (!formData.selectedBrowser) {
-      error.application = "Browser is required";
-    }
-    if (!formData.environmentDescription) {
-      error.description = "Description is required";
-    }
-    if (!formData.Baseurl) {
-      error.baseUrl = "Base Url is required";
-    }
-    if (!formData.DriverPath) {
-      error.driverPath = "Driver Path is required";
-    }
-    if (!formData.BasePath) {
-      error.basePath = "Base Path is required";
-    }
-    // Update error state
-    setError(error);
+   
 
     // Check if there are any errors
-    if (Object.keys(error).length === 0) {
+    
         
       console.log("handleSubmit", formData);
       dispatch(AddUpdateEnvironment(payload));
-    }
+    
 
-    console.log("handleSubmit", error, formData);
+    
   };
   
 
@@ -282,7 +268,7 @@ console.log("selectdapp",formData.selectedApplication);
                     container: (provided) => ({
                       ...provided,
                       backgroundColor: "rgb(242, 242, 242)",
-                      zIndex: 9999,
+                      zIndex: 999,
                     }),
                     control: (provided, state) => ({
                       ...provided,
@@ -327,7 +313,7 @@ console.log("selectdapp",formData.selectedApplication);
                     container: (provided) => ({
                       ...provided,
                       backgroundColor: "rgb(242, 242, 242)",
-                      zIndex: 9999,
+                      zIndex: 999,
                     }),
                     control: (provided, state) => ({
                       ...provided,
@@ -510,7 +496,7 @@ console.log("selectdapp",formData.selectedApplication);
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={onBack}
+              onClick={()=> navigate('/settings/environment')}
               sx={{
                 backgroundColor: "rgb(101, 77, 247)",
                 "&:hover": {
