@@ -23,7 +23,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSpaStaticFiles(configuration =>
 {
-    configuration.RootPath = "../seleniumreact_app/build"; // Update with your React app's build folder
+    configuration.RootPath = "wwwroot/selenium_react_app/build"; // Update with your React app's build folder
 });
 
 builder.Services.AddCors(options =>
@@ -97,7 +97,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -125,7 +125,7 @@ app.UseEndpoints(endpoints =>
 
 app.UseSpa(spa =>
 {
-    spa.Options.SourcePath = "../seleniumreact_app"; // Update with your React app's folder name
+    spa.Options.SourcePath = "wwwroot/selenium_react_app"; // Update with your React app's folder name
 
     if (app.Environment.IsDevelopment())
     {
