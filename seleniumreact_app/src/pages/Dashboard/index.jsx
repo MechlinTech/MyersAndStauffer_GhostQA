@@ -64,6 +64,9 @@ export default function Dashboard() {
     dispatch(getTestSuites());
   }, []);
 
+  useEffect(() => {
+    dispatch(getTestSuites());
+  }, [openDelModal]);
   const filteredTestSuiteData = testSuits?.filter((suite) =>
     suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
@@ -175,6 +178,7 @@ export default function Dashboard() {
                 </Grid>
               </Grid>
               <Grid
+              className={classess.remScrollbar}
                 item
                 style={{ overflow: "auto", maxHeight: "calc(70vh - 50px)" }}
               >

@@ -67,7 +67,6 @@ export default function EditTestSuite() {
     setName(suiteToEdit.TestSuiteName);
     setSelectedApplication(()=>{
      const x =  applicationList.find((app)=> app.ApplicationId === suiteToEdit.ApplicationId)
-     console.log("x:",applicationList)
      return x;
     })
     //work on all-user
@@ -80,8 +79,7 @@ export default function EditTestSuite() {
       return testCasesList.filter((test)=> suiteToEdit.SelectedTestCases?.includes(test.TestCaseName))
     })
   }, [suiteToEdit]);
-  console.log("suite to edit : ",suiteToEdit)
-  console.log("application :",applicationList)
+  
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -102,7 +100,13 @@ export default function EditTestSuite() {
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
-
+ const handleApplication = (env)=>{
+   const app =  {
+    ApplicationId:env.ApplicationId,
+    ApplicationName:env.ApplicationName
+  }
+  setSelectedApplication(app)
+}
   const handledescriptionChange = (e) => {
     setDescription(e.target.value);
   };
@@ -176,16 +180,20 @@ export default function EditTestSuite() {
   };
 
   const handleCheckboxChange = (event, row) => {
-    const checked = event.target.checked;
-    setSelectedRows((prevSelectedRows) =>
-      checked
+      console.log('selected row ', selectedRows)
+      const checked = event.target.checked;
+    console.log("checked : ",checked)
+    setSelectedRows((prevSelectedRows) =>{
+      return  checked
         ? [...prevSelectedRows, row]
         : prevSelectedRows.filter((selectedRow) => selectedRow !== row)
+      }
     );
   };
 
   const handleSelectAllChange = (event) => {
     const checked = event.target.checked;
+    console.log("checked in all selection ", checked)
     setSelectAll(checked);
     setSelectedRows(checked ? testCasesList : []);
   };
@@ -199,6 +207,10 @@ export default function EditTestSuite() {
   })).filter((data) =>
     data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
+  // if(filteredTestCaseData == selectedRows){
+  //   console.log("yes")
+  // }
+  
   return (
     <>
       
@@ -377,25 +389,28 @@ export default function EditTestSuite() {
                           </FormControl>
                         </Grid>
 
-                        {/* Row 3: Additional Name Dropdown */}
+                        
+                        {/* Row 5: Environment Dropdown */}
                         <Grid item>
                           <div className={classes.input}>
                             <Typography
                               variant="subtitle1"
                               className={clsx(classes.customFontSize)}
                             >
-                              Application
+                              Environment
                             </Typography>
                             <Select
                               getOptionLabel={(option) =>
-                                option.ApplicationName
+                                option.EnvironmentName
                               }
-                              getOptionValue={(option) => option.ApplicationId}
-                              options={applicationList}
-                              value={selectedApplication}
-                              onChange={(newValue) => {
-                                setSelectedApplication(newValue);
-                              }}
+                              getOptionValue={(option) => option.EnvironmentId}
+                              options={environementList}
+                              value={selectedEnvironment}
+                              onChange={(newValue) =>{
+                                setSelectedEnvironment(newValue)
+                                handleApplication(newValue)
+                                }
+                              }
                               styles={{
                                 container: (provided) => ({
                                   ...provided,
@@ -408,7 +423,7 @@ export default function EditTestSuite() {
                                   "&:hover": {
                                     borderColor: "#654DF7",
                                   },
-                                  borderColor: Error.application
+                                  borderColor: Error.environment
                                     ? "red"
                                     : state.isFocused
                                     ? "#654DF7"
@@ -423,9 +438,9 @@ export default function EditTestSuite() {
                               }}
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
-                            {Error.application && (
+                            {Error.environment && (
                               <Typography className={classes.inputError}>
-                                {Error.application}
+                                {Error.environment}
                               </Typography>
                             )}
                           </div>
@@ -488,25 +503,26 @@ export default function EditTestSuite() {
                           </Grid>
                         </Grid>
 
-                        {/* Row 5: Environment Dropdown */}
+                        {/* Row 3: Additional Name Dropdown */}
                         <Grid item>
                           <div className={classes.input}>
                             <Typography
                               variant="subtitle1"
                               className={clsx(classes.customFontSize)}
                             >
-                              Environment
+                              Application
                             </Typography>
                             <Select
                               getOptionLabel={(option) =>
-                                option.EnvironmentName
+                                option.ApplicationName
                               }
-                              getOptionValue={(option) => option.EnvironmentId}
-                              options={environementList}
-                              value={selectedEnvironment}
-                              onChange={(newValue) =>
-                                setSelectedEnvironment(newValue)
-                              }
+                              getOptionValue={(option) => option.ApplicationId}
+                              options={applicationList}
+                              value={selectedApplication}
+                              // onChange={(newValue) => {
+                              //   setSelectedApplication(newValue);
+                              // }}
+                              onChange={selectedApplication}
                               styles={{
                                 container: (provided) => ({
                                   ...provided,
@@ -519,7 +535,7 @@ export default function EditTestSuite() {
                                   "&:hover": {
                                     borderColor: "#654DF7",
                                   },
-                                  borderColor: Error.environment
+                                  borderColor: Error.application
                                     ? "red"
                                     : state.isFocused
                                     ? "#654DF7"
@@ -534,13 +550,14 @@ export default function EditTestSuite() {
                               }}
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
-                            {Error.environment && (
+                            {Error.application && (
                               <Typography className={classes.inputError}>
-                                {Error.environment}
+                                {Error.application}
                               </Typography>
                             )}
                           </div>
                         </Grid>
+
 
                         {/* Row 6: Browser Dropdown */}
                         {/* <Grid item>

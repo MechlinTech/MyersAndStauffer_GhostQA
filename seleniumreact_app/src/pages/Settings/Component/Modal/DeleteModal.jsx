@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { DeleteTestSuite, getTestSuites } from '../../../redux/actions/seleniumAction';
+import { DeleteApplication, DeleteBrowser } from '../../../../redux/actions/seleniumAction';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
-function DeleteSuite({ open,onClose,suitToDelete }) {
+function DeleteModal({ open,onClose,itemId,AppOrBrow }) {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+
 
   const handleDelete = () => {
-      dispatch(DeleteTestSuite(suitToDelete))
-      console.log("suit to delete : ",suitToDelete)
-      // window.location.reload();
+    if(AppOrBrow === 'application')
+        dispatch(DeleteApplication(itemId))
+    else
+     dispatch(DeleteBrowser(itemId))
+
     onClose()
   };
 
@@ -26,10 +27,10 @@ function DeleteSuite({ open,onClose,suitToDelete }) {
         <DialogTitle id="alert-dialog-title">{"Delete Confirmation"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete {suitToDelete}?
+            Are you sure you want to delete {AppOrBrow} with Id {itemId}?
           </DialogContentText>
         </DialogContent>
-        <DialogActions style={{ justifyContent: 'center' }}>
+        <DialogActions style={{ justifyContent: 'center',marginBottom:'20px'}}>
         <Button onClick={handleDelete} 
                 style={{
                   marginRight: "10px",
@@ -55,4 +56,4 @@ function DeleteSuite({ open,onClose,suitToDelete }) {
   );
 }
 
-export default DeleteSuite;
+export default DeleteModal;
