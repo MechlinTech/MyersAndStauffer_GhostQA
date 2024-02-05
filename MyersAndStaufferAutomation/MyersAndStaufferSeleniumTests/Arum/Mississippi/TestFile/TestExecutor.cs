@@ -9,32 +9,33 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         private static string _baseurl = "https://clocksession.com/";
         private static string _basepath = "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\";
         private static string _driverpath = "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\bin\\x64\\Debug\\net6.0";
-       public static string JsonData { get; set; }
-        public static string browserName 
-        { 
-            get => _browsername; 
-            set => _browsername = value; 
+        public static string JsonData { get; set; }
+        public static string browserName
+        {
+            get => _browsername;
+            set => _browsername = value;
         }
-        public static string environmentName 
-        { 
-            get => _environmentname; 
-            set => _environmentname = value; }
+        public static string environmentName
+        {
+            get => _environmentname;
+            set => _environmentname = value;
+        }
         public static string testCaseName { get; set; }
-        public static string Baseurl 
-        { 
+        public static string Baseurl
+        {
             get => _baseurl;
-            set => _baseurl = value; 
+            set => _baseurl = value;
         }
-        public static string Basepath 
-        { 
-            get => _basepath; 
-            set => _basepath = value; 
+        public static string Basepath
+        {
+            get => _basepath;
+            set => _basepath = value;
         }
-        public static string Driverpath 
-        { 
+        public static string Driverpath
+        {
             get => _driverpath;
             set => _driverpath = value;
-                
+
         }
         public static string Testername { get; set; }
 
@@ -56,8 +57,18 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             if (method != null)
             {
-                method.Invoke(loginTest, null);
-                bsTest.TearDown();
+                try
+                {
+                    method.Invoke(loginTest, null);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exception occurred while invoking method '{testCaseName}': {ex.Message}");
+                }
+                finally
+                {
+                    bsTest.TearDown();
+                }
             }
             else
             {
