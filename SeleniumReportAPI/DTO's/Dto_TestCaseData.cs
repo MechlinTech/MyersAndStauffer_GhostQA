@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
-
-public class Dto_TestCaseData
+﻿public class Dto_TestCaseData
 {
     public string TestSuiteName { get; set; }
     public string TestRunName { get; set; }

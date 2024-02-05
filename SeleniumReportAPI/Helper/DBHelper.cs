@@ -16,6 +16,7 @@ namespace SeleniumReportAPI.Helper
     {
         private readonly IConfiguration _configuration;
         private readonly TestExecutor _testExecutor;
+
         public DBHelper(IConfiguration configuration, TestExecutor testExecutor)
         {
             _configuration = configuration;
