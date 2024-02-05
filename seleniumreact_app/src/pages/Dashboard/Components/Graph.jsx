@@ -82,9 +82,8 @@ const Graph = (props) => {
   ];
   const [filterType, setFilterType] =useState('runs');
   const [filterValue, setFilterValue] =useState( { value: "7", label: "7" });
-
+  const [empty, setEmpty] =useState( true);
   useEffect(() => {
-
     const get_host = async () => {
      await axios.get(`${BASE_URL}/Selenium/GetChartDetails?TestSuiteName=Mississippi&Filtertype=${filterType}&FilterValue=${filterValue.value}`, header())
       .then((response) => {
@@ -94,13 +93,16 @@ const Graph = (props) => {
         const TotalTestCase = [];
         if(response.data.length){
           response.data.forEach((item)=>{
-            TestRunStartDate.push(item.TestRunStartDate);
+            const date = new Date(item.TestRunStartDate);            
+            TestRunStartDate.push(date.getDate()+'/'+(date.getMonth()+1));
             TotalFailedTestCase.push(item.TotalFailedTestCase);
-            TotalPassedTestCase.push(item.TotalFailedTestCase);
+            TotalPassedTestCase.push(item.TotalPassedTestCase);
             TotalTestCase.push(item.TotalTestCase);
           })
-          
          
+          setEmpty(current=>false);
+        }else{
+          setEmpty(current=>true);
         }
         const newData = {
           ...data,
@@ -224,12 +226,12 @@ const Graph = (props) => {
               
             </div>
           </Grid>
-          <Chart
+         {!empty && <Chart
           options={data.options}
           series={data.series}
           type="bar"
 
-        />
+        />}
       </div>
     </>
   );
