@@ -18,13 +18,11 @@ export const getTestSuites = () => {
   return async (dispatch) => {
     try {
       const response = await axios.get(`${BASE_URL}/Selenium/GetDataTestSuits`, header());
-      console.log("getTestSuites : ", response);
       dispatch({
         type: GET_TEST_SUITS,
         payload: response.data,
       });
     } catch (error) {
-      console.error("Error in getTestSuites:", error);
       toast.error("NETWORK ERROR");
     }
   };
@@ -37,7 +35,6 @@ export const getListByTestSuitsName = (data) => {
                 `${BASE_URL}/Selenium/GetDashboardDetails?testSuitName=${data}`,
                 header()
             );
-            console.log("getListByTestSuitsName", response.data);
             dispatch({
                 type: GET_TEST_SUITS_LIST,
                 payload: response.data,
