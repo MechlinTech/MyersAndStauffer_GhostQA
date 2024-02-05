@@ -37,7 +37,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             string baseURL = TestExecutor.Baseurl;
             WindowSize browserWindowSize = new WindowSize(1280, 720);
             LogMessage(logMessage.ToString());
-            Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize);
+            Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize, isRunHeadless: true);
             driver = Browser.Driver;
             driver.Manage().Window.Maximize();
         }
