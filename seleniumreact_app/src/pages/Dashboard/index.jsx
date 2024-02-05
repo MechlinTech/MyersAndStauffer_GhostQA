@@ -62,7 +62,7 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        dispatch(getTestSuites());
+    dispatch(getTestSuites());
     }, []);
 
   useEffect(() => {
