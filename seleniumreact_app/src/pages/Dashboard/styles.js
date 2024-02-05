@@ -85,6 +85,11 @@ export const useStyles = makeStyles({
     savedSerchesClass: {
         backgroundColor: "transparent",
     },
+    // remScrollbar:{
+    //     '&::-webkit-scrollbar': {
+    //         width: '0em'
+    //       }
+    // },
     infoGrid: {
         height: "345px",
         width: "100%",

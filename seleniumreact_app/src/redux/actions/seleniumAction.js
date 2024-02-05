@@ -18,6 +18,7 @@ export const getTestSuites = () => {
   return async (dispatch) => {
     try {
       const response = await axios.get(`${BASE_URL}/Selenium/GetDataTestSuits`, header());
+      console.log("getTestSuites : ", response);
       dispatch({
         type: GET_TEST_SUITS,
         payload: response.data,
@@ -313,6 +314,52 @@ export const AddUpdateBrowser = (data)=>{
     } 
     }catch (error) {
       console.log("error adding ",error);
+      toast('Posting error')
+    }
+  }
+}
+
+export const DeleteApplication = (appId)=>{
+  
+  return async ()=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Selenium/DeleteApplication?ApplicationId=${appId}`,
+         appId,
+         header())
+      if (res.status === 200) {
+        toast.info('Successfully deleted', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } 
+    }catch (error) {
+      console.log("error deleting ",error);
+      toast('Posting error')
+    }
+  }
+}
+
+export const DeleteBrowser = (brwId)=>{
+  
+  return async ()=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Selenium/DeleteBrowser?BrowserId=${brwId}`,
+         brwId,
+         header())
+      if (res.status === 200) {
+        toast.info('Successfully deleted', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } 
+    }catch (error) {
+      console.log("error deleting ",error);
       toast('Posting error')
     }
   }

@@ -10,7 +10,7 @@ const Auth = lazy(() => import("./pages/Auth"))
 function App() {
   const dispatch = useDispatch()
   const { isLogedIn } = useSelector(state => state.auth)
-
+  console.log("is login ",isLogedIn)
   useEffect(() => {
     let data = JSON.parse(sessionStorage.getItem("userData"))
     if (data) {

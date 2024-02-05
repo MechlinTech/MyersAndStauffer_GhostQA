@@ -43,8 +43,8 @@ export function TestCaseTable({
                 onChange={handleSelectAllChange}
                 color="primary"
                 style={{
-                    color: selectAll && 'rgb(101, 77, 247)' ,
-                  }}
+                  color: selectAll && "rgb(101, 77, 247)",
+                }}
               />
               Test Case Name
             </StyledTableCell>
@@ -68,7 +68,11 @@ export function TestCaseTable({
                       selectedRow.TestCaseName === row.TestCaseName
                   )}
                   style={{
-                    color: selectedRows.includes(row) && 'rgb(101, 77, 247)' ,
+                    color:
+                      selectedRows.some(
+                        (selectedRow) =>
+                          selectedRow.TestCaseName === row.TestCaseName
+                      ) && "rgb(101, 77, 247)",
                   }}
                 />
                 {row.TestCaseName}

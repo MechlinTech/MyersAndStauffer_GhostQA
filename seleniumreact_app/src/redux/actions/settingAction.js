@@ -54,3 +54,32 @@ export const AddUpdateEnvironment = (data,navigate,onBack) => {
       }
   }
 }
+export const DeleteEnvironment = (id) => {
+  return async (dispatch) => {
+       try {
+           const res = await axios.post(
+               `${BASE_URL}/Selenium/DeleteEnvironment?EnvironmentId=${id}`,"",
+               header())
+           console.log('response ', res)
+           if (res.data.status === "success") {
+                dispatch(GetEnvironment());
+               toast.info(res.data.message, {
+                   style: {
+                       background: 'rgb(101, 77, 247)',
+                       color: 'rgb(255, 255, 255)',
+                   },
+               });
+              
+             }
+             else if (res.data.status === "fail") { 
+                 toast.error(res.data.message); 
+                 // navigate('/settings/environment')
+             }
+           
+           console.log("saved ", res)
+       } catch (error) {
+           console.log("error sending ", error);
+           // toast('Posting error')
+       }
+   }
+ }
