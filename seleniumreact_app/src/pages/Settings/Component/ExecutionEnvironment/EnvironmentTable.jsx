@@ -10,14 +10,19 @@ import { useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import { Typography } from "@mui/material";
 import EditNewEnvironment from "./EditNewEnvironment";
+import DeleteModal from "../Modal/DeleteModal";
 export function EnvironmentTable({ rows,handleEditEnvironment}) {
   const classes = useTableStyles();
   const [showAddNewEnvironment, setShowAddNewEnvironment] = useState(false);
 
-  
+  const [openDelModal, setopenDelModal] = useState(false)
+  const [item, setitem] = useState(null)
+  const [AppOrBrow, setAppOrBrow] = useState('environment');
 
   const handleDelete = (row) => {
     console.log(`Deleting environment: ${row.EnvironmentName}`);
+    setopenDelModal(true)
+    setitem(row)
   };
 
   const handleEdit = (row) => {
@@ -32,7 +37,12 @@ export function EnvironmentTable({ rows,handleEditEnvironment}) {
 
   return (
     <>
-    
+    <DeleteModal
+    open={openDelModal}
+    onClose={()=>setopenDelModal(false)}
+    item={item}
+    types={AppOrBrow}
+    />
     <TableContainer sx={{ marginBottom: "8vh" }}>
       <Table>
         <TableHead>
