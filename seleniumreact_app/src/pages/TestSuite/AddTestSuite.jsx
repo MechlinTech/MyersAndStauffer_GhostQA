@@ -29,65 +29,6 @@ import {
   AddUpdateTestSuites,
 } from "../../redux/actions/seleniumAction";
 
-const applicationOptions = [
-  { applicationId: 5667, ApplicationName: "ClockSession" },
-  { value: 12233, ApplicationName: "Whuups" },
-];
-
-const environmentOptions = [
-  { value: "dev", label: "Dev" },
-  { value: "stage", label: "Stage" },
-  { value: "prod", label: "Prod" },
-];
-
-const browserOptions = [
-  { value: "chrome", label: "Chrome" },
-  { value: "FireFox", label: "FireFox" },
-  { value: "edge", label: "Edge" },
-];
-
-const staticData = [
-  {
-    TestCaseName: "Run1",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "TestCase1",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "Run2",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "TestCase2",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "Run3",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "TestCase3",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "Run4",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-  {
-    TestCaseName: "TestCase4",
-    TestRunStartDateTime: "2022-01-01T10:00:00",
-    TestRunEndDateTime: "2022-01-01T12:00:00",
-  },
-];
 
 export default function AddTestSuite() {
   const dispatch = useDispatch();
@@ -144,7 +85,14 @@ export default function AddTestSuite() {
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
-
+  const handleApplication = (env)=>{
+   const app =  {
+    ApplicationId:env.ApplicationId,
+    ApplicationName:env.ApplicationName
+  }
+  console.log('app ',app)
+  setSelectedApplication(app)
+  }
   const handledescriptionChange = (e) => {
     setDescription(e.target.value);
   };
@@ -220,6 +168,8 @@ export default function AddTestSuite() {
 
   const handleCheckboxChange = (event, row) => {
     const checked = event.target.checked;
+    console.log("checked : ",checked)
+    console.log("rows : ",selectedRows)
     setSelectedRows((prevSelectedRows) =>
       checked
         ? [...prevSelectedRows, row]
@@ -419,18 +369,19 @@ export default function AddTestSuite() {
                               variant="subtitle1"
                               className={clsx(classes.customFontSize)}
                             >
-                              Application
+                              Environment
                             </Typography>
                             <Select
                               getOptionLabel={(option) =>
-                                option.ApplicationName
+                                option.EnvironmentName
                               }
-                              getOptionValue={(option) => option.ApplicationId}
-                              options={applicationList}
-                              value={selectedApplication}
-                              onChange={(newValue) => {
-                                setSelectedApplication(newValue);
-                              }}
+                              getOptionValue={(option) => option.EnvironmentId}
+                              options={environementList}
+                              value={selectedEnvironment}
+                              onChange={(newValue) =>{
+                                setSelectedEnvironment(newValue)
+                                handleApplication(newValue)}
+                              }
                               styles={{
                                 container: (provided) => ({
                                   ...provided,
@@ -443,7 +394,7 @@ export default function AddTestSuite() {
                                   "&:hover": {
                                     borderColor: "#654DF7",
                                   },
-                                  borderColor: Error.application
+                                  borderColor: Error.environment
                                     ? "red"
                                     : state.isFocused
                                     ? "#654DF7"
@@ -458,14 +409,13 @@ export default function AddTestSuite() {
                               }}
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
-                            {Error.application && (
+                            {Error.environment && (
                               <Typography className={classes.inputError}>
-                                {Error.application}
+                                {Error.environment}
                               </Typography>
                             )}
                           </div>
                         </Grid>
-
                         {/* Row 4: Radio Buttons */}
                         <Grid
                           container
@@ -530,18 +480,19 @@ export default function AddTestSuite() {
                               variant="subtitle1"
                               className={clsx(classes.customFontSize)}
                             >
-                              Environment
+                              Application
                             </Typography>
                             <Select
                               getOptionLabel={(option) =>
-                                option.EnvironmentName
+                                option.ApplicationName
                               }
-                              getOptionValue={(option) => option.EnvironmentId}
-                              options={environementList}
-                              value={selectedEnvironment}
-                              onChange={(newValue) =>
-                                setSelectedEnvironment(newValue)
-                              }
+                              getOptionValue={(option) => option.ApplicationId}
+                              options={applicationList}
+                              value={selectedApplication}
+                              // onChange={(newValue) => {
+                              //   setSelectedApplication(newValue);
+                              // }}
+                              onChange={selectedApplication}
                               styles={{
                                 container: (provided) => ({
                                   ...provided,
@@ -554,7 +505,7 @@ export default function AddTestSuite() {
                                   "&:hover": {
                                     borderColor: "#654DF7",
                                   },
-                                  borderColor: Error.environment
+                                  borderColor: Error.application
                                     ? "red"
                                     : state.isFocused
                                     ? "#654DF7"
@@ -569,13 +520,15 @@ export default function AddTestSuite() {
                               }}
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
-                            {Error.environment && (
+                            {Error.application && (
                               <Typography className={classes.inputError}>
-                                {Error.environment}
+                                {Error.application}
                               </Typography>
                             )}
                           </div>
                         </Grid>
+
+                        
 
                         {/* Row 6: Browser Dropdown */}
                         {/* <Grid item>

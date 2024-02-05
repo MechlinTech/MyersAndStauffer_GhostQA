@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
@@ -6,12 +6,18 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useTableStyles, StyledTableCell } from "./styles";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
+import DeleteModal from "../Modal/DeleteModal";
 
 export function CustomTable({ rows,handleEditBrowser }) {
   const classes = useTableStyles();
 
+  const [openDelModal, setopenDelModal] = useState(false)
+  const [item, setitem] = useState(null)
+  const [AppOrBrow, setAppOrBrow] = useState('browser')
+
   const handleDelete = (row) => {
-    console.log(`Deleting Brwoser: ${row.BrowserName}`);
+    setopenDelModal(true)
+    setitem(row)
   };
 
   const handleEdit = (row) => {
@@ -19,6 +25,13 @@ export function CustomTable({ rows,handleEditBrowser }) {
     console.log(`Editing Browser `,row);
   };
   return (
+    <>
+    <DeleteModal
+    open={openDelModal}
+    onClose={()=>setopenDelModal(false)}
+    item={item}
+    AppOrBrow={AppOrBrow}
+    />
     <TableContainer sx={{ marginBottom: "8vh" }}>
       <Table>
         <TableHead>
@@ -62,5 +75,6 @@ export function CustomTable({ rows,handleEditBrowser }) {
         </TableBody>
       </Table>
     </TableContainer>
+    </>
   );
 }

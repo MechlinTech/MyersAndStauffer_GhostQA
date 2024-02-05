@@ -11,8 +11,7 @@ export const login = (data, setLoading) => {
 
       const res = await axios.post(`${BASE_URL}/Login`, data);
       const response = res.data;
-
-      if (res.status === 200) {
+      if (response?.result === 'Success') {
         toast.info('Successfully logged in', {
           style: {
             background: 'rgb(101, 77, 247)',
@@ -28,6 +27,8 @@ export const login = (data, setLoading) => {
           type: LOG_IN,
           payload: { ...response.data, token: response.token },
         });
+      }else{
+        toast.error(response.message)
       }
     } catch (err) {
       console.error(err);

@@ -62,15 +62,15 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        dispatch(getTestSuites());
+    dispatch(getTestSuites());
     }, []);
 
-    useEffect(() => {
-        dispatch(getTestSuites());
-    }, [testSuits]);
-    const filteredTestSuiteData = testSuits?.filter((suite) =>
-        suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
-    );
+  useEffect(() => {
+    dispatch(getTestSuites());
+  }, [openDelModal]);
+  const filteredTestSuiteData = testSuits?.filter((suite) =>
+    suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+  );
 
     const handlePaperClick = (suite) => {
         let data = suite.TestSuiteName;
@@ -133,75 +133,77 @@ export default function Dashboard() {
           </Link>
         </Box>
       </Typography> */}
-            <div className={classess.main}>
-                <AddSuite
-                    open={openModal}
-                    onClose={() => setOpenModal(false)}
-                    hookProps={{}}
-                />
-                <DeleteSuite
-                    open={openDelModal}
-                    onClose={() => setopenDelModal(false)}
-                    suitToDelete={suitToDelete}
-                />
-                <Grid container spacing={2}>
-                    {/* Left side for Search and Results */}
-                    <Grid item xs={12} sm={4}>
-                        <Card style={{ paddingBottom: "30px", minHeight: "84vh" }}>
-                            <Grid container alignItems="center">
-                                <Grid item xs={6} style={tabLableStyle}>
-                                    Test Suite
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={6}
-                                    style={{ textAlign: "right", paddingRight: "25px" }}
-                                >
-                                    <Add
-                                        style={{
-                                            fontSize: 25,
-                                            backgroundColor: "rgb(101, 77, 247)",
-                                            color: "#ffffff",
-                                            borderRadius: "50%",
-                                            // padding: "8px",
-                                            cursor: "pointer",
-                                        }}
-                                        onClick={handleAddSuite}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Grid container style={{}}>
-                                <Grid item xs={12} style={{ padding: "10px 20px" }}>
-                                    <SearchField
-                                        placeholder="Search Test Suite..."
-                                        onChange={(value) => setSearchTerm(value)}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Grid
-                                item
-                                style={{ overflow: "auto", maxHeight: "calc(70vh - 50px)" }}
-                            >
-                                {filteredTestSuiteData.map((suite, index) => (
-                                    <Paper
-                                        key={index}
-                                        className={`${classess.paper} ${selectedSuite === suite ? classess.paperActive : ""
-                                            }`}
-                                        onClick={() => handlePaperClick(suite)}
-                                    >
-                                        <Grid container className={classess.paperGrid}>
-                                            <Grid item className={classess.infoGridHeader}>
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "space-between",
-                                                    }}
-                                                >
-                                                    <Typography className={classess.infoHeader}>
-                                                        {suite.TestSuiteName}
-
-                                                    </Typography>
+      <div className={classess.main}>
+        <AddSuite
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          hookProps={{}}
+        />
+        <DeleteSuite
+        open={openDelModal}
+        onClose={() => setopenDelModal(false)}
+        suitToDelete={suitToDelete}
+        />
+        <Grid container spacing={2}>
+          {/* Left side for Search and Results */}
+          <Grid item xs={12} sm={4}>
+            <Card style={{ paddingBottom: "30px", minHeight: "84vh" }}>
+              <Grid container alignItems="center">
+                <Grid item xs={6} style={tabLableStyle}>
+                  Test Suite
+                </Grid>
+                <Grid
+                  item
+                  xs={6}
+                  style={{ textAlign: "right", paddingRight: "25px" }}
+                >
+                  <Add
+                    style={{
+                      fontSize: 25,
+                      backgroundColor: "rgb(101, 77, 247)",
+                      color: "#ffffff",
+                      borderRadius: "50%",
+                      // padding: "8px",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleAddSuite}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container style={{}}>
+                <Grid item xs={12} style={{ padding: "10px 20px" }}>
+                  <SearchField
+                    placeholder="Search Test Suite..."
+                    onChange={(value) => setSearchTerm(value)}
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+              // className={classess.remScrollbar}
+                item
+                style={{ overflow: "auto", maxHeight: "calc(70vh - 50px)" }}
+              >
+                {filteredTestSuiteData.map((suite, index) => (
+                  <Paper
+                    key={index}
+                    className={`${classess.paper} ${
+                      selectedSuite === suite ? classess.paperActive : ""
+                    }`}
+                    onClick={() => handlePaperClick(suite)}
+                  >
+                    <Grid container className={classess.paperGrid}>
+                      <Grid item className={classess.infoGridHeader}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography className={classess.infoHeader}>
+                            {suite.TestSuiteName}
+                       
+                          </Typography>
 
                                                     <div
                                                         style={{

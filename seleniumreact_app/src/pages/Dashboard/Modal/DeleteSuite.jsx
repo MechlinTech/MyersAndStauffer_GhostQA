@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -7,16 +7,16 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { DeleteTestSuite, getTestSuites } from '../../../redux/actions/seleniumAction';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function DeleteSuite({ open,onClose,suitToDelete }) {
   const dispatch = useDispatch()
-
+  const navigate = useNavigate()
 
   const handleDelete = () => {
       dispatch(DeleteTestSuite(suitToDelete))
       console.log("suit to delete : ",suitToDelete)
-      dispatch(DeleteTestSuite(getTestSuites()))
-      
+      // window.location.reload();
     onClose()
   };
 
