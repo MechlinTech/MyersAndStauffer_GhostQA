@@ -167,6 +167,7 @@ export const useStyles = makeStyles((theme) => ({
         borderRadius: "10px",
         boxShadow: theme.shadows[5],
         padding: "16px 0 24px",
+        zIndex: 10000,
     },
     modelHead: {
         padding: "0 32px 20px",

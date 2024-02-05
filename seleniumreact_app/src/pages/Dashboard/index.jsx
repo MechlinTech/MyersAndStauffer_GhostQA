@@ -4,11 +4,11 @@ import { useStyles } from "./styles";
 import SearchField from "../../comman/SearchField";
 import BasicAccordion from "../../comman/Accordion";
 import {
-  getTestCaseRundetailsByTestName,
-  getTestSuites,
-  ExecuteTestCasesByTestSuite,
-  Getsuitebyname,
-  GetApplication
+    getTestCaseRundetailsByTestName,
+    getTestSuites,
+    ExecuteTestCasesByTestSuite,
+    Getsuitebyname,
+    GetApplication
 } from "../../redux/actions/seleniumAction";
 import { useDispatch, useSelector } from "react-redux";
 import Tab from "@mui/material/Tab";
@@ -22,22 +22,23 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import AddSuite from "./Modal/AddSuite";
 import DeleteSuite from "./Modal/DeleteSuite";
 import { useNavigate, Link } from "react-router-dom";
+import Graph from "./Components/Graph";
 
 export default function Dashboard() {
-  const classess = useStyles();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { testSuits } = useSelector((state) => state.selenium);
-  const [selectedSuite, setSelectedSuite] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [tabNo, setTabNo] = useState("2");
-  const [openModal, setOpenModal] = useState(false);
-  const [openDelModal, setopenDelModal] = useState(false)
-  const [suitToDelete, setsuitToDelete] = useState('')
-  const handleAddSuite = () => {
-    //  setOpenModal(true);
-    navigate("/add-suite");
-  };
+    const classess = useStyles();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { testSuits } = useSelector((state) => state.selenium);
+    const [selectedSuite, setSelectedSuite] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [tabNo, setTabNo] = useState("2");
+    const [openModal, setOpenModal] = useState(false);
+    const [openDelModal, setopenDelModal] = useState(false)
+    const [suitToDelete, setsuitToDelete] = useState('')
+    const handleAddSuite = () => {
+        //  setOpenModal(true);
+        navigate("/add-suite");
+    };
 
     const handleCloseModal = () => {
         setOpenModal(false);
@@ -60,9 +61,9 @@ export default function Dashboard() {
         fontFamily: "Lexend Deca",
     };
 
-  useEffect(() => {
-    dispatch(getTestSuites());
-  }, []);
+    useEffect(() => {
+        dispatch(getTestSuites());
+    }, []);
 
   useEffect(() => {
     dispatch(getTestSuites());
@@ -71,40 +72,40 @@ export default function Dashboard() {
     suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
 
-  const handlePaperClick = (suite) => {
-    let data = suite.TestSuiteName;
-    setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
-    dispatch(getTestCaseRundetailsByTestName(data));
-  };
+    const handlePaperClick = (suite) => {
+        let data = suite.TestSuiteName;
+        setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
+        dispatch(getTestCaseRundetailsByTestName(data));
+    };
 
-  const handleChange = (event, newValue) => {
-    // Redirect based on the selected tab
-    if (newValue === "1") {
-      navigate("/");
-    } else if (newValue === "2") {
-      navigate("/settings");
-    }
-  };
-  const handleEditClick = (suite) => {
-    dispatch(Getsuitebyname(suite.TestSuiteName))
-    navigate('/edit-suite')
-    // getsuitebyname api will give you detail
-  };
+    const handleChange = (event, newValue) => {
+        // Redirect based on the selected tab
+        if (newValue === "1") {
+            navigate("/");
+        } else if (newValue === "2") {
+            navigate("/settings");
+        }
+    };
+    const handleEditClick = (suite) => {
+        dispatch(Getsuitebyname(suite.TestSuiteName))
+        navigate('/edit-suite')
+        // getsuitebyname api will give you detail
+    };
 
-  const handleExecuteClick = (suite) => {
-    let data = suite.TestSuiteName;
-    setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
-    dispatch(ExecuteTestCasesByTestSuite(data));
-  };
+    const handleExecuteClick = (suite) => {
+        let data = suite.TestSuiteName;
+        setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
+        dispatch(ExecuteTestCasesByTestSuite(data));
+    };
 
-  const handleDeleteClick = (suite) => {
-    setopenDelModal(true)
-    setsuitToDelete(suite.TestSuiteName)
-  };
+    const handleDeleteClick = (suite) => {
+        setopenDelModal(true)
+        setsuitToDelete(suite.TestSuiteName)
+    };
 
-  return (
-    <>
-      {/* <Typography variant="h4" gutterBottom>
+    return (
+        <>
+            {/* <Typography variant="h4" gutterBottom>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Link
             to="/"
@@ -204,48 +205,48 @@ export default function Dashboard() {
                        
                           </Typography>
 
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                             {suite.TestSuiteFlag == "Custom" && (<><PlayCircleIcon
-                              style={{
-                                marginRight: "8px",
-                                color: "rgb(101, 77, 247)",
-                              }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleExecuteClick(suite);
-                              }}
-                            />
-                            <EditIcon
-                              style={{
-                                marginRight: "8px",
-                                color: "rgb(101, 77, 247)",
-                              }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEditClick(suite);
-                              }}
-                            />
-                            <DeleteIcon
-                              style={{ color: "rgb(247, 77, 77)" }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteClick(suite);
-                              }}
-                            /></>)}
-                          </div>
-                        </div>
-                      </Grid>
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                        }}
+                                                    >
+                                                        {suite.TestSuiteFlag == "Custom" && (<><PlayCircleIcon
+                                                            style={{
+                                                                marginRight: "8px",
+                                                                color: "rgb(101, 77, 247)",
+                                                            }}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleExecuteClick(suite);
+                                                            }}
+                                                        />
+                                                            <EditIcon
+                                                                style={{
+                                                                    marginRight: "8px",
+                                                                    color: "rgb(101, 77, 247)",
+                                                                }}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleEditClick(suite);
+                                                                }}
+                                                            />
+                                                            <DeleteIcon
+                                                                style={{ color: "rgb(247, 77, 77)" }}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleDeleteClick(suite);
+                                                                }}
+                                                            /></>)}
+                                                    </div>
+                                                </div>
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+                                ))}
+                            </Grid>
+                        </Card>
                     </Grid>
-                  </Paper>
-                ))}
-              </Grid>
-            </Card>
-          </Grid>
 
                     {/* Right side for Test Cases */}
                     {selectedSuite !== null && (
@@ -280,7 +281,11 @@ export default function Dashboard() {
                                                     />
                                                 </TabList>
                                             </Box>
-                                            <TabPanel value="1">Dashboard</TabPanel>
+                                            <TabPanel value="1">
+                                                <Box sx={{ padding: "0 !important" }}>
+                                                    <Graph />
+                                                </Box>
+                                            </TabPanel>
                                             <TabPanel value="2">
                                                 <Box sx={{ padding: "0 !important" }}>
                                                     <BasicAccordion />

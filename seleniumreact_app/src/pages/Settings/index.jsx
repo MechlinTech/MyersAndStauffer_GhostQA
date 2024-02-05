@@ -38,6 +38,13 @@ export default function Settings() {
     dispatch(GetBrowser())
   }, []);
 
+  // useEffect(()=>{
+  //   setSelectedItem(()=>{
+  //     const storedItem = sessionStorage.getItem("selectedCategory");
+  //   return flatted.parse(storedItem)
+  //   })
+  // },[sessionStorage.getItem("selectedCategory")])
+
   const handleItemClick = (category) => {
     sessionStorage.setItem("selectedCategory", flatted.stringify(category));
     setSelectedItem(category);

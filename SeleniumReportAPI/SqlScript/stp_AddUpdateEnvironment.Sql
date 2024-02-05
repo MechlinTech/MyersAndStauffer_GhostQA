@@ -1,20 +1,14 @@
-USE [SeleniumTest]
-GO
-/****** Object:  StoredProcedure [dbo].[stp_AddUpdateEnvironment]    Script Date: 1/23/2024 5:48:08 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER   PROCEDURE [dbo].[stp_AddUpdateEnvironment]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateEnvironment]
 @EnvironmentName		VARCHAR(100),
 @EnvironmentId			INT = 0,
 @ApplicationId          INT,
 @BrowserId              INT,
-@Baseurl                VARCHAR(100),
-@BasePath				VARCHAR(100),
-@DriverPath				VARCHAR(100),
+@Baseurl                VARCHAR(1000),
+@BasePath				VARCHAR(1000),
+@DriverPath				VARCHAR(1000),
 @CreatedBy				VARCHAR(100) = 'Admin',
-@ModifiedBy				VARCHAR(100) = 'Admin'
+@ModifiedBy				VARCHAR(100) = 'Admin',
+@Description			VARCHAR(500)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_AddUpdateEnvironment

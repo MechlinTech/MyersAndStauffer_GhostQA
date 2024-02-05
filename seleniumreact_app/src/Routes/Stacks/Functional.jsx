@@ -2,6 +2,8 @@ import React from 'react'
 import { useStyles } from '../../Layout/styles'
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import {Grid } from '@material-ui/core';
+import { StyledDashBoardIcon } from '../../comman/icons';
+import * as Flatted from 'flatted';
 
 export default function Functional() {
     const classes = useStyles()
@@ -26,6 +28,13 @@ export default function Functional() {
                 location.pathname.slice(0,9) === "/settings" && classes.activeLink
               }`}
               style={{ marginLeft: "20px" }}
+              onClick={()=>{
+                sessionStorage.setItem("selectedCategory",Flatted.stringify({
+                  title: "Environment",
+                  icon: <StyledDashBoardIcon />,
+                  path: "/",
+                }))
+              }}
             >
               Settings
             </Link>

@@ -5,50 +5,43 @@ import { EnvironmentTable } from "./EnvironmentTable";
 import { Button } from "@mui/material";
 import SearchField from "../../../../comman/SearchField";
 import AddNewEnvironment from "./AddNewEnvironment";
+import EditNewEnvironment from "./EditNewEnvironment";
+import useEnvironment from "../../../../hooks/useEnvironment";
 
-const staticData = [
-  {
-    EnvironmentName: "Dev",
-    EnvironmentDescription: "Development",
-    application:"clocksession",
-    baseUrl:'https://codearrest.dyndns.org/'
-  },
-  {
-    EnvironmentName: "QA",
-    EnvironmentDescription: "QA For Test",
-    application:"Ghost-Qa",
-    baseUrl:'https://codearrest.dyndns.org/'
-  },
-  {
-    EnvironmentName: "PROD",
-    EnvironmentDescription: "Production",
-    application:"clocksession-prod",
-    baseUrl:'https://codearrest.dyndns.org/'
-  },
-];
+
 
 export default function ExecutionEnvironment() {
+    const{
+      searchTerm,
+       showAddNewEnvironment,
+       handleBackFromAddNew,
+       showEditNewEnvironment,
+       editEnvironmentData,
+       handleAddEnvironment,
+       setSearchTerm,
+       handleEditEnvironment,
+       environementList
+    }=useEnvironment();
   const classes = useStyles();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAddNewEnvironment, setShowAddNewEnvironment] = useState(false);
-
-  const handleAddEnvironment = () => {
-    setShowAddNewEnvironment(true);
-    console.log("Adding Environment...");
-  };
-
-  const filteredData = staticData?.filter((data) =>
-    data?.EnvironmentName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
-  );
-
-  const handleBackFromAddNew = () => {
-    setShowAddNewEnvironment(false);
-  };
+  
+  
+  
+  console.log("listenv",environementList);
+  const filteredData = environementList
+  ? environementList.filter((data) =>
+      data?.EnvironmentName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+    )
+  : [];
 
   return (
     <>
       {showAddNewEnvironment ? (
-        <AddNewEnvironment onBack={handleBackFromAddNew}/>
+        <AddNewEnvironment onBack={handleBackFromAddNew} />
+      ) : showEditNewEnvironment ? (
+        <EditNewEnvironment
+          onBack={handleBackFromAddNew}
+          rowData={editEnvironmentData}
+        />
       ) : (
         <Grid
           container
@@ -85,7 +78,7 @@ export default function ExecutionEnvironment() {
       )}
 
       {/* Body */}
-      {!showAddNewEnvironment && (
+      {!showAddNewEnvironment && !showEditNewEnvironment && (
         <Grid container justifyContent="center" alignItems="center" spacing={2}>
           <Grid item xs={12}>
             <Card style={{ textAlign: "center", margin: "20px" }}>
@@ -96,7 +89,7 @@ export default function ExecutionEnvironment() {
                 />
               </Grid>
               <Grid item>
-                <EnvironmentTable rows={filteredData} />
+                <EnvironmentTable rows={filteredData} handleEditEnvironment={handleEditEnvironment} />
               </Grid>
             </Card>
           </Grid>

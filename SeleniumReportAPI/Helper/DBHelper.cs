@@ -15,9 +15,12 @@ namespace SeleniumReportAPI.Helper
     public class DBHelper
     {
         private readonly IConfiguration _configuration;
-        public DBHelper(IConfiguration configuration)
+        private readonly TestExecutor _testExecutor;
+
+        public DBHelper(IConfiguration configuration, TestExecutor testExecutor)
         {
             _configuration = configuration;
+            _testExecutor = testExecutor;
         }
 
         internal string GetConnectionString()
@@ -455,12 +458,12 @@ namespace SeleniumReportAPI.Helper
             return EnvironmentListJson;
         }
 
-        internal static string RunTestCase(string testCaseName, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
+        internal async Task<string> RunTestCase(string testCaseName, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
         {
             string TestCaseJsonData = string.Empty;
             try
             {
-                TestCaseJsonData = TestExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
+                TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
             }
             catch (Exception)
             {
@@ -480,7 +483,7 @@ namespace SeleniumReportAPI.Helper
                     using (SqlCommand command = new SqlCommand("stp_AddUpdateEnvironment", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-
+                        command.Parameters.AddWithValue("@EnvironmentId", model.EnvironmentId);
                         command.Parameters.AddWithValue("@EnvironmentName", model.EnvironmentName);
                         command.Parameters.AddWithValue("@ApplicationId", model.ApplicationId);
                         command.Parameters.AddWithValue("@BrowserId", model.BroswerId);
@@ -740,6 +743,99 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
             return DashBoardDetailsJson;
+        }
+
+        internal async Task<string> DeleteApplication(int ApplicationId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteApplication", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@ApplicationId", ApplicationId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> DeleteBrowser(int BrowserId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteBrowser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@BrowserId", BrowserId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> DeleteEnvironment(int EnvironmentId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteEnvironment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@EnvironmentId", EnvironmentId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
         }
     }
 }

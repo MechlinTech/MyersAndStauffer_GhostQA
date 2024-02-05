@@ -1,42 +1,32 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using SeleniumReportAPI.DBContext;
 using SeleniumReportAPI.Helper;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-ConfigurationManager configuration = builder.Configuration;
+
+// Load configurations based on environment
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
 
 var connectionString = builder.Configuration.GetConnectionString("AppDBContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDBContextConnection' not found.");
 
 builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<AppDBContext>();
+    .AddEntityFrameworkStores<AppDBContext>();
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSpaStaticFiles(configuration =>
-{
-    configuration.RootPath = "../seleniumreact_app/build"; // Update with your React app's build folder
-});
-
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
-        });
-});
-
+builder.Services.AddCors();
 builder.Services.AddMvc(x => x.EnableEndpointRouting = false);
 
 builder.Services.AddAuthentication(options =>
@@ -55,9 +45,9 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = configuration["JWT:ValidAudience"],
-        ValidIssuer = configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
 });
 
@@ -89,6 +79,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+builder.Services.AddTransient<TestExecutor>();
 builder.Services.AddSingleton<DBHelper>();
 
 var app = builder.Build();
@@ -97,13 +88,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseSpaStaticFiles();
-
 app.UseRouting();
 
 app.UseAuthentication();
@@ -121,16 +109,6 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller}/{action=Index}/{id?}");
     endpoints.MapFallbackToFile("index.html");
-});
-
-app.UseSpa(spa =>
-{
-    spa.Options.SourcePath = "../seleniumreact_app"; // Update with your React app's folder name
-
-    if (app.Environment.IsDevelopment())
-    {
-        spa.UseReactDevelopmentServer(npmScript: "start");
-    }
 });
 
 app.Run();

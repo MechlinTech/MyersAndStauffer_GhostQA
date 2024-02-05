@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
+import { GetEnvironment } from "./seleniumAction";
 export const GET_TEST_SUITS = "GET_TEST_SUITS";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -19,3 +20,37 @@ export const getTestSuitesList = () => {
     }
   };
 };
+
+export const AddUpdateEnvironment = (data,navigate,onBack) => {
+
+
+  return async (dispatch) => {
+      try {
+          const res = await axios.post(
+              `${BASE_URL}/Selenium/AddUpdateEnvironment`,
+              data,
+              header())
+          console.log('response ', res)
+          if (res.data.status === "success") {
+               dispatch(GetEnvironment());
+              toast.info(res.data.message, {
+                  style: {
+                      background: 'rgb(101, 77, 247)',
+                      color: 'rgb(255, 255, 255)',
+                  },
+              });
+              onBack();
+            }
+            else if (res.data.status === "fail") { 
+                toast.error(res.data.message); 
+                onBack();
+                // navigate('/settings/environment')
+            }
+          
+          console.log("saved ", res)
+      } catch (error) {
+          console.log("error sending ", error);
+          // toast('Posting error')
+      }
+  }
+}

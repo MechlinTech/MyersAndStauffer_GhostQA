@@ -1,6 +1,6 @@
-﻿using ScreenRecorderLib;
-using System;
+﻿using System;
 using System.IO;
+using ScreenRecorderLib;
 
 namespace MyersAndStaufferFramework
 {

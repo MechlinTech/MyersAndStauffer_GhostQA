@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -68,6 +68,18 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\MyersAndStaufferSeleniumTests.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\linux\selenium-manager" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\macos\selenium-manager" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\windows\selenium-manager.exe" />
 	</ItemGroup>
 
 </Project>
