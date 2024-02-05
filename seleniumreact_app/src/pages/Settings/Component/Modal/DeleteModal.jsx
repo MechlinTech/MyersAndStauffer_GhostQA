@@ -8,15 +8,20 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { DeleteApplication, DeleteBrowser } from '../../../../redux/actions/seleniumAction';
 import { useDispatch } from 'react-redux';
 
-function DeleteModal({ open,onClose,itemId,AppOrBrow }) {
+function DeleteModal({ open,onClose,item,AppOrBrow }) {
   const dispatch = useDispatch()
-
+ const [name, setname] = useState("")
 
   const handleDelete = () => {
-    if(AppOrBrow === 'application')
-        dispatch(DeleteApplication(itemId))
-    else
-     dispatch(DeleteBrowser(itemId))
+    
+    if(AppOrBrow === 'application'){
+        dispatch(DeleteApplication(item.ApplicationId))
+        setname(item.ApplicationName)
+      }
+    else{
+     dispatch(DeleteBrowser(item.BrowserId))
+     setname(item.BrowserName)
+    }
 
     onClose()
   };
@@ -27,7 +32,7 @@ function DeleteModal({ open,onClose,itemId,AppOrBrow }) {
         <DialogTitle id="alert-dialog-title">{"Delete Confirmation"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete {AppOrBrow} with Id {itemId}?
+            Are you sure you want to delete this {AppOrBrow} {name}? It may be linked to a test suite, and you will have to update the test suites after deleting it.
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{ justifyContent: 'center',marginBottom:'20px'}}>

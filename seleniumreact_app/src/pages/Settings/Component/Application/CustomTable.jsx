@@ -13,13 +13,13 @@ export function CustomTable({ rows,handleEditApplication}) {
   const classes = useTableStyles();
 
   const [openDelModal, setopenDelModal] = useState(false)
-  const [itemId, setitemId] = useState(null)
+  const [item, setitem] = useState(null)
   const [AppOrBrow, setAppOrBrow] = useState('application')
 
 
   const handleDelete = (row) => {
     setopenDelModal(true)
-    setitemId(row.ApplicationId)
+    setitem(row)
   };
 
   const handleEdit = (row) => {
@@ -31,7 +31,7 @@ export function CustomTable({ rows,handleEditApplication}) {
     <DeleteModal
     open={openDelModal}
     onClose={()=>setopenDelModal(false)}
-    itemId={itemId}
+    item={item}
     AppOrBrow={AppOrBrow}
     />
     <TableContainer sx={{ marginBottom: "8vh" }}>

@@ -178,7 +178,7 @@ export default function Dashboard() {
                 </Grid>
               </Grid>
               <Grid
-              className={classess.remScrollbar}
+              // className={classess.remScrollbar}
                 item
                 style={{ overflow: "auto", maxHeight: "calc(70vh - 50px)" }}
               >
