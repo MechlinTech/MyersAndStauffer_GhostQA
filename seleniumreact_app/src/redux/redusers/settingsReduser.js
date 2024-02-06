@@ -1,7 +1,7 @@
-import { GET_TEST_SUITS } from "../actions/settingAction";
+import { GET_TEST_SUITS,GET_DELETE_RES } from "../actions/settingAction";
 
 const initialState = {
- testSuitsList: [],
+ testSuitsList: []
 };
 
 const settingsReduser = (state = initialState, action) => {

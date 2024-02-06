@@ -19,7 +19,8 @@ export default function Browser() {
 
   useEffect(()=>{
     dispatch(GetBrowser())
-  })
+  },[])
+  
   const handleAddBrowser = () => {
     setShowAddNewBrowser(true);
     setaddOredit("Add");

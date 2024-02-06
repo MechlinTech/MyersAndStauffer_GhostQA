@@ -275,13 +275,14 @@ export const DeleteTestSuite = (suiteName)=>{
 }
 
 export const AddUpdateApplication = (data)=>{
-  return async ()=>{
+  return async (dispatch)=>{
     try {
       const res = await axios.post(
         `${BASE_URL}/Selenium/AddUpdateApplication`,
          data,
          header())
       if (res.status === 200) {
+        dispatch(GetApplication())
         toast.info('Successfully added', {
           style: {
             background: 'rgb(101, 77, 247)', 
@@ -298,13 +299,14 @@ export const AddUpdateApplication = (data)=>{
 
 export const AddUpdateBrowser = (data)=>{
   
-  return async ()=>{
+  return async (dispatch)=>{
     try {
       const res = await axios.post(
         `${BASE_URL}/Selenium/AddUpdateBrowser`,
          data,
          header())
       if (res.status === 200) {
+        dispatch(GetBrowser())
         toast.info('Successfully added', {
           style: {
             background: 'rgb(101, 77, 247)', 
@@ -319,48 +321,4 @@ export const AddUpdateBrowser = (data)=>{
   }
 }
 
-export const DeleteApplication = (appId)=>{
-  
-  return async ()=>{
-    try {
-      const res = await axios.post(
-        `${BASE_URL}/Selenium/DeleteApplication?ApplicationId=${appId}`,
-         appId,
-         header())
-      if (res.status === 200) {
-        toast.info('Successfully deleted', {
-          style: {
-            background: 'rgb(101, 77, 247)', 
-            color: 'rgb(255, 255, 255)', 
-          },
-        });
-    } 
-    }catch (error) {
-      console.log("error deleting ",error);
-      toast('Posting error')
-    }
-  }
-}
 
-export const DeleteBrowser = (brwId)=>{
-  
-  return async ()=>{
-    try {
-      const res = await axios.post(
-        `${BASE_URL}/Selenium/DeleteBrowser?BrowserId=${brwId}`,
-         brwId,
-         header())
-      if (res.status === 200) {
-        toast.info('Successfully deleted', {
-          style: {
-            background: 'rgb(101, 77, 247)', 
-            color: 'rgb(255, 255, 255)', 
-          },
-        });
-    } 
-    }catch (error) {
-      console.log("error deleting ",error);
-      toast('Posting error')
-    }
-  }
-}

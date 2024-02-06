@@ -32,7 +32,7 @@ export function CustomTable({ rows,handleEditApplication}) {
     open={openDelModal}
     onClose={()=>setopenDelModal(false)}
     item={item}
-    AppOrBrow={AppOrBrow}
+    types={AppOrBrow}
     />
     <TableContainer sx={{ marginBottom: "8vh" }}>
       <Table>

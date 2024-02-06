@@ -30,7 +30,7 @@ export function CustomTable({ rows,handleEditBrowser }) {
     open={openDelModal}
     onClose={()=>setopenDelModal(false)}
     item={item}
-    AppOrBrow={AppOrBrow}
+    types={AppOrBrow}
     />
     <TableContainer sx={{ marginBottom: "8vh" }}>
       <Table>

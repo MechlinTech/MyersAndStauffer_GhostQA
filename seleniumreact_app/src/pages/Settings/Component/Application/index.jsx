@@ -19,7 +19,7 @@ export default function Application() {
 
   useEffect(() => {
     dispatch(GetApplication())
-  }, [applicationList])
+  }, [])
 
   const handleAddApplication = () => {
     setShowAddNewApplication(true);
