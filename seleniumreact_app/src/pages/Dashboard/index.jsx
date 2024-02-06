@@ -222,7 +222,7 @@ export default function Dashboard() {
                     {/* Right side for Test Cases */}
                     {selectedSuite !== null && (
                         <Grid item xs={12} sm={8}>
-                            <Card style={{ paddingBottom: "20px", maxHeight: "84vh" }}>
+                            <Card style={{ paddingBottom: "20px", minHeight: "84vh" }}>
                                 <Box style={tabLableStyle}>Test Run</Box>
                                 <Grid container>
                                     <Grid item xs={12} style={{ padding: "20px" }}>
