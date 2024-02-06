@@ -371,7 +371,7 @@ export default function EditTestSuite() {
                             >
                               <FormControlLabel
                                 value="custom-Suites"
-                                control={<Radio />}
+                                control={<Radio style={{ color: '#654DF7' }}/>}
                                 label={
                                   <Typography
                                     variant="body1"
@@ -471,7 +471,7 @@ export default function EditTestSuite() {
                               >
                                 <FormControlLabel
                                   value="only-for-me"
-                                  control={<Radio />}
+                                  control={<Radio style={{ color: '#654DF7' }}/>}
                                   label={
                                     <Typography
                                       variant="body1"
@@ -487,7 +487,7 @@ export default function EditTestSuite() {
                                 />
                                 <FormControlLabel
                                   value="all-users"
-                                  control={<Radio />}
+                                  control={<Radio style={{ color: '#654DF7' }}/>}
                                   label={
                                     <Typography
                                       variant="body1"
