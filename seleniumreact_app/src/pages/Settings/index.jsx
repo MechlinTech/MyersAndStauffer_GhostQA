@@ -137,7 +137,7 @@ export default function Settings() {
                     {/* First Section */}
                     <Grid item xs={12} sm={2}>
                         <Card style={{ paddingBottom: "30px", maxHeight: "84vh" }}>
-                            <Box className={classess.sideBar}>Settings</Box>
+                            {/* <Box className={classess.sideBar}>Settings</Box> */}
                             {renderedCategories}
                         </Card>
                     </Grid>
