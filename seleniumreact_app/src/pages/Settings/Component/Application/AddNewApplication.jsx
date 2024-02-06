@@ -68,7 +68,7 @@ export default function AddNewApplication({ onBack,addOredit,applicationToEdit,
         spacing={2}
       >
         <Grid item xs={6} className={classes.header}>
-          {addOredit} New Application
+        <div className={classes.highlight}> {addOredit} New Application</div>
         </Grid>
         {/* <Grid item>
           <Button

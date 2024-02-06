@@ -50,8 +50,8 @@ export default function ExecutionEnvironment() {
           alignItems="center"
           spacing={2}
         >
-          <Grid item xs={6} className={classes.header}>
-            Enviroment
+          <Grid item xs={6}  className={`${classes.header}`}>
+          <div className={classes.highlight}>Enviroment</div>
           </Grid>
           <Grid item>
             <Button

@@ -119,7 +119,7 @@ export default function Dashboard() {
                 <Grid container spacing={2}>
                     {/* Left side for Search and Results */}
                     <Grid item xs={12} sm={4}>
-                        <Card style={{ paddingBottom: "20px", maxHeight: "84vh" }}>
+                        <Card style={{ paddingBottom: "30px", maxHeight: "78vh" }}>
                             <Grid container alignItems="center">
                                 <Grid item xs={6} style={tabLableStyle}>
                                     Test Suite

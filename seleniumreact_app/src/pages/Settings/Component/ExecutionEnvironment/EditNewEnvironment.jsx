@@ -152,29 +152,9 @@ console.log("selectdapp",formData.selectedApplication);
         spacing={2}
       >
         <Grid item xs={6} className={classes.header}>
-          Edit Environment
+        <div className={classes.highlight}>Edit Environment</div>
         </Grid>
-        {/* <Grid item>
-          <Button
-            className={classes.button}
-            onClick={handleBack}
-            sx={{
-              backgroundColor: "rgb(101, 77, 247)",
-              "&:hover": {
-                backgroundColor: "rgb(101, 77, 247) !important",
-                borderColor: "#654DF7",
-                color: "#fff",
-                "&:before": {
-                  backgroundColor: "rgb(101, 77, 247) !important",
-                  color: "#fff",
-                },
-              },
-              color: "#fff",
-            }}
-          >
-            Back
-          </Button>
-        </Grid> */}
+       
       </Grid>
 
       {/* Body */}
