@@ -75,9 +75,9 @@ const Graph = (props) => {
     { value: "7", label: "7" },
     { value: "15", label: "15" },
     { value: "30", label: "30" },
-    { value: "30", label: "45" },
-    { value: "30", label: "60" },
-    { value: "30", label: "90" }
+    { value: "45", label: "45" },
+    { value: "60", label: "60" },
+    { value: "90", label: "90" }
     // Add more options as needed
   ];
   const [filterType, setFilterType] =useState('runs');
@@ -208,17 +208,42 @@ const Graph = (props) => {
                 options={staticOptions}
                 value={filterValue}
                 onChange={handleFilterValue}
-                className={clsx(classes.select, classes.customBackgroung)}
-                sx={{
-                  "& .MuiSelect-outlined": {
-                    backgroundColor: "red", // Background color
+                // className={clsx(classes.select, classes.customBackgroung)}
+                // sx={{
+                //   "& .MuiSelect-outlined": {
+                //     backgroundColor: "red", // Background color
+                //     "&:hover": {
+                //       borderColor: "red", // Hover border color
+                //     },
+                //     "&.Mui-focused": {
+                //       borderColor: "green !important", // Active border color
+                //     },
+                //   },
+                // }}
+                styles={{
+                  container: (provided) => ({
+                    ...provided,
+                    backgroundColor: "rgb(242, 242, 242)",
+                    zIndex: 999, // Adjust the zIndex value
+                  }),
+                  control: (provided, state) => ({
+                    ...provided,
+                    backgroundColor: "rgb(242, 242, 242)",
                     "&:hover": {
-                      borderColor: "red", // Hover border color
+                      borderColor: "#654DF7",
                     },
-                    "&.Mui-focused": {
-                      borderColor: "green !important", // Active border color
-                    },
-                  },
+                    borderColor: Error.environment
+                      ? "red"
+                      : state.isFocused
+                      ? "#654DF7"
+                      : "rgb(242, 242, 242)",
+                  }),
+                  option: (provided, state) => ({
+                    ...provided,
+                    backgroundColor: state.isSelected
+                      ? "#654DF7"
+                      : "transparent",
+                  }),
                 }}
               />
               
