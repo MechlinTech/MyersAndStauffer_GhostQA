@@ -210,18 +210,7 @@ const Graph = (props) => {
                 options={staticOptions}
                 value={filterValue}
                 onChange={handleFilterValue}
-                // className={clsx(classes.select, classes.customBackgroung)}
-                // sx={{
-                //   "& .MuiSelect-outlined": {
-                //     backgroundColor: "red", // Background color
-                //     "&:hover": {
-                //       borderColor: "red", // Hover border color
-                //     },
-                //     "&.Mui-focused": {
-                //       borderColor: "green !important", // Active border color
-                //     },
-                //   },
-                // }}
+                
                 styles={{
                   container: (provided) => ({
                     ...provided,
