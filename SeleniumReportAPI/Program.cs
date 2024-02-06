@@ -1,7 +1,5 @@
-using Mailosaur.Operations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -28,11 +26,6 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSpaStaticFiles(configuration =>
-{
-    configuration.RootPath = "wwwroot/selenium_react_app/build"; // Update with your React app's build folder
-});
-
 builder.Services.AddCors();
 builder.Services.AddMvc(x => x.EnableEndpointRouting = false);
 
@@ -95,13 +88,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseSpaStaticFiles();
-
 app.UseRouting();
 
 app.UseAuthentication();
@@ -119,16 +109,6 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller}/{action=Index}/{id?}");
     endpoints.MapFallbackToFile("index.html");
-});
-
-app.UseSpa(spa =>
-{
-    spa.Options.SourcePath = "wwwroot/selenium_react_app"; // Update with your React app's folder name
-
-    if (app.Environment.IsDevelopment())
-    {
-        spa.UseReactDevelopmentServer(npmScript: "start");
-    }
 });
 
 app.Run();

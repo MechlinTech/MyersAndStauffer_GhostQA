@@ -19,7 +19,7 @@ export default function Application() {
 
   useEffect(() => {
     dispatch(GetApplication())
-  }, [applicationList])
+  }, [])
 
   const handleAddApplication = () => {
     setShowAddNewApplication(true);
@@ -59,7 +59,7 @@ export default function Application() {
           spacing={2}
         >
           <Grid item xs={6} className={classes.header}>
-            Application
+          <div className={classes.highlight}>Application</div>
           </Grid>
           <Grid item>
             <Button

@@ -67,7 +67,6 @@ export default function EditTestSuite() {
     setName(suiteToEdit.TestSuiteName);
     setSelectedApplication(()=>{
      const x =  applicationList.find((app)=> app.ApplicationId === suiteToEdit.ApplicationId)
-     console.log("x:",applicationList)
      return x;
     })
     //work on all-user
@@ -80,8 +79,7 @@ export default function EditTestSuite() {
       return testCasesList.filter((test)=> suiteToEdit.SelectedTestCases?.includes(test.TestCaseName))
     })
   }, [suiteToEdit]);
-  console.log("suite to edit : ",suiteToEdit)
-  console.log("application :",applicationList)
+  
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -102,7 +100,13 @@ export default function EditTestSuite() {
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
-
+ const handleApplication = (env)=>{
+   const app =  {
+    ApplicationId:env.ApplicationId,
+    ApplicationName:env.ApplicationName
+  }
+  setSelectedApplication(app)
+}
   const handledescriptionChange = (e) => {
     setDescription(e.target.value);
   };
@@ -176,16 +180,20 @@ export default function EditTestSuite() {
   };
 
   const handleCheckboxChange = (event, row) => {
-    const checked = event.target.checked;
-    setSelectedRows((prevSelectedRows) =>
-      checked
+      console.log('selected row ', selectedRows)
+      const checked = event.target.checked;
+    console.log("checked : ",checked)
+    setSelectedRows((prevSelectedRows) =>{
+      return  checked
         ? [...prevSelectedRows, row]
         : prevSelectedRows.filter((selectedRow) => selectedRow !== row)
+      }
     );
   };
 
   const handleSelectAllChange = (event) => {
     const checked = event.target.checked;
+    console.log("checked in all selection ", checked)
     setSelectAll(checked);
     setSelectedRows(checked ? testCasesList : []);
   };
@@ -199,6 +207,10 @@ export default function EditTestSuite() {
   })).filter((data) =>
     data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
+  // if(filteredTestCaseData == selectedRows){
+  //   console.log("yes")
+  // }
+  
   return (
     <>
       
@@ -359,7 +371,7 @@ export default function EditTestSuite() {
                             >
                               <FormControlLabel
                                 value="custom-Suites"
-                                control={<Radio />}
+                                control={<Radio style={{ color: '#654DF7' }}/>}
                                 label={
                                   <Typography
                                     variant="body1"
@@ -377,117 +389,7 @@ export default function EditTestSuite() {
                           </FormControl>
                         </Grid>
 
-                        {/* Row 3: Additional Name Dropdown */}
-                        <Grid item>
-                          <div className={classes.input}>
-                            <Typography
-                              variant="subtitle1"
-                              className={clsx(classes.customFontSize)}
-                            >
-                              Application
-                            </Typography>
-                            <Select
-                              getOptionLabel={(option) =>
-                                option.ApplicationName
-                              }
-                              getOptionValue={(option) => option.ApplicationId}
-                              options={applicationList}
-                              value={selectedApplication}
-                              onChange={(newValue) => {
-                                setSelectedApplication(newValue);
-                              }}
-                              styles={{
-                                container: (provided) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  zIndex: 999, // Adjust the zIndex value
-                                }),
-                                control: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  "&:hover": {
-                                    borderColor: "#654DF7",
-                                  },
-                                  borderColor: Error.application
-                                    ? "red"
-                                    : state.isFocused
-                                    ? "#654DF7"
-                                    : "rgb(242, 242, 242)",
-                                }),
-                                option: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: state.isSelected
-                                    ? "#654DF7"
-                                    : "transparent",
-                                }),
-                              }}
-                              menuPosition={"fixed"} // Set menuPosition to fixed
-                            />
-                            {Error.application && (
-                              <Typography className={classes.inputError}>
-                                {Error.application}
-                              </Typography>
-                            )}
-                          </div>
-                        </Grid>
-
-                        {/* Row 4: Radio Buttons */}
-                        <Grid
-                          container
-                          alignItems="center"
-                          sx={{ display: "grid" }}
-                        >
-                          <Grid item>
-                            <Typography className={classes.customFontSize}>
-                              Email Recipient
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <FormControl
-                              component="fieldset"
-                              className={classes.radioGroup}
-                            >
-                              <RadioGroup
-                                aria-label="options"
-                                name="options"
-                                value={selectedRecepentValue}
-                                onChange={handleRadioChangeRecepent}
-                                row
-                              >
-                                <FormControlLabel
-                                  value="only-for-me"
-                                  control={<Radio />}
-                                  label={
-                                    <Typography
-                                      variant="body1"
-                                      className={classes.radioButtonLabel}
-                                    >
-                                      Only for me
-                                    </Typography>
-                                  }
-                                  className={clsx(
-                                    classes.radioLabel,
-                                    classes.customFontSize
-                                  )}
-                                />
-                                <FormControlLabel
-                                  value="all-users"
-                                  control={<Radio />}
-                                  label={
-                                    <Typography
-                                      variant="body1"
-                                      className={classes.radioButtonLabel}
-                                    >
-                                      All users
-                                    </Typography>
-                                  }
-                                  className={classes.radioLabel}
-                                />
-                              </RadioGroup>
-                            </FormControl>
-                          </Grid>
-                        </Grid>
-
+                        
                         {/* Row 5: Environment Dropdown */}
                         <Grid item>
                           <div className={classes.input}>
@@ -504,8 +406,10 @@ export default function EditTestSuite() {
                               getOptionValue={(option) => option.EnvironmentId}
                               options={environementList}
                               value={selectedEnvironment}
-                              onChange={(newValue) =>
+                              onChange={(newValue) =>{
                                 setSelectedEnvironment(newValue)
+                                handleApplication(newValue)
+                                }
                               }
                               styles={{
                                 container: (provided) => ({
@@ -541,6 +445,119 @@ export default function EditTestSuite() {
                             )}
                           </div>
                         </Grid>
+
+                        {/* Row 4: Radio Buttons */}
+                        <Grid
+                          container
+                          alignItems="center"
+                          sx={{ display: "grid" }}
+                        >
+                          <Grid item>
+                            <Typography className={classes.customFontSize}>
+                              Email Recipient
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <FormControl
+                              component="fieldset"
+                              className={classes.radioGroup}
+                            >
+                              <RadioGroup
+                                aria-label="options"
+                                name="options"
+                                value={selectedRecepentValue}
+                                onChange={handleRadioChangeRecepent}
+                                row
+                              >
+                                <FormControlLabel
+                                  value="only-for-me"
+                                  control={<Radio style={{ color: '#654DF7' }}/>}
+                                  label={
+                                    <Typography
+                                      variant="body1"
+                                      className={classes.radioButtonLabel}
+                                    >
+                                      Only for me
+                                    </Typography>
+                                  }
+                                  className={clsx(
+                                    classes.radioLabel,
+                                    classes.customFontSize
+                                  )}
+                                />
+                                <FormControlLabel
+                                  value="all-users"
+                                  control={<Radio style={{ color: '#654DF7' }}/>}
+                                  label={
+                                    <Typography
+                                      variant="body1"
+                                      className={classes.radioButtonLabel}
+                                    >
+                                      All users
+                                    </Typography>
+                                  }
+                                  className={classes.radioLabel}
+                                />
+                              </RadioGroup>
+                            </FormControl>
+                          </Grid>
+                        </Grid>
+
+                        {/* Row 3: Additional Name Dropdown */}
+                        <Grid item>
+                          <div className={classes.input}>
+                            <Typography
+                              variant="subtitle1"
+                              className={clsx(classes.customFontSize)}
+                            >
+                              Application
+                            </Typography>
+                            <Select
+                              getOptionLabel={(option) =>
+                                option.ApplicationName
+                              }
+                              getOptionValue={(option) => option.ApplicationId}
+                              options={applicationList}
+                              value={selectedApplication}
+                              // onChange={(newValue) => {
+                              //   setSelectedApplication(newValue);
+                              // }}
+                              onChange={selectedApplication}
+                              styles={{
+                                container: (provided) => ({
+                                  ...provided,
+                                  backgroundColor: "rgb(242, 242, 242)",
+                                  zIndex: 999, // Adjust the zIndex value
+                                }),
+                                control: (provided, state) => ({
+                                  ...provided,
+                                  backgroundColor: "rgb(242, 242, 242)",
+                                  "&:hover": {
+                                    borderColor: "#654DF7",
+                                  },
+                                  borderColor: Error.application
+                                    ? "red"
+                                    : state.isFocused
+                                    ? "#654DF7"
+                                    : "rgb(242, 242, 242)",
+                                }),
+                                option: (provided, state) => ({
+                                  ...provided,
+                                  backgroundColor: state.isSelected
+                                    ? "#654DF7"
+                                    : "transparent",
+                                }),
+                              }}
+                              menuPosition={"fixed"} // Set menuPosition to fixed
+                            />
+                            {Error.application && (
+                              <Typography className={classes.inputError}>
+                                {Error.application}
+                              </Typography>
+                            )}
+                          </div>
+                        </Grid>
+
 
                         {/* Row 6: Browser Dropdown */}
                         {/* <Grid item>

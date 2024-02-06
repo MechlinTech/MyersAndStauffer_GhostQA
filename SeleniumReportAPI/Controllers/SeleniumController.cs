@@ -352,5 +352,38 @@ namespace SeleniumReportAPI.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        /// <summary>
+        /// Delete Application By ApplicationId
+        /// </summary>
+        /// <param Int="ApplicationId"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteApplication")]
+        public async Task<ActionResult> DeleteApplication(int ApplicationId)
+        {
+            return Ok(await _helper.DeleteApplication(ApplicationId));
+        }
+
+        /// <summary>
+        /// Delete Browser By BrowserId
+        /// </summary>
+        /// <param Int="BrowserId"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteBrowser")]
+        public async Task<ActionResult> DeleteBrowser(int BrowserId)
+        {
+            return Ok(await _helper.DeleteBrowser(BrowserId));
+        }
+
+        /// <summary>
+        /// Delete Environment By EnvironmentId
+        /// </summary>
+        /// <param Int="EnvironmentId"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteEnvironment")]
+        public async Task<ActionResult> DeleteEnvironment(int EnvironmentId)
+        {
+            return Ok(await _helper.DeleteEnvironment(EnvironmentId));
+        }
     }
 }

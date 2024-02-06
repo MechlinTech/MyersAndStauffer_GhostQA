@@ -24,7 +24,6 @@ export const getTestSuites = () => {
         payload: response.data,
       });
     } catch (error) {
-      console.error("Error in getTestSuites:", error);
       toast.error("NETWORK ERROR");
     }
   };
@@ -37,7 +36,6 @@ export const getListByTestSuitsName = (data) => {
                 `${BASE_URL}/Selenium/GetDashboardDetails?testSuitName=${data}`,
                 header()
             );
-            console.log("getListByTestSuitsName", response.data);
             dispatch({
                 type: GET_TEST_SUITS_LIST,
                 payload: response.data,
@@ -277,13 +275,14 @@ export const DeleteTestSuite = (suiteName)=>{
 }
 
 export const AddUpdateApplication = (data)=>{
-  return async ()=>{
+  return async (dispatch)=>{
     try {
       const res = await axios.post(
         `${BASE_URL}/Selenium/AddUpdateApplication`,
          data,
          header())
       if (res.status === 200) {
+        dispatch(GetApplication())
         toast.info('Successfully added', {
           style: {
             background: 'rgb(101, 77, 247)', 
@@ -300,13 +299,14 @@ export const AddUpdateApplication = (data)=>{
 
 export const AddUpdateBrowser = (data)=>{
   
-  return async ()=>{
+  return async (dispatch)=>{
     try {
       const res = await axios.post(
         `${BASE_URL}/Selenium/AddUpdateBrowser`,
          data,
          header())
       if (res.status === 200) {
+        dispatch(GetBrowser())
         toast.info('Successfully added', {
           style: {
             background: 'rgb(101, 77, 247)', 
@@ -320,3 +320,5 @@ export const AddUpdateBrowser = (data)=>{
     }
   }
 }
+
+

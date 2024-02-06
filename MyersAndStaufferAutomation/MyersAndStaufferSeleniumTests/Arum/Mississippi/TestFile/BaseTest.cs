@@ -37,7 +37,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             string baseURL = TestExecutor.Baseurl;
             WindowSize browserWindowSize = new WindowSize(1280, 720);
             LogMessage(logMessage.ToString());
-            Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize);
+            Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize, isRunHeadless: true);
             driver = Browser.Driver;
             driver.Manage().Window.Maximize();
         }
@@ -69,7 +69,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             _testData.TestRunEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestCaseSteps = "-";
-            //VideoRecorder.EndRecording();
+            VideoRecorder.EndRecording();
 
             Browser.Driver.Dispose();
             _testData.TestSuiteEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");

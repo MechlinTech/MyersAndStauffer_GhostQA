@@ -19,7 +19,8 @@ export default function Browser() {
 
   useEffect(()=>{
     dispatch(GetBrowser())
-  })
+  },[])
+  
   const handleAddBrowser = () => {
     setShowAddNewBrowser(true);
     setaddOredit("Add");
@@ -59,7 +60,7 @@ export default function Browser() {
           spacing={2}
         >
           <Grid item xs={6} className={classes.header}>
-            Browser
+          <div className={classes.highlight}> Browser</div>
           </Grid>
           <Grid item>
             <Button

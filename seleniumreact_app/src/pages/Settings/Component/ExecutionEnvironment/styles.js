@@ -12,6 +12,7 @@ export const useStyles = makeStyles((theme) => ({
         fontSize: "14px",
         lineHeight: "21px",
         padding: "10px 22px",
+        
     },
     button: {
         height: "40px",
@@ -70,6 +71,11 @@ export const useStyles = makeStyles((theme) => ({
         display: "flex",
         textTransform: "none !important",
     },
+    highlight: {
+        fontSize: "24px",
+        fontWeight: "400",
+        color: "rgb(56, 56, 56)"
+    }
 }));
 
 export const useTableStyles = makeStyles((theme) => ({

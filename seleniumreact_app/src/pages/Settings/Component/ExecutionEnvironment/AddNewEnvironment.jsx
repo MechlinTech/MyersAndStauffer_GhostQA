@@ -129,7 +129,7 @@ export default function AddNewEnvironment({ onBack }) {
         spacing={2}
       >
         <Grid item xs={6} className={classes.header}>
-          Add New Environment
+        <div className={classes.highlight}>Add New Environment</div>
         </Grid>
         {/* <Grid item>
           <Button

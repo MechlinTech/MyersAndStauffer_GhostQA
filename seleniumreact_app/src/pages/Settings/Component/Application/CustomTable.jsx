@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
@@ -6,12 +6,20 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useTableStyles, StyledTableCell } from "./styles";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
+import { useDispatch } from "react-redux";
+import DeleteModal from "../Modal/DeleteModal";
 
 export function CustomTable({ rows,handleEditApplication}) {
   const classes = useTableStyles();
 
+  const [openDelModal, setopenDelModal] = useState(false)
+  const [item, setitem] = useState(null)
+  const [AppOrBrow, setAppOrBrow] = useState('application')
+
+
   const handleDelete = (row) => {
-    console.log(`Deleting ApplicationName: ${row.ApplicationName}`);
+    setopenDelModal(true)
+    setitem(row)
   };
 
   const handleEdit = (row) => {
@@ -19,6 +27,13 @@ export function CustomTable({ rows,handleEditApplication}) {
     console.log(`Editing ApplicationName: ${row.ApplicationName}`);
   };
   return (
+    <>
+    <DeleteModal
+    open={openDelModal}
+    onClose={()=>setopenDelModal(false)}
+    item={item}
+    types={AppOrBrow}
+    />
     <TableContainer sx={{ marginBottom: "8vh" }}>
       <Table>
         <TableHead>
@@ -51,15 +66,16 @@ export function CustomTable({ rows,handleEditApplication}) {
                   onClick={() => handleEdit(row)}
                   style={{ cursor: "pointer", marginRight: "10px",  color: "rgb(101, 77, 247)", }}
                 />
-                {/* <DeleteIcon
+                <DeleteIcon
                   onClick={() => handleDelete(row)}
                   style={{ cursor: "pointer", marginRight: "10px", color: "#F64E4E"}}
-                /> */}
+                />
               </StyledTableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+    </>
   );
 }

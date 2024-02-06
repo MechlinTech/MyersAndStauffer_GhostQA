@@ -65,7 +65,7 @@ export default function AddNewBrowser({ onBack,addOredit,browserToEdit,setBrowse
         spacing={2}
       >
         <Grid item xs={6} className={classes.header}>
-          {addOredit} New Browser
+        <div className={classes.highlight}> {addOredit} New Browser</div>
         </Grid>
         {/* <Grid item>
           <Button
