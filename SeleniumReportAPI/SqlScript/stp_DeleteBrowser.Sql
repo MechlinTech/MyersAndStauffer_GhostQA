@@ -1,4 +1,4 @@
-Create OR ALTER  PROCEDURE [dbo].[stp_DeleteBrowser]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteBrowser]
 @BrowserId			INT
 AS
 /**************************************************************************************
@@ -13,7 +13,17 @@ PROC EXEC		:
 BEGIN TRY
 	IF EXISTS(SELECT 1 FROM tbl_Browsers WHERE [BrowserId] = @BrowserId)
 	BEGIN
-		DELETE FROM tbl_Browsers WHERE [BrowserId] = @BrowserId
+		IF NOT EXISTS(SELECT 1 FROM tbl_TestSuites WHERE EnvironmentId IN (SELECT EnvironmentId FROM tbl_Environments WHERE BroswerId = @BrowserId))
+		BEGIN
+			DELETE FROM tbl_Browsers WHERE [BrowserId] = @BrowserId
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], 'Browser is already connected with TestSuite' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
 	END
 	ELSE
 	BEGIN

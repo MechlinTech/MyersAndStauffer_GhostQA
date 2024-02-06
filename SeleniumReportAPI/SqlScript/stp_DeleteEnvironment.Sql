@@ -1,4 +1,4 @@
-Create OR ALTER PROCEDURE [dbo].[stp_DeleteEnvironment]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteEnvironment]
 @EnvironmentId			INT
 AS
 /**************************************************************************************
@@ -13,7 +13,17 @@ PROC EXEC		:
 BEGIN TRY
 	IF EXISTS(SELECT 1 FROM tbl_Environments WHERE [EnvironmentId] = @EnvironmentId)
 	BEGIN
-		DELETE FROM tbl_Environments WHERE [EnvironmentId] = @EnvironmentId
+		IF NOT EXISTS(SELECT 1 FROM tbl_TestSuites WHERE EnvironmentId = @EnvironmentId)
+		BEGIN
+			DELETE FROM tbl_Environments WHERE [EnvironmentId] = @EnvironmentId
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], 'Environment is already connected with TestSuite' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
 	END
 	ELSE
 	BEGIN

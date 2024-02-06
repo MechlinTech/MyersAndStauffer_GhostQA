@@ -1,4 +1,4 @@
-Create OR ALTER PROCEDURE [dbo].[stp_DeleteApplication]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteApplication]
 @ApplicationId			INT
 AS
 /**************************************************************************************
@@ -13,7 +13,17 @@ PROC EXEC		:
 BEGIN TRY
 	IF EXISTS(SELECT 1 FROM tbl_Applications WHERE [ApplicationId] = @ApplicationId)
 	BEGIN
-		DELETE FROM tbl_Applications WHERE [ApplicationId] = @ApplicationId
+		IF NOT EXISTS(SELECT 1 FROM tbl_TestSuites WHERE ApplicationId = @ApplicationId)
+		BEGIN
+			DELETE FROM tbl_Applications WHERE [ApplicationId] = @ApplicationId
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], 'Application is already connected with TestSuite' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
 	END
 	ELSE
 	BEGIN
