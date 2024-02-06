@@ -257,7 +257,7 @@ export default function Dashboard() {
                           />
                         </TabList>
                       </Box>
-                      <TabPanel value="1"><Graph/></TabPanel>
+                      <TabPanel value="1"><Graph testSuitName={selectedSuite}/></TabPanel>
                       <TabPanel value="2">
                         <Box sx={{ padding: "0 !important" }}>
                           <BasicAccordion />

@@ -20,10 +20,12 @@ import Radio from "@material-ui/core/Radio";
 import useStyles from "./../../../pages/Dashboard/Modal/styles";
 import clsx from "clsx";
 
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Graph = (props) => {
   const classes = useStyles();
+  
 
   const [data, setData] = useState({
     options: {
@@ -80,12 +82,15 @@ const Graph = (props) => {
     { value: "30", label: "90" }
     // Add more options as needed
   ];
+ 
   const [filterType, setFilterType] =useState('runs');
   const [filterValue, setFilterValue] =useState( { value: "7", label: "7" });
+  const { testSuiteLists } = useSelector((state) => state.selenium);
   const [empty, setEmpty] =useState( true);
   useEffect(() => {
+   
     const get_host = async () => {
-     await axios.get(`${BASE_URL}/Selenium/GetChartDetails?TestSuiteName=Mississippi&Filtertype=${filterType}&FilterValue=${filterValue.value}`, header())
+     await axios.get(`${BASE_URL}/Selenium/GetChartDetails?TestSuiteName=${props.testSuitName.TestSuiteName}&Filtertype=${filterType}&FilterValue=${filterValue.value}`, header())
       .then((response) => {
         const  TestRunStartDate = [];
         const  TotalFailedTestCase = [];
@@ -129,17 +134,12 @@ const Graph = (props) => {
         };
 
         setData((current)=>newData);
-        console.log(data,'test',response); 
+      
       });
       
     }
     get_host();
-
-
-
-
-
-  }, [filterType,filterValue]);
+  }, [filterType,filterValue,testSuiteLists]);
   const handleRadioChange = (event) => {
     
     setFilterType(event.target.value);
