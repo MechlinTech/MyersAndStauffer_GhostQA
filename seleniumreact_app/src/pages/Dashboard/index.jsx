@@ -31,7 +31,7 @@ export default function Dashboard() {
     const { testSuits } = useSelector((state) => state.selenium);
     const [selectedSuite, setSelectedSuite] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [tabNo, setTabNo] = useState("2");
+    const [tabNo, setTabNo] = useState("1");
     const [openModal, setOpenModal] = useState(false);
     const [openDelModal, setopenDelModal] = useState(false)
     const [suitToDelete, setsuitToDelete] = useState('')
