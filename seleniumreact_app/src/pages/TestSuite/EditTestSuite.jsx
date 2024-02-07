@@ -184,6 +184,7 @@ export default function EditTestSuite() {
       const checked = event.target.checked;
     console.log("checked : ",checked)
     setSelectedRows((prevSelectedRows) =>{
+      console.log('previous seletcted rows ', prevSelectedRows)
       return  checked
         ? [...prevSelectedRows, row]
         : prevSelectedRows.filter((selectedRow) => selectedRow !== row)
