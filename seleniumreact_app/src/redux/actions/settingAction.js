@@ -92,7 +92,7 @@ export const AddUpdateBrowser = (data)=>{
         `${BASE_URL}/Selenium/AddUpdateBrowser`,
          data,
          header())
-      if (res.data.status="success") {
+      if (res.data.status==="success") {
         dispatch(GetBrowser())
         toast.info(res.data.message, {
           style: {
