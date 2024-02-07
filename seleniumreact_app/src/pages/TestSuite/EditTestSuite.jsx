@@ -180,15 +180,11 @@ export default function EditTestSuite() {
   };
 
   const handleCheckboxChange = (event, row) => {
-      console.log('selected row ', selectedRows)
-      const checked = event.target.checked;
-    console.log("checked : ",checked)
-    setSelectedRows((prevSelectedRows) =>{
-      console.log('previous seletcted rows ', prevSelectedRows)
-      return  checked
+    const checked = event.target.checked;
+    setSelectedRows((prevSelectedRows) =>
+      checked
         ? [...prevSelectedRows, row]
-        : prevSelectedRows.filter((selectedRow) => selectedRow !== row)
-      }
+        : prevSelectedRows.filter((selectedRow) => selectedRow.TestCaseName !== row.TestCaseName)
     );
   };
 
