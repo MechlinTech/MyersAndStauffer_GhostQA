@@ -281,15 +281,20 @@ export const AddUpdateApplication = (data)=>{
         `${BASE_URL}/Selenium/AddUpdateApplication`,
          data,
          header())
-      if (res.status === 200) {
+      if (res.data.status=== "success") {
         dispatch(GetApplication())
-        toast.info('Successfully added', {
+        toast.info(res.data.message, {
           style: {
             background: 'rgb(101, 77, 247)', 
             color: 'rgb(255, 255, 255)', 
           },
         });
     } 
+    else if (res.data.status === "fail") { 
+      toast.error(res.data.message); 
+     
+      
+  }
     }catch (error) {
       console.log("error adding ",error);
       toast('Posting error')
@@ -305,15 +310,18 @@ export const AddUpdateBrowser = (data)=>{
         `${BASE_URL}/Selenium/AddUpdateBrowser`,
          data,
          header())
-      if (res.status === 200) {
+      if (res.data.status="success") {
         dispatch(GetBrowser())
-        toast.info('Successfully added', {
+        toast.info(res.data.message, {
           style: {
             background: 'rgb(101, 77, 247)', 
             color: 'rgb(255, 255, 255)', 
           },
         });
     } 
+    else if (res.data.status === "fail") { 
+      toast.error(res.data.message); 
+  }
     }catch (error) {
       console.log("error adding ",error);
       toast('Posting error')
