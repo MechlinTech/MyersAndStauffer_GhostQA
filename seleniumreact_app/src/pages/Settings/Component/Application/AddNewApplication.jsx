@@ -11,7 +11,7 @@ import {
   Card,
 } from "@mui/material";
 
-import { AddUpdateApplication, GetApplication } from "../../../../redux/actions/seleniumAction";
+import { AddUpdateApplication } from "../../../../redux/actions/settingAction";
 import { useDispatch } from "react-redux";
 
 export default function AddNewApplication({ onBack,addOredit,applicationToEdit,

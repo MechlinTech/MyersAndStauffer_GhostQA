@@ -11,7 +11,7 @@ import {
   Card,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { AddUpdateBrowser, GetBrowser } from "../../../../redux/actions/seleniumAction";
+import { AddUpdateBrowser } from "../../../../redux/actions/settingAction";
 
 
 export default function AddNewBrowser({ onBack,addOredit,browserToEdit,setBrowserToEdit }) {

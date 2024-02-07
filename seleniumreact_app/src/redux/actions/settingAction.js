@@ -55,6 +55,62 @@ export const AddUpdateEnvironment = (data,navigate,onBack) => {
       }
   }
 }
+
+export const AddUpdateApplication = (data)=>{
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Selenium/AddUpdateApplication`,
+         data,
+         header())
+      if (res.data.status=== "success") {
+        dispatch(GetApplication())
+        toast.info(res.data.message, {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } 
+    else if (res.data.status === "fail") { 
+      toast.error(res.data.message); 
+     
+      
+  }
+    }catch (error) {
+      console.log("error adding ",error);
+      toast('Posting error')
+    }
+  }
+}
+
+export const AddUpdateBrowser = (data)=>{
+  
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Selenium/AddUpdateBrowser`,
+         data,
+         header())
+      if (res.data.status="success") {
+        dispatch(GetBrowser())
+        toast.info(res.data.message, {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } 
+    else if (res.data.status === "fail") { 
+      toast.error(res.data.message); 
+  }
+    }catch (error) {
+      console.log("error adding ",error);
+      toast('Posting error')
+    }
+  }
+}
+
 export const DeleteEnvironment = (id) => {
   return async (dispatch) => {
        try {
