@@ -1,12 +1,19 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
+using System;
+using System.Text;
 using SeleniumReportAPI.DBContext;
 using SeleniumReportAPI.Helper;
-using System.Text;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +33,18 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddCors();
-builder.Services.AddMvc(x => x.EnableEndpointRouting = false);
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 builder.Services.AddAuthentication(options =>
 {
@@ -94,13 +111,11 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+// Use CORS before any other middleware
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors(builder => builder
-    .AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader());
 
 app.UseEndpoints(endpoints =>
 {

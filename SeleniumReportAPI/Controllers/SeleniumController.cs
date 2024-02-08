@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
@@ -8,6 +9,7 @@ namespace SeleniumReportAPI.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
+    [EnableCors("AllowAll")]
     [ApiController]
     public class SeleniumController : ControllerBase
     {

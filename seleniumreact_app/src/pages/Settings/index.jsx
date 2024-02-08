@@ -6,13 +6,10 @@ import { useDispatch } from "react-redux";
 import { ListItemIcon } from "@material-ui/core";
 import {
     Environment,
-    RoleIcon,
     StyledDashBoardIcon,
-    UserManagementIcon,
 } from "../../comman/icons";
 import { Link, Outlet } from "react-router-dom";
 import { GetApplication, GetBrowser } from "../../redux/actions/seleniumAction";
-
 //JSON is showing circular reference error
 import * as flatted from 'flatted';
 
@@ -73,16 +70,16 @@ export default function Settings() {
             icon: <Environment />,
             path: "/bbbbbb",
         },
-        {
-            title: "Roles",
-            icon: <RoleIcon />,
-            path: "/Performance",
-        },
-        {
-            title: "User",
-            icon: <UserManagementIcon />,
-            path: "/Performance",
-        },
+        // {
+        //     title: "Roles",
+        //     icon: <RoleIcon />,
+        //     path: "/Performance",
+        // },
+        // {
+        //     title: "User",
+        //     icon: <UserManagementIcon />,
+        //     path: "/Performance",
+        // },
     ];
 
     const renderedCategories = categories.map((category, index) => (
