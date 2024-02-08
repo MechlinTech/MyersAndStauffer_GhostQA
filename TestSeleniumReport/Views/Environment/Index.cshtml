@@ -51,55 +51,11 @@
                                 </a>
                             </td>
                         </tr>
-                        <div class="modal fade" id="editModal_@environment.EnvironmentId" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editModalLabel">Edit Application</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="form-group">
-                                                <label>Environment Name</label>
-                                                <input type="text" class="form-control" id="editEnvName" value="@environment.EnvironmentName" />
-                                            </div>
-                                            <button type="submit" class="btn btn-primary float-end" onclick="editEnvironment(@environment.EnvironmentId)">Save Changes</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     }
                 }
 
             </tbody>
         </table>
-    </div>
-
-    <!-- Add Modal for adding new item -->
-    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">Add New Environment</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form asp-action="AddEnviroment" method="post">
-                        <div class="form-group">
-                            <label>Environment Name</label>
-                            <input type="text" class="form-control" id="newEnvName" />
-                        </div>
-                        <button type="submit" class="btn btn-primary float-end" onclick="addEnvironment()">Save</button>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
  
 </body>
@@ -114,34 +70,4 @@
         window.location.href = url + '?id=' + id;
     }
 
-    //function addEnvironment(){
-    //    var _environmentName = document.getElementById('newEnvName').value;
-    //    const model = { EnvironmentId: 0, EnvironmentName: _environmentName };
-    //    $.ajax({
-    //        url: '@Url.Action("AddEnviroment", "Environment")',
-    //        type: "POST",
-    //        data: model,
-    //        success: function (result) {
-    //           location.reload();
-    //        }
-    //    });
-    //}
-
-    //function editEnvironment(id) {
-    //    debugger;
-    //    var _editEnvironmentName = $('#editEnvName').val();
-    //    const model = { EnvironmentId: id, EnvironmentName: _editEnvironmentName };
-    //    $.ajax({
-    //        url: '@Url.Action("AddEnviroment", "Environment")',
-    //        type: "POST",
-    //        data: model,
-    //        success: function (result) {
-    //            if(result != "")
-    //            {
-    //                debugger;
-    //                window.location.reload();
-    //            }
-    //        }
-    //    });
-    //}
 </script>

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using SeleniumTestReport.Helper;
 using TestSeleniumReport.DBContext;
 
@@ -13,6 +14,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<AppDBContext>();
 
 builder.Services.AddSingleton<DBHelper>();
+builder.Services.AddTransient<TestExecutor>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
