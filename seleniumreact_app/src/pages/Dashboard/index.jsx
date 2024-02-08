@@ -7,21 +7,20 @@ import {
     getTestCaseRundetailsByTestName,
     getTestSuites,
     ExecuteTestCasesByTestSuite,
-    Getsuitebyname,
-    GetApplication
+    Getsuitebyname
 } from "../../redux/actions/seleniumAction";
 import { useDispatch, useSelector } from "react-redux";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Add, CookieSharp } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import AddSuite from "./Modal/AddSuite";
 import DeleteSuite from "./Modal/DeleteSuite";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Graph from "./Components/Graph";
 
 export default function Dashboard() {
@@ -36,12 +35,7 @@ export default function Dashboard() {
     const [openDelModal, setopenDelModal] = useState(false)
     const [suitToDelete, setsuitToDelete] = useState('')
     const handleAddSuite = () => {
-        //  setOpenModal(true);
         navigate("/add-suite");
-    };
-
-    const handleCloseModal = () => {
-        setOpenModal(false);
     };
 
     const handleTabChange = (event, newValue) => {
@@ -157,7 +151,7 @@ export default function Dashboard() {
                             >
                                 {filteredTestSuiteData.map((suite, index) => (
                                     <Paper
-                                        key={index}
+                                        key={suite}
                                         className={`${classess.paper} ${selectedSuite === suite ? classess.paperActive : ""
                                             }`}
                                         onClick={() => handlePaperClick(suite)}

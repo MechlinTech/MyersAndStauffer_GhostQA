@@ -50,11 +50,11 @@ export const useStyles = makeStyles({
         flexDirection: "column",
         alignItems: "center",
     },
-    infoGrid: {
-        height: "345px",
-        width: "100%",
-        overflowY: " scroll",
-    },
+    // infoGrid: {
+    //     height: "345px",
+    //     width: "100%",
+    //     overflowY: " scroll",
+    // },
     infoGridHeader: {
         width: "100%",
         padding: "10px 5px",

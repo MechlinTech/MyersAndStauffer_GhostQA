@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { useStyles } from "./styles";
 import clsx from "clsx";
 import Select from "react-select";
@@ -12,10 +12,8 @@ import {
   Box,
   Card,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { GetApplication, GetBrowser, GetEnvironment } from "../../../../redux/actions/seleniumAction";
+import { GetApplication, GetBrowser } from "../../../../redux/actions/seleniumAction";
 import { AddUpdateEnvironment } from "../../../../redux/actions/settingAction";
-import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 

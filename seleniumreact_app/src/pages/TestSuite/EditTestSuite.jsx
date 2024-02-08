@@ -4,15 +4,12 @@ import { useNavigate } from "react-router-dom";
 import {
   OutlinedInput,
   FormControl,
-  IconButton,
   Button,
   Typography,
   FormControlLabel,
   Grid,
   Box,
-  Card,
-  Checkbox,
-  TextField,
+  Card
 } from "@mui/material";
 import useStyles from "./styles";
 import clsx from "clsx";
@@ -27,7 +24,6 @@ import {
   GetEnvironment,
   GetTestCases,
   AddUpdateTestSuites,
-  Getsuitebyname,
 } from "../../redux/actions/seleniumAction";
 
 
@@ -57,7 +53,6 @@ export default function EditTestSuite() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [isFocused, setIsFocused] = useState(false);
   
   
   useEffect(() => {
@@ -81,13 +76,6 @@ export default function EditTestSuite() {
   }, [suiteToEdit]);
   
 
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
 
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
@@ -107,16 +95,7 @@ export default function EditTestSuite() {
   }
   setSelectedApplication(app)
 }
-  const handledescriptionChange = (e) => {
-    setDescription(e.target.value);
-  };
 
-  // const testCaseNameExtract = (testcases)=>{
-  //   const arr = []
-  //   for(obj test : testcases){
-  //       arr.push(test.TestCaseName)
-  //   }
-  // }
 
   const getTestcaseNameOnly = () => {
     let testCaseArrName = [];

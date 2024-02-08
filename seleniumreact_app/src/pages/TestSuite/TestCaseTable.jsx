@@ -8,19 +8,6 @@ import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import { useTableStyles, StyledTableCell } from "./styles";
 
-function formatTime(dateTimeString) {
-  const options = {
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    hour12: true,
-  };
-  const formattedTime = new Date(dateTimeString).toLocaleTimeString(
-    undefined,
-    options
-  );
-  return formattedTime;
-}
 
 export function TestCaseTable({
   rows,

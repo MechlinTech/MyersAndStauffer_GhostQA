@@ -14,12 +14,10 @@ import {
 import { useDispatch ,useSelector} from "react-redux";
 import { AddUpdateEnvironment } from "../../../../redux/actions/settingAction";
 import { GetApplication, GetBrowser } from "../../../../redux/actions/seleniumAction";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export default function EditNewEnvironment({ onBack ,rowData}) {
-  const location = useLocation();
-  // const rowData = location.state.editEnvironmentData;
 
 
     console.log("row",rowData);

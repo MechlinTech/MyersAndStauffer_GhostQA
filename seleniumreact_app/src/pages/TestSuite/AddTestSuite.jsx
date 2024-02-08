@@ -4,15 +4,12 @@ import { useNavigate } from "react-router-dom";
 import {
   OutlinedInput,
   FormControl,
-  IconButton,
   Button,
   Typography,
   FormControlLabel,
   Grid,
   Box,
-  Card,
-  Checkbox,
-  TextField,
+  Card
 } from "@mui/material";
 import useStyles from "./styles";
 import clsx from "clsx";
@@ -35,7 +32,6 @@ export default function AddTestSuite() {
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
-    // dispatch(GetBrowser());
     dispatch(GetTestCases());
   }, []);
   const classes = useStyles();
@@ -44,7 +40,7 @@ export default function AddTestSuite() {
   const [selectedRecepentValue, setSelectedRecepentValue] =
     useState("only-for-me");
   const [name, setName] = useState("");
-  const { applicationList, environementList, browserList, testCasesList } =
+  const { applicationList, environementList, testCasesList } =
     useSelector((state) => state.selenium);
 
   // console.log("environment",environementList)
@@ -52,7 +48,6 @@ export default function AddTestSuite() {
   // console.log("testcases",testCasesList)
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [selectedEnvironment, setSelectedEnvironment] = useState(null);
-  const [selectedBrowser, setSelectedBrowser] = useState(null);
   const [description, setDescription] = useState("");
   const [Error, setError] = useState({
     name: "",
@@ -64,15 +59,6 @@ export default function AddTestSuite() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
 
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
@@ -93,17 +79,7 @@ export default function AddTestSuite() {
   console.log('app ',app)
   setSelectedApplication(app)
   }
-  const handledescriptionChange = (e) => {
-    setDescription(e.target.value);
-  };
-
-  // const testCaseNameExtract = (testcases)=>{
-  //   const arr = []
-  //   for(obj test : testcases){
-  //       arr.push(test.TestCaseName)
-  //   }
-  // }
-
+  
   const getTestcaseNameOnly = ()=>{
     let testCaseArrName = []
     selectedRows.map((testCase) => testCaseArrName.push(testCase.TestCaseName))

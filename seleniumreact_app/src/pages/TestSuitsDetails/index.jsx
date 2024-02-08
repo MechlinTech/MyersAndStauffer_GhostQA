@@ -30,7 +30,6 @@ import CustomVideoChell from "./CustomVideoChell";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { classes } from "istanbul-lib-coverage";
 
 export default function TestSuitsDetails() {
   const { testSuiteName, testRunName } = useParams();
@@ -352,7 +351,7 @@ export default function TestSuitsDetails() {
                           onClick={() => handleRowClick(row)}
                         >
                           <TableCell>
-                            {row.TestCaseStatus == "Passed" ? (
+                            {row.TestCaseStatus === "Passed" ? (
                               <Icon
                                 component={CheckCircleIcon}
                                 style={{ color: "#198754" }}
@@ -440,7 +439,7 @@ export default function TestSuitsDetails() {
                         className={classess.headrRightSite}
                         style={{
                           color:
-                            activeRow?.TestCaseStatus == "Failed"
+                            activeRow?.TestCaseStatus === "Failed"
                               ? "red"
                               : "green",
                         }}
@@ -495,7 +494,7 @@ export default function TestSuitsDetails() {
                               <TableRow key={index}>
                                 <TableCell>
                                   {" "}
-                                  {row.Status == "Passed" ? (
+                                  {row.Status === "Passed" ? (
                                     <Icon
                                       component={CheckCircleIcon}
                                       style={{ color: "#198754" }}
@@ -511,7 +510,7 @@ export default function TestSuitsDetails() {
                                   {" "}
                                   {formatTime(row.Timestamp)}
                                 </TableCell>
-                                {row.Status == "Passed" ? (
+                                {row.Status === "Passed" ? (
                                   <TableCell
                                     style={{ overflowWrap: "anywhere" }}
                                   >

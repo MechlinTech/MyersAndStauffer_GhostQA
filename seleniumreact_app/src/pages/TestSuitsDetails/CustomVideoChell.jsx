@@ -4,12 +4,10 @@ import Modal from "@material-ui/core/Modal";
 import Box from "@material-ui/core/Box";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
-import { IconButton, Icon } from "@material-ui/core";
-import { useStyles } from "./styles";
+import { Icon } from "@material-ui/core";
 
 const CustomVideoChell = ({ row }) => {
   const [openModal, setOpenModal] = useState(false);
-  const classess = useStyles();
   const baseUrl = "https://codearrest.dyndns.org:3005";
   const getVideoUrl = (apiPath) => {
     return `${baseUrl}${apiPath?.replace(/\\/g, '/')}`;

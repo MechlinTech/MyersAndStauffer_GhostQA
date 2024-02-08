@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
 import { GetEnvironment,GetApplication,GetBrowser } from "./seleniumAction";
 export const GET_TEST_SUITS = "GET_TEST_SUITS";
-export const GET_DELETE_RES = "GET_DELETE_RES";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const getTestSuitesList = () => {
@@ -92,7 +91,7 @@ export const AddUpdateBrowser = (data)=>{
         `${BASE_URL}/Selenium/AddUpdateBrowser`,
          data,
          header())
-      if (res.data.status==="success") {
+      if (res.data.status === "success") {
         dispatch(GetBrowser())
         toast.info(res.data.message, {
           style: {
