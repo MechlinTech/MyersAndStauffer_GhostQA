@@ -137,9 +137,45 @@ export default function EditNewEnvironment({ onBack ,rowData}) {
     }
   };
   
-  
-
-console.log("selectdapp",formData.selectedApplication);
+  const selectStyle={
+    container: (provided) => ({
+      ...provided,
+      backgroundColor: "rgb(242, 242, 242)",
+      zIndex: 999, // Adjust the zIndex value
+    }),
+    control: (provided, state) => ({
+      ...provided,
+      backgroundColor: "rgb(242, 242, 242)",
+      "&:hover": {
+        borderColor: "#654DF7",
+      },
+      borderColor: Error.environment
+        ? "red"
+        : state.isFocused
+        ? "#654DF7"
+        : "rgb(242, 242, 242)",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? "#654DF7"
+        : "transparent",
+    }),
+    clearIndicator: (provided) => ({
+      ...provided,
+      cursor: 'pointer',
+      ':hover': {
+        color: '#654DF7', // Change the color on hover if desired
+      },
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      cursor: 'pointer',
+      ':hover': {
+        color: '#654DF7', // Change the color on hover if desired
+      },
+    }),
+  } 
   return (
     <>
       <Grid
@@ -263,39 +299,15 @@ console.log("selectdapp",formData.selectedApplication);
               </Grid>
               <Grid item xs={8}>
                 <Select
-               
                options={applicationOptions}
                value={selectedApplication}
+               isClearable={true}
                onChange={(newValue) => {
                 setSelectedApplication(newValue); // Update selectedApplication state
-                handleFieldChange("selectedApplication", newValue.label);
+                handleFieldChange("selectedApplication", newValue?.label);
                 
               }}
-                  styles={{
-                    container: (provided) => ({
-                      ...provided,
-                      backgroundColor: "rgb(242, 242, 242)",
-                      zIndex: 999,
-                    }),
-                    control: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: "rgb(242, 242, 242)",
-                      "&:hover": {
-                        borderColor: "#654DF7",
-                      },
-                      borderColor: Error.application
-                        ? "red"
-                        : state.isFocused
-                        ? "#654DF7"
-                        : "rgb(242, 242, 242)",
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected
-                        ? "#654DF7"
-                        : "transparent",
-                    }),
-                  }}
+                  styles={selectStyle}
                   menuPosition={"fixed"}
                 />
               </Grid>
@@ -313,36 +325,12 @@ console.log("selectdapp",formData.selectedApplication);
                 <Select
                   options={browserOptions}
                   value={selectedBrowser}
+                  isClearable={true}
                   onChange={(newValue) => {
                     setSelectedBrowser(newValue); 
-                    handleFieldChange("selectedBrowser", newValue.label);
-                    
+                    handleFieldChange("selectedBrowser", newValue?.label);
                   }}
-                  styles={{
-                    container: (provided) => ({
-                      ...provided,
-                      backgroundColor: "rgb(242, 242, 242)",
-                      zIndex: 999,
-                    }),
-                    control: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: "rgb(242, 242, 242)",
-                      "&:hover": {
-                        borderColor: "#654DF7",
-                      },
-                      borderColor: Error.application
-                        ? "red"
-                        : state.isFocused
-                        ? "#654DF7"
-                        : "rgb(242, 242, 242)",
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected
-                        ? "#654DF7"
-                        : "transparent",
-                    }),
-                  }}
+                  styles={selectStyle}
                   menuPosition={"fixed"}
                 />
               </Grid>

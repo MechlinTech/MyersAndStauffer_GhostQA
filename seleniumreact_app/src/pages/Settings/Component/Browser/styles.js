@@ -64,12 +64,6 @@ export const useStyles = makeStyles((theme) => ({
         // borderTop: "1px solid #ccc",
         gap: "8px",
     },
-    button: {
-        height: "40px",
-        minWidth: "110px",
-        display: "flex",
-        textTransform: "none !important",
-    },
     highlight: {
         fontSize: "24px",
         fontWeight: "400",

@@ -6,7 +6,7 @@ import { Box } from "@material-ui/core";
 import EditTestSuite from "../pages/TestSuite/EditTestSuite";
 import AddNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/AddNewEnvironment";
 import EditNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/EditNewEnvironment";
-
+import CircularProgress from '@mui/material/CircularProgress';
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() => import("../pages/Settings/Component/ExecutionEnvironment/index"));
 const Application = lazy(() => import("../pages/Settings/Component/Application/index"));
@@ -23,9 +23,14 @@ export default function Navigations() {
   return (
     <Suspense
       fallback={
-        <div>
-          <h1>LOADING ....</h1>
-        </div>
+        <Box sx={{
+          display:'flex',
+          justifyContent:'center',
+          alignItems:'center',
+          height:'80vh'
+        }}>
+          <CircularProgress sx={{color:'#654DF7'}}/>
+        </Box>
       }
     >
       <Routes>

@@ -117,6 +117,45 @@ export default function AddNewEnvironment({ onBack }) {
     });
   };
 
+  const selectStyle={
+    container: (provided) => ({
+      ...provided,
+      backgroundColor: "rgb(242, 242, 242)",
+      zIndex: 999, // Adjust the zIndex value
+    }),
+    control: (provided, state) => ({
+      ...provided,
+      backgroundColor: "rgb(242, 242, 242)",
+      "&:hover": {
+        borderColor: "#654DF7",
+      },
+      borderColor: Error.environment
+        ? "red"
+        : state.isFocused
+        ? "#654DF7"
+        : "rgb(242, 242, 242)",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? "#654DF7"
+        : "transparent",
+    }),
+    clearIndicator: (provided) => ({
+      ...provided,
+      cursor: 'pointer',
+      ':hover': {
+        color: '#654DF7', // Change the color on hover if desired
+      },
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      cursor: 'pointer',
+      ':hover': {
+        color: '#654DF7', // Change the color on hover if desired
+      },
+    }),
+  } 
   return (
     <>
       <Grid
@@ -279,34 +318,11 @@ export default function AddNewEnvironment({ onBack }) {
                 <Select
                   options={applicationOptions}
                   value={formData.selectedApplication}
+                  isClearable={true}
                   onChange={(selectedOption) =>
                     handleFieldChange("selectedApplication", selectedOption)
                   }
-                  styles={{
-                    container: (provided) => ({
-                      ...provided,
-                      backgroundColor: "rgb(242, 242, 242)",
-                      zIndex: 999,
-                    }),
-                    control: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: "rgb(242, 242, 242)",
-                      "&:hover": {
-                        borderColor: "#654DF7",
-                      },
-                      borderColor: Error.application
-                        ? "red"
-                        : state.isFocused
-                        ? "#654DF7"
-                        : "rgb(242, 242, 242)",
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected
-                        ? "#654DF7"
-                        : "transparent",
-                    }),
-                  }}
+                  styles={selectStyle}
                   menuPosition={"fixed"}
                 />
                 {Error.application && (
@@ -329,34 +345,11 @@ export default function AddNewEnvironment({ onBack }) {
                 <Select
                   options={browserOptions}
                   value={formData.selectedBrowser}
+                  isClearable={true}
                   onChange={(selectedOption) =>
                     handleFieldChange("selectedBrowser", selectedOption)
                   }
-                  styles={{
-                    container: (provided) => ({
-                      ...provided,
-                      backgroundColor: "rgb(242, 242, 242)",
-                      zIndex: 999,
-                    }),
-                    control: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: "rgb(242, 242, 242)",
-                      "&:hover": {
-                        borderColor: "#654DF7",
-                      },
-                      borderColor: Error.application
-                        ? "red"
-                        : state.isFocused
-                        ? "#654DF7"
-                        : "rgb(242, 242, 242)",
-                    }),
-                    option: (provided, state) => ({
-                      ...provided,
-                      backgroundColor: state.isSelected
-                        ? "#654DF7"
-                        : "transparent",
-                    }),
-                  }}
+                  styles={selectStyle}
                   menuPosition={"fixed"}
                 />
                 {Error.browser && (

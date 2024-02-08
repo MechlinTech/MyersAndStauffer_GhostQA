@@ -71,15 +71,6 @@ export default function Dashboard() {
         setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
         dispatch(getTestCaseRundetailsByTestName(data));
     };
-
-    const handleChange = (event, newValue) => {
-        // Redirect based on the selected tab
-        if (newValue === "1") {
-            navigate("/");
-        } else if (newValue === "2") {
-            navigate("/settings");
-        }
-    };
     const handleEditClick = (suite) => {
         dispatch(Getsuitebyname(suite.TestSuiteName))
         navigate('/edit-suite')
@@ -165,7 +156,8 @@ export default function Dashboard() {
                                                         justifyContent: "space-between",
                                                     }}
                                                 >
-                                                    <Typography className={classess.infoHeader}>
+                                                    <Typography className={`${classess.infoHeader} ${selectedSuite === suite ? classess.activeColor : ""
+                                            }`}>
                                                         {suite.TestSuiteName}
 
                                                     </Typography>
@@ -179,7 +171,7 @@ export default function Dashboard() {
                                                         {suite.TestSuiteFlag == "Custom" && (<><PlayCircleIcon
                                                             style={{
                                                                 marginRight: "8px",
-                                                                color: "rgb(101, 77, 247)",
+                                                                color: selectedSuite === suite?'#fff':"rgb(101, 77, 247)",
                                                             }}
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
@@ -189,7 +181,7 @@ export default function Dashboard() {
                                                             <EditIcon
                                                                 style={{
                                                                     marginRight: "8px",
-                                                                    color: "rgb(101, 77, 247)",
+                                                                    color: selectedSuite === suite?'#fff':"rgb(101, 77, 247)",
                                                                 }}
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();

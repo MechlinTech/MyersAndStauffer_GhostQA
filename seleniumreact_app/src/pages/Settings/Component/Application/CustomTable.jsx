@@ -6,7 +6,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useTableStyles, StyledTableCell } from "./styles";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
-import { useDispatch } from "react-redux";
 import DeleteModal from "../Modal/DeleteModal";
 
 export function CustomTable({ rows,handleEditApplication}) {

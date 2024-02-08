@@ -104,6 +104,11 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '14px !important',
         // paddingLeft: '10px',
     },
+    testCaseErrorStyle:{
+        color:'red',
+        textAlign:'right',
+        margin:'10px 30px 10px 0'
+    },
 }));
 export default useStyles;
 

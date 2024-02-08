@@ -89,10 +89,10 @@ export default function EditTestSuite() {
     setName(e.target.value);
   };
  const handleApplication = (env)=>{
-   const app =  {
+   const app =  env?{
     ApplicationId:env.ApplicationId,
     ApplicationName:env.ApplicationName
-  }
+  }:null
   setSelectedApplication(app)
 }
 
@@ -145,6 +145,10 @@ export default function EditTestSuite() {
     if (!description) {
       error.description = "Description is required";
     }
+    if(testCaseNames.length === 0){
+      error.testCaseError = "1px solid red"
+      error.testCaseErrorText = "Select atleast one test case"
+    }
     // Update error state
     setError(error);
 
@@ -183,21 +187,57 @@ export default function EditTestSuite() {
   })).filter((data) =>
     data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
-  // if(filteredTestCaseData == selectedRows){
-  //   console.log("yes")
-  // }
   
+  const selectStyle={
+    container: (provided) => ({
+      ...provided,
+      backgroundColor: "rgb(242, 242, 242)",
+      zIndex: 999, // Adjust the zIndex value
+    }),
+    control: (provided, state) => ({
+      ...provided,
+      backgroundColor: "rgb(242, 242, 242)",
+      "&:hover": {
+        borderColor: "#654DF7",
+      },
+      borderColor: Error.environment
+        ? "red"
+        : state.isFocused
+        ? "#654DF7"
+        : "rgb(242, 242, 242)",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? "#654DF7"
+        : "transparent",
+    }),
+    clearIndicator: (provided) => ({
+      ...provided,
+      cursor: 'pointer',
+      ':hover': {
+        color: '#654DF7', // Change the color on hover if desired
+      },
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      cursor: 'pointer',
+      ':hover': {
+        color: '#654DF7', // Change the color on hover if desired
+      },
+    }),
+  } 
   return (
     <>
       
       <div className={classes.main}>
-        <Grid container style={{ height: "100vh" }}>
+        <Grid container >
           {/* First Section */}
           <Grid item xs={12} sm={4}>
             {/* Left Section Part 1 */}
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Card style={{ height: "38vh" }}>
+                <Card >
                   <Box className={classes.sideBar}>New Suite</Box>
                   <div
                     style={{
@@ -380,6 +420,7 @@ export default function EditTestSuite() {
                                 option.EnvironmentName
                               }
                               getOptionValue={(option) => option.EnvironmentId}
+                              isClearable={true}
                               options={environementList}
                               value={selectedEnvironment}
                               onChange={(newValue) =>{
@@ -387,31 +428,7 @@ export default function EditTestSuite() {
                                 handleApplication(newValue)
                                 }
                               }
-                              styles={{
-                                container: (provided) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  zIndex: 999, // Adjust the zIndex value
-                                }),
-                                control: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  "&:hover": {
-                                    borderColor: "#654DF7",
-                                  },
-                                  borderColor: Error.environment
-                                    ? "red"
-                                    : state.isFocused
-                                    ? "#654DF7"
-                                    : "rgb(242, 242, 242)",
-                                }),
-                                option: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: state.isSelected
-                                    ? "#654DF7"
-                                    : "transparent",
-                                }),
-                              }}
+                              styles={selectStyle}
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
                             {Error.environment && (
@@ -599,10 +616,6 @@ export default function EditTestSuite() {
             <Grid container>
               <Grid item xs={12}>
                 <Card
-                  style={{
-                    // paddingBottom: "30px",
-                    height: "92vh",
-                  }}
                 >
                   <Box
                     className={classes.sideBar}
@@ -630,7 +643,8 @@ export default function EditTestSuite() {
                     style={{
                       overflow: "auto",
                       maxHeight: "calc(100vh - 50px)",
-                      marginBottom: "20px",
+                      // marginBottom: "20px",
+                      border:Error.testCaseError
                     }}
                   >
                     <TestCaseTable
@@ -641,6 +655,7 @@ export default function EditTestSuite() {
                       handleCheckboxChange={handleCheckboxChange}
                       selectAll={selectAll}
                     />
+                  <Box className={classes.testCaseErrorStyle}>{Error.testCaseErrorText}</Box>
                   </div>
                 </Card>
               </Grid>
@@ -648,14 +663,14 @@ export default function EditTestSuite() {
 
             <Grid container style={{ paddingTop: "10px" }}>
               <Grid item xs={12}>
-                <Card
+                {/* <Card
                   style={{
                     // paddingBottom: "30px",
                     height: "8vh",
                   }}
                   className={classes.buttonContainer}
-                >
-                  {/* <Box > */}
+                > */}
+                  <Box className={classes.buttonContainer}>
                   <Button
                     variant="contained"
                     color="primary"
@@ -702,8 +717,8 @@ export default function EditTestSuite() {
                   >
                     Cancel
                   </Button>
-                  {/* </Box> */}
-                </Card>
+                   </Box> 
+                {/* </Card> */}
               </Grid>
             </Grid>
           </Grid>

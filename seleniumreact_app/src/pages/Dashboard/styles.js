@@ -29,7 +29,10 @@ export const useStyles = makeStyles({
         marginRight: "20px",
         marginLeft: "20px",
         cursor: "pointer",
-        color: "rgb(101, 77, 247)",
+        backgroundColor: 'rgb(101, 77, 247)'
+    },
+    activeColor:{
+        color:'white',
     },
     infoContainer: {
         display: "flex",
@@ -46,11 +49,6 @@ export const useStyles = makeStyles({
         flexDirection: "column",
         alignItems: "center",
     },
-    infoGrid: {
-        height: "345px",
-        width: "100%",
-        overflowY: " scroll",
-    },
     infoGridHeader: {
         width: "100%",
         padding: "10px 10px",
@@ -63,7 +61,7 @@ export const useStyles = makeStyles({
         // fontSize:"1 rem",
         //lineHeight: "1.5rem",
         // fontFamily: "Poppins",
-        color: "#000000",
+        // color: "#000000",
         fontWeight: "400",
         fontSize: "14px",
         lineHeight: "21px",
