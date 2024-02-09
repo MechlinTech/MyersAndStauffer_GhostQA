@@ -837,5 +837,56 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+
+        internal async void SaveInBuiltTestSuites(string testDataJson)
+        {
+            try
+            {
+                string connectionString = GetConnectionString();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_UpsertTableData", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@DynamicObject", testDataJson);
+                    cmd.Parameters.AddWithValue("@TableName", "tbl_TestCase");
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        internal async void UpdateInBuiltTestSuitesTestStepsJson(string testStepJson, string testSuite, string testRun, string testCase)
+        {
+            try
+            {
+                string connectionString = GetConnectionString();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_UpdateTestStepData", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@testStepJson", testStepJson);
+                    cmd.Parameters.AddWithValue("@testSuite", testSuite);
+                    cmd.Parameters.AddWithValue("@testRun", testRun);
+                    cmd.Parameters.AddWithValue("@testCase", testCase);
+                    cmd.Parameters.AddWithValue("@TableName", "tbl_TestCase");
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
