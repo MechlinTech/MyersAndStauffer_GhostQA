@@ -39,7 +39,12 @@ export default function MiniDrawer() {
     const [showMenu, setShowMenu] = useState(false);
 
     const userData = useSelector((store) => store.auth.userData);
-
+    const getName = ()=>{
+        const email = sessionStorage.getItem('email')
+        const i = email.indexOf('@')
+        const name = email.substring(0,i)
+        return name
+    }
     const handleLogout = () => {
         dispatch(logout());
         sessionStorage.removeItem("userData");
@@ -115,7 +120,7 @@ export default function MiniDrawer() {
                                             onMouseOver={handleMouseOver}
                                             onMouseOut={handleMouseOut}
                                         >
-                                            Admin
+                                            {getName()}
                                             {showMenu ? <ArrowDropUp /> : <ArrowDropDown />}
                                         </Typography>
                                     </Box>

@@ -22,7 +22,7 @@ export const login = (data, setLoading) => {
           "userData",
           JSON.stringify({ ...response.data, token: response.token })
         );
-
+        sessionStorage.setItem('email',data.email.toString())
         dispatch({
           type: LOG_IN,
           payload: { ...response.data, token: response.token },

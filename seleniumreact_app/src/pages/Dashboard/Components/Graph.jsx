@@ -159,9 +159,13 @@ const Graph = (props) => {
   return (
     <>
       <div>
-        <Grid container alignItems="center" sx={{ display: "grid" }}>
+        <Grid 
+        container 
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="center">
           <Grid item>
-            <Typography className={classes.customFontSize}>Results</Typography>
+            <Typography className={classes.customFontSize} mr={3}>Results</Typography>
           </Grid>
           <Grid item>
             <FormControl component="fieldset" className={classes.radioGroup}>
@@ -224,6 +228,7 @@ const Graph = (props) => {
                 ...provided,
                 backgroundColor: "rgb(242, 242, 242)",
                 zIndex: 999, // Adjust the zIndex value
+                width:'130px'
               }),
               control: (provided, state) => ({
                 ...provided,
