@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using GitHub;
+using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using SeleniumReportAPI.Models;
@@ -838,8 +839,9 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async void SaveInBuiltTestSuites(string testDataJson)
+        internal async Task<string> SaveInBuiltTestSuites(string testDataJson)
         {
+            string result = string.Empty;
             try
             {
                 string connectionString = GetConnectionString();
@@ -853,17 +855,26 @@ namespace SeleniumReportAPI.Helper
                     connection.Open();
                     cmd.Parameters.AddWithValue("@DynamicObject", testDataJson);
                     cmd.Parameters.AddWithValue("@TableName", "tbl_TestCase");
-                    cmd.ExecuteNonQuery();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            result = reader["result"].ToString();
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+            return result;
         }
 
-        internal async void UpdateInBuiltTestSuitesTestStepsJson(string testStepJson, string testSuite, string testRun, string testCase)
+        internal async Task<string> UpdateInBuiltTestSuitesTestStepsJson(string testStepJson, string testSuite, string testRun, string testCase)
         {
+            string result = string.Empty;
             try
             {
                 string connectionString = GetConnectionString();
@@ -880,13 +891,21 @@ namespace SeleniumReportAPI.Helper
                     cmd.Parameters.AddWithValue("@testRun", testRun);
                     cmd.Parameters.AddWithValue("@testCase", testCase);
                     cmd.Parameters.AddWithValue("@TableName", "tbl_TestCase");
-                    cmd.ExecuteNonQuery();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            result = reader["result"].ToString();
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+            return result;
         }
     }
 }
