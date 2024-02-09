@@ -208,10 +208,10 @@ export default function Dashboard() {
           {/* Right side for Test Cases */}
           {selectedSuite !== null && (
             <Grid item xs={12} sm={8}>
-              <Card style={{ paddingBottom: "30px", minHeight: "84vh" }}>
+              <Card >
                 <Box style={tabLableStyle}>Test Run</Box>
                 <Grid container>
-                  <Grid item xs={12} style={{ padding: "20px" }}>
+                  <Grid item xs={12} style={{ paddingLeft: "20px" }}>
                     <TabContext value={tabNo}>
                       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                         <TabList
@@ -238,7 +238,9 @@ export default function Dashboard() {
                           />
                         </TabList>
                       </Box>
-                      <TabPanel value="1"><Graph testSuitName={selectedSuite}/></TabPanel>
+                      <TabPanel value="1">
+                        <Graph testSuitName={selectedSuite}/>
+                      </TabPanel>
                       <TabPanel value="2">
                         <Box sx={{ padding: "0 !important" }}>
                           <BasicAccordion />

@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import { LOG_IN } from './redux/actions/authActions'
-import { Box, CircularProgress } from '@mui/material';
 
 const Auth = lazy(() => import("./pages/Auth"))
 
@@ -21,18 +20,9 @@ function App() {
 
   return (
     <div>
-       <Suspense 
-       fallback={
-      //  <Box sx={{
-      //     display:'flex',
-      //     justifyContent:'center',
-      //     alignItems:'center',
-      //     height:'80vh'
-      //   }}>
-      //     <CircularProgress sx={{color:'#654DF7'}}/>
-      //   </Box>
-      <h1>loading...</h1>
-      }>
+       <Suspense fallback={<div>
+      <h1>LOADING ....</h1>
+     </div>}>
       {isLogedIn ? <Layout /> : <Auth />}
       {/* {isLogedIn ? <Auth />  : <Layout /> } */}
       <ToastContainer

@@ -35,11 +35,11 @@ export default function AddNewEnvironment({ onBack }) {
   const [formData, setFormData] = useState({
     environmentName: "",
     environmentDescription: "",
-    selectedApplication: "",
+    selectedApplication: null,
     baseUrl: "",
     driverPath: "",
     basePath: "",
-    selectedBrowser:"",
+    selectedBrowser:null,
   });
   const [Error, setError] = useState({
     name: "",
@@ -62,10 +62,10 @@ export default function AddNewEnvironment({ onBack }) {
     let payload = {
       environmentName: formData.environmentName,
       description: formData.environmentDescription,
-      applicationId:formData.selectedApplication.value,
-      applicationName:formData.selectedApplication.label,
-      broswerId:formData.selectedBrowser.value,
-      browserName:formData.selectedBrowser.label,
+      applicationId:formData.selectedApplication?.value,
+      applicationName:formData.selectedApplication?.label,
+      broswerId:formData.selectedBrowser?.value,
+      browserName:formData.selectedBrowser?.label,
       driverPath:formData.driverPath,
       basePath:formData.basePath,
       baseurl:formData.baseUrl
@@ -129,7 +129,7 @@ export default function AddNewEnvironment({ onBack }) {
       "&:hover": {
         borderColor: "#654DF7",
       },
-      borderColor: Error.environment
+      borderColor: Error.application || Error.browser
         ? "red"
         : state.isFocused
         ? "#654DF7"
@@ -240,11 +240,11 @@ export default function AddNewEnvironment({ onBack }) {
                       classes.customBackgroung
                     )}
                   />
-                   {Error.name && (
+                   {/* {Error.name && (
                       <Typography variant="caption" color="error">
                         {Error.name}
                       </Typography>
-                    )}
+                    )} */}
                 </FormControl>
               </Grid>
             </Grid>
@@ -295,11 +295,11 @@ export default function AddNewEnvironment({ onBack }) {
                     )}
                     
                   />
-                  {Error.description && (
+                  {/* {Error.description && (
                       <Typography variant="caption" color="error">
                         {Error.description}
                       </Typography>
-                    )}
+                    )} */}
                 </FormControl>
               </Grid>
             </Grid>
@@ -325,11 +325,11 @@ export default function AddNewEnvironment({ onBack }) {
                   styles={selectStyle}
                   menuPosition={"fixed"}
                 />
-                {Error.application && (
+                {/* {Error.application && (
                       <Typography variant="caption" color="error">
                         {Error.application}
                       </Typography>
-                    )}
+                    )} */}
               </Grid>
             </Grid>
             <Grid container xs={6}>
@@ -352,11 +352,11 @@ export default function AddNewEnvironment({ onBack }) {
                   styles={selectStyle}
                   menuPosition={"fixed"}
                 />
-                {Error.browser && (
+                {/* {Error.browser && (
                       <Typography variant="caption" color="error">
                         {Error.browser}
                       </Typography>
-                    )}
+                    )} */}
               </Grid>
             </Grid>
             
@@ -406,11 +406,11 @@ export default function AddNewEnvironment({ onBack }) {
                       classes.customBackgroung
                     )}
                   />
-                  {Error.driverPath && (
+                  {/* {Error.driverPath && (
                       <Typography variant="caption" color="error">
                         {Error.driverPath}
                       </Typography>
-                    )}
+                    )} */}
                 </FormControl>
               </Grid>
             </Grid>
@@ -458,11 +458,11 @@ export default function AddNewEnvironment({ onBack }) {
                       classes.customBackgroung
                     )}
                   />
-                  {Error.basePath && (
+                  {/* {Error.basePath && (
                       <Typography variant="caption" color="error">
                         {Error.basePath}
                       </Typography>
-                    )}
+                    )} */}
                 </FormControl>
               </Grid>
             </Grid>
@@ -512,11 +512,11 @@ export default function AddNewEnvironment({ onBack }) {
                       classes.customBackgroung
                     )}
                   />
-                  {Error.baseUrl && (
+                  {/* {Error.baseUrl && (
                       <Typography variant="caption" color="error">
                         {Error.baseUrl}
                       </Typography>
-                    )}
+                    )} */}
                 </FormControl>
               </Grid>
             </Grid>

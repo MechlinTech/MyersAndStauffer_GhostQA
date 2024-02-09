@@ -18,9 +18,6 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function EditNewEnvironment({ onBack ,rowData}) {
-
-
-    console.log("row",rowData);
    
   const dispatch=useDispatch();
   const navigate=useNavigate();
@@ -37,7 +34,6 @@ export default function EditNewEnvironment({ onBack ,rowData}) {
   });
   
   const { applicationList,  browserList,  } =useSelector((state) => state.selenium);
-  console.log("applist",applicationList);
 
   useEffect(() => {
     dispatch(GetApplication());
@@ -65,8 +61,6 @@ export default function EditNewEnvironment({ onBack ,rowData}) {
     ApplicationId:rowData?rowData.ApplicationId:0,
     BrowserId:rowData?rowData.BroswerId:0
   });
-  console.log("formdata",formData);
-  console.log("selectedapp",selectedApplication);
   const [Error, setError] = useState({
     name: "",
     description: "",
@@ -97,14 +91,38 @@ export default function EditNewEnvironment({ onBack ,rowData}) {
       basePath:formData.BasePath,
       baseurl:formData.Baseurl
     }
-   
-
     // Check if there are any errors
     
-        
-      console.log("handleSubmit", formData);
+    let error = {};
+    if (!formData.environmentName.trim()) {
+      error.name = "Environment Name is required";
+    }
+    if (!formData.selectedApplication) {
+      error.application = "Application is required";
+    }
+    if (!formData.selectedBrowser) {
+      error.browser = "Browser is required";
+    }
+    if (!formData.Description) {
+      error.description = "Description is required";
+    }
+    if (!formData.Baseurl) {
+      error.baseUrl = "Base Url is required";
+    }
+    if (!formData.DriverPath) {
+      error.driverPath = "Driver Path is required";
+    }
+    if (!formData.BasePath) {
+      error.basePath = "Base Path is required";
+    }
+    // Update error state
+    setError(error);
+      // Check if there are any errors
+    if (Object.keys(error).length === 0) {
+      // Proceed with form submission
       dispatch(AddUpdateEnvironment(payload,navigate,onBack));
-    
+      // navigate('/settings/environment')
+    }
 
     
   };
@@ -149,7 +167,7 @@ export default function EditNewEnvironment({ onBack ,rowData}) {
       "&:hover": {
         borderColor: "#654DF7",
       },
-      borderColor: Error.environment
+      borderColor: Error.application || Error.browser
         ? "red"
         : state.isFocused
         ? "#654DF7"

@@ -21,6 +21,9 @@ export const useStyles = makeStyles({
         marginRight: "20px",
         marginLeft: "20px",
         cursor: "pointer",
+        '&:hover':{
+            border:'2px solid rgb(101, 77, 247)'
+        }
     },
     paperActive: {
         border: "2px solid rgb(101, 77, 247)",
