@@ -245,7 +245,7 @@ export default function TestSuitsDetails() {
                     >
                       <CardContent className={classess.hederStyle}>
                         <Typography style={{ fontSize: "14px" }}>
-                          Start
+                        Start Date, Time
                         </Typography>
                       </CardContent>
 
@@ -403,7 +403,7 @@ export default function TestSuitsDetails() {
                           Name
                         </TableCell>
                         <TableCell style={{ fontWeight: "400" }}>
-                          value
+                          Value
                         </TableCell>
                       </TableRow>
                     </TableHead>

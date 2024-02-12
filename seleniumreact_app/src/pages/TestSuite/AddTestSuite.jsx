@@ -216,7 +216,7 @@ export default function AddTestSuite() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Card >
-                  <Box className={classes.sideBar}>New Suite</Box>
+                  <Box className={classes.sideBar}><b>New Suite</b></Box>
                   <div
                     style={{
                       // overflow: "auto",
@@ -339,7 +339,7 @@ export default function AddTestSuite() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Card >
-                  <Box className={classes.sideBar}>Run Settings</Box>
+                  <Box className={classes.sideBar}><b>Run Settings</b></Box>
 
                   <div
                     // style={{ overflow: "auto", maxHeight: "calc(42vh - 50px)" }}
@@ -603,7 +603,7 @@ export default function AddTestSuite() {
                     className={classes.sideBar}
                     style={{ paddingLeft: "5vh" }}
                   >
-                    Test Cases{" "}
+                   <b> Test Cases{" "}</b>
                   </Box>
                   <Grid
                     container
