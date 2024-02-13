@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <div class="container mt-4">
+    <div class="mt-4">
         <h2>Environment List</h2>
 
         <button type="button" class="btn btn-primary float-end" onclick="AddEditEnviroment()">
@@ -22,7 +22,6 @@
         <table class="table mt-3">
             <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Name</th>
                     <th>Application Name</th>
                     <th>Browser Name</th>
@@ -38,13 +37,12 @@
                     @foreach (var environment in Model)
                     {
                         <tr>
-                            <td>@environment.EnvironmentId</td>
                             <td>@environment.EnvironmentName</td>
                             <td>@environment.ApplicationName</td>
-                            <td>@environment.BrowserName</td>
-                            <td>@environment.Baseurl</td>
-                            <td>@environment.BasePath</td>
-                            <td>@environment.DriverPath</td>
+                            <td >@environment.BrowserName</td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">@environment.Baseurl</td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">@environment.BasePath</td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">@environment.DriverPath</td>
                             <td>
                                 <a class="bg-white border-0" onclick="EditEnvironment(@environment.EnvironmentId)">
                                     <em class="fas fa-edit mx-2 text-success"></em>
