@@ -4,10 +4,10 @@ import { useStyles } from "./styles";
 import SearchField from "../../comman/SearchField";
 import BasicAccordion from "../../comman/Accordion";
 import {
-    getTestCaseRundetailsByTestName,
-    getTestSuites,
-    ExecuteTestCasesByTestSuite,
-    Getsuitebyname
+  getTestCaseRundetailsByTestName,
+  getTestSuites,
+  ExecuteTestCasesByTestSuite,
+  Getsuitebyname,
 } from "../../redux/actions/seleniumAction";
 import { useDispatch, useSelector } from "react-redux";
 import Tab from "@mui/material/Tab";
@@ -17,6 +17,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Add } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import CircularProgress from "@mui/material/CircularProgress";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import AddSuite from "./Modal/AddSuite";
 import DeleteSuite from "./Modal/DeleteSuite";
@@ -24,191 +25,231 @@ import { useNavigate } from "react-router-dom";
 import Graph from "./Components/Graph";
 
 export default function Dashboard() {
-    const classess = useStyles();
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { testSuits } = useSelector((state) => state.selenium);
-    const [selectedSuite, setSelectedSuite] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [tabNo, setTabNo] = useState("1");
-    const [openModal, setOpenModal] = useState(false);
-    const [openDelModal, setopenDelModal] = useState(false)
-    const [suitToDelete, setsuitToDelete] = useState('')
-    const handleAddSuite = () => {
-        navigate("/add-suite");
-    };
+  const classess = useStyles();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { testSuits } = useSelector((state) => state.selenium);
+  const [selectedSuite, setSelectedSuite] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tabNo, setTabNo] = useState("1");
+  const [openModal, setOpenModal] = useState(false);
+  const [openDelModal, setopenDelModal] = useState(false);
+  const [suitToDelete, setsuitToDelete] = useState("");
+  const [isExecuting, setisExecuting] = useState({});
+  const handleAddSuite = () => {
+    navigate("/add-suite");
+  };
 
-    const handleTabChange = (event, newValue) => {
-        setTabNo(newValue);
-    };
+  const handleTabChange = (event, newValue) => {
+    setTabNo(newValue);
+  };
 
-    const tabLableStyle = {
-        fontWeight: "400",
-        fontSize: "14px",
-        lineHeight: "21px",
-        padding: "10px 22px",
-    };
+  const tabLableStyle = {
+    fontWeight: "400",
+    fontSize: "14px",
+    lineHeight: "21px",
+    padding: "10px 22px",
+  };
 
-    const tabHeaderStyle = {
-        fontSize: "14px",
-        fontWeight: "400",
-        fontFamily: "Lexend Deca",
-    };
+  const tabHeaderStyle = {
+    fontSize: "14px",
+    fontWeight: "400",
+    fontFamily: "Lexend Deca",
+  };
 
-    useEffect(() => {
-        dispatch(getTestSuites());
-    }, []);
+  useEffect(() => {
+    dispatch(getTestSuites());
+  }, []);
 
-    useEffect(() => {
-        dispatch(getTestSuites());
-    }, [openDelModal]);
-    const filteredTestSuiteData = testSuits?.filter((suite) =>
-        suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
-    );
+  useEffect(() => {
+    dispatch(getTestSuites());
+  }, [openDelModal]);
+  const filteredTestSuiteData = testSuits?.filter((suite) =>
+    suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+  );
 
-    const handlePaperClick = (suite) => {
-        let data = suite.TestSuiteName;
-        setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
-        dispatch(getTestCaseRundetailsByTestName(data));
-    };
-    const handleEditClick = (suite) => {
-        dispatch(Getsuitebyname(suite.TestSuiteName))
-        navigate('/edit-suite')
-        // getsuitebyname api will give you detail
-    };
+  const handlePaperClick = (suite) => {
+    let data = suite.TestSuiteName;
+    setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
+    dispatch(getTestCaseRundetailsByTestName(data));
+  };
+  const handleEditClick = (suite) => {
+    dispatch(Getsuitebyname(suite.TestSuiteName));
+    navigate("/edit-suite");
+    // getsuitebyname api will give you detail
+  };
 
-    const handleExecuteClick = (suite) => {
-        let data = suite.TestSuiteName;
-        setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
-        dispatch(ExecuteTestCasesByTestSuite(data));
-    };
+  const controlLoading = (name) => { // function to set loading false when promise resolve or reject
+    setisExecuting((prev) => ({
+      ...prev,
+      [name]: false,
+    }));
+  };
 
-    const handleDeleteClick = (suite) => {
-        setopenDelModal(true)
-        setsuitToDelete(suite.TestSuiteName)
-    };
+  const handleExecuteClick = (suite) => {
+    let data = suite.TestSuiteName;
+    setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
+    setisExecuting((prev) => ({
+      ...prev,
+      [data]: true,
+    }));
+    dispatch(ExecuteTestCasesByTestSuite(data, controlLoading));
+  };
 
-    return (
-        <>
-            <div className={classess.main}>
-                <AddSuite
-                    open={openModal}
-                    onClose={() => setOpenModal(false)}
-                    hookProps={{}}
-                />
-                <DeleteSuite
-                    open={openDelModal}
-                    onClose={() => setopenDelModal(false)}
-                    suitToDelete={suitToDelete}
-                />
-                <Grid container spacing={2}>
-                    {/* Left side for Search and Results */}
-                    <Grid item xs={12} sm={4}>
-                        <Card style={{ paddingBottom: "30px", maxHeight: "78vh" }}>
-                            <Grid container alignItems="center">
-                                <Grid item xs={6} style={tabLableStyle}>
-                                    Test Suite
-                                </Grid>
-                                <Grid
-                                    item
-                                    xs={6}
-                                    style={{ textAlign: "right", paddingRight: "25px" }}
-                                >
-                                    <Add
-                                        style={{
-                                            fontSize: 25,
-                                            backgroundColor: "rgb(101, 77, 247)",
-                                            color: "#ffffff",
-                                            borderRadius: "50%",
-                                            // padding: "8px",
-                                            cursor: "pointer",
-                                        }}
-                                        onClick={handleAddSuite}
+  const handleDeleteClick = (suite) => {
+    setopenDelModal(true);
+    setsuitToDelete(suite.TestSuiteName);
+  };
+
+  return (
+    <>
+      <div className={classess.main}>
+        <AddSuite
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          hookProps={{}}
+        />
+        <DeleteSuite
+          open={openDelModal}
+          onClose={() => setopenDelModal(false)}
+          suitToDelete={suitToDelete}
+        />
+        <Grid container spacing={2}>
+          {/* Left side for Search and Results */}
+          <Grid item xs={12} sm={4}>
+            <Card style={{ paddingBottom: "30px", maxHeight: "78vh" }}>
+              <Grid container alignItems="center">
+                <Grid item xs={6} style={tabLableStyle}>
+                  Test Suite
+                </Grid>
+                <Grid
+                  item
+                  xs={6}
+                  style={{ textAlign: "right", paddingRight: "25px" }}
+                >
+                  <Add
+                    style={{
+                      fontSize: 25,
+                      backgroundColor: "rgb(101, 77, 247)",
+                      color: "#ffffff",
+                      borderRadius: "50%",
+                      // padding: "8px",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleAddSuite}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container style={{}}>
+                <Grid item xs={12} style={{ padding: "10px 20px" }}>
+                  <SearchField
+                    placeholder="Search Test Suite..."
+                    onChange={(value) => setSearchTerm(value)}
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+                // className={classess.remScrollbar}
+                item
+                style={{ overflow: "auto", maxHeight: "calc(70vh - 50px)" }}
+              >
+                {filteredTestSuiteData.map((suite, index) => (
+                  <Paper
+                    key={suite}
+                    className={`${classess.paper} ${
+                      selectedSuite === suite ? classess.paperActive : ""
+                    }`}
+                    onClick={() => handlePaperClick(suite)}
+                  >
+                    <Grid container className={classess.paperGrid}>
+                      <Grid item className={classess.infoGridHeader}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography
+                            className={`${classess.infoHeader} ${
+                              selectedSuite === suite
+                                ? classess.activeColor
+                                : ""
+                            }`}
+                          >
+                            {suite.TestSuiteName}
+                          </Typography>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            {suite.TestSuiteFlag == "Custom" && (
+                              <>
+                                {isExecuting[suite.TestSuiteName] ? (
+                                  <CircularProgress
+                                    size={25}
+                                    style={{
+                                      marginRight: "8px",
+                                      color:
+                                        selectedSuite === suite
+                                          ? "#fff"
+                                          : "rgb(101, 77, 247)",
+                                    }}
+                                  />
+                                ) : ( 
+                                    <PlayCircleIcon
+                                      style={{
+                                        marginRight: "8px",
+                                        color:
+                                          selectedSuite === suite
+                                            ? "#fff"
+                                            : "rgb(101, 77, 247)",
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleExecuteClick(suite);
+                                      }}
                                     />
-                                </Grid>
-                            </Grid>
-                            <Grid container style={{}}>
-                                <Grid item xs={12} style={{ padding: "10px 20px" }}>
-                                    <SearchField
-                                        placeholder="Search Test Suite..."
-                                        onChange={(value) => setSearchTerm(value)}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Grid
-                                // className={classess.remScrollbar}
-                                item
-                                style={{ overflow: "auto", maxHeight: "calc(70vh - 50px)" }}
-                            >
-                                {filteredTestSuiteData.map((suite, index) => (
-                                    <Paper
-                                        key={suite}
-                                        className={`${classess.paper} ${selectedSuite === suite ? classess.paperActive : ""
-                                            }`}
-                                        onClick={() => handlePaperClick(suite)}
-                                    >
-                                        <Grid container className={classess.paperGrid}>
-                                            <Grid item className={classess.infoGridHeader}>
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "space-between",
-                                                    }}
-                                                >
-                                                    <Typography className={`${classess.infoHeader} ${selectedSuite === suite ? classess.activeColor : ""
-                                            }`}>
-                                                        {suite.TestSuiteName}
-
-                                                    </Typography>
-
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                        }}
-                                                    >
-                                                        {suite.TestSuiteFlag == "Custom" && (<><PlayCircleIcon
-                                                            style={{
-                                                                marginRight: "8px",
-                                                                color: selectedSuite === suite?'#fff':"rgb(101, 77, 247)",
-                                                            }}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleExecuteClick(suite);
-                                                            }}
-                                                        />
-                                                            <EditIcon
-                                                                style={{
-                                                                    marginRight: "8px",
-                                                                    color: selectedSuite === suite?'#fff':"rgb(101, 77, 247)",
-                                                                }}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    handleEditClick(suite);
-                                                                }}
-                                                            />
-                                                            <DeleteIcon
-                                                                style={{ color: "rgb(247, 77, 77)" }}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    handleDeleteClick(suite);
-                                                                }}
-                                                            /></>)}
-                                                    </div>
-                                                </div>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                ))}
-                            </Grid>
-                        </Card>
+                                )}
+                                <EditIcon
+                                  style={{
+                                    marginRight: "8px",
+                                    color:
+                                      selectedSuite === suite
+                                        ? "#fff"
+                                        : "rgb(101, 77, 247)",
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEditClick(suite);
+                                  }}
+                                />
+                                <DeleteIcon
+                                  style={{ color: "rgb(247, 77, 77)" }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteClick(suite);
+                                  }}
+                                />
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </Grid>
                     </Grid>
+                  </Paper>
+                ))}
+              </Grid>
+            </Card>
+          </Grid>
 
           {/* Right side for Test Cases */}
           {selectedSuite !== null && (
             <Grid item xs={12} sm={8}>
-              <Card >
+              <Card>
                 <Box style={tabLableStyle}>Test Run</Box>
                 <Grid container>
                   <Grid item xs={12} style={{ paddingLeft: "20px" }}>
@@ -239,7 +280,7 @@ export default function Dashboard() {
                         </TabList>
                       </Box>
                       <TabPanel value="1">
-                        <Graph testSuitName={selectedSuite}/>
+                        <Graph testSuitName={selectedSuite} />
                       </TabPanel>
                       <TabPanel value="2">
                         <Box sx={{ padding: "0 !important" }}>
