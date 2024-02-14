@@ -8,6 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="wwwroot\Identity\**" />
+	  <Content Remove="wwwroot\Identity\**" />
+	  <EmbeddedResource Remove="wwwroot\Identity\**" />
+	  <None Remove="wwwroot\Identity\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Remove="SqlScript\stp_AddUpdateApplication.Sql" />
 		<None Remove="SqlScript\stp_AddUpdateBrowser.Sql" />
 		<None Remove="SqlScript\stp_AddUpdateEnvironment.Sql" />
