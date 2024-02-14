@@ -25,6 +25,7 @@ import {
   GetTestCases,
   AddUpdateTestSuites,
 } from "../../redux/actions/seleniumAction";
+import CircularProgress from "@mui/material/CircularProgress";
 
 
 export default function AddTestSuite() {
@@ -59,6 +60,7 @@ export default function AddTestSuite() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [isExecuting, setisExecuting] = useState(false);
 
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
@@ -88,6 +90,12 @@ export default function AddTestSuite() {
     return testCaseArrName
   }
 
+  const handleLoading = (status)=>{
+    setisExecuting(false)
+    if(status === 'pass')
+    navigate('/')
+
+  }
   const handleSubmit = (action) => {
     const testCaseNames= getTestcaseNameOnly()
     let payload = {
@@ -139,9 +147,10 @@ export default function AddTestSuite() {
     // Check if there are any errors
     if (Object.keys(error).length === 0) {
       // Proceed with form submission
+      if(action === 'SaveAndExecute'){
+        setisExecuting(true)}
       console.log("no error ", payload);
-      dispatch(AddUpdateTestSuites(payload,action))
-      navigate('/')
+      dispatch(AddUpdateTestSuites(payload, action,handleLoading));
     }else
     console.log("handleSubmit error", error, payload);
   };
@@ -681,7 +690,11 @@ export default function AddTestSuite() {
                       },
                     }}
                   >
-                    Save & Execute
+                    {isExecuting ? (
+                      <CircularProgress size={25} style={{color:'#fff'}}/>
+                    ) : (
+                      "Save & Execute"
+                    )}
                   </Button>
 
                   <Button

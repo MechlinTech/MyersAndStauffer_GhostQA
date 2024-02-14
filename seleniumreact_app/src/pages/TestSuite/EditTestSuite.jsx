@@ -9,7 +9,7 @@ import {
   FormControlLabel,
   Grid,
   Box,
-  Card
+  Card,
 } from "@mui/material";
 import useStyles from "./styles";
 import clsx from "clsx";
@@ -25,19 +25,17 @@ import {
   GetTestCases,
   AddUpdateTestSuites,
 } from "../../redux/actions/seleniumAction";
-
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function EditTestSuite() {
-  
   const { applicationList, environementList, suiteToEdit, testCasesList } =
     useSelector((state) => state.selenium);
   const dispatch = useDispatch();
-  
+
   const classes = useStyles();
   const navigate = useNavigate();
   const [selectedSuiteValue, setSelectedSuiteValue] = useState("custom-Suites");
-  const [selectedRecepentValue, setSelectedRecepentValue] =
-    useState("");
+  const [selectedRecepentValue, setSelectedRecepentValue] = useState("");
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [selectedEnvironment, setSelectedEnvironment] = useState(null);
   const [name, setName] = useState("");
@@ -53,29 +51,35 @@ export default function EditTestSuite() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  
-  
+  const [isExecuting, setisExecuting] = useState(false);
+
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
     dispatch(GetTestCases());
     setName(suiteToEdit.TestSuiteName);
-    setSelectedApplication(()=>{
-     const x =  applicationList.find((app)=> app.ApplicationId === suiteToEdit.ApplicationId)
-     return x;
-    })
+    setSelectedApplication(() => {
+      const x = applicationList.find(
+        (app) => app.ApplicationId === suiteToEdit.ApplicationId
+      );
+      return x;
+    });
     //work on all-user
-    setSelectedRecepentValue(suiteToEdit.SendEmail?'only-for-me':'all-users')
-    setSelectedEnvironment(()=>{
-      return environementList.find((env)=>env.EnvironmentId === suiteToEdit.EnvironmentId)
-    })
-    setDescription(suiteToEdit.Description)
-    setSelectedRows(()=>{
-      return testCasesList.filter((test)=> suiteToEdit.SelectedTestCases?.includes(test.TestCaseName))
-    })
+    setSelectedRecepentValue(
+      suiteToEdit.SendEmail ? "only-for-me" : "all-users"
+    );
+    setSelectedEnvironment(() => {
+      return environementList.find(
+        (env) => env.EnvironmentId === suiteToEdit.EnvironmentId
+      );
+    });
+    setDescription(suiteToEdit.Description);
+    setSelectedRows(() => {
+      return testCasesList.filter((test) =>
+        suiteToEdit.SelectedTestCases?.includes(test.TestCaseName)
+      );
+    });
   }, [suiteToEdit]);
-  
-
 
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
@@ -88,14 +92,15 @@ export default function EditTestSuite() {
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
- const handleApplication = (env)=>{
-   const app =  env?{
-    ApplicationId:env.ApplicationId,
-    ApplicationName:env.ApplicationName
-  }:null
-  setSelectedApplication(app)
-}
-
+  const handleApplication = (env) => {
+    const app = env
+      ? {
+          ApplicationId: env.ApplicationId,
+          ApplicationName: env.ApplicationName,
+        }
+      : null;
+    setSelectedApplication(app);
+  };
 
   const getTestcaseNameOnly = () => {
     let testCaseArrName = [];
@@ -104,6 +109,12 @@ export default function EditTestSuite() {
     return testCaseArrName;
   };
 
+  const handleLoading = (status)=>{
+    setisExecuting(false)
+    if(status === 'pass')
+    navigate('/')
+
+  }
   const handleSubmit = (action) => {
     const testCaseNames = getTestcaseNameOnly();
     let payload = {
@@ -145,21 +156,21 @@ export default function EditTestSuite() {
     if (!description) {
       error.description = "Description is required";
     }
-    if(testCaseNames.length === 0){
-      error.testCaseError = "1px solid red"
-      error.testCaseErrorText = "Select atleast one test case"
+    if (testCaseNames.length === 0) {
+      error.testCaseError = "1px solid red";
+      error.testCaseErrorText = "Select atleast one test case";
     }
     // Update error state
     setError(error);
-
+    
     // Check if there are any errors
     if (Object.keys(error).length === 0) {
       // Proceed with form submission
+      if(action === 'SaveAndExecute'){
+        setisExecuting(true)}
       console.log("no error ", payload);
-      dispatch(AddUpdateTestSuites(payload,action))
-      navigate('/')
-    }else
-    console.log("handleSubmit error", error, payload);
+      dispatch(AddUpdateTestSuites(payload, action,handleLoading));
+    } else console.log("handleSubmit error", error, payload);
   };
 
   const handleCheckboxChange = (event, row) => {
@@ -167,13 +178,15 @@ export default function EditTestSuite() {
     setSelectedRows((prevSelectedRows) =>
       checked
         ? [...prevSelectedRows, row]
-        : prevSelectedRows.filter((selectedRow) => selectedRow.TestCaseName !== row.TestCaseName)
+        : prevSelectedRows.filter(
+            (selectedRow) => selectedRow.TestCaseName !== row.TestCaseName
+          )
     );
   };
 
   const handleSelectAllChange = (event) => {
     const checked = event.target.checked;
-    console.log("checked in all selection ", checked)
+    console.log("checked in all selection ", checked);
     setSelectAll(checked);
     setSelectedRows(checked ? testCasesList : []);
   };
@@ -181,14 +194,19 @@ export default function EditTestSuite() {
   //   data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   // );
 
-  const filteredTestCaseData = testCasesList.map((data) => ({
-    ...data,
-    isChecked: selectedRows.find((selectedRow) => selectedRow.TestCaseName === data.TestCaseName) !== undefined,
-  })).filter((data) =>
-    data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
-  );
-  
-  const selectStyle={
+  const filteredTestCaseData = testCasesList
+    .map((data) => ({
+      ...data,
+      isChecked:
+        selectedRows.find(
+          (selectedRow) => selectedRow.TestCaseName === data.TestCaseName
+        ) !== undefined,
+    }))
+    .filter((data) =>
+      data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+    );
+
+  const selectStyle = {
     container: (provided) => ({
       ...provided,
       backgroundColor: "rgb(242, 242, 242)",
@@ -208,37 +226,36 @@ export default function EditTestSuite() {
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isSelected
-        ? "#654DF7"
-        : "transparent",
+      backgroundColor: state.isSelected ? "#654DF7" : "transparent",
     }),
     clearIndicator: (provided) => ({
       ...provided,
-      cursor: 'pointer',
-      ':hover': {
-        color: '#654DF7', // Change the color on hover if desired
+      cursor: "pointer",
+      ":hover": {
+        color: "#654DF7", // Change the color on hover if desired
       },
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
-      cursor: 'pointer',
-      ':hover': {
-        color: '#654DF7', // Change the color on hover if desired
+      cursor: "pointer",
+      ":hover": {
+        color: "#654DF7", // Change the color on hover if desired
       },
     }),
-  } 
+  };
   return (
     <>
-      
       <div className={classes.main}>
-        <Grid container >
+        <Grid container>
           {/* First Section */}
           <Grid item xs={12} sm={4}>
             {/* Left Section Part 1 */}
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Card >
-                  <Box className={classes.sideBar}><b>New Suite</b></Box>
+                <Card>
+                  <Box className={classes.sideBar}>
+                    <b>New Suite</b>
+                  </Box>
                   <div
                     style={{
                       // overflow: "auto",
@@ -273,7 +290,6 @@ export default function EditTestSuite() {
                               height: "40px",
                             }}
                           >
-                            
                             <OutlinedInput
                               id="outlined-adornment-name"
                               type="text"
@@ -363,7 +379,9 @@ export default function EditTestSuite() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Card style={{ minHeight: "42vh" }}>
-                  <Box className={classes.sideBar}><b>Run Settings</b></Box>
+                  <Box className={classes.sideBar}>
+                    <b>Run Settings</b>
+                  </Box>
 
                   <div
                     // style={{ overflow: "auto", maxHeight: "calc(42vh - 50px)" }}
@@ -387,7 +405,7 @@ export default function EditTestSuite() {
                             >
                               <FormControlLabel
                                 value="custom-Suites"
-                                control={<Radio style={{ color: '#654DF7' }}/>}
+                                control={<Radio style={{ color: "#654DF7" }} />}
                                 label={
                                   <Typography
                                     variant="body1"
@@ -405,7 +423,6 @@ export default function EditTestSuite() {
                           </FormControl>
                         </Grid>
 
-                        
                         {/* Row 5: Environment Dropdown */}
                         <Grid item>
                           <div className={classes.input}>
@@ -423,11 +440,10 @@ export default function EditTestSuite() {
                               isClearable={true}
                               options={environementList}
                               value={selectedEnvironment}
-                              onChange={(newValue) =>{
-                                setSelectedEnvironment(newValue)
-                                handleApplication(newValue)
-                                }
-                              }
+                              onChange={(newValue) => {
+                                setSelectedEnvironment(newValue);
+                                handleApplication(newValue);
+                              }}
                               styles={selectStyle}
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
@@ -464,7 +480,9 @@ export default function EditTestSuite() {
                               >
                                 <FormControlLabel
                                   value="only-for-me"
-                                  control={<Radio style={{ color: '#654DF7' }}/>}
+                                  control={
+                                    <Radio style={{ color: "#654DF7" }} />
+                                  }
                                   label={
                                     <Typography
                                       variant="body1"
@@ -480,7 +498,9 @@ export default function EditTestSuite() {
                                 />
                                 <FormControlLabel
                                   value="all-users"
-                                  control={<Radio style={{ color: '#654DF7' }}/>}
+                                  control={
+                                    <Radio style={{ color: "#654DF7" }} />
+                                  }
                                   label={
                                     <Typography
                                       variant="body1"
@@ -551,7 +571,6 @@ export default function EditTestSuite() {
                           </div>
                         </Grid>
 
-
                         {/* Row 6: Browser Dropdown */}
                         {/* <Grid item>
                           <div className={classes.input}>
@@ -615,13 +634,12 @@ export default function EditTestSuite() {
           <Grid item xs={12} sm={8}>
             <Grid container>
               <Grid item xs={12}>
-                <Card
-                >
+                <Card>
                   <Box
                     className={classes.sideBar}
                     style={{ paddingLeft: "5vh" }}
                   >
-                    <b>Test Cases{" "}</b>
+                    <b>Test Cases </b>
                   </Box>
                   <Grid
                     container
@@ -644,7 +662,7 @@ export default function EditTestSuite() {
                       overflow: "auto",
                       maxHeight: "calc(100vh - 50px)",
                       // marginBottom: "20px",
-                      border:Error.testCaseError
+                      border: Error.testCaseError,
                     }}
                   >
                     <TestCaseTable
@@ -655,7 +673,9 @@ export default function EditTestSuite() {
                       handleCheckboxChange={handleCheckboxChange}
                       selectAll={selectAll}
                     />
-                  <Box className={classes.testCaseErrorStyle}>{Error.testCaseErrorText}</Box>
+                    <Box className={classes.testCaseErrorStyle}>
+                      {Error.testCaseErrorText}
+                    </Box>
                   </div>
                 </Card>
               </Grid>
@@ -670,7 +690,7 @@ export default function EditTestSuite() {
                   }}
                   className={classes.buttonContainer}
                 > */}
-                  <Box className={classes.buttonContainer}>
+                <Box className={classes.buttonContainer}>
                   <Button
                     variant="contained"
                     color="primary"
@@ -700,7 +720,11 @@ export default function EditTestSuite() {
                       },
                     }}
                   >
-                    Save & Execute
+                    {isExecuting ? (
+                      <CircularProgress size={25} style={{color:'#fff'}}/>
+                    ) : (
+                      "Save & Execute"
+                    )}
                   </Button>
 
                   <Button
@@ -717,7 +741,7 @@ export default function EditTestSuite() {
                   >
                     Cancel
                   </Button>
-                   </Box> 
+                </Box>
                 {/* </Card> */}
               </Grid>
             </Grid>

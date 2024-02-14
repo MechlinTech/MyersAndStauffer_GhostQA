@@ -67,7 +67,7 @@ export const getTestCaseRundetailsByTestName = (data) => {
     };
 };
 
-export const ExecuteTestCasesByTestSuite = (data) => {
+export const ExecuteTestCasesByTestSuite = (data,controlLoading) => {
     // let data = "Mississippi";
     return async (dispatch) => {
         try {
@@ -75,8 +75,10 @@ export const ExecuteTestCasesByTestSuite = (data) => {
                 `${BASE_URL}/Selenium/ExecuteTestSuite?TestSuiteName=${data}`,
                 header()
             );
+            controlLoading(data)
             console.log("ExecuteTestCasesByTestSuite", response.data);
         } catch (error) {
+            controlLoading(data)
             console.error(error);
             toast.error("NETWORK ERROR");
         }
@@ -200,7 +202,7 @@ export const GetTestCases = () => {
   };
 };
 
-export const AddUpdateTestSuites = (data,action)=>{
+export const AddUpdateTestSuites = (data,action,handleLoading)=>{
   return async (dispatch)=>{
     try {
       const res = await axios.post(
@@ -208,7 +210,8 @@ export const AddUpdateTestSuites = (data,action)=>{
          data,
          header())
       console.log('response ' ,res)
-      if (res.status === 200) {
+      if (res.data.status === "success") {
+        handleLoading('pass')
         toast.info('Successfully saved', {
           style: {
             background: 'rgb(101, 77, 247)', 
@@ -218,8 +221,9 @@ export const AddUpdateTestSuites = (data,action)=>{
     } 
     console.log("saved ",res)
     }catch (error) {
+      handleLoading('error')
       console.log("error sending ",error);
-      toast('Posting error')
+      toast.error("NETWORK ERROR");
     }
   }
 }
