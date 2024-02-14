@@ -1,11 +1,4 @@
-USE [SeleniumTest]
-GO
-/****** Object:  StoredProcedure [dbo].[stp_GetApplications]    Script Date: 1/23/2024 4:10:43 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER   PROCEDURE [dbo].[stp_GetApplications]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetApplications]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetApplications

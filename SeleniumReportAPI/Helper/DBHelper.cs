@@ -847,14 +847,13 @@ namespace SeleniumReportAPI.Helper
                 string connectionString = GetConnectionString();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand cmd = new SqlCommand("stp_UpsertTableData", connection)
+                    SqlCommand cmd = new SqlCommand("stp_InsertBuiltInTestSuiteDetails", connection)
                     {
                         CommandType = CommandType.StoredProcedure
                     };
 
                     connection.Open();
                     cmd.Parameters.AddWithValue("@DynamicObject", testDataJson);
-                    cmd.Parameters.AddWithValue("@TableName", "tbl_TestCase");
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -890,7 +889,6 @@ namespace SeleniumReportAPI.Helper
                     cmd.Parameters.AddWithValue("@testSuite", testSuite);
                     cmd.Parameters.AddWithValue("@testRun", testRun);
                     cmd.Parameters.AddWithValue("@testCase", testCase);
-                    cmd.Parameters.AddWithValue("@TableName", "tbl_TestCase");
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)

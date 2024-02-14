@@ -15,7 +15,7 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<Models.Applications> tbl_Applications { get; set; }
         public DbSet<Models.Environments> tbl_Environments { get; set; }
         public DbSet<Models.Browsers> tbl_Browsers { get; set; }
-
+        public DbSet<TestCase> tbl_TestCase { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TestSuites>()
@@ -32,6 +32,8 @@ namespace SeleniumReportAPI.DBContext
             .Property(e => e.EnvironmentId)
             .HasColumnName("EnvironmentId")
             .UseIdentityColumn(seed: 1000);
+
+            builder.Entity<Models.TestCase>().HasNoKey();
 
             base.OnModelCreating(builder);
         }

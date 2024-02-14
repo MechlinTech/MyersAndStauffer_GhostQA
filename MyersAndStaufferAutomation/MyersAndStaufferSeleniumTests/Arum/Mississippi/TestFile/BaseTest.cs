@@ -7,6 +7,9 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Remote;
 using System.Text;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
@@ -37,9 +40,31 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             string baseURL = TestExecutor.Baseurl;
             WindowSize browserWindowSize = new WindowSize(1280, 720);
             LogMessage(logMessage.ToString());
+
+            // Create options for Chrome
+            ChromeOptions options = new ChromeOptions();
+
+            // options.AddArgument("--headless");
             Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize);
-            driver = Browser.Driver;
+
+            // Set the Remote WebDriver URL
+            Uri url = new Uri("https://codearrest.dyndns.org:3006/Arum/Mississippi/Driver");
+
+            // Instantiate the RemoteWebDriver with ChromeOptions
+            driver = new RemoteWebDriver(url, options);
+
+            // Maximize the window
             driver.Manage().Window.Maximize();
+
+            //StringBuilder logMessage = new StringBuilder();
+            //_testData.TestCaseName = TestContext.CurrentContext.Test.Name;
+            // Get Browser settings
+            //string baseURL = TestExecutor.Baseurl;
+            //WindowSize browserWindowSize = new WindowSize(1280, 720);
+            //LogMessage(logMessage.ToString());
+            //Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize);
+            //driver = Browser.Driver;
+            //driver.Manage().Window.Maximize();
         }
 
         [TearDown]
