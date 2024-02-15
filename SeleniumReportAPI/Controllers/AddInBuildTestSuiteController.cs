@@ -30,20 +30,5 @@ namespace SeleniumReportAPI.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
-
-
-        [HttpPost("UpdateInBuiltTestSuitesTestStepsJson")]
-        public async Task<IActionResult> UpdateInBuiltTestSuitesTestStepsJson(string testStepJson, string testSuite, string testRun, string testCase)
-        {
-            try
-            {
-                var result = await _helper.UpdateInBuiltTestSuitesTestStepsJson(testStepJson, testSuite, testRun, testCase);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal Server Error");
-            }
-        }
     }
 }
