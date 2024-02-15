@@ -1,5 +1,5 @@
 CREATE OR ALTER PROCEDURE [dbo].[stp_InsertBuiltInTestSuiteDetails]
-@DynamicObject			VARCHAR(1000)
+@DynamicObject			NVARCHAR(MAX)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_InsertBuiltInTestSuiteDetails
@@ -71,7 +71,7 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SELECT [result] = JSON_QUERY((
-			SELECT 'fail' [status], CAST(ERROR_MESSAGE() AS NVARCHAR(20)) [message]
+			SELECT 'fail' [status], ERROR_MESSAGE() [message]
 			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER 
 		)) 
 END CATCH
