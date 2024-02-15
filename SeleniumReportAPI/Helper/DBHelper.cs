@@ -839,7 +839,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<string> SaveInBuiltTestSuites(string testDataJson)
+        internal async Task<string> SaveInBuiltTestSuites(Object testDataJson)
         {
             string result = string.Empty;
             try
@@ -853,7 +853,7 @@ namespace SeleniumReportAPI.Helper
                     };
 
                     connection.Open();
-                    cmd.Parameters.AddWithValue("@DynamicObject", testDataJson);
+                    cmd.Parameters.AddWithValue("@DynamicObject", testDataJson.ToString());
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.Helper;
 
 namespace SeleniumReportAPI.Controllers
@@ -17,7 +18,7 @@ namespace SeleniumReportAPI.Controllers
         }
 
         [HttpPost("SaveInBuiltTestSuites")]
-        public async Task<IActionResult> SaveInBuiltTestSuites(string testDataJson)
+        public async Task<IActionResult> SaveInBuiltTestSuites(Object testDataJson)
         {
             try
             {
