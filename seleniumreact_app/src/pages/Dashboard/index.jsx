@@ -19,7 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import CircularProgress from "@mui/material/CircularProgress";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import AddSuite from "./Modal/AddSuite";
+import LoadingWave from "./Modal/LoadingWave";
 import DeleteSuite from "./Modal/DeleteSuite";
 import { useNavigate } from "react-router-dom";
 import Graph from "./Components/Graph";
@@ -35,7 +35,7 @@ export default function Dashboard() {
   const [openModal, setOpenModal] = useState(false);
   const [openDelModal, setopenDelModal] = useState(false);
   const [suitToDelete, setsuitToDelete] = useState("");
-  const [isExecuting, setisExecuting] = useState({});
+  const [executingSuite, setexecutingSuite] = useState("");
   const handleAddSuite = () => {
     navigate("/add-suite");
   };
@@ -79,20 +79,16 @@ export default function Dashboard() {
     // getsuitebyname api will give you detail
   };
 
-  const controlLoading = (name) => { // function to set loading false when promise resolve or reject
-    setisExecuting((prev) => ({
-      ...prev,
-      [name]: false,
-    }));
+  const controlLoading = () => { // function to set loading false when promise resolve or reject
+   setOpenModal(false)
+   setexecutingSuite("")
   };
 
   const handleExecuteClick = (suite) => {
     let data = suite.TestSuiteName;
-    setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
-    setisExecuting((prev) => ({
-      ...prev,
-      [data]: true,
-    }));
+    // setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
+    setOpenModal(true)
+    setexecutingSuite(data)
     dispatch(ExecuteTestCasesByTestSuite(data, controlLoading));
   };
 
@@ -104,10 +100,10 @@ export default function Dashboard() {
   return (
     <>
       <div className={classess.main}>
-        <AddSuite
+        <LoadingWave
           open={openModal}
           onClose={() => setOpenModal(false)}
-          hookProps={{}}
+          suiteName={executingSuite}
         />
         <DeleteSuite
           open={openDelModal}
@@ -188,19 +184,7 @@ export default function Dashboard() {
                           >
                             {suite.TestSuiteFlag == "Custom" && (
                               <>
-                                {isExecuting[suite.TestSuiteName] ? (
-                                  <CircularProgress
-                                    size={25}
-                                    style={{
-                                      marginRight: "8px",
-                                      color:
-                                        selectedSuite === suite
-                                          ? "#fff"
-                                          : "rgb(101, 77, 247)",
-                                    }}
-                                  />
-                                ) : ( 
-                                    <PlayCircleIcon
+                                 <PlayCircleIcon
                                       style={{
                                         marginRight: "8px",
                                         color:
@@ -213,7 +197,6 @@ export default function Dashboard() {
                                         handleExecuteClick(suite);
                                       }}
                                     />
-                                )}
                                 <EditIcon
                                   style={{
                                     marginRight: "8px",

@@ -75,10 +75,10 @@ export const ExecuteTestCasesByTestSuite = (data,controlLoading) => {
                 `${BASE_URL}/Selenium/ExecuteTestSuite?TestSuiteName=${data}`,
                 header()
             );
-            controlLoading(data)
+            controlLoading()
             console.log("ExecuteTestCasesByTestSuite", response.data);
         } catch (error) {
-            controlLoading(data)
+            controlLoading()
             console.error(error);
             toast.error("NETWORK ERROR");
         }

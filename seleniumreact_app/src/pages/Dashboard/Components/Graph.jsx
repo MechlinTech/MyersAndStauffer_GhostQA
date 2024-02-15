@@ -9,7 +9,7 @@ import { FormControl, Typography, FormControlLabel, Grid } from "@mui/material";
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
-import useStyles from "./../../../pages/Dashboard/Modal/styles";
+import useStyles from "./style";
 import clsx from "clsx";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
