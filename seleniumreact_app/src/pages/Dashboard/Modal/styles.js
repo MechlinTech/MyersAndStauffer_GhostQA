@@ -1,100 +1,84 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-    modalContent: {
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: "white",
-        borderRadius: "8px",
-        overflow: "hidden",
-        outline: "none",
-        width: "80%",
-        maxWidth: "500px",
-    },
-    header: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "10px",
-        borderBottom: "1px solid #ccc",
-    },
     body: {
-        display: "grid !important",
-        gridTemplateRows: "auto",
-        rowGap: "20px",
-        padding: "20px",
-        gridTemplateColumns: "1fr", // Use one column for each item
-    },
-    input: {
-        display: "flex",
-        flexDirection: "column",
-    },
-    footer: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "10px",
-        borderTop: "1px solid #ccc",
-        gap: "8px",
-    },
-    button: {
-        height: "40px",
-        minWidth: "110px",
-        display: "flex",
-        textTransform: "none !important",
-    },
-    form: {
-        marginTop: theme.spacing(2),
-    },
-    radioGroup: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: theme.spacing(2),
-    },
-    radioLabel: {
-        marginRight: theme.spacing(2),
-        "& .Mui-checked": {
-            color: "rgb(101, 77, 247)",
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box',
+      },
+    center: {
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'start',
+        alignItems: 'center',
+        flexDirection:'column',
+        background: '#000',
+        color:'white'
+      },
+      waveContainer:{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      text:{
+        margin:'100px',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection:'column',
+        alignItems: 'center',
+      },
+      header:{
+        textTransform:'uppercase',
+        letterSpacing:'2px'
+      },
+      wave: {
+        width: '5px',
+        height: '100px',
+        background: '#654DF7',
+        margin: '10px',
+        borderRadius: '20px',
+      },
+      wave1: {
+        animation: '$wave 1s linear infinite 0s',
+      },
+      wave2: {
+        animation: '$wave 1s linear infinite 0.1s',
+      },
+      wave3: {
+        animation: '$wave 1s linear infinite 0.2s',
+      },
+      wave4: {
+        animation: '$wave 1s linear infinite 0.3s',
+      },
+      wave5: {
+        animation: '$wave 1s linear infinite 0.4s',
+      },
+      wave6: {
+        animation: '$wave 1s linear infinite 0.5s',
+      },
+      wave7: {
+        animation: '$wave 1s linear infinite 0.6s',
+      },
+      wave8: {
+        animation: '$wave 1s linear infinite 0.7s',
+      },
+      wave9: {
+        animation: '$wave 1s linear infinite 0.8s',
+      },
+      wave10: {
+        animation: '$wave 1s linear infinite 0.9s',
+      },
+      '@keyframes wave': {
+        '0%': {
+          transform: 'scale(0)',
         },
-        fontSize: '14px'
-    },
-    select: {
-        control: (base, state) => ({
-            ...base,
-            boxShadow: 'red',
-            borderColor: "rgb(101, 77, 247)",
-        }),
-        indicatorsContainer: (base) => ({
-            ...base,
-            borderRight: 0,
-        }),
-    },
-    textField: {
-        "& .MuiOutlinedInput-root": {
-            borderColor: "transparent !important",
-            "&:hover fieldset": {
-                borderColor: "#654DF7",
-            },
-            "&.Mui-focused fieldset": {
-                borderColor: "#654DF7",
-            },
+        '50%': {
+          transform: 'scale(1)',
         },
-    },
-    customheight: {
-        height: "40px",
-    },
-    customFontSize: {
-        fontSize: '14px !important',
-    },
-    customBackgroung: {
-        backgroundColor: 'rgb(242, 242, 242)',
-        border: '0px !important'
-    },
-    radioButtonLabel: {
-        fontSize: '14px',
-        display: 'inline-block'
-    }
-}));
+        '100%': {
+          transform: 'scale(0)',
+        },
+      },
+    }));
 
 export default useStyles;

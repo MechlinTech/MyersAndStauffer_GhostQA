@@ -26,6 +26,7 @@ import {
   AddUpdateTestSuites,
 } from "../../redux/actions/seleniumAction";
 import CircularProgress from "@mui/material/CircularProgress";
+import LoadingWave from "../Dashboard/Modal/LoadingWave";
 
 
 export default function AddTestSuite() {
@@ -60,7 +61,7 @@ export default function AddTestSuite() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [isExecuting, setisExecuting] = useState(false);
+  const [openLoadingModal, setopenLoadingModal] = useState(false);
 
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
@@ -91,7 +92,7 @@ export default function AddTestSuite() {
   }
 
   const handleLoading = (status)=>{
-    setisExecuting(false)
+    setopenLoadingModal(false)
     if(status === 'pass')
     navigate('/')
 
@@ -148,7 +149,7 @@ export default function AddTestSuite() {
     if (Object.keys(error).length === 0) {
       // Proceed with form submission
       if(action === 'SaveAndExecute'){
-        setisExecuting(true)}
+        setopenLoadingModal(true)}
       console.log("no error ", payload);
       dispatch(AddUpdateTestSuites(payload, action,handleLoading));
     }else
@@ -218,6 +219,11 @@ export default function AddTestSuite() {
   return (
     <>
       <div className={classes.main}>
+      <LoadingWave
+        open={openLoadingModal}
+        onClose={() => setopenLoadingModal(false)}
+        suiteName={name}
+        />
         <Grid container >
           {/* First Section */}
           <Grid item xs={12} sm={4}>
@@ -690,11 +696,7 @@ export default function AddTestSuite() {
                       },
                     }}
                   >
-                    {isExecuting ? (
-                      <CircularProgress size={25} style={{color:'#fff'}}/>
-                    ) : (
                       "Save & Execute"
-                    )}
                   </Button>
 
                   <Button
