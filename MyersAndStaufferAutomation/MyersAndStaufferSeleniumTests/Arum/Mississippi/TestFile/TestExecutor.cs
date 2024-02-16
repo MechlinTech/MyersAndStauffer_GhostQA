@@ -7,8 +7,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         private static string _browsername = "Chrome";
         private static string _environmentname = "dev";
         private static string _baseurl = "https://clocksession.com/";
-        private static string _basepath = "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\TestSeleniumReport\\wwwroot\\";
-        private static string _driverpath = "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\bin\\x64\\Debug\\net6.0";
+        private static string _basepath = @"C:\GhostQA\SeleniumReportAPI\wwwroot\";
+        private static string _driverpath = @"C:\GhostQA\SeleniumReportAPI\wwwroot\Driver";
         public static string JsonData { get; set; }
         public static string browserName
         {

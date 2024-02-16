@@ -839,7 +839,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<string> SaveInBuiltTestSuites(string testDataJson)
+        internal async Task<string> SaveInBuiltTestSuites(Object testDataJson)
         {
             string result = string.Empty;
             try
@@ -853,42 +853,7 @@ namespace SeleniumReportAPI.Helper
                     };
 
                     connection.Open();
-                    cmd.Parameters.AddWithValue("@DynamicObject", testDataJson);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            reader.Read();
-                            result = reader["result"].ToString();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
-
-        internal async Task<string> UpdateInBuiltTestSuitesTestStepsJson(string testStepJson, string testSuite, string testRun, string testCase)
-        {
-            string result = string.Empty;
-            try
-            {
-                string connectionString = GetConnectionString();
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand cmd = new SqlCommand("stp_UpdateTestStepData", connection)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@testStepJson", testStepJson);
-                    cmd.Parameters.AddWithValue("@testSuite", testSuite);
-                    cmd.Parameters.AddWithValue("@testRun", testRun);
-                    cmd.Parameters.AddWithValue("@testCase", testCase);
+                    cmd.Parameters.AddWithValue("@DynamicObject", testDataJson.ToString());
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)

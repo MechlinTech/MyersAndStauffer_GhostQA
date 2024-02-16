@@ -82,4 +82,8 @@
 	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\windows\selenium-manager.exe" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\Driver\" />
+	</ItemGroup>
+
 </Project>
