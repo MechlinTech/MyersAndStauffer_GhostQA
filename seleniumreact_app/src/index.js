@@ -5,9 +5,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
 import store from './redux/store'
 import App from './App';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
-const theme = createMuiTheme({
+import { ThemeProvider, createTheme } from '@material-ui/core/styles';
+const theme = createTheme({
   typography: {
     fontFamily: [
       "Lexend Deca",

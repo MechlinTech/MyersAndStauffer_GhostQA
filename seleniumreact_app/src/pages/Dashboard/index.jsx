@@ -147,11 +147,11 @@ export default function Dashboard() {
               <Grid
                 // className={classess.remScrollbar}
                 item
-                style={{ overflow: "auto", maxHeight: "calc(70vh - 50px)" }}
+                style={{ overflow: "auto", maxHeight: "calc(70vh - 50px)", paddingBottom:'10px' }}
               >
                 {filteredTestSuiteData.map((suite, index) => (
                   <Paper
-                    key={suite}
+                    key={suite.TestSuiteName}
                     className={`${classess.paper} ${
                       selectedSuite === suite ? classess.paperActive : ""
                     }`}

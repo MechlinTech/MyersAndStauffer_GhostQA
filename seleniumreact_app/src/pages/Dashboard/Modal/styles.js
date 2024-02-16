@@ -28,10 +28,11 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         flexDirection:'column',
         alignItems: 'center',
+        color:'#fff'
       },
       header:{
         textTransform:'uppercase',
-        letterSpacing:'2px'
+        letterSpacing:'2px',
       },
     }));
 

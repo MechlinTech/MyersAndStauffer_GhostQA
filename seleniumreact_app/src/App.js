@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import { LOG_IN } from './redux/actions/authActions'
-
+import Load from './comman/spiner/Spin';
 const Auth = lazy(() => import("./pages/Auth"))
 
 function App() {
@@ -16,13 +16,13 @@ function App() {
     if (data) {
       dispatch({ type: LOG_IN, payload: data  })
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <div>
-       <Suspense fallback={<div>
-      <h1>LOADING ....</h1>
-     </div>}>
+       <Suspense fallback={
+        <Load/>}>
+
       {isLogedIn ? <Layout /> : <Auth />}
       {/* {isLogedIn ? <Auth />  : <Layout /> } */}
       <ToastContainer

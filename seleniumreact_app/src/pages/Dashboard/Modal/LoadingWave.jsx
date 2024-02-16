@@ -5,7 +5,6 @@ import { Box, Typography } from "@mui/material";
 import ghostLogo from "./ghost.gif"
 const LoadingWave = ({ open, onClose, suiteName }) => {
   const classes = useStyles()
-  console.log(suiteName)
   return (
     <Modal
       open={open}
