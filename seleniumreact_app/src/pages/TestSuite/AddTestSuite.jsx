@@ -698,7 +698,7 @@ export default function AddTestSuite() {
                       },
                     }}
                   >
-                      "Save & Execute"
+                      Save & Execute
                   </Button>
 
                   <Button

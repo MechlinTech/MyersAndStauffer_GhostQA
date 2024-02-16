@@ -728,7 +728,7 @@ export default function EditTestSuite() {
                       },
                     }}
                   >
-                      "Save & Execute"
+                      Save & Execute
                   </Button>
 
                   <Button
