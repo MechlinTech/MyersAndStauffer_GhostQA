@@ -25,7 +25,6 @@ import {
   GetTestCases,
   AddUpdateTestSuites,
 } from "../../redux/actions/seleniumAction";
-import CircularProgress from "@mui/material/CircularProgress";
 import LoadingWave from "../Dashboard/Modal/LoadingWave";
 
 export default function EditTestSuite() {
@@ -176,13 +175,16 @@ export default function EditTestSuite() {
 
   const handleCheckboxChange = (event, row) => {
     const checked = event.target.checked;
-    setSelectedRows((prevSelectedRows) =>
-      checked
-        ? [...prevSelectedRows, row]
-        : prevSelectedRows.filter(
-            (selectedRow) => selectedRow.TestCaseName !== row.TestCaseName
-          )
-    );
+    const checkedRows = checked
+    ? [...selectedRows, row]
+    : selectedRows.filter(
+        (selectedRow) => selectedRow.TestCaseName !== row.TestCaseName
+      )
+    setSelectedRows(checkedRows);
+    if(checkedRows.length === testCasesList.length)
+     setSelectAll(true)
+    else
+      setSelectAll(false)
   };
 
   const handleSelectAllChange = (event) => {
@@ -320,7 +322,7 @@ export default function EditTestSuite() {
                       </Grid>
 
                       {/* Row 2: Test Description Input Field */}
-                      <Grid item>
+                      <Grid item mb={2}>
                         <div className={classes.input}>
                           <Typography
                             variant="subtitle1"
@@ -391,7 +393,7 @@ export default function EditTestSuite() {
 
                   <div
                     // style={{ overflow: "auto", maxHeight: "calc(42vh - 50px)" }}
-                    style={{ padding: "10px 0px" }}
+                    // style={{ padding: "10px 0px" }}
                   >
                     {/* Your existing content */}
                     <Grid container className={classes.body}>
@@ -523,7 +525,7 @@ export default function EditTestSuite() {
                         </Grid>
 
                         {/* Row 3: Additional Name Dropdown */}
-                        <Grid item>
+                        <Grid item mb={2}>
                           <div className={classes.input}>
                             <Typography
                               variant="subtitle1"

@@ -2,6 +2,7 @@ import React from "react";
 import  useStyles  from "./styles";
 import Modal from "@material-ui/core/Modal";
 import { Box, Typography } from "@mui/material";
+import ghostLogo from "./ghost.gif"
 const LoadingWave = ({ open, onClose, suiteName }) => {
   const classes = useStyles()
   console.log(suiteName)
@@ -16,11 +17,9 @@ const LoadingWave = ({ open, onClose, suiteName }) => {
           <h3 className={classes.header}>executing</h3>
           <span>{suiteName}</span>
         </Box>
-        <Box className={classes.waveContainer}>
-        {[...Array(10)].map((_, index) => (
-          <Box key={index} className={`${classes.wave} ${classes[`wave${index + 1}`]}`}></Box>
-        ))}
-      </Box>
+        <Box>
+        <img src={ghostLogo} alt="" height='200px' width='500px'/>
+        </Box> 
       </Box>
     </Box>
     </Modal>

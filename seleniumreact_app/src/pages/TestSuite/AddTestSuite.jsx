@@ -25,7 +25,6 @@ import {
   GetTestCases,
   AddUpdateTestSuites,
 } from "../../redux/actions/seleniumAction";
-import CircularProgress from "@mui/material/CircularProgress";
 import LoadingWave from "../Dashboard/Modal/LoadingWave";
 
 
@@ -158,13 +157,14 @@ export default function AddTestSuite() {
 
   const handleCheckboxChange = (event, row) => {
     const checked = event.target.checked;
-    console.log("checked : ",checked)
-    console.log("rows : ",selectedRows)
-    setSelectedRows((prevSelectedRows) =>
-      checked
-        ? [...prevSelectedRows, row]
-        : prevSelectedRows.filter((selectedRow) => selectedRow !== row)
-    );
+    const checkedRows =  checked
+    ? [...selectedRows, row]
+    : selectedRows.filter((selectedRow) => selectedRow !== row)
+    setSelectedRows(checkedRows);
+    if(checkedRows.length === testCasesList.length)
+     setSelectAll(true)
+    else
+      setSelectAll(false)
   };
 
   const handleSelectAllChange = (event) => {
@@ -177,6 +177,7 @@ export default function AddTestSuite() {
     data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
 
+  
   const selectStyle={
     container: (provided) => ({
       ...provided,
@@ -289,7 +290,7 @@ export default function AddTestSuite() {
                       </Grid>
 
                       {/* Row 2: Test Description Input Field */}
-                      <Grid item>
+                      <Grid item mb={3}>
                         <div className={classes.input}>
                           <Typography
                             variant="subtitle1"
@@ -358,7 +359,7 @@ export default function AddTestSuite() {
 
                   <div
                     // style={{ overflow: "auto", maxHeight: "calc(42vh - 50px)" }}
-                    style={{ padding: "10px 0px" }}
+                    // style={{ padding: "10px 0px" }}
                   >
                     {/* Your existing content */}
                     <Grid container className={classes.body}>
@@ -485,7 +486,7 @@ export default function AddTestSuite() {
                         </Grid>
 
                         {/* Row 3: Additional Name Dropdown */}
-                        <Grid item>
+                        <Grid item mb={2}>
                           <div className={classes.input}>
                             <Typography
                               variant="subtitle1"
@@ -639,7 +640,8 @@ export default function AddTestSuite() {
                   <div
                     style={{
                       overflow: "auto",
-                      maxHeight: "calc(100vh - 50px)",
+                      // maxHeight: "calc(100vh - 50px)",
+                      maxHeight:'400px',
                       // marginBottom: "20px",
                       border:Error.testCaseError
                     }}
