@@ -9,7 +9,7 @@ const initialState = {
   environementList:[],
   browserList:[],
   testCasesList:[],
-  suiteToEdit:{},
+  suiteToEdit:null,
 };
 
 const seleniumReduser = (state = initialState, action) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -10,6 +10,7 @@ import {
   Grid,
   Box,
   Card,
+  CircularProgress,
 } from "@mui/material";
 import useStyles from "./styles";
 import clsx from "clsx";
@@ -24,16 +25,17 @@ import {
   GetEnvironment,
   GetTestCases,
   AddUpdateTestSuites,
+  Getsuitebyname,
 } from "../../redux/actions/seleniumAction";
 import LoadingWave from "../Dashboard/Modal/LoadingWave";
+import { useParams } from "react-router-dom";
 
 export default function EditTestSuite() {
-  const { applicationList, environementList, suiteToEdit, testCasesList } =
-    useSelector((state) => state.selenium);
   const dispatch = useDispatch();
 
   const classes = useStyles();
   const navigate = useNavigate();
+  const {suiteName} = useParams()
   const [selectedSuiteValue, setSelectedSuiteValue] = useState("custom-Suites");
   const [selectedRecepentValue, setSelectedRecepentValue] = useState("");
   const [selectedApplication, setSelectedApplication] = useState(null);
@@ -52,35 +54,39 @@ export default function EditTestSuite() {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [openLoadingModal, setopenLoadingModal] = useState(false);
+  const { applicationList, environementList, suiteToEdit, testCasesList } =
+  useSelector((state) => state.selenium);
 
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
     dispatch(GetTestCases());
-    setName(suiteToEdit.TestSuiteName);
+    if(!suiteToEdit){
+      dispatch(Getsuitebyname(suiteName))
+    }
+    setName(suiteToEdit?.TestSuiteName);
     setSelectedApplication(() => {
-      const x = applicationList.find(
-        (app) => app.ApplicationId === suiteToEdit.ApplicationId
+      const x = applicationList?.find(
+        (app) => app.ApplicationId === suiteToEdit?.ApplicationId
       );
       return x;
     });
     //work on all-user
     setSelectedRecepentValue(
-      suiteToEdit.SendEmail ? "only-for-me" : "all-users"
+      suiteToEdit?.SendEmail ? "only-for-me" : "all-users"
     );
     setSelectedEnvironment(() => {
-      return environementList.find(
+      return environementList?.find(
         (env) => env.EnvironmentId === suiteToEdit.EnvironmentId
       );
     });
-    setDescription(suiteToEdit.Description);
+    setDescription(suiteToEdit?.Description);
     setSelectedRows(() => {
       return testCasesList.filter((test) =>
-        suiteToEdit.SelectedTestCases?.includes(test.TestCaseName)
+        suiteToEdit?.SelectedTestCases?.includes(test.TestCaseName)
       );
     });
-  }, [suiteToEdit]);
-
+  }, [dispatch ,suiteToEdit]);
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
   };
@@ -208,7 +214,6 @@ export default function EditTestSuite() {
     .filter((data) =>
       data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
     );
-
   const selectStyle = {
     container: (provided) => ({
       ...provided,
@@ -247,8 +252,18 @@ export default function EditTestSuite() {
     }),
   };
   return (
-    <>
-      <div className={classes.main}>
+    <Suspense
+      fallback={
+        <Box sx={{
+          display:'flex',
+          justifyContent:'center',
+          alignItems:'center',
+          height:'80vh'
+        }}>
+          <CircularProgress sx={{color:'#654DF7'}}/>
+        </Box>
+      }
+    ><div className={classes.main}>
         <LoadingWave
         open={openLoadingModal}
         onClose={() => setopenLoadingModal(false)}
@@ -752,6 +767,6 @@ export default function EditTestSuite() {
           </Grid>
         </Grid>
       </div>
-    </>
+    </Suspense>
   );
 }

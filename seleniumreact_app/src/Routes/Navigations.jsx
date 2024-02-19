@@ -54,7 +54,7 @@ export default function Navigations() {
         <Route path="/add-suite" element={<AddTestSuite />} />
         <Route path="/setting/add-environment" element={<AddNewEnvironment/>} />
         <Route path="/setting/edit-environment" element={<EditNewEnvironment/>} />
-        <Route path="/edit-suite" element={<EditTestSuite />} />
+        <Route path="/edit/:suiteName" element={<EditTestSuite />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

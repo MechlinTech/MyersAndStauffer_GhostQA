@@ -17,7 +17,6 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Add } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import CircularProgress from "@mui/material/CircularProgress";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import LoadingWave from "./Modal/LoadingWave";
 import DeleteSuite from "./Modal/DeleteSuite";
@@ -74,9 +73,10 @@ export default function Dashboard() {
     dispatch(getTestCaseRundetailsByTestName(data));
   };
   const handleEditClick = (suite) => {
-    dispatch(Getsuitebyname(suite.TestSuiteName));
-    navigate("/edit-suite");
+    const suiteName = suite.TestSuiteName
+    dispatch(Getsuitebyname(suiteName));
     // getsuitebyname api will give you detail
+    navigate(`/edit/${suiteName}`);
   };
 
   const controlLoading = () => { // function to set loading false when promise resolve or reject
