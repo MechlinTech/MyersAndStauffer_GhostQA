@@ -7,9 +7,6 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Remote;
 using System.Text;
 
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
@@ -42,7 +39,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 string baseURL = TestExecutor.Baseurl;
                 WindowSize browserWindowSize = new WindowSize(1280, 720);
                 LogMessage(logMessage.ToString());
-                Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize);
+                Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize, isRunHeadless: true);
                 driver = Browser.Driver;
                 driver.Manage().Window.Maximize();
             }
@@ -79,7 +76,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 
             _testData.TestRunEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestCaseSteps = "-";
-            VideoRecorder.EndRecording();
+            //VideoRecorder.EndRecording();
 
             Browser.Driver.Dispose();
             _testData.TestSuiteEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
@@ -97,7 +94,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             string timestamp = DateTime.Now.ToString("yy-MM-dd hh-mm-ss");
 
             string screenshotFile = Path.Combine(basePath, fileName + (hasTimeStamp ? timestamp : null) + ".png");
-            ss.SaveAsFile(screenshotFile, ScreenshotImageFormat.Png);
+            ss.SaveAsFile(screenshotFile);
             TestContext.AddTestAttachment(screenshotFile, fileName + "Screenshot");
             WriteToLogfile("Error screenshot: " + screenshotFile);
 
@@ -107,7 +104,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
                 Directory.CreateDirectory(FailureSSPath);
             }
             var FailureSSImagePath = Path.Combine(FailureSSPath, fileName + (hasTimeStamp ? timestamp : null) + ".png");
-            ss.SaveAsFile(FailureSSImagePath, ScreenshotImageFormat.Png);
+            ss.SaveAsFile(FailureSSImagePath);
             _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Failed and here is the screenshot on which test failed", FailureMessage = "Test failed with message " + FailureMessage.ToString().Replace("'", "''"), FailureScreenShots = FailureSSImagePath.StartsWith(basePath) ? @"\" + FailureSSImagePath.Substring(basePath.Length).ToString() : FailureSSImagePath.ToString() });
         }
 

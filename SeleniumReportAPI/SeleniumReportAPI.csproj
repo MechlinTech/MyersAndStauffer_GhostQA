@@ -67,10 +67,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\MyersAndStaufferSeleniumTests.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\linux\selenium-manager" />
 	</ItemGroup>
 
@@ -84,6 +80,10 @@
 
 	<ItemGroup>
 	  <Folder Include="wwwroot\Driver\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\MyersAndStaufferSeleniumTests.csproj" />
 	</ItemGroup>
 
 </Project>
