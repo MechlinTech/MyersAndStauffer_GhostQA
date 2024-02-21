@@ -12,10 +12,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule
         // Page Elements
 
         public IWebElement Login => driver.FindElementWhenVisible(() => By.XPath("//a[contains(text(),'Login')]"));
-        public IWebElement EmailInput => driver.FindElementWhenVisible(() => By.XPath("//input[@name='email']"));
-        public IWebElement PasswordInput => driver.FindElement(By.XPath("//input[@name='password']"));
+        public IWebElement EmailInput => driver.FindElementWhenVisible(() => By.Id("email"));
+        public IWebElement PasswordInput => driver.FindElement(By.Id("password"));
 
-        public IWebElement LogInButton => driver.FindElement(By.XPath("//button[contains(text(),'LOGIN')]"));
+        public IWebElement LogInButton => driver.FindElement(By.XPath("//span[contains(text(),'Login')]"));
         public IWebElement MechlinHeader => driver.FindElementWhenVisible(() => By.XPath("//div//h1[contains(text(), 'Mechlin Software Technology Pvt. Ltd.')]"));
 
         // Methods

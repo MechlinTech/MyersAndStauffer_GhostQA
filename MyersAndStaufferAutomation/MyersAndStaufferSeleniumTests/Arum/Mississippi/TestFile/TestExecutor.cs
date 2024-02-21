@@ -70,7 +70,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             {
                 Console.WriteLine($"Method '{testCaseName}' not found.");
             }
-            bsTest.TearDown();
+            bsTest.TearDownAsync();
             return JsonData;
 
         }

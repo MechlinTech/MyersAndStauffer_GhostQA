@@ -27,6 +27,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         {
             _testData.TestSuiteStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestEnvironment = EnvironmentName;
+            
         }
 
         [SetUp]
@@ -38,13 +39,13 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             string baseURL = TestExecutor.Baseurl;
             WindowSize browserWindowSize = new WindowSize(1280, 720);
             LogMessage(logMessage.ToString());
-            Browser.Start(BrowserDriver.Edge, windowSize: browserWindowSize);
+            Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize);
             driver = Browser.Driver;
             driver.Manage().Window.Maximize();
         }
 
         [TearDown]
-        public virtual void TearDown()
+        public virtual async Task TearDownAsync()
         {
             var status = LoginTest.Status;
             var message = LoginTest.Message;
@@ -77,7 +78,25 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             _testData.TestSuiteEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestCaseSteps = JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty)));
             TestExecutor.JsonData = JsonConvert.SerializeObject(_testData);
-           
+            //API to push to data 
+            //  
+            string apiUrl = "http://65.1.72.190/api/AddInBuildTestSuite/SaveInBuiltTestSuites";
+
+            // Replace this with your JSON payload
+            string jsonPayload = JsonConvert.SerializeObject(_testData);
+
+            APIClient apiClient = new APIClient(apiUrl);
+            try
+            {
+                string response = await apiClient.MakeApiRequest(jsonPayload);
+                Console.WriteLine(response);
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
         }
 
         public static void ScreenShot(string FailureMessage, string fileName = null, bool hasTimeStamp = false)

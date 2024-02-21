@@ -23,6 +23,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         {
 
             _testData.TestCaseName = "VerifyLoginOK";
+            _testData.TestSuiteName = "ClockSession_Test";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
             VideoRecorder.CreateRecording(TestExecutor.Basepath);
             var logInPage = new LoginPage();
@@ -64,7 +65,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         public void VerifyLoginOK2()
         {
             _testData.TestCaseName = "VerifyLoginOK";
-            _testData.TestSuiteName = "ClockSession";
+            _testData.TestSuiteName = "ClockSession_Test";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
 
             VideoRecorder.CreateRecording(TestExecutor.Basepath);
@@ -103,7 +104,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         public void Verify_User_is_able_to_Login_Successfully()
         {
             _testData.TestCaseName = "Verify_User_is_able_to_Login_Successfully";
-            _testData.TestSuiteName = "ClockSession";
+            _testData.TestSuiteName = "ClockSession_Test";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
 
             VideoRecorder.CreateRecording(TestExecutor.Basepath);
