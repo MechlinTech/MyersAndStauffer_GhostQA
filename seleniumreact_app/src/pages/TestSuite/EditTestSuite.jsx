@@ -77,7 +77,7 @@ export default function EditTestSuite() {
     );
     setSelectedEnvironment(() => {
       return environementList?.find(
-        (env) => env.EnvironmentId === suiteToEdit.EnvironmentId
+        (env) => env.EnvironmentId === suiteToEdit?.EnvironmentId
       );
     });
     setDescription(suiteToEdit?.Description);
@@ -316,7 +316,7 @@ export default function EditTestSuite() {
                             <OutlinedInput
                               id="outlined-adornment-name"
                               type="text"
-                              placeholder="name here"
+                              placeholder="Enter your test suite name"
                               value={name}
                               error={Error.name ? true : false}
                               disabled={false}

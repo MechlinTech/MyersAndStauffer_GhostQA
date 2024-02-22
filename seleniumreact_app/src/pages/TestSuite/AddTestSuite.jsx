@@ -270,7 +270,7 @@ export default function AddTestSuite() {
                             <OutlinedInput
                               id="outlined-adornment-name"
                               type="text"
-                              placeholder="Enter your name"
+                              placeholder="Enter your test suite name"
                               value={name}
                               error={Error.name ? true : false}
                               onChange={handleNameChange}

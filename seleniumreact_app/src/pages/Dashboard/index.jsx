@@ -56,13 +56,13 @@ export default function Dashboard() {
     fontFamily: "Lexend Deca",
   };
 
-  useEffect(() => {
-    dispatch(getTestSuites());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getTestSuites());
+  // }, []);
 
   useEffect(() => {
     dispatch(getTestSuites());
-  }, [openDelModal]);
+  }, [dispatch,openDelModal]);
   const filteredTestSuiteData = testSuits?.filter((suite) =>
     suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );

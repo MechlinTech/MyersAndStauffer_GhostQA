@@ -16,7 +16,7 @@ import {
     Popper,
     MenuList,
 } from "@material-ui/core/";
-import { Avatar } from "@mui/material";
+import { Avatar, Stack } from "@mui/material";
 import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
 
 // Redux import
@@ -43,7 +43,7 @@ export default function MiniDrawer() {
         const email = sessionStorage.getItem('email')
         const i = email.indexOf('@')
         const name = email.substring(0,i)
-        return name
+        return name.charAt(0).toUpperCase() + name.slice(1)
     }
     const handleLogout = () => {
         dispatch(logout());
@@ -55,7 +55,7 @@ export default function MiniDrawer() {
     };
 
     const handleMouseOut = () => {
-        // setShowMenu(false);
+        setShowMenu(false);
     };
     const isActive =
         location.pathname === "/" || location.pathname.slice(0, 9) === "/settings";
@@ -70,29 +70,29 @@ export default function MiniDrawer() {
                     [classes.appBarShift]: menustate,
                 })}
             >
-                <Toolbar>
-                    <Grid container spacing={3} alignItems="center">
-                        <Grid item>
-                            <img src={"/images/GhostQA-Logo.png"} alt="logo" />{" "}
+                <Toolbar >
+                        <Grid container spacing={2} alignItems="center" style={{minWidth:'500px'}} >
+                            <Grid item>
+                                <img src={"/images/GhostQA-Logo.png"} alt="logo" />{" "}
+                            </Grid>
+                            <Grid item>
+                                <Link to="/" className={`${classes.linkStyle} ${isActive && classes.activeLink}`} >
+                                    Functional
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link className={`${classes.linkStyle} ${location.pathname.slice(0, 5) === "/test" && classes.activeLink}`} >
+                                    API
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link className={`${classes.linkStyle} ${location.pathname === "/performance" && classes.activeLink}`}>
+                                    Performance
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link to="/" className={`${classes.linkStyle} ${isActive && classes.activeLink}`} >
-                                Functional
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link className={`${classes.linkStyle} ${location.pathname.slice(0, 5) === "/test" && classes.activeLink}`} >
-                                API
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link className={`${classes.linkStyle} ${location.pathname === "/performance" && classes.activeLink}`}>
-                                Performance
-                            </Link>
-                        </Grid>
-                    </Grid>
 
-                    <Grid container justify="flex-end" spacing={2}>
+                        <Grid container justifyContent="flex-end" spacing={2}>
                         <Grid item>
                             <Box sx={{ display: "flex", alignItems: "center" }}>
                                 <Box sx={{ marginRight: "5px" }}>
