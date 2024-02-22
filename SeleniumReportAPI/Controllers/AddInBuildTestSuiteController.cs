@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.Helper;
 
 namespace SeleniumReportAPI.Controllers
 {
     [AllowAnonymous]
     [Route("api/[controller]")]
+    [EnableCors("AllowAll")]
     [ApiController]
     public class AddInBuildTestSuiteController : ControllerBase
     {

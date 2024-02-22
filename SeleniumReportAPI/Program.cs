@@ -9,11 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Text;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using SeleniumReportAPI.DBContext;
 using SeleniumReportAPI.Helper;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
