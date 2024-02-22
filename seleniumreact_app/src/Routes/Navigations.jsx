@@ -17,6 +17,7 @@ const BasicAccordion = lazy(() => import("../comman/Accordion/index"));
 const TestSuitsDetails = lazy(() => import("../pages/TestSuitsDetails"));
 const Settings = lazy(() => import("../pages/Settings"));
 const AddTestSuite = lazy(() => import("../pages/TestSuite/AddTestSuite"));
+const Account = lazy(()=>import("../pages/Account/Account"))
 const NotFound = lazy(() =>   import("../pages/NotFound"));
 
 export default function Navigations() {
@@ -50,6 +51,7 @@ export default function Navigations() {
         </Route>
 
         <Route path="/accordian" element={<BasicAccordion />} />
+        <Route path="/myaccount" element={<Account/>}/>
         <Route path="/:testSuiteName/:testRunName" element={<TestSuitsDetails />} />
         <Route path="/add-suite" element={<AddTestSuite />} />
         <Route path="/setting/add-environment" element={<AddNewEnvironment/>} />

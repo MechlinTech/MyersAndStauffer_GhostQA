@@ -477,11 +477,65 @@ export default function EditTestSuite() {
                             )}
                           </div>
                         </Grid>
-
+                        {/* Row 3: Additional Name Dropdown */}
+                        <Grid item >
+                          <div>
+                            <Typography
+                              variant="subtitle1"
+                              className={clsx(classes.customFontSize)}
+                            >
+                              Application : {selectedApplication?selectedApplication.ApplicationName:""}
+                            </Typography>
+                            {/* <Select
+                              getOptionLabel={(option) =>
+                                option.ApplicationName
+                              }
+                              getOptionValue={(option) => option.ApplicationId}
+                              options={applicationList}
+                              value={selectedApplication}
+                              // onChange={(newValue) => {
+                              //   setSelectedApplication(newValue);
+                              // }}
+                              onChange={selectedApplication}
+                              styles={{
+                                container: (provided) => ({
+                                  ...provided,
+                                  backgroundColor: "rgb(242, 242, 242)",
+                                  zIndex: 999, // Adjust the zIndex value
+                                }),
+                                control: (provided, state) => ({
+                                  ...provided,
+                                  backgroundColor: "rgb(242, 242, 242)",
+                                  "&:hover": {
+                                    borderColor: "#654DF7",
+                                  },
+                                  borderColor: Error.application
+                                    ? "red"
+                                    : state.isFocused
+                                    ? "#654DF7"
+                                    : "rgb(242, 242, 242)",
+                                }),
+                                option: (provided, state) => ({
+                                  ...provided,
+                                  backgroundColor: state.isSelected
+                                    ? "#654DF7"
+                                    : "transparent",
+                                }),
+                              }}
+                              menuPosition={"fixed"} // Set menuPosition to fixed
+                            />
+                            {Error.application && (
+                              <Typography className={classes.inputError}>
+                                {Error.application}
+                              </Typography>
+                            )} */}
+                          </div>
+                        </Grid>
                         {/* Row 4: Radio Buttons */}
                         <Grid
                           container
                           alignItems="center"
+                          mb={3}
                           sx={{ display: "grid" }}
                         >
                           <Grid item>
@@ -539,60 +593,7 @@ export default function EditTestSuite() {
                           </Grid>
                         </Grid>
 
-                        {/* Row 3: Additional Name Dropdown */}
-                        <Grid item mb={2}>
-                          <div className={classes.input}>
-                            <Typography
-                              variant="subtitle1"
-                              className={clsx(classes.customFontSize)}
-                            >
-                              Application
-                            </Typography>
-                            <Select
-                              getOptionLabel={(option) =>
-                                option.ApplicationName
-                              }
-                              getOptionValue={(option) => option.ApplicationId}
-                              options={applicationList}
-                              value={selectedApplication}
-                              // onChange={(newValue) => {
-                              //   setSelectedApplication(newValue);
-                              // }}
-                              onChange={selectedApplication}
-                              styles={{
-                                container: (provided) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  zIndex: 999, // Adjust the zIndex value
-                                }),
-                                control: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  "&:hover": {
-                                    borderColor: "#654DF7",
-                                  },
-                                  borderColor: Error.application
-                                    ? "red"
-                                    : state.isFocused
-                                    ? "#654DF7"
-                                    : "rgb(242, 242, 242)",
-                                }),
-                                option: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: state.isSelected
-                                    ? "#654DF7"
-                                    : "transparent",
-                                }),
-                              }}
-                              menuPosition={"fixed"} // Set menuPosition to fixed
-                            />
-                            {Error.application && (
-                              <Typography className={classes.inputError}>
-                                {Error.application}
-                              </Typography>
-                            )}
-                          </div>
-                        </Grid>
+                        
 
                         {/* Row 6: Browser Dropdown */}
                         {/* <Grid item>

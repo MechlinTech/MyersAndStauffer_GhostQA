@@ -94,11 +94,11 @@ export default function MiniDrawer() {
 
                         <Grid container justifyContent="flex-end" spacing={2}>
                         <Grid item>
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Box sx={{ display: "flex", alignItems: "center"}}>
                                 <Box sx={{ marginRight: "5px" }}>
                                     <Avatar sx={{ m: 1, bgcolor: "#654DF7" }} src="" />
                                 </Box>
-                                <Box>
+                                <Box >
                                     <Box
                                         style={{
                                             paddingTop: "5px",
@@ -143,15 +143,20 @@ export default function MiniDrawer() {
                                                 placement === "bottom" ? "center top" : "center bottom",
                                         }}
                                     >
-                                        <Paper>
-                                            <ClickAwayListener onClickAway={() => setShowMenu(false)}>
+                                        <Paper 
+                                            onMouseOver={handleMouseOver}
+                                            onMouseOut={handleMouseOut}>
+                                        <ClickAwayListener onClickAway={() => setShowMenu(false)}>
                                                 <MenuList
                                                     autoFocusItem={showMenu}
                                                     id="menu-list-grow"
                                                     onKeyDown={() => setShowMenu(false)}
                                                     className={classes.customMenuList}
                                                 >
-                                                    <MenuItem>
+                                                    <MenuItem onClick={()=>{
+                                                        setShowMenu(false)
+                                                        navigate('/myaccount')
+                                                    }}>
                                                         <UserIcon />
                                                         <span style={{ marginLeft: "10px" }}>
                                                             My Account
@@ -159,6 +164,7 @@ export default function MiniDrawer() {
                                                     </MenuItem>
                                                     <MenuItem
                                                         onClick={() => {
+                                                            setShowMenu(false)
                                                             setshowmodel(true);
                                                         }}
                                                     >
