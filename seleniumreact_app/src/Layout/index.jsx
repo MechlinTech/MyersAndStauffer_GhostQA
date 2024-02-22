@@ -55,7 +55,7 @@ export default function MiniDrawer() {
     };
 
     const handleMouseOut = () => {
-        // setShowMenu(false);
+        setShowMenu(false);
     };
     const isActive =
         location.pathname === "/" || location.pathname.slice(0, 9) === "/settings";
@@ -143,8 +143,10 @@ export default function MiniDrawer() {
                                                 placement === "bottom" ? "center top" : "center bottom",
                                         }}
                                     >
-                                        <Paper>
-                                            <ClickAwayListener onClickAway={() => setShowMenu(false)}>
+                                        <Paper 
+                                            onMouseOver={handleMouseOver}
+                                            onMouseOut={handleMouseOut}>
+                                        <ClickAwayListener onClickAway={() => setShowMenu(false)}>
                                                 <MenuList
                                                     autoFocusItem={showMenu}
                                                     id="menu-list-grow"
@@ -152,6 +154,7 @@ export default function MiniDrawer() {
                                                     className={classes.customMenuList}
                                                 >
                                                     <MenuItem onClick={()=>{
+                                                        setShowMenu(false)
                                                         navigate('/myaccount')
                                                     }}>
                                                         <UserIcon />
@@ -161,6 +164,7 @@ export default function MiniDrawer() {
                                                     </MenuItem>
                                                     <MenuItem
                                                         onClick={() => {
+                                                            setShowMenu(false)
                                                             setshowmodel(true);
                                                         }}
                                                     >
