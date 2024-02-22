@@ -1,0 +1,78 @@
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestLogger.dll
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestAdapter.dll
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Spekt.TestLogger.dll
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.deps.json
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.runtimeconfig.json
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.pdb
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.AssemblyReference.cache
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.CoreCompileInputs.cache
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\refint\MyersAndStaufferFramework.dll
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.pdb
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.genruntimeconfig.cache
+C:\Users\MSharma\Downloads\11 May latest\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\ref\MyersAndStaufferFramework.dll
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestLogger.dll
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestAdapter.dll
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Spekt.TestLogger.dll
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.deps.json
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.runtimeconfig.json
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.pdb
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.AssemblyReference.cache
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.CoreCompileInputs.cache
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\refint\MyersAndStaufferFramework.dll
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.pdb
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.genruntimeconfig.cache
+C:\Users\ermob\Downloads\MyersAndStauffer\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\ref\MyersAndStaufferFramework.dll
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestLogger.dll
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestAdapter.dll
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Spekt.TestLogger.dll
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.deps.json
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.runtimeconfig.json
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.pdb
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.AssemblyReference.cache
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.CoreCompileInputs.cache
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\refint\MyersAndStaufferFramework.dll
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.pdb
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.genruntimeconfig.cache
+C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\ref\MyersAndStaufferFramework.dll
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestLogger.dll
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestAdapter.dll
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Spekt.TestLogger.dll
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.deps.json
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.runtimeconfig.json
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.dll
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.pdb
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.AssemblyReference.cache
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.GeneratedMSBuildEditorConfig.editorconfig
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.CoreCompileInputs.cache
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.dll
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\refint\MyersAndStaufferFramework.dll
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.pdb
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.genruntimeconfig.cache
+D:\Nitin Srivastava Automation\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\ref\MyersAndStaufferFramework.dll
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestLogger.dll
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Extension.NUnit.Xml.TestAdapter.dll
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\Spekt.TestLogger.dll
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.deps.json
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.runtimeconfig.json
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\bin\Debug\net6.0\MyersAndStaufferFramework.pdb
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.AssemblyReference.cache
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.CoreCompileInputs.cache
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\refint\MyersAndStaufferFramework.dll
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.pdb
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.genruntimeconfig.cache
+C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\ref\MyersAndStaufferFramework.dll
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.dll
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\refint\MyersAndStaufferFramework.dll
+C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.pdb

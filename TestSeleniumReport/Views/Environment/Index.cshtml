@@ -1,0 +1,71 @@
+﻿@model List<Environments>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Application List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <div class="mt-4">
+        <h2>Environment List</h2>
+
+        <button type="button" class="btn btn-primary float-end" onclick="AddEditEnviroment()">
+            Add Environment
+        </button>
+
+        <!-- Table to display the list of items -->
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Application Name</th>
+                    <th>Browser Name</th>
+                    <th>Base Url</th>
+                    <th>Base Path</th>
+                    <th>Driver Path</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    @foreach (var environment in Model)
+                    {
+                        <tr>
+                            <td>@environment.EnvironmentName</td>
+                            <td>@environment.ApplicationName</td>
+                            <td >@environment.BrowserName</td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">@environment.Baseurl</td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">@environment.BasePath</td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">@environment.DriverPath</td>
+                            <td>
+                                <a class="bg-white border-0" onclick="EditEnvironment(@environment.EnvironmentId)">
+                                    <em class="fas fa-edit mx-2 text-success"></em>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+ 
+</body>
+</html>
+
+<script>
+    function AddEditEnviroment() {
+        window.location.href = '@Url.Action("Add", "Environment")';
+    }
+    function EditEnvironment(id) {
+        var url = '@Url.Action("Edit", "Environment")';
+        window.location.href = url + '?id=' + id;
+    }
+
+</script>

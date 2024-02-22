@@ -1,0 +1,118 @@
+﻿@page
+@model LoginModel
+
+@{
+    Layout = "";
+}
+<link href="~/css/loginstyle.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<html>
+<head>
+    <script>
+        var errorMessage = @Html.Raw(Json.Serialize(Model.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+        if (typeof errorMessage !== 'undefined' && errorMessage.length > 0) {
+            alert(errorMessage);
+        }
+    </script>
+</head>
+<body data-new-gr-c-s-check-loaded="14.1147.0" data-gr-ext-installed="" class="style-0">
+    <div class="box-border">
+        <div class="box-border">
+            <div class="box-border">
+                <div class="style-5">
+                    <div class="style-6">
+                        <div class="style-7">
+                            <div class="style-8 box-border">
+                                <img width="174" height="50" viewBox="0 0 174 50" fill="none" src="~/images/ghostqa-logo.png" focusable="false" aria-hidden="true" />
+                            </div>
+                            <div class="style-12">
+                                <p class="style-13">Welcome</p>
+                                <p class="style-14">Enter your login details</p>
+                            </div>
+                            <div class="style-15">
+                                <div class="style-16">
+                                    <div aria-label="basic tabs example" class="style-17" role="tablist">
+                                        <button class="style-18" tabindex="0" type="button" role="tab" aria-selected="true">Log in</button>
+                                    </div>
+                                    <span class="style-20"></span>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="style-21" aria-labelledby="simple-tab-undefined">
+                                <div class="box-border">
+                                    <form id="account" method="post" class="style-23">
+                                        <div class="style-24">
+                                            <div class="style-25">
+                                                <div class="style-26">
+                                                    <div class="box-border">
+                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="box-border">
+                                                            <path d="M14.2853 12.5446C14.2853 13.2589 14.068 13.8229 13.6335 14.2366C13.199 14.6503 12.6216 14.8571 11.9014 14.8571H4.0978C3.37756 14.8571 2.80018 14.6503 2.36565 14.2366C1.93113 13.8229 1.71387 13.2589 1.71387 12.5446C1.71387 12.2291 1.72428 11.9211 1.74512 11.6205C1.76595 11.3199 1.80762 10.9955 1.87012 10.6473C1.93262 10.2991 2.01149 9.97616 2.10672 9.67854C2.20196 9.38092 2.32994 9.09074 2.49065 8.808C2.65137 8.52526 2.83589 8.28419 3.04422 8.08479C3.25256 7.88538 3.50702 7.72616 3.80762 7.60711C4.10821 7.48806 4.44006 7.42854 4.80315 7.42854C4.85672 7.42854 4.98172 7.49252 5.17815 7.6205C5.37458 7.74848 5.59631 7.89133 5.84333 8.04907C6.09035 8.20681 6.41178 8.34967 6.80762 8.47764C7.20345 8.60562 7.60077 8.66961 7.99958 8.66961C8.39839 8.66961 8.79571 8.60562 9.19155 8.47764C9.58738 8.34967 9.90881 8.20681 10.1558 8.04907C10.4029 7.89133 10.6246 7.74848 10.821 7.6205C11.0174 7.49252 11.1424 7.42854 11.196 7.42854C11.5591 7.42854 11.891 7.48806 12.1915 7.60711C12.4921 7.72616 12.7466 7.88538 12.9549 8.08479C13.1633 8.28419 13.3478 8.52526 13.5085 8.808C13.6692 9.09074 13.7972 9.38092 13.8924 9.67854C13.9877 9.97616 14.0665 10.2991 14.129 10.6473C14.1915 10.9955 14.2332 11.3199 14.254 11.6205C14.2749 11.9211 14.2853 12.2291 14.2853 12.5446ZM11.4282 4.57139C11.4282 5.51782 11.0933 6.32586 10.4237 6.9955C9.75405 7.66514 8.94601 7.99996 7.99958 7.99996C7.05315 7.99996 6.24512 7.66514 5.57547 6.9955C4.90583 6.32586 4.57101 5.51782 4.57101 4.57139C4.57101 3.62496 4.90583 2.81693 5.57547 2.14729C6.24512 1.47764 7.05315 1.14282 7.99958 1.14282C8.94601 1.14282 9.75405 1.47764 10.4237 2.14729C11.0933 2.81693 11.4282 3.62496 11.4282 4.57139Z" fill="#737373" class="box-border"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <input asp-for="Input.Email" aria-invalid="false" name="email" placeholder="E-mail" type="text" class="login-input" autocomplete="username" aria-required="true" />
+                                                    <fieldset aria-hidden="true" class="style-31">
+                                                        <legend class="style-32">
+                                                            <span class="box-border"></span>
+                                                        </legend>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box-border">
+                                            <div class="box-border">
+                                                <div class="style-36">
+                                                    <div class="style-37">
+                                                        <div variant="outlined" class="style-38">
+                                                            <div class="style-39">
+                                                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="box-border">
+                                                                    <path d="M14.2346 7.76829C14.2898 7.45232 14.3202 7.12728 14.3202 6.795C14.3202 3.77436 11.9337 1.31665 9.00039 1.31665C6.06691 1.31665 3.68029 3.77436 3.68029 6.795C3.68029 7.12728 3.71085 7.45206 3.76615 7.76829C3.30424 8.06328 2.99707 8.57907 2.99707 9.16815V14.5312C2.99707 15.4486 3.74077 16.1922 4.65786 16.1922H13.3428C14.2596 16.1922 15.0032 15.4486 15.0032 14.5312H15.0037V9.16815C15.0037 8.5792 14.6968 8.06328 14.2346 7.76829ZM9.73321 12.4511V13.6166C9.73321 14.0217 9.40507 14.3498 9.00014 14.3498C8.5952 14.3498 8.26706 14.0217 8.26706 13.6166V12.4506C7.79685 12.1915 7.4779 11.6915 7.4779 11.1166C7.4779 10.2759 8.15944 9.59419 9.00039 9.59419C9.84134 9.59419 10.523 10.2759 10.523 11.1166C10.523 11.6918 10.2038 12.1921 9.73321 12.4511ZM12.2961 7.5071H5.70458C5.65939 7.27724 5.6353 7.03884 5.6353 6.795C5.6353 4.85216 7.14484 3.27166 9.00039 3.27166C10.8558 3.27166 12.3652 4.85203 12.3652 6.795C12.3652 7.03884 12.3414 7.27724 12.2961 7.5071Z" fill="#737373" class="box-border"></path>
+                                                                </svg>
+                                                            </div>
+                                                            <input asp-for="Input.Password" aria-invalid="false" name="password" placeholder="Password" type="password" class="login-input" autocomplete="current-password" aria-required="true" />
+                                                            <div class="style-43">
+                                                                <button class="style-44" tabindex="0" type="button" variant="contained">
+                                                                    <svg class="style-45" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="VisibilityOffIcon">
+                                                                        <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78 3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z" class="box-border"></path>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                            <fieldset aria-hidden="true" class="style-47">
+                                                                <legend class="style-48"><span class="box-border"></span></legend>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button id="login-submit" type="submit" class="login-button">Log in</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.style-44').click(function () {
+                var passwordInput = $('input[name="password"]');
+                var eyeButton = $(this);
+
+                // Toggle password visibility
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    eyeButton.find('.style-45 path').attr('d', 'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    eyeButton.find('.style-45 path').attr('d', 'M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78 3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

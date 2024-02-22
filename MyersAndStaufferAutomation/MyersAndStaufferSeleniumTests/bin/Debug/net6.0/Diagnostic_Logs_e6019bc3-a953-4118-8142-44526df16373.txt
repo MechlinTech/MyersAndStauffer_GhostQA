@@ -1,0 +1,1 @@
+Error screenshot: C:\Users\Aditya-SD\Desktop\Ghost QA\MyersAndStauffer1\MyersAndStauffer\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\bin\Debug\net6.0\Failure23-12-04 09-54-06.png

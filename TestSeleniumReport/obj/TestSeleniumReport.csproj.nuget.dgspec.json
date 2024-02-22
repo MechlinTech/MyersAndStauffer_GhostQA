@@ -1,0 +1,356 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\TestSeleniumReport\\TestSeleniumReport.csproj": {}
+  },
+  "projects": {
+    "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
+        "projectName": "MyersAndStaufferFramework",
+        "projectPath": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
+        "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
+        "outputPath": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "BouncyCastle.NetCore": {
+              "target": "Package",
+              "version": "[1.9.0, )"
+            },
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.4.4, )"
+            },
+            "FontAwesome": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.CSharp": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.EnvironmentVariables": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.FileExtensions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[5.1.2, )"
+            },
+            "NLogger": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "NunitXml.TestLogger": {
+              "target": "Package",
+              "version": "[3.0.131, )"
+            },
+            "ScreenRecorderLib": {
+              "target": "Package",
+              "version": "[5.4.0, )"
+            },
+            "System.Data.DataSetExtensions": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "System.Runtime.Caching": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "System.ServiceModel.Primitives": {
+              "target": "Package",
+              "version": "[4.10.2, )"
+            },
+            "scientist": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
+        "projectName": "MyersAndStaufferSeleniumTests",
+        "projectPath": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
+        "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
+        "outputPath": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
+                "projectPath": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "DotNetSeleniumExtras.PageObjects": {
+              "target": "Package",
+              "version": "[3.11.0, )"
+            },
+            "DotNetSeleniumExtras.WaitHelpers": {
+              "target": "Package",
+              "version": "[3.11.0, )"
+            },
+            "ExtentReports": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            },
+            "FontAwesome": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "HtmlAgilityPack": {
+              "target": "Package",
+              "version": "[1.11.46, )"
+            },
+            "Mailosaur": {
+              "target": "Package",
+              "version": "[8.6.0, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.5.0, )"
+            },
+            "NLogger": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[3.13.3, )"
+            },
+            "NUnit3TestAdapter": {
+              "target": "Package",
+              "version": "[4.4.2, )"
+            },
+            "Nancy": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "NunitXml.TestLogger": {
+              "target": "Package",
+              "version": "[3.0.131, )"
+            },
+            "Selenium.Support": {
+              "target": "Package",
+              "version": "[4.8.2, )"
+            },
+            "Selenium.WebDriver": {
+              "target": "Package",
+              "version": "[4.18.1, )"
+            },
+            "Selenium.WebDriver.ChromeDriver": {
+              "target": "Package",
+              "version": "[121.0.6167.18400, )"
+            },
+            "Selenium.WebDriver.MSEdgeDriver": {
+              "target": "Package",
+              "version": "[120.0.2210.144, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\TestSeleniumReport\\TestSeleniumReport.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\TestSeleniumReport\\TestSeleniumReport.csproj",
+        "projectName": "TestSeleniumReport",
+        "projectPath": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\TestSeleniumReport\\TestSeleniumReport.csproj",
+        "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
+        "outputPath": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\TestSeleniumReport\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {
+                "projectPath": "E:\\GhostQACode\\MyersAndStauffer_GhostQA-main (2)\\MyersAndStauffer_GhostQA-main\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "FontAwesome": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.25, )"
+            },
+            "Microsoft.AspNetCore.Identity.UI": {
+              "target": "Package",
+              "version": "[6.0.25, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.25, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.25, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[6.0.16, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

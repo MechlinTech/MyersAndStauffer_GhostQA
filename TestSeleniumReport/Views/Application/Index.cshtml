@@ -1,0 +1,125 @@
+﻿@model List<Applications>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Application List</title>
+    <!-- Add necessary styles and scripts, such as Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <div class="container mt-4">
+        <h2>Application List</h2>
+
+        <button type="button" class="btn btn-primary float-end" data-toggle="modal" data-target="#addModal">
+            Add Application
+        </button>
+        <!-- Table to display the list of items -->
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Application Id</th>
+                    <th>Application Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    @foreach (var application in Model)
+                    {
+                        <tr>
+                            <td>@application.ApplicationId</td>
+                            <td>@application.ApplicationName</td>
+                            <td>
+                                <span data-toggle="modal" data-target="#editModal_@application.ApplicationId">
+                                    <em class="fas fa-edit mx-2 text-success"></em>
+                                </span>
+                            </td>
+                        </tr>
+
+                        <!-- Edit Modal for each item -->
+                        <div class="modal fade" id="editModal_@application.ApplicationId" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel">Edit Application</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="editAppName">Application Name</label>
+                                            <input type="text" class="form-control" id="@application.ApplicationId" value="@application.ApplicationName" />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary float-end" onclick="editApplication(@application.ApplicationId)">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Modal for adding new item -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Add New Application</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="newAppName">Application Name</label>
+                        <input type="text" class="form-control" id="newAppName" />
+                    </div>
+                    <button type="submit" class="btn btn-primary float-end" onclick="addApplication()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    function addApplication() {
+        var _applicationName = document.getElementById('newAppName').value;
+        const model = { ApplicationId: 0, ApplicationName: _applicationName };
+        $.ajax({
+            url: '@Url.Action("AddApplication", "Application")',
+            type: "POST",
+            data: model,
+            success: function (result) {
+                if (result.includes("success")) {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    function editApplication(id) {
+        var _applicationName = document.getElementById(id).value;
+        const model = { ApplicationId: id, ApplicationName: _applicationName };
+        $.ajax({
+            url: '@Url.Action("AddApplication", "Application")',
+            type: "POST",
+            data: model,
+            success: function (result) {
+                if (result.includes("success")) {
+                    location.reload();
+                }
+            }
+        });
+    }
+</script>

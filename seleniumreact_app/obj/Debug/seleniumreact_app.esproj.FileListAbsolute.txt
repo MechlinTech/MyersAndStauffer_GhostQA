@@ -1,0 +1,1 @@
+E:\GhostQACode\MyersAndStauffer_GhostQA-main (2)\MyersAndStauffer_GhostQA-main\seleniumreact_app\obj\Debug\seleniumreact_app.esproj.CoreCompileInputs.cache

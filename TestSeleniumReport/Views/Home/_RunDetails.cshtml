@@ -1,0 +1,44 @@
+﻿<html>
+<body>
+    <div class="accordion">
+        @{
+            if (Model != null && Model != string.Empty)
+            {
+                var RunDateGroupsList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TestSeleniumReport.DTO_s.Dto_RunDetailsList>>(Model);
+                foreach (var runDate in RunDateGroupsList)
+                {
+                    <div class="accordion-gray mb-1" onclick="toggleContent('@runDate.TestRunDateYear.Replace(" ", "")')">@runDate.TestRunDateYear</div>
+                    <div class="content" id="@runDate.TestRunDateYear.Replace(" ", "")">
+                        @{
+                            <div class="border card-header col-md-12 d-flex mb-2 fw-bold">
+                                <div class="col-md-2">Run Id</div>
+                                <div class="col-md-2">Start Time</div>
+                                <div class="col-md-2">End Time</div>
+                                <div class="col">Status</div>
+                                <div class="col-md-1">Total</div>
+                                <div class="col-md-1">Passed</div>
+                                <div class="col-md-1">Failed</div>
+                            </div>
+                            foreach (var runId in runDate.RunDetails)
+                            {
+                                <button id="runId_@runId.TestSuiteName@runId.TestRunName" type="button" class="btn btn-gray mb-2 w-100 card testRunId_Clickable" onclick="GetTestCaseDetails('@runId.TestSuiteName','@runId.TestRunName')">
+                                    <div class="col-md-12 d-flex text-lg-start">
+                                        <div class="col-md-2">@runId.TestRunName</div>
+                                        <div class="col-md-2">@runId.TestRunStartDateTime.ToString("hh:mm:ss tt")</div>
+                                        <div class="col-md-2">@runId.TestRunEndDateTime.ToString("hh:mm:ss tt")</div>
+                                        <div class="col badge p-2 @(runId.TestRunStatus == "Passed" ? "bg-success" : runId.TestRunStatus == "Failed" ? "bg-danger" : runId.TestRunStatus == "Partially Passed" ? "bg-warning" : "bg-primary")">@runId.TestRunStatus</div>
+                                        <div class="col-md-1 text-center">@runId.TotalTestCases</div>
+                                        <div class="col-md-1 text-center">@runId.PassedTestCases</div>
+                                        <div class="col-md-1 text-center">@runId.FailedTestCases</div>
+                                    </div>
+                                </button>
+                            }
+
+                        }
+                    </div>
+                }
+            }
+        }
+    </div>
+</body>
+</html>

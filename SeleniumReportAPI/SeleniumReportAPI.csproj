@@ -1,0 +1,89 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>0900b981-f067-41f1-9ad8-7577741b5e82</UserSecretsId>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="SqlScript\stp_AddUpdateTestSuites.Sql" />
+		<None Remove="SqlScript\stp_DeleteTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetApplications.sql" />
+		<None Remove="SqlScript\stp_GetCustomTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
+		<None Remove="SqlScript\stp_GetEnvironment.sql" />
+		<None Remove="SqlScript\stp_GetRunDetails.Sql" />
+		<None Remove="SqlScript\stp_GetRunId.Sql" />
+		<None Remove="SqlScript\stp_GetTestCaseDetails.Sql" />
+		<None Remove="SqlScript\stp_GetTestCases.sql" />
+		<None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
+		<None Remove="SqlScript\stp_GetTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetTestSuitsByName.Sql" />
+		<None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
+		<None Remove="SqlScript\stp_UpsertTableData.Sql" />
+		<None Remove="SqlScript\stp_ValidateUser.Sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeleteTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetCustomTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_ValidateUser.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetDashBoardDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetRunDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetRunId.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestCaseDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_UpdateTestStepData.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_UpsertTableData.Sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="SqlScript\stp_GetApplications.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetEnvironment.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestCases.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestSuitsByName.Sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.25">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.1" />
+
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\linux\selenium-manager" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\macos\selenium-manager" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\windows\selenium-manager.exe" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\Driver\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\MyersAndStaufferSeleniumTests.csproj" />
+	</ItemGroup>
+
+</Project>

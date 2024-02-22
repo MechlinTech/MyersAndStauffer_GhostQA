@@ -1,0 +1,17 @@
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetRunId]
+@TestSuite		VARCHAR(1000)
+AS
+BEGIN TRY
+	DECLARE @Count INT = 0
+	IF OBJECT_ID('tbl_TestCase', 'U') IS NOT NULL
+	BEGIN
+		IF EXISTS(SELECT 1 FROM tbl_TestCase)
+		BEGIN
+			SELECT @Count = ISNULL((MAX(CAST(REPLACE([TestRunName],'TestRun-','') AS INT))),0) FROM tbl_TestCase WHERE [TestSuiteName] = @TestSuite
+		END
+	END
+	SELECT CONCAT('TestRun-',CAST((@Count + 1) AS VARCHAR(20))) [TestRunName]
+END TRY
+BEGIN CATCH
+	SELECT CONCAT('TestRun-',CAST(ERROR_MESSAGE() AS VARCHAR(20))) [TestRunName] 
+END CATCH
