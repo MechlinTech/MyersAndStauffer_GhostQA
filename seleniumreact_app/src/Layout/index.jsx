@@ -55,7 +55,7 @@ export default function MiniDrawer() {
     };
 
     const handleMouseOut = () => {
-        setShowMenu(false);
+        // setShowMenu(false);
     };
     const isActive =
         location.pathname === "/" || location.pathname.slice(0, 9) === "/settings";
@@ -94,11 +94,11 @@ export default function MiniDrawer() {
 
                         <Grid container justifyContent="flex-end" spacing={2}>
                         <Grid item>
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Box sx={{ display: "flex", alignItems: "center"}}>
                                 <Box sx={{ marginRight: "5px" }}>
                                     <Avatar sx={{ m: 1, bgcolor: "#654DF7" }} src="" />
                                 </Box>
-                                <Box>
+                                <Box >
                                     <Box
                                         style={{
                                             paddingTop: "5px",
@@ -151,7 +151,9 @@ export default function MiniDrawer() {
                                                     onKeyDown={() => setShowMenu(false)}
                                                     className={classes.customMenuList}
                                                 >
-                                                    <MenuItem>
+                                                    <MenuItem onClick={()=>{
+                                                        navigate('/myaccount')
+                                                    }}>
                                                         <UserIcon />
                                                         <span style={{ marginLeft: "10px" }}>
                                                             My Account
