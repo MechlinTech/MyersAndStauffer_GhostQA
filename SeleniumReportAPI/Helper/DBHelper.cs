@@ -1,5 +1,6 @@
 ﻿using GitHub;
 using Microsoft.IdentityModel.Tokens;
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using SeleniumReportAPI.Models;
@@ -459,18 +460,102 @@ namespace SeleniumReportAPI.Helper
             return EnvironmentListJson;
         }
 
-        internal async Task<string> RunTestCase(string testCaseName, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
+        internal async Task<string> RunTestCase(string testSuiteName, string testCaseName, string testRun, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
         {
             string TestCaseJsonData = string.Empty;
             try
             {
+                SaveExecutionProgress(testSuiteName, testCaseName, testRun, testerName, environmentName);
                 TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
+                UpdateExecutionProgress(testSuiteName, testCaseName, testRun, testerName, environmentName);
             }
             catch (Exception)
             {
                 throw;
             }
             return TestCaseJsonData;
+        }
+
+        private void UpdateExecutionProgress(string testSuiteName, string testCaseName, string testRun, string testerName, string environmentName)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateExecutionInProgressFlag", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", testSuiteName);
+                        command.Parameters.AddWithValue("@TestRunName", testRun);
+                        command.Parameters.AddWithValue("@TestCaseName", testCaseName);
+                        command.Parameters.AddWithValue("@TesterName", testerName);
+                        command.Parameters.AddWithValue("@TestEnvironment", environmentName);
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void SaveExecutionProgress(string testSuiteName, string testCaseName, string testRun, string testerName, string environmentName)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_SaveExecutionInProgress", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuiteName", testSuiteName);
+                        command.Parameters.AddWithValue("@TestRunName", testRun);
+                        command.Parameters.AddWithValue("@TestCaseName", testCaseName);
+                        command.Parameters.AddWithValue("@TesterName", testerName);
+                        command.Parameters.AddWithValue("@TestEnvironment", environmentName);
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        internal async Task<bool> GetExecutionInProgress()
+        {
+            bool ExecutionInProgress = false;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_IsExecutionInProgress", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                ExecutionInProgress = (bool)reader["ExecutionInProgress"];
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ExecutionInProgress;
         }
 
         internal async Task<string> AddUpdateEnvironmentJson(Environments model)

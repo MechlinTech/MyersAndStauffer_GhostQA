@@ -271,12 +271,12 @@ namespace SeleniumReportAPI.Migrations
 
                     b.Property<string>("BasePath")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("varchar(1000)")
                         .HasColumnName("BasePath");
 
                     b.Property<string>("Baseurl")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("varchar(1000)")
                         .HasColumnName("Baseurl");
 
                     b.Property<int>("BroswerId")
@@ -293,7 +293,7 @@ namespace SeleniumReportAPI.Migrations
 
                     b.Property<string>("DriverPath")
                         .IsRequired()
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("varchar(1000)")
                         .HasColumnName("DriverPath");
 
                     b.Property<string>("EnvironmentName")
@@ -310,6 +310,100 @@ namespace SeleniumReportAPI.Migrations
                     b.HasKey("EnvironmentId");
 
                     b.ToTable("tbl_Environments");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.TestCase", b =>
+                {
+                    b.Property<string>("TestCaseName")
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("TestCaseName");
+
+                    b.Property<string>("TestCaseStatus")
+                        .HasColumnType("VARCHAR(10)")
+                        .HasColumnName("TestCaseStatus");
+
+                    b.Property<string>("TestCaseSteps")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestCaseVideoURL")
+                        .HasColumnType("NVARCHAR(1000)")
+                        .HasColumnName("TestCaseVideoURL");
+
+                    b.Property<string>("TestEnvironment")
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("TestEnvironment");
+
+                    b.Property<string>("TestRunEndDateTime")
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("TestRunEndDateTime");
+
+                    b.Property<string>("TestRunName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("TestRunName");
+
+                    b.Property<string>("TestRunStartDateTime")
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("TestRunStartDateTime");
+
+                    b.Property<string>("TestSuiteEndDateTime")
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("TestSuiteEndDateTime");
+
+                    b.Property<string>("TestSuiteName")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("TestSuiteName");
+
+                    b.Property<string>("TestSuiteStartDateTime")
+                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnName("TestSuiteStartDateTime");
+
+                    b.Property<string>("TesterName")
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("TesterName");
+
+                    b.ToTable("tbl_TestCase");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.TestExecution", b =>
+                {
+                    b.Property<int>("ExecutionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ExecutionId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExecutionId"), 1000L, 1);
+
+                    b.Property<DateTime>("ExecutionStartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsExecutionInProgress")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TestCaseName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestEnvironment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestRunName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestSuiteName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TesterName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ExecutionId");
+
+                    b.ToTable("tbl_TestExecution");
                 });
 
             modelBuilder.Entity("SeleniumReportAPI.Models.TestSuites", b =>

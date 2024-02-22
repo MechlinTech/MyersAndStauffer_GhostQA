@@ -9,11 +9,11 @@ namespace SeleniumReportAPI.Models
         [Column("TestRunName", TypeName = "VARCHAR(100)")]
         public string TestRunName { get; set; }
         [Column("TestCaseName", TypeName = "VARCHAR(100)")]
-        public string TestCaseName { get; set; }
+        public string? TestCaseName { get; set; }
         [Column("TestCaseStatus", TypeName = "VARCHAR(10)")]
-        public string TestCaseStatus { get; set; }
+        public string? TestCaseStatus { get; set; }
         [Column("TestCaseVideoURL", TypeName = "NVARCHAR(1000)")]
-        public string TestCaseVideoURL { get; set; }
+        public string? TestCaseVideoURL { get; set; }
         [Column("TestSuiteStartDateTime", TypeName = "VARCHAR(50)")]
         public string? TestSuiteStartDateTime { get; set; }
         [Column("TestSuiteEndDateTime", TypeName = "VARCHAR(50)")]
@@ -24,8 +24,8 @@ namespace SeleniumReportAPI.Models
         public string? TestRunEndDateTime { get; set; }
         public string? TestCaseSteps { get; set; }
         [Column("TesterName", TypeName = "VARCHAR(100)")]
-        public string TesterName { get; set; }
+        public string? TesterName { get; set; }
         [Column("TestEnvironment", TypeName = "VARCHAR(100)")]
-        public string TestEnvironment { get; set; }
+        public string? TestEnvironment { get; set; }
     }
 }

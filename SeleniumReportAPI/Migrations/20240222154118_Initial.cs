@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace SeleniumReportAPI.Migrations
 {
-    public partial class initialsetup : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,16 +62,79 @@ namespace SeleniumReportAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tbl_Browsers",
+                columns: table => new
+                {
+                    BrowserId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BrowserName = table.Column<string>(type: "varchar(100)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_Browsers", x => x.BrowserId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tbl_Environments",
                 columns: table => new
                 {
                     EnvironmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1000, 1"),
-                    EnvironmentName = table.Column<string>(type: "varchar(100)", nullable: false)
+                    EnvironmentName = table.Column<string>(type: "varchar(100)", nullable: false),
+                    ApplicationId = table.Column<int>(type: "int", nullable: false),
+                    Baseurl = table.Column<string>(type: "varchar(1000)", nullable: false),
+                    BasePath = table.Column<string>(type: "varchar(1000)", nullable: false),
+                    DriverPath = table.Column<string>(type: "varchar(1000)", nullable: false),
+                    BroswerId = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tbl_Environments", x => x.EnvironmentId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_TestCase",
+                columns: table => new
+                {
+                    TestSuiteName = table.Column<string>(type: "VARCHAR(100)", nullable: false),
+                    TestRunName = table.Column<string>(type: "VARCHAR(100)", nullable: false),
+                    TestCaseName = table.Column<string>(type: "VARCHAR(100)", nullable: true),
+                    TestCaseStatus = table.Column<string>(type: "VARCHAR(10)", nullable: true),
+                    TestCaseVideoURL = table.Column<string>(type: "NVARCHAR(1000)", nullable: true),
+                    TestSuiteStartDateTime = table.Column<string>(type: "VARCHAR(50)", nullable: true),
+                    TestSuiteEndDateTime = table.Column<string>(type: "VARCHAR(50)", nullable: true),
+                    TestRunStartDateTime = table.Column<string>(type: "VARCHAR(50)", nullable: true),
+                    TestRunEndDateTime = table.Column<string>(type: "VARCHAR(50)", nullable: true),
+                    TestCaseSteps = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TesterName = table.Column<string>(type: "VARCHAR(100)", nullable: true),
+                    TestEnvironment = table.Column<string>(type: "VARCHAR(100)", nullable: true)
+                },
+                constraints: table =>
+                {
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tbl_TestExecution",
+                columns: table => new
+                {
+                    ExecutionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1000, 1"),
+                    TestSuiteName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TestRunName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TestCaseName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TestEnvironment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TesterName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExecutionStartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsExecutionInProgress = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_TestExecution", x => x.ExecutionId);
                 });
 
             migrationBuilder.CreateTable(
@@ -80,11 +144,12 @@ namespace SeleniumReportAPI.Migrations
                     TestSuiteId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1000, 1"),
                     TestSuiteName = table.Column<string>(type: "varchar(100)", nullable: false),
-                    TestSuiteType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TestSuiteType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApplicationId = table.Column<int>(type: "int", nullable: false),
                     SendEmail = table.Column<bool>(type: "bit", nullable: false),
                     EnvironmentId = table.Column<int>(type: "int", nullable: false),
-                    SelectedTestCases = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    SelectedTestCases = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -137,8 +202,8 @@ namespace SeleniumReportAPI.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -182,8 +247,8 @@ namespace SeleniumReportAPI.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -258,7 +323,16 @@ namespace SeleniumReportAPI.Migrations
                 name: "tbl_Applications");
 
             migrationBuilder.DropTable(
+                name: "tbl_Browsers");
+
+            migrationBuilder.DropTable(
                 name: "tbl_Environments");
+
+            migrationBuilder.DropTable(
+                name: "tbl_TestCase");
+
+            migrationBuilder.DropTable(
+                name: "tbl_TestExecution");
 
             migrationBuilder.DropTable(
                 name: "tbl_TestSuites");

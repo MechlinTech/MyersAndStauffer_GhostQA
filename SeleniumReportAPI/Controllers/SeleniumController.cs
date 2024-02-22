@@ -102,7 +102,7 @@ namespace SeleniumReportAPI.Controllers
                     Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(model.EnvironmentId));
                     foreach (var testCaseName in model.SelectedTestCases)
                     {
-                        string _testCaseJsonData = await _helper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
+                        string _testCaseJsonData = await _helper.RunTestCase(model.TestSuiteName.ToString(), testCaseName.ToString(), _testRunName, User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
                         if (!string.IsNullOrEmpty(_testCaseJsonData))
                         {
                             Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
@@ -204,7 +204,7 @@ namespace SeleniumReportAPI.Controllers
             {
                 foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
                 {
-                    string _testCaseJsonData = await _helper.RunTestCase(testCaseName.ToString(), User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
+                    string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, User.Identity.Name, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
                     if (!string.IsNullOrEmpty(_testCaseJsonData))
                     {
                         try
@@ -386,6 +386,16 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> DeleteEnvironment(int EnvironmentId)
         {
             return Ok(await _helper.DeleteEnvironment(EnvironmentId));
+        }
+
+        /// <summary>
+        /// Check Test Execution is in progress or not
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("IsExecutionInProgress")]
+        public async Task<ActionResult> IsExecutionInProgress()
+        {
+            return Ok(await _helper.GetExecutionInProgress());
         }
     }
 }
