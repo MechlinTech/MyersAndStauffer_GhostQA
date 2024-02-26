@@ -32,12 +32,12 @@ namespace SeleniumReportAPI.Controllers
             }
         }
 
-        [HttpPost("SendEmail")]
-        public async Task<IActionResult> SendEmail(string toEmail)
+        [HttpPost("InviteUser")]
+        public async Task<IActionResult> InviteUser(string toEmail)
         {
             try
             {
-                var result =  _helper.SendEmail(toEmail);
+                var result = _helper.SendEmail(toEmail, "Invitation");
                 return Ok(result);
             }
             catch (Exception ex)

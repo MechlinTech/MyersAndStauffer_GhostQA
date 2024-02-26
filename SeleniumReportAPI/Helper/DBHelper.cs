@@ -1,20 +1,18 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using SeleniumReportAPI.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using TestSeleniumReport.DTO_s;
 using Environments = SeleniumReportAPI.Models.Environments;
-using System.Net.Mail;
-using System.Net;
 using SmtpClient = System.Net.Mail.SmtpClient;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Mailosaur.Models;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -962,13 +960,129 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        public object SendEmail(string toEmail)
+        public object SendEmail(string toEmail, string Mailtype)
         {
-
+            var BodyString = string.Empty;
             var apiKey = _configuration["EmailDetails:apiKey"];
             var fromEmail = _configuration["EmailDetails:EmailUsername"];
             var hostName = _configuration["EmailDetails:EmailHost"];
             var subject = "Invitation to Join Our Platform";
+            if (Mailtype.Equals("Invitation"))
+            {
+                BodyString = @"<!DOCTYPE html>
+                            <html lang=""en"">
+                            <head>
+                                <meta charset=""UTF-8"">
+                                <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+                                <title>Join Ghost QA Platform</title>
+                                <style>
+                                    body {
+                                        font-family: Arial, sans-serif;
+                                        background-color: #f7f7f7;
+                                        margin: 0;
+                                        padding: 0;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        height: 100vh;
+                                    }
+                                    .container {
+                                        background-color: #fff;
+                                        padding: 20px;
+                                        border-radius: 8px;
+                                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                        max-width: 400px;
+                                        text-align: center;
+                                    }
+                                    h1 {
+                                        color: #333;
+                                    }
+                                    p {
+                                        color: #666;
+                                    }
+                                    .btn {
+                                        display: inline-block;
+                                        padding: 10px 20px;
+                                        background-color: #007bff;
+                                        color: #fff;
+                                        text-decoration: none;
+                                        border-radius: 4px;
+                                        transition: background-color 0.3s ease;
+                                    }
+                                    .btn:hover {
+                                        background-color: #0056b3;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class=""container"">
+                                    <h1>Welcome to Ghost QA Platform!</h1>
+                                    <p>We warmly welcome you to join us!</p>
+                                    <a href=""https://localhost:7099/api/AddInBuildTestSuite/AcceptInvitation?toEmail=" + toEmail + @""" class=""btn"">Join Now</a>
+                                </div>
+                            </body>
+                            </html>";
+            }
+            else if (Mailtype.Equals("Accept"))
+            {
+                BodyString = @"<!DOCTYPE html>
+                            <html lang=""en"">
+                            <head>
+                                <meta charset=""UTF-8"">
+                                <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+                                <title>Join Ghost QA Platform</title>
+                                <style>
+                                    body {
+                                        font-family: Arial, sans-serif;
+                                        background-color: #f7f7f7;
+                                        margin: 0;
+                                        padding: 0;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        height: 100vh;
+                                    }
+                                    .container {
+                                        background-color: #fff;
+                                        padding: 20px;
+                                        border-radius: 8px;
+                                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                        max-width: 400px;
+                                        text-align: center;
+                                    }
+                                    h1 {
+                                        color: #333;
+                                    }
+                                    p {
+                                        color: #666;
+                                    }
+                                    .btn {
+                                        display: inline-block;
+                                        padding: 10px 20px;
+                                        background-color: #007bff;
+                                        color: #fff;
+                                        text-decoration: none;
+                                        border-radius: 4px;
+                                        transition: background-color 0.3s ease;
+                                    }
+                                    .btn:hover {
+                                        background-color: #0056b3;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class=""container"">
+                                    <h1>Welcome to Ghost QA Platform!</h1>
+                                    <p>We warmly welcome you to join us!</p>
+                                    <a href=""https://localhost:7099/api/AddInBuildTestSuite/AcceptInvitation?toEmail=" + toEmail + @""" class=""btn"">Join Now</a>
+                                </div>
+                            </body>
+                            </html>";
+            }
+            else
+            {
+                BodyString = "";
+            }
             var smtpClient = new SmtpClient(hostName)
             {
                 Port = 587,
@@ -980,28 +1094,7 @@ namespace SeleniumReportAPI.Helper
             {
                 Subject = subject,
                 IsBodyHtml = true, // Set IsBodyHtml to true to indicate that the body contains HTML content
-                Body = @"<!DOCTYPE html>
-<html lang=""en"">
-<head>
-<meta charset=""UTF-8"">
-<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-<title>Link Button with Inline Style</title>
-<style>
-        /* Add your custom CSS styles here */
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-</style>
-</head>
-<body>
-<a href=""https://localhost:7099/api/AddInBuildTestSuite/AcceptInvitation?toEmail=" + toEmail + @""" class=""button"">Join</a>
-</body>
-</html>"
+                Body = BodyString
             };
 
             try
@@ -1048,6 +1141,10 @@ namespace SeleniumReportAPI.Helper
                         {
                             reader.Read();
                             result = reader["result"].ToString();
+                            if (result != null && result.Contains("success"))
+                            {
+                                SendEmail(Email, "Accept");
+                            }
                         }
                     }
                 }
@@ -1056,20 +1153,7 @@ namespace SeleniumReportAPI.Helper
             {
                 throw ex;
             }
-            // IdentityResult result;
-            //var user = Activator.CreateInstance<IdentityUser>();
-            // await _userStore.SetUserNameAsync(user, Email, CancellationToken.None);
-            // await _emailStore.SetEmailAsync(user, Email, CancellationToken.None);
-            // try
-            // {
-            //      result = await _userManager.CreateAsync(user, "Test@123");
-            // }
-            // catch (Exception ex) 
-            // {
-            //     throw ex;
-            // }
-
-            return null;
+            return result;
         }
 
     }
