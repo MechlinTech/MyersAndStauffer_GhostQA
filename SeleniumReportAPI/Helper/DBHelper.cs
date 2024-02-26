@@ -1,6 +1,4 @@
-﻿using GitHub;
-using Microsoft.IdentityModel.Tokens;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages;
+﻿using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using SeleniumReportAPI.Models;
@@ -11,6 +9,12 @@ using System.Security.Claims;
 using System.Text;
 using TestSeleniumReport.DTO_s;
 using Environments = SeleniumReportAPI.Models.Environments;
+using System.Net.Mail;
+using System.Net;
+using SmtpClient = System.Net.Mail.SmtpClient;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Mailosaur.Models;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -18,11 +22,13 @@ namespace SeleniumReportAPI.Helper
     {
         private readonly IConfiguration _configuration;
         private readonly TestExecutor _testExecutor;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public DBHelper(IConfiguration configuration, TestExecutor testExecutor)
+        public DBHelper(IConfiguration configuration, TestExecutor testExecutor, IServiceProvider serviceProvider)
         {
             _configuration = configuration;
             _testExecutor = testExecutor;
+            _userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
         }
 
         internal string GetConnectionString()
@@ -955,5 +961,116 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+
+        public object SendEmail(string toEmail)
+        {
+
+            var apiKey = _configuration["EmailDetails:apiKey"];
+            var fromEmail = _configuration["EmailDetails:EmailUsername"];
+            var hostName = _configuration["EmailDetails:EmailHost"];
+            var subject = "Invitation to Join Our Platform";
+            var smtpClient = new SmtpClient(hostName)
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("apikey", apiKey),
+                EnableSsl = true,
+            };
+
+            var mailMessage = new MailMessage(fromEmail, toEmail)
+            {
+                Subject = subject,
+                IsBodyHtml = true, // Set IsBodyHtml to true to indicate that the body contains HTML content
+                Body = @"<!DOCTYPE html>
+<html lang=""en"">
+<head>
+<meta charset=""UTF-8"">
+<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+<title>Link Button with Inline Style</title>
+<style>
+        /* Add your custom CSS styles here */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+</style>
+</head>
+<body>
+<a href=""https://localhost:7099/api/AddInBuildTestSuite/AcceptInvitation?toEmail=" + toEmail + @""" class=""button"">Join</a>
+</body>
+</html>"
+            };
+
+            try
+            {
+                smtpClient.Send(mailMessage);
+                Console.WriteLine("Email sent successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending email: {ex.Message}");
+            }
+
+            return null;
+        }
+
+        public async Task<object> AcceptInvitation(string Email)
+        {
+            string result = string.Empty;
+            var passwordHasher = new PasswordHasher<IdentityUser>();
+            var password = "Test@123";
+            var Id = Guid.NewGuid().ToString();
+            var securityStamp = Guid.NewGuid().ToString();
+            var normalizeEmail = Email.ToUpper();
+            var hashedPassword = passwordHasher.HashPassword(null, password);
+            try
+            {
+                string connectionString = GetConnectionString();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("stp_AddUser", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    connection.Open();
+                    cmd.Parameters.AddWithValue("@Id", Id);
+                    cmd.Parameters.AddWithValue("@Email", Email);
+                    cmd.Parameters.AddWithValue("@Password", hashedPassword);
+                    cmd.Parameters.AddWithValue("@securityStamp", securityStamp);
+                    cmd.Parameters.AddWithValue("@normalizeEmail", normalizeEmail);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            result = reader["result"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            // IdentityResult result;
+            //var user = Activator.CreateInstance<IdentityUser>();
+            // await _userStore.SetUserNameAsync(user, Email, CancellationToken.None);
+            // await _emailStore.SetEmailAsync(user, Email, CancellationToken.None);
+            // try
+            // {
+            //      result = await _userManager.CreateAsync(user, "Test@123");
+            // }
+            // catch (Exception ex) 
+            // {
+            //     throw ex;
+            // }
+
+            return null;
+        }
+
     }
 }

@@ -31,5 +31,34 @@ namespace SeleniumReportAPI.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpPost("SendEmail")]
+        public async Task<IActionResult> SendEmail(string toEmail)
+        {
+            try
+            {
+                var result =  _helper.SendEmail(toEmail);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpGet("AcceptInvitation")]
+        public async Task<IActionResult> AcceptInvitation(string toEmail)
+        {
+            try
+            {
+                var result = _helper.AcceptInvitation(toEmail);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,7 @@ builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(conn
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AppDBContext>();
+
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -95,8 +97,10 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddTransient<TestExecutor>();
-builder.Services.AddSingleton<DBHelper>();
-
+builder.Services.AddScoped<DBHelper>();
+builder.Services.AddScoped<UserManager<IdentityUser>>();
+//builder.Services.AddScoped<IUserStore<IdentityUser>>();
+//builder.Services.AddScoped<IUserEmailStore<IdentityUser>>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
