@@ -32,6 +32,7 @@ namespace SeleniumReportAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("InviteUser")]
         public async Task<IActionResult> InviteUser(string toEmail)
         {
