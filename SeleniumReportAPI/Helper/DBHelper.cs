@@ -13,6 +13,7 @@ using System.Net.Mail;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using TestSeleniumReport.DTO_s;
 using Environments = SeleniumReportAPI.Models.Environments;
 using SmtpClient = System.Net.Mail.SmtpClient;
@@ -965,6 +966,10 @@ namespace SeleniumReportAPI.Helper
 
         public object SendEmail(string toEmail, string Mailtype)
         {
+            if (!IsValidEmail(toEmail))
+            {
+                return new { message = "Invalid email address format." };
+            }
             string result = string.Empty;
             var BodyString = string.Empty;
             var apiKey = _configuration["EmailDetails:apiKey"];
@@ -1058,6 +1063,11 @@ namespace SeleniumReportAPI.Helper
 
         public async Task<object> AcceptInvitation(string Email)
         {
+            if (!IsValidEmail(Email))
+            {
+                return new { message = "Invalid email address format." };
+            }
+
             string result = string.Empty;
             var passwordHasher = new PasswordHasher<IdentityUser>();
             var password = "Test@123";
@@ -1067,6 +1077,11 @@ namespace SeleniumReportAPI.Helper
             var hashedPassword = passwordHasher.HashPassword(null, password);
             try
             {
+                if (string.IsNullOrEmpty(Email))
+                {
+                    return new { message = "Email cannot be null or empty." };
+                }
+
                 string connectionString = GetConnectionString();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1081,6 +1096,7 @@ namespace SeleniumReportAPI.Helper
                     cmd.Parameters.AddWithValue("@Password", hashedPassword);
                     cmd.Parameters.AddWithValue("@securityStamp", securityStamp);
                     cmd.Parameters.AddWithValue("@normalizeEmail", normalizeEmail);
+
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -1097,10 +1113,18 @@ namespace SeleniumReportAPI.Helper
             }
             catch (Exception ex)
             {
-                throw ex;
+                return new { message = $"Error: {ex.Message}" };
             }
-            return result;
+            return new { result };
         }
+
+        private bool IsValidEmail(string email)
+        {
+            string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            Regex regex = new Regex(pattern);
+            return regex.IsMatch(email);
+        }
+
         public async Task<IdentityResult> ChangePasswordAsync(Dto_ChangePassword model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
