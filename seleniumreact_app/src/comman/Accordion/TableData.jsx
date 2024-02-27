@@ -51,7 +51,7 @@ export function TableData({ rows }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows?.map((row) => (
             <TableRow
               key={row.TestRunName}
               className={`${classes.tableRow} ${

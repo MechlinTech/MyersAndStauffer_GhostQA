@@ -35,7 +35,7 @@ export default function EditTestSuite() {
 
   const classes = useStyles();
   const navigate = useNavigate();
-  const {suiteName} = useParams()
+  const { suiteName } = useParams();
   const [selectedSuiteValue, setSelectedSuiteValue] = useState("custom-Suites");
   const [selectedRecepentValue, setSelectedRecepentValue] = useState("");
   const [selectedApplication, setSelectedApplication] = useState(null);
@@ -53,16 +53,16 @@ export default function EditTestSuite() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [openLoadingModal, setopenLoadingModal] = useState(false);
+  // const [openLoadingModal, setopenLoadingModal] = useState(false);
   const { applicationList, environementList, suiteToEdit, testCasesList } =
-  useSelector((state) => state.selenium);
-
+    useSelector((state) => state.selenium);
+  const [isExecuting, setisExecuting] = useState(false);
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
     dispatch(GetTestCases());
-    if(!suiteToEdit){
-      dispatch(Getsuitebyname(suiteName))
+    if (!suiteToEdit) {
+      dispatch(Getsuitebyname(suiteName));
     }
     setName(suiteToEdit?.TestSuiteName);
     setSelectedApplication(() => {
@@ -86,7 +86,7 @@ export default function EditTestSuite() {
         suiteToEdit?.SelectedTestCases?.includes(test.TestCaseName)
       );
     });
-  }, [dispatch ,suiteToEdit]);
+  }, [dispatch, suiteToEdit]);
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
   };
@@ -115,12 +115,11 @@ export default function EditTestSuite() {
     return testCaseArrName;
   };
 
-  const handleLoading = (status)=>{
-    setopenLoadingModal(false)
-    if(status === 'pass')
-    navigate('/')
-
-  }
+  const handleLoading = (status) => {
+    // setopenLoadingModal(false)
+    setisExecuting(false);
+    if (status === "pass") navigate("/");
+  };
   const handleSubmit = (action) => {
     const testCaseNames = getTestcaseNameOnly();
     let payload = {
@@ -168,29 +167,29 @@ export default function EditTestSuite() {
     }
     // Update error state
     setError(error);
-    
+
     // Check if there are any errors
     if (Object.keys(error).length === 0) {
       // Proceed with form submission
-      if(action === 'SaveAndExecute'){
-        setopenLoadingModal(true)}
+      if (action === "SaveAndExecute") {
+        // setopenLoadingModal(true)
+        setisExecuting(true);
+      }
       console.log("no error ", payload);
-      dispatch(AddUpdateTestSuites(payload, action,handleLoading));
+      dispatch(AddUpdateTestSuites(payload, action, handleLoading));
     } else console.log("handleSubmit error", error, payload);
   };
 
   const handleCheckboxChange = (event, row) => {
     const checked = event.target.checked;
     const checkedRows = checked
-    ? [...selectedRows, row]
-    : selectedRows.filter(
-        (selectedRow) => selectedRow.TestCaseName !== row.TestCaseName
-      )
+      ? [...selectedRows, row]
+      : selectedRows.filter(
+          (selectedRow) => selectedRow.TestCaseName !== row.TestCaseName
+        );
     setSelectedRows(checkedRows);
-    if(checkedRows.length === testCasesList.length)
-     setSelectAll(true)
-    else
-      setSelectAll(false)
+    if (checkedRows.length === testCasesList.length) setSelectAll(true);
+    else setSelectAll(false);
   };
 
   const handleSelectAllChange = (event) => {
@@ -254,21 +253,24 @@ export default function EditTestSuite() {
   return (
     <Suspense
       fallback={
-        <Box sx={{
-          display:'flex',
-          justifyContent:'center',
-          alignItems:'center',
-          height:'80vh'
-        }}>
-          <CircularProgress sx={{color:'#654DF7'}}/>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "80vh",
+          }}
+        >
+          <CircularProgress sx={{ color: "#654DF7" }} />
         </Box>
       }
-    ><div className={classes.main}>
-        <LoadingWave
+    >
+      <div className={classes.main}>
+        {/* <LoadingWave
         open={openLoadingModal}
         onClose={() => setopenLoadingModal(false)}
         suiteName={name}
-        />
+        /> */}
         <Grid container>
           {/* First Section */}
           <Grid item xs={12} sm={4}>
@@ -407,8 +409,8 @@ export default function EditTestSuite() {
                   </Box>
 
                   <div
-                    // style={{ overflow: "auto", maxHeight: "calc(42vh - 50px)" }}
-                    // style={{ padding: "10px 0px" }}
+                  // style={{ overflow: "auto", maxHeight: "calc(42vh - 50px)" }}
+                  // style={{ padding: "10px 0px" }}
                   >
                     {/* Your existing content */}
                     <Grid container className={classes.body}>
@@ -465,6 +467,10 @@ export default function EditTestSuite() {
                               value={selectedEnvironment}
                               onChange={(newValue) => {
                                 setSelectedEnvironment(newValue);
+                                setError((prev)=>({
+                                  ...prev,
+                                  ['environment']:""
+                                }))
                                 handleApplication(newValue);
                               }}
                               styles={selectStyle}
@@ -478,13 +484,16 @@ export default function EditTestSuite() {
                           </div>
                         </Grid>
                         {/* Row 3: Additional Name Dropdown */}
-                        <Grid item >
+                        <Grid item>
                           <div>
                             <Typography
                               variant="subtitle1"
                               className={clsx(classes.customFontSize)}
                             >
-                              Application : {selectedApplication?selectedApplication.ApplicationName:""}
+                              Application :{" "}
+                              {selectedApplication
+                                ? selectedApplication.ApplicationName
+                                : ""}
                             </Typography>
                             {/* <Select
                               getOptionLabel={(option) =>
@@ -592,8 +601,6 @@ export default function EditTestSuite() {
                             </FormControl>
                           </Grid>
                         </Grid>
-
-                        
 
                         {/* Row 6: Browser Dropdown */}
                         {/* <Grid item>
@@ -736,6 +743,7 @@ export default function EditTestSuite() {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleSubmit("SaveAndExecute")}
+                    // disabled={isExecuting}
                     sx={{
                       backgroundColor: "rgb(101, 77, 247)",
                       "&:hover": {
@@ -744,7 +752,17 @@ export default function EditTestSuite() {
                       },
                     }}
                   >
-                      Save & Execute
+                    {!isExecuting ? (
+                      "Save & Execute"
+                    ) : (
+                      <CircularProgress
+                        size={25}
+                        style={{
+                          marginRight: "8px",
+                          color: "#fff"
+                        }}
+                      />
+                    )}
                   </Button>
 
                   <Button

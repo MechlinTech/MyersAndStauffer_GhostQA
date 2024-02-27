@@ -7,6 +7,7 @@ import EditTestSuite from "../pages/TestSuite/EditTestSuite";
 import AddNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/AddNewEnvironment";
 import EditNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/EditNewEnvironment";
 import CircularProgress from '@mui/material/CircularProgress';
+import Invitation from "../pages/Invitaion";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() => import("../pages/Settings/Component/ExecutionEnvironment/index"));
 const Application = lazy(() => import("../pages/Settings/Component/Application/index"));
@@ -57,6 +58,7 @@ export default function Navigations() {
         <Route path="/setting/add-environment" element={<AddNewEnvironment/>} />
         <Route path="/setting/edit-environment" element={<EditNewEnvironment/>} />
         <Route path="/edit/:suiteName" element={<EditTestSuite />} />
+        <Route path="/AcceptInvitation/:toEmail" element={<Invitation />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
