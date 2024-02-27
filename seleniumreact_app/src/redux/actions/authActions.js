@@ -44,3 +44,48 @@ export const logout = () => {
     dispatch({ type: LOG_OUT });
   };
 };
+
+
+export const InviteUser = (email)=>{
+  
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/InviteUser?toEmail=${email}`,email);
+      console.log('response ' ,res)
+      if (res.status === 204) {
+        toast.info('Successfully invited', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } 
+    }catch (error) {
+      console.log("error inviting ",error);
+      toast('Invitation fail')
+    }
+  }
+}
+
+export const AcceptInvitation = (email)=>{
+  
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/AcceptInvitation?toEmail=${email}`,email);
+      console.log('response ' ,res)
+      if (res.status === 204) {
+        toast.info('Successfully accept', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } 
+    }catch (error) {
+      console.log("error inviting ",error);
+      toast('accept fail')
+    }
+  }
+}

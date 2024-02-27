@@ -46,14 +46,14 @@ export default function Navigations() {
             <Route path="User" element={<UserManagement/>} />
           </Route>
         </Route>
-        <Route path="test" element={<Api />} >
+        <Route path="api" element={<Api />} >
           <Route path="" element={<Box m={10} component={'h1'}>api1</Box>} />
           <Route path="api2" element={<Box m={10} component={'h1'}>api2</Box>} />
         </Route>
 
         <Route path="/accordian" element={<BasicAccordion />} />
         <Route path="/myaccount" element={<Account/>}/>
-        <Route path="/:testSuiteName/:testRunName" element={<TestSuitsDetails />} />
+        <Route path="/test/:testSuiteName/:testRunName" element={<TestSuitsDetails />} />
         <Route path="/add-suite" element={<AddTestSuite />} />
         <Route path="/setting/add-environment" element={<AddNewEnvironment/>} />
         <Route path="/setting/edit-environment" element={<EditNewEnvironment/>} />

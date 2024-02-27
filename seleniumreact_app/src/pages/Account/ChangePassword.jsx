@@ -104,10 +104,44 @@ export default function ChangePassword() {
                       }}
                     />
                   </FormControl>
+                 {Error.emailError&& <Typography>{Error.emailError}</Typography>}
                 </Grid>
                 <Grid item xs={12}>
                   <StyledTypography variant="subtitle1">
-                    Password
+                    old Password
+                  </StyledTypography>
+                  <FormControl
+                    fullWidth
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        "&:hover fieldset": {
+                          borderColor: "#654DF7",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#654DF7",
+                        },
+                        "& fieldset": {
+                          borderColor: "transparent",
+                        },
+                      },
+                    }}
+                  >
+                    <StyledOutlinedInput
+                      id="outlined-adornment-name"
+                      type="password"
+                      placeholder="password"
+                      error={Error.organizationNameError ? true : false}
+                      value={password}
+                      onChange={(e) => {
+                        setpassword(e.target.value);
+                        setError({ ...Error, ["passwordError"]: "" });
+                      }}
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <StyledTypography variant="subtitle1">
+                    new Password
                   </StyledTypography>
                   <FormControl
                     fullWidth

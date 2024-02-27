@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Container, Typography, Box, makeStyles } from '@material-ui/core';
 import { Link, useParams } from "react-router-dom";
-
+import { useDispatch } from 'react-redux';
+import { AcceptInvitation } from '../../redux/actions/authActions';
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -62,20 +63,24 @@ const useStyles = makeStyles((theme) => ({
 const Invitation = () => {
   const classes = useStyles();
   const {toEmail} = useParams()
+  const dispatch = useDispatch()
   const [accepted, setAccepted] = useState(false);
+  const [rejected, setRejected] = useState(false);
 
   const handleAccept = () => {
-  console.log("email id ", toEmail)
-  setAccepted(true);
+    console.log("email id ", toEmail)
+    dispatch(AcceptInvitation(toEmail))
+    setAccepted(true);
   };
 
   const handleReject = () => {
     // Handle reject logic if needed
+    setRejected(true)
   };
 
   return (
     <Container className={classes.container}>
-        <Box style={{ display: !accepted ? 'block' : 'none' }}>
+        <Box style={{ display: !accepted && !rejected ? 'block' : 'none' }}>
       <div className={classes.text}>You are invited</div>
       <Box className={classes.btnContainer}>
         <div className={classes.acceptBox}>
@@ -101,7 +106,7 @@ const Invitation = () => {
         <Typography>Thank you</Typography>
         <Typography style={{marginTop:'50px'}}>To change password <Link to='/changepassword'>click here</Link></Typography>
       </div>
-      <div className={classes.rejectMsgBox}>
+      <div className={classes.rejectMsgBox} style={{ display: rejected ? 'flex' : 'none' }}>
         <Typography variant="h6">Thank You</Typography>
       </div>
     </Container>

@@ -12,7 +12,7 @@ import { useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
 import { useDispatch } from "react-redux";
-import { InviteUser } from "../../redux/actions/seleniumAction";
+import { InviteUser } from "../../redux/actions/authActions";
 export default function Account() {
   const classes = useStyles();
   const dispatch = useDispatch();

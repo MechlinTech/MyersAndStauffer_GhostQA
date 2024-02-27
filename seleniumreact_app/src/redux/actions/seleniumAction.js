@@ -286,26 +286,3 @@ export const DeleteTestSuite = (suiteName)=>{
   }
 }
 
-
-export const InviteUser = (email)=>{
-  
-  return async (dispatch)=>{
-    try {
-      const res = await axios.post(
-        `${BASE_URL}/AddInBuildTestSuite/InviteUser?toEmail=${email}`,email,
-         header());
-      console.log('response ' ,res)
-      if (res.status === 204) {
-        toast.info('Successfully invited', {
-          style: {
-            background: 'rgb(101, 77, 247)', 
-            color: 'rgb(255, 255, 255)', 
-          },
-        });
-    } 
-    }catch (error) {
-      console.log("error inviting ",error);
-      toast('Invitation fail')
-    }
-  }
-}

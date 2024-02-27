@@ -60,7 +60,7 @@ export function TableData({ rows }) {
             >
               <StyledTableCell component="th" scope="row">
                 <Link
-                  to={`/${row?.TestSuiteName}/${row.TestRunName}`}
+                  to={`/test/${row?.TestSuiteName}/${row.TestRunName}`}
                   style={{ textDecoration: "none" }}
                   onClick={() => handleRowClick(row)}
                 >
