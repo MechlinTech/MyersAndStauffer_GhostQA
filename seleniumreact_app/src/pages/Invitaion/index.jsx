@@ -104,7 +104,7 @@ const Invitation = () => {
         </div> */}
         <Typography>Your temporary password is sent on your emailId, Please check.</Typography>
         <Typography>Thank you</Typography>
-        <Typography style={{marginTop:'50px'}}>To change password <Link to='/changepassword'>click here</Link></Typography>
+        {/* <Typography style={{marginTop:'50px'}}>To change password <Link to='/changepassword'>click here</Link></Typography> */}
       </div>
       <div className={classes.rejectMsgBox} style={{ display: rejected ? 'flex' : 'none' }}>
         <Typography variant="h6">Thank You</Typography>
