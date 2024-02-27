@@ -971,55 +971,23 @@ namespace SeleniumReportAPI.Helper
             {
                 BodyString = @"<!DOCTYPE html>
                             <html lang=""en"">
-                            <head>
-                                <meta charset=""UTF-8"">
-                                <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-                                <title>Join Ghost QA Platform</title>
-                                <style>
-                                    body {
-                                        font-family: Arial, sans-serif;
-                                        background-color: #f7f7f7;
-                                        margin: 0;
-                                        padding: 0;
-                                        display: flex;
-                                        justify-content: center;
-                                        align-items: center;
-                                        height: 100vh;
-                                    }
-                                    .container {
-                                        background-color: #fff;
-                                        padding: 20px;
-                                        border-radius: 8px;
-                                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                                        max-width: 400px;
-                                        text-align: center;
-                                    }
-                                    h1 {
-                                        color: #333;
-                                    }
-                                    p {
-                                        color: #666;
-                                    }
-                                    .btn {
-                                        display: inline-block;
-                                        padding: 10px 20px;
-                                        background-color: #007bff;
-                                        color: #fff;
-                                        text-decoration: none;
-                                        border-radius: 4px;
-                                        transition: background-color 0.3s ease;
-                                    }
-                                    .btn:hover {
-                                        background-color: #0056b3;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <div class=""container"">
-                                    <h1>Welcome to Ghost QA Platform!</h1>
-                                    <p>We warmly welcome you to join us!</p>
-                                    <a href=""https://localhost:7099/api/AddInBuildTestSuite/AcceptInvitation?toEmail=" + toEmail + @""" class=""btn"">Join Now</a>
-                                </div>
+                            <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
+
+                            <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" width=""600"">
+                              <tr>
+                                <td style=""padding: 20px 0; text-align: center;"">
+                                  <h2 style=""color: #654DF7;"">You're Invited! Join Ghost-QA Plateform 🎉</h2>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style=""padding: 20px 0;"">
+                                  <p>Dear [" + toEmail.ToUpper() + @"],</p>
+                                  <p>We are thrilled to invite you to join Ghost-QA Plateform! 🌟</p>
+                                  <p>To accept your invitation and dive into the excitement, simply click the button below:</p>
+                                  <p><a href=""http://localhost:3000/AcceptInvitation/" + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">View Invitation</a></p>
+                                </td>
+                              </tr>
+                            </table>
                             </body>
                             </html>";
             }
