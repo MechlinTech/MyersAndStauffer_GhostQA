@@ -103,8 +103,6 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddTransient<TestExecutor>();
 builder.Services.AddScoped<DBHelper>();
 builder.Services.AddScoped<UserManager<IdentityUser>>();
-//builder.Services.AddScoped<IUserStore<IdentityUser>>();
-//builder.Services.AddScoped<IUserEmailStore<IdentityUser>>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
