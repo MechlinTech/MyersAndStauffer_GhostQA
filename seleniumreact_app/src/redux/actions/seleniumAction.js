@@ -75,10 +75,18 @@ export const ExecuteTestCasesByTestSuite = (data,controlLoading) => {
                 `${BASE_URL}/Selenium/ExecuteTestSuite?TestSuiteName=${data}`,
                 header()
             );
-            controlLoading()
-            console.log("ExecuteTestCasesByTestSuite", response.data);
+            controlLoading(data)
+            if (response.data.status === "success") {
+              toast.info('Successfully executed', {
+                style: {
+                  background: 'rgb(101, 77, 247)', 
+                  color: 'rgb(255, 255, 255)', 
+                },
+              });
+          } 
+            console.log("ExecuteTestCasesByTestSuite", response);
         } catch (error) {
-            controlLoading()
+            controlLoading(data)
             console.error(error);
             toast.error("NETWORK ERROR");
         }
@@ -274,6 +282,30 @@ export const DeleteTestSuite = (suiteName)=>{
     }catch (error) {
       console.log("error deleting ",error);
       toast('deleting error')
+    }
+  }
+}
+
+
+export const InviteUser = (email)=>{
+  
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/InviteUser?toEmail=${email}`,email,
+         header());
+      console.log('response ' ,res)
+      if (res.status === 204) {
+        toast.info('Successfully invited', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } 
+    }catch (error) {
+      console.log("error inviting ",error);
+      toast('Invitation fail')
     }
   }
 }

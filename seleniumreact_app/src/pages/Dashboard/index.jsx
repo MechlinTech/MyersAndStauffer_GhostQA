@@ -18,10 +18,12 @@ import { Add } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import CircularProgress from '@mui/material/CircularProgress';
 import LoadingWave from "./Modal/LoadingWave";
 import DeleteSuite from "./Modal/DeleteSuite";
 import { useNavigate } from "react-router-dom";
 import Graph from "./Components/Graph";
+import { Tooltip } from "@mui/material";
 
 export default function Dashboard() {
   const classess = useStyles();
@@ -34,7 +36,7 @@ export default function Dashboard() {
   const [openModal, setOpenModal] = useState(false);
   const [openDelModal, setopenDelModal] = useState(false);
   const [suitToDelete, setsuitToDelete] = useState("");
-  const [executingSuite, setexecutingSuite] = useState("");
+  const [executingSuite, setexecutingSuite] = useState({});
   const handleAddSuite = () => {
     navigate("/add-suite");
   };
@@ -62,7 +64,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     dispatch(getTestSuites());
-  }, [dispatch,openDelModal]);
+  }, [dispatch,openDelModal,executingSuite]);
+
   const filteredTestSuiteData = testSuits?.filter((suite) =>
     suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
@@ -79,16 +82,23 @@ export default function Dashboard() {
     navigate(`/edit/${suiteName}`);
   };
 
-  const controlLoading = () => { // function to set loading false when promise resolve or reject
-   setOpenModal(false)
-   setexecutingSuite("")
+  const controlLoading = (suiteName) => { // function to set loading false when promise resolve or reject
+  //  setOpenModal(false)
+  setexecutingSuite((prevExecutingSuite)=>({
+    ...prevExecutingSuite,
+    [suiteName]:false
+  }))
   };
 
   const handleExecuteClick = (suite) => {
     let data = suite.TestSuiteName;
     // setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
-    setOpenModal(true)
-    setexecutingSuite(data)
+    // setOpenModal(true)
+    // setexecutingSuite(data)
+    setexecutingSuite((prevExecutingSuite)=>({
+      ...prevExecutingSuite,
+      [data]:true
+    }))
     dispatch(ExecuteTestCasesByTestSuite(data, controlLoading));
   };
 
@@ -100,11 +110,11 @@ export default function Dashboard() {
   return (
     <>
       <div className={classess.main}>
-        <LoadingWave
+        {/* <LoadingWave
           open={openModal}
           onClose={() => setOpenModal(false)}
           suiteName={executingSuite}
-        />
+        /> */}
         <DeleteSuite
           open={openDelModal}
           onClose={() => setopenDelModal(false)}
@@ -123,7 +133,9 @@ export default function Dashboard() {
                   xs={6}
                   style={{ textAlign: "right", paddingRight: "25px" }}
                 >
+                  <Tooltip title='add test' placement="top" arrow>
                   <Add
+                  aria-label="Accessibility Icon"
                     style={{
                       fontSize: 25,
                       backgroundColor: "rgb(101, 77, 247)",
@@ -134,6 +146,7 @@ export default function Dashboard() {
                     }}
                     onClick={handleAddSuite}
                   />
+                  </Tooltip>
                 </Grid>
               </Grid>
               <Grid container style={{}}>
@@ -184,7 +197,7 @@ export default function Dashboard() {
                           >
                             {suite.TestSuiteFlag == "Custom" && (
                               <>
-                                 <PlayCircleIcon
+                                 {!executingSuite[suite.TestSuiteName]?<PlayCircleIcon
                                       style={{
                                         marginRight: "8px",
                                         color:
@@ -196,7 +209,13 @@ export default function Dashboard() {
                                         e.stopPropagation();
                                         handleExecuteClick(suite);
                                       }}
-                                    />
+                                    />:<CircularProgress size={25} style={{
+                                      marginRight: "8px",
+                                      color:
+                                        selectedSuite === suite
+                                          ? "#fff"
+                                          : "rgb(101, 77, 247)",
+                                    }}/>}
                                 <EditIcon
                                   style={{
                                     marginRight: "8px",
