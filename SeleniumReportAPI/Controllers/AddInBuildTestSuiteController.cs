@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
 
 namespace SeleniumReportAPI.Controllers
@@ -58,6 +59,35 @@ namespace SeleniumReportAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, ex);
+            }
+        }
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePasswordAsync([FromBody] Dto_ChangePassword model)
+        {
+            try
+            {
+                var result = await _helper.ChangePasswordAsync(model);
+
+                if (result.Succeeded)
+                {
+                    return Ok(new
+                    {
+                        status = "Success",
+                        message = "Password Changed Successfully"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        message = "Failed to change password",
+                        errors = result.Errors
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
+using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Models;
 using System.Data;
 using System.Data.SqlClient;
@@ -964,6 +965,7 @@ namespace SeleniumReportAPI.Helper
 
         public object SendEmail(string toEmail, string Mailtype)
         {
+            string result = string.Empty;
             var BodyString = string.Empty;
             var apiKey = _configuration["EmailDetails:apiKey"];
             var fromEmail = _configuration["EmailDetails:EmailUsername"];
@@ -1033,21 +1035,25 @@ namespace SeleniumReportAPI.Helper
             var mailMessage = new MailMessage(fromEmail, toEmail)
             {
                 Subject = subject,
-                IsBodyHtml = true, // Set IsBodyHtml to true to indicate that the body contains HTML content
+                IsBodyHtml = true,
                 Body = BodyString
             };
 
             try
             {
                 smtpClient.Send(mailMessage);
-                Console.WriteLine("Email sent successfully!");
+                result ="Email sent successfully!";
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error sending email: {ex.Message}");
+                throw ex;
             }
-
-            return null;
+            return new
+            {
+                status = "Success",
+                message = result
+            };
+           
         }
 
         public async Task<object> AcceptInvitation(string Email)
@@ -1094,6 +1100,30 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
             return result;
+        }
+        public async Task<IdentityResult> ChangePasswordAsync(Dto_ChangePassword model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            }
+            var passwordCheckResult = await _userManager.CheckPasswordAsync(user, model.OldPassword);
+
+            if (!passwordCheckResult)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Current password is incorrect." });
+            }
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+            if (changePasswordResult.Succeeded)
+            {
+                return IdentityResult.Success;
+            }
+
+            return IdentityResult.Failed(new IdentityError { Description = "Failed to change password." });
         }
 
     }
