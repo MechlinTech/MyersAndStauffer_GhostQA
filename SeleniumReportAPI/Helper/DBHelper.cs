@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using GitHub;
+using Mailosaur.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
@@ -24,13 +26,13 @@ namespace SeleniumReportAPI.Helper
     {
         private readonly IConfiguration _configuration;
         private readonly TestExecutor _testExecutor;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public DBHelper(IConfiguration configuration, TestExecutor testExecutor, IServiceProvider serviceProvider)
         {
             _configuration = configuration;
             _testExecutor = testExecutor;
-            _userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         }
 
         internal string GetConnectionString()
@@ -1019,7 +1021,7 @@ namespace SeleniumReportAPI.Helper
                                   <p> Thank you for accepting invitation here is your temprory password:</p>
                                   <em><b> Password: </b> Test@123 </em>
                                   <p> If you want to change your password follow below link </p>
-                                  <p><a href=""http://codearrest.dyndns.org:3009/ResetPassword/" + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
+                                  <p><a href=""http://codearrest.dyndns.org:3009/ChangePassword/" + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
                                 </td>
                               </tr>
                             </table>
@@ -1047,7 +1049,7 @@ namespace SeleniumReportAPI.Helper
             try
             {
                 smtpClient.Send(mailMessage);
-                result ="Email sent successfully!";
+                result = "Email sent successfully!";
             }
             catch (Exception ex)
             {
@@ -1058,7 +1060,7 @@ namespace SeleniumReportAPI.Helper
                 status = "Success",
                 message = result
             };
-           
+
         }
 
         public async Task<object> AcceptInvitation(string Email)
@@ -1068,54 +1070,33 @@ namespace SeleniumReportAPI.Helper
                 return new { message = "Invalid email address format." };
             }
 
-            string result = string.Empty;
-            var passwordHasher = new PasswordHasher<IdentityUser>();
-            var password = "Test@123";
-            var Id = Guid.NewGuid().ToString();
-            var securityStamp = Guid.NewGuid().ToString();
-            var normalizeEmail = Email.ToUpper();
-            var hashedPassword = passwordHasher.HashPassword(null, password);
+
+            ApplicationUser user = new()
+            {
+                Email = Email,
+                UserName = Email,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+            IdentityResult result = null;
+            var EmailStatus = (dynamic)null;
             try
             {
-                if (string.IsNullOrEmpty(Email))
+                result = await _userManager.CreateAsync(user, "Test@123");
+
+                if (!result.Succeeded)
                 {
-                    return new { message = "Email cannot be null or empty." };
+                    throw new ArgumentException($"Unable to register user");
                 }
-
-                string connectionString = GetConnectionString();
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand cmd = new SqlCommand("stp_AddUser", connection)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-
-                    connection.Open();
-                    cmd.Parameters.AddWithValue("@Id", Id);
-                    cmd.Parameters.AddWithValue("@Email", Email);
-                    cmd.Parameters.AddWithValue("@Password", hashedPassword);
-                    cmd.Parameters.AddWithValue("@securityStamp", securityStamp);
-                    cmd.Parameters.AddWithValue("@normalizeEmail", normalizeEmail);
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            reader.Read();
-                            result = reader["result"].ToString();
-                            if (result != null && result.Contains("success"))
-                            {
-                                SendEmail(Email, "Accept");
-                            }
-                        }
-                    }
-                }
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                await _userManager.ConfirmEmailAsync(user, token);
+                EmailStatus = SendEmail(Email, "Accept");
             }
             catch (Exception ex)
             {
                 return new { message = $"Error: {ex.Message}" };
             }
-            return new { result };
+
+            return new { userStatus = result.Succeeded, emailStatus = EmailStatus };
         }
 
         private bool IsValidEmail(string email)
@@ -1148,6 +1129,69 @@ namespace SeleniumReportAPI.Helper
             }
 
             return IdentityResult.Failed(new IdentityError { Description = "Failed to change password." });
+        }
+        internal async Task<string> GetUserDetails()
+        {
+            string UsersListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetUserDetails", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                UsersListJson = reader["UsersListJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return UsersListJson;
+        }
+
+        internal async Task<string> UpdateUserProfile(Dto_UpdateUserProfile model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateUserProfile", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@FullName", model.FullName);
+                        command.Parameters.AddWithValue("@OrganizationName", model.OrganizationName);
+                        command.Parameters.AddWithValue("@Email", model.Email);
+                        command.Parameters.AddWithValue("@Id", model.Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
         }
 
     }

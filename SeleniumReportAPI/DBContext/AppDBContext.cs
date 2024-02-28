@@ -5,7 +5,7 @@ using SeleniumReportAPI.Models;
 
 namespace SeleniumReportAPI.DBContext
 {
-    public class AppDBContext : IdentityDbContext<IdentityUser>
+    public class AppDBContext : IdentityDbContext<ApplicationUser>
     {
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {

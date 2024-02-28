@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
+		<!--<Nullable>enable</Nullable>-->
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>0900b981-f067-41f1-9ad8-7577741b5e82</UserSecretsId>
 		<Platforms>AnyCPU;x64</Platforms>
@@ -22,6 +22,7 @@
 		<None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
 		<None Remove="SqlScript\stp_GetTestSuites.Sql" />
 		<None Remove="SqlScript\stp_GetTestSuitsByName.Sql" />
+		<None Remove="SqlScript\stp_GetUserDetails.Sql" />
 		<None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
 		<None Remove="SqlScript\stp_UpsertTableData.Sql" />
 		<None Remove="SqlScript\stp_ValidateUser.Sql" />
@@ -30,6 +31,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_DeleteTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetUserDetails.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetCustomTestSuites.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_ValidateUser.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetDashBoardDetails.Sql" />

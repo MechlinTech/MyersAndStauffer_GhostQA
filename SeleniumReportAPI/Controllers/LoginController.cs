@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
+using SeleniumReportAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -13,10 +14,10 @@ namespace SeleniumReportAPI.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly DBHelper _helper;
 
-        public LoginController(DBHelper helper, UserManager<IdentityUser> userManager)
+        public LoginController(DBHelper helper, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _helper = helper;
@@ -27,7 +28,7 @@ namespace SeleniumReportAPI.Controllers
         {
             try
             {
-                var user = await _userManager.FindByNameAsync(loginDTO.Email);
+                var user = await _userManager.FindByEmailAsync(loginDTO.Email.ToString());
                 if (await _userManager.CheckPasswordAsync(user, loginDTO.Password))
                 {
                     if (!string.IsNullOrEmpty(loginDTO.Email) && !string.IsNullOrEmpty(loginDTO.Password))
@@ -72,7 +73,7 @@ namespace SeleniumReportAPI.Controllers
                     return Ok(new Dto_Response { status = "false", message = "User Name or Password is Wrong" });
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 return BadRequest
                 ("An error occurred in generating the token");

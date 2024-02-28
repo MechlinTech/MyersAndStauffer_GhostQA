@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
+using SeleniumReportAPI.Models;
 
 namespace SeleniumReportAPI.Controllers
 {
@@ -48,12 +50,13 @@ namespace SeleniumReportAPI.Controllers
             }
         }
 
-        [HttpGet("AcceptInvitation")]
+        [HttpPost("AcceptInvitation")]
         public async Task<IActionResult> AcceptInvitation(string toEmail)
         {
             try
             {
-                var result = _helper.AcceptInvitation(toEmail);
+                var result = await _helper.AcceptInvitation(toEmail);
+               
                 return Ok(result);
             }
             catch (Exception ex)
