@@ -1,5 +1,4 @@
-
-CREATE OR ALTER  PROCEDURE [dbo].[stp_DisableEnableUser]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DisableEnableUser]
 @IsDisabled		        VARCHAR(100),
 @UserId			        NVARCHAR(450)
 AS
@@ -13,9 +12,19 @@ PROC EXEC		:  EXEC stp_DisableEnableUser
 				
 **************************************************************************************/
 BEGIN TRY
-		UPDATE [dbo].[AspNetUsers]
-			SET  IsDisabled = @IsDisabled
-		WHERE [Id] = @UserId
+		IF (SELECT COUNT(1) FROM [AspNetUsers] WHERE [Id]  = @UserId AND [UserName] = 'admin@gmail.com') > 0
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'success' [status], 'Please Contact System Admin you can not disable product admin!!!' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+		ELSE
+		BEGIN
+			UPDATE [dbo].[AspNetUsers]
+				SET  IsDisabled = @IsDisabled
+			WHERE [Id] = @UserId
+		END
 
 		IF @@ERROR = 0
 		BEGIN
