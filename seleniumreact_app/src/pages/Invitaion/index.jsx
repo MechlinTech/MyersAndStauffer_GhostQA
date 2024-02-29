@@ -72,7 +72,7 @@ const Invitation = () => {
   }
   const handleAccept = () => {
     console.log("email id ", toEmail)
-    dispatch(AcceptInvitation(toEmail),handleSetAccept)
+    dispatch(AcceptInvitation(toEmail,handleSetAccept))
   };
 
   const handleReject = () => {

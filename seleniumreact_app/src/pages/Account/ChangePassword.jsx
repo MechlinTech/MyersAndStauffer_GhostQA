@@ -14,7 +14,6 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { ChangePasswordReq } from "../../redux/actions/authActions";
 
-
 export default function ChangePassword() {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -58,10 +57,12 @@ export default function ChangePassword() {
     // }
     //updating error state before submitting
     setError(error);
-    if (Object.keys(error).length === 0) {
+    // if (Object.keys(error).length === 0) {
+    if (true) {
+       navigate('http://localhost:3000/')
       setNewPassword("")
       setOldPassword("")
-    dispatch(ChangePasswordReq(payload))
+    // dispatch(ChangePasswordReq(payload))
     } else {
       console.log("error saving");
     }
