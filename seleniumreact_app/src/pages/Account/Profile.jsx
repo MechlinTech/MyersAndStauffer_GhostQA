@@ -26,6 +26,7 @@ export default function Profile() {
   const [email, setEmail] = useState(user?.Email);
   const [organizationName, setorganizationName] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isEditable, setisEditable] = useState(false)
   const [Error, setError] = useState({
     nameError: "",
     emailError: "",
@@ -81,6 +82,7 @@ export default function Profile() {
     setError(error);
     if (Object.keys(error).length === 0) {
       dispatch(UpdateUserProfile(payload))
+      setisEditable(false)
     } else {
       console.log("some field are empty or not valid");
     }
@@ -133,6 +135,7 @@ export default function Profile() {
                       id="outlined-adornment-name"
                       type="email"
                       placeholder="Enter your full name"
+                      disabled={!isEditable}
                       error={Error.nameError ? true : false}
                       value={fullName}
                       onChange={(e) => {
@@ -166,6 +169,7 @@ export default function Profile() {
                       id="outlined-adornment-name"
                       type="text"
                       placeholder="Enter your email"
+                      disabled={!isEditable}
                       error={Error.emailError ? true : false}
                       value={email}
                       onChange={(e) => {
@@ -199,6 +203,7 @@ export default function Profile() {
                       id="outlined-adornment-name"
                       type="text"
                       placeholder="Enter your organization name"
+                      disabled={!isEditable}
                       error={Error.organizationNameError ? true : false}
                       value={organizationName}
                       onChange={(e) => {
@@ -230,10 +235,9 @@ export default function Profile() {
                     marginRight: "10px",
                   }}
                 >
-                  Back
+                Back
                 </Button>
-
-                <Button
+                {isEditable?(<Button
                   variant="contained"
                   color="primary"
                   onClick={handleSave}
@@ -246,7 +250,22 @@ export default function Profile() {
                   }}
                 >
                   Save
+                </Button>):(
+                  <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={()=>setisEditable(true)}
+                  sx={{
+                    backgroundColor: "rgb(101, 77, 247)",
+                    "&:hover": {
+                      backgroundColor: "rgb(101, 77, 247)",
+                      borderColor: "#654DF7",
+                    },
+                  }}
+                >
+                  Edit
                 </Button>
+                )}
               </Box>
             </Paper>
           </Box>)}
