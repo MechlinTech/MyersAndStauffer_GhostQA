@@ -9,61 +9,63 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./style";
-import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
 import { useDispatch } from "react-redux";
-import { InviteUser } from "../../redux/actions/seleniumAction";
+import { useParams } from "react-router-dom";
+import { ChangePasswordReq } from "../../redux/actions/authActions";
+
 
 export default function ChangePassword() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setpassword] = useState("");
-  const [confirmPassword, setconfirmPassword] = useState("");
+  const {emailId} = useParams()
+  const [email, setEmail] = useState(emailId);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   const [Error, setError] = useState({
     emailError: "",
-    passwordError: "",
-    confirmPasswordError: "",
+    oldPasswordError: "",
+    newPasswordError: "",
   });
 
   const handleSave = () => {
     const payload = {
       email,
-      password,
-      confirmPassword,
+      oldPassword,
+      newPassword
     };
-    console.log("payload ", payload);
-
+   console.log(payload)
     let error = {};
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    // if (!email.trim()) error.emailError = "email required";
+    if (!oldPassword.trim())
+      error.oldPasswordError = "old password required";
+    else if(!passwordRegex.test(oldPassword))
+      error.oldPasswordError = "at least one lowercase, one uppercase, one number, one special character is required"
+    if (!newPassword.trim())
+      error.newPasswordError = "new password required";
+    else if(!passwordRegex.test(newPassword))
+      error.newPasswordError = "at least one lowercase, one uppercase, one number, one special character is required"
+    
 
-    if (!email.trim()) error.emailError = "email required";
-    if (!password.trim())
-      error.passwordError = "password required";
-    if (!confirmPassword.trim())
-      error.confirmPasswordError = "new member email required";
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsEmailValid(emailRegex.test(email));
-    if (!isEmailValid) {
-      error.newMemEmailError = "enter valid email";
-    }
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // setIsEmailValid(emailRegex.test(email));
+    // if (!isEmailValid) {
+    //   error.emailError = "enter valid email";
+    // }
     //updating error state before submitting
     setError(error);
     if (Object.keys(error).length === 0) {
-      // invite api
-    //   setfullName("");
-    //   setEmail("");
-    //   setorganizationName("");
-    //   setnewMemEmail("");
+      setNewPassword("")
+      setOldPassword("")
+    dispatch(ChangePasswordReq(payload))
     } else {
       console.log("error saving");
     }
   };
-
-
   return (
     <Grid container justifyContent="center" alignItems="center" height='100vh'>
       <Grid item xs={12} sm={12} md={10} lg={8}>
@@ -95,6 +97,7 @@ export default function ChangePassword() {
                     <StyledOutlinedInput
                       id="outlined-adornment-name"
                       type="email"
+                      disabled
                       placeholder="Enter your email"
                       error={Error.emailError ? true : false}
                       value={email}
@@ -108,7 +111,7 @@ export default function ChangePassword() {
                 </Grid>
                 <Grid item xs={12}>
                   <StyledTypography variant="subtitle1">
-                    old Password
+                    Old Password
                   </StyledTypography>
                   <FormControl
                     fullWidth
@@ -129,19 +132,20 @@ export default function ChangePassword() {
                     <StyledOutlinedInput
                       id="outlined-adornment-name"
                       type="password"
-                      placeholder="password"
-                      error={Error.organizationNameError ? true : false}
-                      value={password}
+                      placeholder="old password"
+                      error={Error.oldPasswordError ? true : false}
+                      value={oldPassword}
                       onChange={(e) => {
-                        setpassword(e.target.value);
-                        setError({ ...Error, ["passwordError"]: "" });
+                        setOldPassword(e.target.value);
+                        setError({ ...Error, ['oldPasswordError']: "" });
                       }}
                     />
                   </FormControl>
+                  {Error.oldPasswordError&& <Typography  sx={{color:'red',fontSize:'12px'}}>{Error.oldPasswordError}</Typography>}
                 </Grid>
                 <Grid item xs={12}>
                   <StyledTypography variant="subtitle1">
-                    new Password
+                    New Password
                   </StyledTypography>
                   <FormControl
                     fullWidth
@@ -162,48 +166,16 @@ export default function ChangePassword() {
                     <StyledOutlinedInput
                       id="outlined-adornment-name"
                       type="password"
-                      placeholder="password"
-                      error={Error.organizationNameError ? true : false}
-                      value={password}
+                      placeholder="new password"
+                      error={Error.newPasswordError ? true : false}
+                      value={newPassword}
                       onChange={(e) => {
-                        setpassword(e.target.value);
-                        setError({ ...Error, ["passwordError"]: "" });
+                        setNewPassword(e.target.value);
+                        setError({ ...Error, ['newPasswordError']: "" });
                       }}
                     />
                   </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <StyledTypography variant="subtitle1">
-                    Confirm password
-                  </StyledTypography>
-                  <FormControl
-                    fullWidth
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        "&:hover fieldset": {
-                          borderColor: "#654DF7",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#654DF7",
-                        },
-                        "& fieldset": {
-                          borderColor: "transparent",
-                        },
-                      },
-                    }}
-                  >
-                    <StyledOutlinedInput
-                      id="outlined-adornment-name"
-                      type="password"
-                      placeholder="confirm password"
-                      error={Error.organizationNameError ? true : false}
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setconfirmPassword(e.target.value);
-                        setError({ ...Error, ["confirmPasswordError"]: "" });
-                      }}
-                    />
-                  </FormControl>
+                  {Error.newPasswordError&& <Typography  sx={{color:'red',fontSize:'12px'}}>{Error.newPasswordError}</Typography>}
                 </Grid>
               </Grid>
               <Box
@@ -217,7 +189,7 @@ export default function ChangePassword() {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate()}
                   sx={{
                     backgroundColor: "rgb(108, 117, 125)",
                     color: "#f1f1f1",
@@ -227,7 +199,7 @@ export default function ChangePassword() {
                     marginRight: "10px",
                   }}
                 >
-                  Back
+                  Cancel
                 </Button>
 
                 <Button
@@ -242,7 +214,7 @@ export default function ChangePassword() {
                     },
                   }}
                 >
-                  Save
+                  save
                 </Button>
               </Box>
             </Paper>

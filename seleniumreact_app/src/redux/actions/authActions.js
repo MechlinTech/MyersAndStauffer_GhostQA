@@ -53,7 +53,7 @@ export const InviteUser = (email)=>{
       const res = await axios.post(
         `${BASE_URL}/AddInBuildTestSuite/InviteUser?toEmail=${email}`,email);
       console.log('response ' ,res)
-      if (res.status === 204) {
+      if (res.data.status === "Success") {
         toast.info('Successfully invited', {
           style: {
             background: 'rgb(101, 77, 247)', 
@@ -68,14 +68,15 @@ export const InviteUser = (email)=>{
   }
 }
 
-export const AcceptInvitation = (email)=>{
+export const AcceptInvitation = (email,handeSetAccept)=>{
   
   return async (dispatch)=>{
     try {
       const res = await axios.post(
         `${BASE_URL}/AddInBuildTestSuite/AcceptInvitation?toEmail=${email}`,email);
       console.log('response ' ,res)
-      if (res.status === 204) {
+      if (res.data.status === "Success") {
+        handeSetAccept()
         toast.info('Successfully accept', {
           style: {
             background: 'rgb(101, 77, 247)', 
@@ -85,6 +86,28 @@ export const AcceptInvitation = (email)=>{
     } 
     }catch (error) {
       console.log("error inviting ",error);
+      toast('accept fail')
+    }
+  }
+}
+
+export const ChangePasswordReq = (payload)=>{
+  
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/ChangePassword`,payload);
+      console.log('payload ' ,payload)
+      if(res.data.status === "Success"){
+        toast.info('Successfully accept', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+      }
+    }catch (error) {
+      console.log("error changing password ",error);
       toast('accept fail')
     }
   }

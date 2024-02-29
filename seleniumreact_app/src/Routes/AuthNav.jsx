@@ -9,7 +9,7 @@ export default function AuthNav() {
     <Routes>
         <Route path='/' element={<Auth/>}/>
         <Route path="/AcceptInvitation/:toEmail" element={<Invitation />} />
-        <Route path="/changepassword" element={<ChangePassword />} />
+        <Route path="/ChangePassword/:emailId" element={<ChangePassword />} />
     </Routes>
   )
 }

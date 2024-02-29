@@ -8,6 +8,7 @@ import AddNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/
 import EditNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/EditNewEnvironment";
 import CircularProgress from '@mui/material/CircularProgress';
 import Invitation from "../pages/Invitaion";
+import Account from "../pages/Account";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() => import("../pages/Settings/Component/ExecutionEnvironment/index"));
 const Application = lazy(() => import("../pages/Settings/Component/Application/index"));
@@ -18,7 +19,6 @@ const BasicAccordion = lazy(() => import("../comman/Accordion/index"));
 const TestSuitsDetails = lazy(() => import("../pages/TestSuitsDetails"));
 const Settings = lazy(() => import("../pages/Settings"));
 const AddTestSuite = lazy(() => import("../pages/TestSuite/AddTestSuite"));
-const Account = lazy(()=>import("../pages/Account/Account"))
 const NotFound = lazy(() =>   import("../pages/NotFound"));
 
 export default function Navigations() {

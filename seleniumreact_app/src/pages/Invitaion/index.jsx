@@ -67,10 +67,12 @@ const Invitation = () => {
   const [accepted, setAccepted] = useState(false);
   const [rejected, setRejected] = useState(false);
 
+  const handleSetAccept = ()=>{
+    setAccepted(true);
+  }
   const handleAccept = () => {
     console.log("email id ", toEmail)
-    dispatch(AcceptInvitation(toEmail))
-    setAccepted(true);
+    dispatch(AcceptInvitation(toEmail),handleSetAccept)
   };
 
   const handleReject = () => {
