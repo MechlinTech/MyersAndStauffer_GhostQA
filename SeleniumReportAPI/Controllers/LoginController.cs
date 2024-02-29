@@ -29,8 +29,9 @@ namespace SeleniumReportAPI.Controllers
             try
             {
                 var user = await _userManager.FindByEmailAsync(loginDTO.Email.ToString());
-                if ((bool)user.IsDisabled)
-                    return StatusCode(403, new { status = "error", message = "User account is Disable. Please contact with Administrator" }); ;
+                if (user != null)
+                    if ((bool)(user.IsDisabled ?? false))
+                        return StatusCode(403, new { status = "error", message = "User account is Disable. Please contact with Administrator" });
 
                 if (await _userManager.CheckPasswordAsync(user, loginDTO.Password))
                 {
@@ -76,7 +77,7 @@ namespace SeleniumReportAPI.Controllers
                     return Ok(new Dto_Response { status = "false", message = "User Name or Password is Wrong" });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest
                 ("An error occurred in generating the token");
