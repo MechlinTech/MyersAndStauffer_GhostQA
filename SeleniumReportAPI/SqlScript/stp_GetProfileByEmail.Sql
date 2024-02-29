@@ -16,12 +16,12 @@ BEGIN TRY
 		SELECT [Id], 
 			   [UserName],
                [Email],
-               CASE WHEN [FullName] IS NULL THEN '' ELSE [FullName] END AS [FullName],
-			   CASE WHEN [OrganizationName] IS NULL THEN '' ELSE [OrganizationName] END AS [OrganizationName],
-			   CASE WHEN [IsDisabled] IS NULL THEN 'false' ELSE [IsDisabled] END AS [IsDisabled]
+               ISNULL([FullName], '') [FullName],
+			   ISNULL([OrganizationName],'') [OrganizationName],
+			   ISNULL([IsDisabled], 'false') [IsDisabled]
 		FROM dbo.AspNetUsers
 		WHERE [Email] = @Email
-	FOR JSON PATH))
+	FOR JSON PATH, WITHOUT_ARRAY_WRAPPER))
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [GetUserProfile]
