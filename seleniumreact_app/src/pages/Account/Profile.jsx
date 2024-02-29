@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Grid,
@@ -11,23 +11,48 @@ import { useNavigate } from "react-router-dom";
 import { useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
+import { useDispatch } from "react-redux";
+import { UpdateUserProfile } from "../../redux/actions/authActions";
+import axios from "axios";
+import { header } from "../../utils/authheader";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Profile() {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const navigate = useNavigate();
+  const [user, setuser] = useState(null)
   const [fullName, setfullName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(user?.Email);
   const [organizationName, setorganizationName] = useState("");
-  const [newMemEmail, setnewMemEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
-
   const [Error, setError] = useState({
     nameError: "",
     emailError: "",
     organizationNameError: "",
-    newMemEmailError: "",
   });
 
+  useEffect(() => {
+    const emailFromSession = sessionStorage.getItem("email");
+  
+    const getUserByEmail = async () => {
+      try {
+        const res = await axios.post(
+          `${BASE_URL}/Selenium/GetProfilByEmail?Email=${emailFromSession}`,
+          emailFromSession,
+          header()
+        );
+        setuser(res.data);
+        setEmail(res.data?.Email || ""); 
+        setfullName(res.data?.FullName || "")
+        setorganizationName(res.data?.OrganizationName || "")
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+  
+    getUserByEmail();
+  }, []);
   // Extracting the name of user
   const getName = () => {
     const email = sessionStorage.getItem("email");
@@ -37,46 +62,35 @@ export default function Profile() {
   };
   const handleSave = () => {
     const payload = {
+      id: user?.Id,
       fullName,
       email,
       organizationName,
-      newMemEmail,
     };
-    console.log("payload ", payload);
-
     let error = {};
 
-    if (!fullName.trim()) error.nameError = "name required";
-    if (!email.trim()) error.emailError = "email required";
-    if (!organizationName.trim())
-      error.organizationNameError = "organization name required";
-    if (!newMemEmail.trim())
-      error.newMemEmailError = "new member email required";
+    if (!fullName.trim()) error.nameError = "Name required";
+    if (!email.trim()) error.emailError = "Email required";
+    if (!organizationName.trim())  error.organizationNameError = "Organization name required";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setIsEmailValid(emailRegex.test(email));
     if (!isEmailValid) {
-      error.newMemEmailError = "enter valid email";
+      error.emailError = "Enter a valid email";
     }
     //updating error state before submitting
     setError(error);
     if (Object.keys(error).length === 0) {
-      // invite api
-      setfullName("");
-      setEmail("");
-      setorganizationName("");
-      setnewMemEmail("");
+      dispatch(UpdateUserProfile(payload))
     } else {
-      console.log("error saving");
+      console.log("some field are empty or not valid");
     }
   };
-
- 
 
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={12} md={12} lg={8}>
         <Paper elevation={0} className={classes.papercontainer}>
-          <Box sx={{ width: "70%" }}>
+          {user && (<Box sx={{ width: "70%" }}>
             <Box
               m={1}
               sx={{
@@ -123,7 +137,7 @@ export default function Profile() {
                       value={fullName}
                       onChange={(e) => {
                         setfullName(e.target.value);
-                        setError({ ...Error, ["nameError"]: "" });
+                        setError((prev)=>({ ...prev, ["nameError"]: "" }));
                       }}
 
                       // sx={{ backgroundColor: "rgb(242, 242, 242)",fontFamily:'Lexend Deca',fontWeight:'400', height:'40px'}}
@@ -150,13 +164,13 @@ export default function Profile() {
                   >
                     <StyledOutlinedInput
                       id="outlined-adornment-name"
-                      type="email"
+                      type="text"
                       placeholder="Enter your email"
                       error={Error.emailError ? true : false}
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
-                        setError({ ...Error, ["emailError"]: "" });
+                        setError((prev)=>({ ...prev, ["emailError"]: "" }));
                       }}
                     />
                   </FormControl>
@@ -194,57 +208,6 @@ export default function Profile() {
                     />
                   </FormControl>
                 </Grid>
-                {/* <Grid item xs={12} md={10}>
-                  <StyledTypography variant="subtitle1">
-                    Type E-mail to invite
-                  </StyledTypography>
-                  <FormControl
-                    fullWidth
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        "&:hover fieldset": {
-                          borderColor: "#654DF7",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#654DF7",
-                        },
-                        "& fieldset": {
-                          borderColor: "transparent",
-                        },
-                      },
-                    }}
-                    className={classes.btn}
-                  >
-                    <StyledOutlinedInput
-                      id="outlined-adornment-name"
-                      type="email"
-                      placeholder="Enter your email to invite"
-                      error={Error.newMemEmailError ? true : false}
-                      value={newMemEmail}
-                      onChange={(e) => {
-                        setnewMemEmail(e.target.value);
-                        setError({ ...Error, ["newMemEmailError"]: "" });
-                      }}
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={4} md={2} alignSelf="end">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleInvite}
-                    sx={{
-                      backgroundColor: "rgb(101, 77, 247)",
-                      height: "38px",
-                      "&:hover": {
-                        backgroundColor: "rgb(101, 77, 247)",
-                        borderColor: "#654DF7",
-                      },
-                    }}
-                  >
-                    Invite
-                  </Button>
-                </Grid> */}
               </Grid>
               <Box
                 mt={8}
@@ -286,7 +249,7 @@ export default function Profile() {
                 </Button>
               </Box>
             </Paper>
-          </Box>
+          </Box>)}
         </Paper>
       </Grid>
     </Grid>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { header } from "../../utils/authheader";
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -47,7 +48,6 @@ export const logout = () => {
 
 
 export const InviteUser = (email)=>{
-  
   return async (dispatch)=>{
     try {
       const res = await axios.post(
@@ -69,7 +69,6 @@ export const InviteUser = (email)=>{
 }
 
 export const AcceptInvitation = (email,handeSetAccept)=>{
-  
   return async (dispatch)=>{
     try {
       const res = await axios.post(
@@ -92,14 +91,13 @@ export const AcceptInvitation = (email,handeSetAccept)=>{
 }
 
 export const ChangePasswordReq = (payload)=>{
-  
   return async (dispatch)=>{
     try {
       const res = await axios.post(
         `${BASE_URL}/AddInBuildTestSuite/ChangePassword`,payload);
       console.log('payload ' ,payload)
       if(res.data.status === "Success"){
-        toast.info('Successfully accept', {
+        toast.info('Successfully changed', {
           style: {
             background: 'rgb(101, 77, 247)', 
             color: 'rgb(255, 255, 255)', 
@@ -109,6 +107,27 @@ export const ChangePasswordReq = (payload)=>{
     }catch (error) {
       console.log("error changing password ",error);
       toast('accept fail')
+    }
+  }
+}
+
+export const UpdateUserProfile = (payload)=>{
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Selenium/UpdateUserProfile`,payload,header());
+        console.log('res',res)
+      if(res.data.status === "success"){
+        toast.info('Successfully updated', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+      }
+    }catch (error) {
+      console.log("error updating profile ",error);
+      toast('Failed update')
     }
   }
 }

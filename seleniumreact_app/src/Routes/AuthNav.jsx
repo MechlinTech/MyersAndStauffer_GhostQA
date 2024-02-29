@@ -7,7 +7,7 @@ const Auth = lazy(() => import("../pages/Auth"))
 export default function AuthNav() {
   return (
     <Routes>
-        <Route path='/' element={<Auth/>}/>
+        <Route path='*' element={<Auth/>}/>
         <Route path="/AcceptInvitation/:toEmail" element={<Invitation />} />
         <Route path="/ChangePassword/:emailId" element={<ChangePassword />} />
     </Routes>
