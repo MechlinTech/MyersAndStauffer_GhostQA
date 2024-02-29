@@ -9,6 +9,6 @@ namespace SeleniumReportAPI.Models
         public string FullName { get; set; }
         [MaxLength(100)]
         public string OrganizationName { get; set; }
-        public bool IsDisabled { get; set; }
+        public bool? IsDisabled { get; set; }
     }
 }
