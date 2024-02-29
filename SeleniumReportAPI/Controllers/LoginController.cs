@@ -29,6 +29,9 @@ namespace SeleniumReportAPI.Controllers
             try
             {
                 var user = await _userManager.FindByEmailAsync(loginDTO.Email.ToString());
+                if ((bool)user.IsDisabled)
+                    return StatusCode(403, new { status = "error", message = "User account is Disable. Please contact with Administrator" }); ;
+
                 if (await _userManager.CheckPasswordAsync(user, loginDTO.Password))
                 {
                     if (!string.IsNullOrEmpty(loginDTO.Email) && !string.IsNullOrEmpty(loginDTO.Password))

@@ -422,5 +422,27 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.UpdateUserProfile(model));
         }
+
+        /// <summary>
+        /// Get User Profile
+        /// </summary>
+        /// <param Email="Email"></param>
+        /// <returns></returns>
+        [HttpPost("GetProfilByEmail")]
+        public async Task<ActionResult> GetProfilByEmail(string Email)
+        {
+            return Ok(await _helper.GetProfilByEmail(Email));
+        }
+
+        /// <summary>
+        /// Get User Profile
+        /// </summary>
+        /// <param DisableEnableUser="Dto_DisableEnableUser"></param>
+        /// <returns></returns>
+        [HttpPost("DisableEnableUser")]
+        public async Task<ActionResult> DisableEnableUser(Dto_DisableEnableUser model)
+        {
+            return Ok(await _helper.DisableEnableUser(model));
+        }
     }
 }
