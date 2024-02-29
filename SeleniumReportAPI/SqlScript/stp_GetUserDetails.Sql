@@ -13,7 +13,8 @@ BEGIN TRY
 	SELECT [UsersListJson] = JSON_QUERY((
 		SELECT [Id],
 			[UserName],
-			[Email]
+			[Email],
+			ISNULL([IsDisabled], 'false') [IsDisabled]
 		FROM [dbo].[AspNetUsers]
 		FOR JSON PATH
 	))
