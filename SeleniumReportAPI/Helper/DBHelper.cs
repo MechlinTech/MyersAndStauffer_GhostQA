@@ -1,15 +1,21 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using GitHub;
+using Mailosaur.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
+using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using TestSeleniumReport.DTO_s;
 using Environments = SeleniumReportAPI.Models.Environments;
 using SmtpClient = System.Net.Mail.SmtpClient;
@@ -20,13 +26,13 @@ namespace SeleniumReportAPI.Helper
     {
         private readonly IConfiguration _configuration;
         private readonly TestExecutor _testExecutor;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public DBHelper(IConfiguration configuration, TestExecutor testExecutor, IServiceProvider serviceProvider)
         {
             _configuration = configuration;
             _testExecutor = testExecutor;
-            _userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         }
 
         internal string GetConnectionString()
@@ -962,6 +968,11 @@ namespace SeleniumReportAPI.Helper
 
         public object SendEmail(string toEmail, string Mailtype)
         {
+            if (!IsValidEmail(toEmail))
+            {
+                return new { message = "Invalid email address format." };
+            }
+            string result = string.Empty;
             var BodyString = string.Empty;
             var apiKey = _configuration["EmailDetails:apiKey"];
             var fromEmail = _configuration["EmailDetails:EmailUsername"];
@@ -971,55 +982,23 @@ namespace SeleniumReportAPI.Helper
             {
                 BodyString = @"<!DOCTYPE html>
                             <html lang=""en"">
-                            <head>
-                                <meta charset=""UTF-8"">
-                                <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-                                <title>Join Ghost QA Platform</title>
-                                <style>
-                                    body {
-                                        font-family: Arial, sans-serif;
-                                        background-color: #f7f7f7;
-                                        margin: 0;
-                                        padding: 0;
-                                        display: flex;
-                                        justify-content: center;
-                                        align-items: center;
-                                        height: 100vh;
-                                    }
-                                    .container {
-                                        background-color: #fff;
-                                        padding: 20px;
-                                        border-radius: 8px;
-                                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                                        max-width: 400px;
-                                        text-align: center;
-                                    }
-                                    h1 {
-                                        color: #333;
-                                    }
-                                    p {
-                                        color: #666;
-                                    }
-                                    .btn {
-                                        display: inline-block;
-                                        padding: 10px 20px;
-                                        background-color: #007bff;
-                                        color: #fff;
-                                        text-decoration: none;
-                                        border-radius: 4px;
-                                        transition: background-color 0.3s ease;
-                                    }
-                                    .btn:hover {
-                                        background-color: #0056b3;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <div class=""container"">
-                                    <h1>Welcome to Ghost QA Platform!</h1>
-                                    <p>We warmly welcome you to join us!</p>
-                                    <a href=""https://localhost:7099/api/AddInBuildTestSuite/AcceptInvitation?toEmail=" + toEmail + @""" class=""btn"">Join Now</a>
-                                </div>
+                            <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
+
+                            <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" width=""600"">
+                              <tr>
+                                <td style=""padding: 20px 0; text-align: center;"">
+                                  <h2 style=""color: #654DF7;"">You're Invited! Join Ghost-QA Plateform 🎉</h2>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style=""padding: 20px 0;"">
+                                  <p>Dear [" + toEmail.ToUpper() + @"],</p>
+                                  <p>We are thrilled to invite you to join Ghost-QA Plateform! 🌟</p>
+                                  <p>To accept your invitation and dive into the excitement, simply click the button below:</p>
+                                  <p><a href=""http://codearrest.dyndns.org:3009/AcceptInvitation/" + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">View Invitation</a></p>
+                                </td>
+                              </tr>
+                            </table>
                             </body>
                             </html>";
             }
@@ -1027,55 +1006,25 @@ namespace SeleniumReportAPI.Helper
             {
                 BodyString = @"<!DOCTYPE html>
                             <html lang=""en"">
-                            <head>
-                                <meta charset=""UTF-8"">
-                                <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-                                <title>Join Ghost QA Platform</title>
-                                <style>
-                                    body {
-                                        font-family: Arial, sans-serif;
-                                        background-color: #f7f7f7;
-                                        margin: 0;
-                                        padding: 0;
-                                        display: flex;
-                                        justify-content: center;
-                                        align-items: center;
-                                        height: 100vh;
-                                    }
-                                    .container {
-                                        background-color: #fff;
-                                        padding: 20px;
-                                        border-radius: 8px;
-                                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                                        max-width: 400px;
-                                        text-align: center;
-                                    }
-                                    h1 {
-                                        color: #333;
-                                    }
-                                    p {
-                                        color: #666;
-                                    }
-                                    .btn {
-                                        display: inline-block;
-                                        padding: 10px 20px;
-                                        background-color: #007bff;
-                                        color: #fff;
-                                        text-decoration: none;
-                                        border-radius: 4px;
-                                        transition: background-color 0.3s ease;
-                                    }
-                                    .btn:hover {
-                                        background-color: #0056b3;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <div class=""container"">
-                                    <h1>Welcome to Ghost QA Platform!</h1>
-                                    <p>We warmly welcome you to join us!</p>
-                                    <a href=""https://localhost:7099/api/AddInBuildTestSuite/AcceptInvitation?toEmail=" + toEmail + @""" class=""btn"">Join Now</a>
-                                </div>
+                            <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
+
+                            <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" width=""600"">
+                              <tr>
+                                <td style=""padding: 20px 0; text-align: center;"">
+                                <h2 style=""color: #654DF7;""> Welcome Ghost - QA Plateform 🎉</h2>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style=""padding: 20px 0;"">
+                                  <p>Dear [" + toEmail.ToUpper() + @"""],</p>
+                                  <p> We are exited to serve you our Ghost - QA Plateform services! 🌟</p>
+                                  <p> Thank you for accepting invitation here is your temprory password:</p>
+                                  <em><b> Password: </b> Test@123 </em>
+                                  <p> If you want to change your password follow below link </p>
+                                  <p><a href=""http://codearrest.dyndns.org:3009/ChangePassword/" + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
+                                </td>
+                              </tr>
+                            </table>
                             </body>
                             </html>";
             }
@@ -1093,60 +1042,149 @@ namespace SeleniumReportAPI.Helper
             var mailMessage = new MailMessage(fromEmail, toEmail)
             {
                 Subject = subject,
-                IsBodyHtml = true, // Set IsBodyHtml to true to indicate that the body contains HTML content
+                IsBodyHtml = true,
                 Body = BodyString
             };
 
             try
             {
                 smtpClient.Send(mailMessage);
-                Console.WriteLine("Email sent successfully!");
+                result = "Email sent successfully!";
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error sending email: {ex.Message}");
+                throw ex;
             }
+            return new
+            {
+                status = "Success",
+                message = result
+            };
 
-            return null;
         }
 
         public async Task<object> AcceptInvitation(string Email)
         {
-            string result = string.Empty;
-            var passwordHasher = new PasswordHasher<IdentityUser>();
-            var password = "Test@123";
-            var Id = Guid.NewGuid().ToString();
-            var securityStamp = Guid.NewGuid().ToString();
-            var normalizeEmail = Email.ToUpper();
-            var hashedPassword = passwordHasher.HashPassword(null, password);
+            if (!IsValidEmail(Email))
+            {
+                return new { message = "Invalid email address format." };
+            }
+
+
+            ApplicationUser user = new()
+            {
+                Email = Email,
+                UserName = Email,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+            IdentityResult result = null;
+            var EmailStatus = (dynamic)null;
             try
             {
-                string connectionString = GetConnectionString();
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand cmd = new SqlCommand("stp_AddUser", connection)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
+                result = await _userManager.CreateAsync(user, "Test@123");
 
+                if (!result.Succeeded)
+                {
+                    throw new ArgumentException($"Unable to register user");
+                }
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                await _userManager.ConfirmEmailAsync(user, token);
+                EmailStatus = SendEmail(Email, "Accept");
+            }
+            catch (Exception ex)
+            {
+                return new { message = $"Error: {ex.Message}" };
+            }
+
+            return new { userStatus = result.Succeeded, emailStatus = EmailStatus };
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            Regex regex = new Regex(pattern);
+            return regex.IsMatch(email);
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(Dto_ChangePassword model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            }
+            var passwordCheckResult = await _userManager.CheckPasswordAsync(user, model.OldPassword);
+
+            if (!passwordCheckResult)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Current password is incorrect." });
+            }
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+            if (changePasswordResult.Succeeded)
+            {
+                return IdentityResult.Success;
+            }
+
+            return IdentityResult.Failed(new IdentityError { Description = "Failed to change password." });
+        }
+        internal async Task<string> GetUserDetails()
+        {
+            string UsersListJson = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
                     connection.Open();
-                    cmd.Parameters.AddWithValue("@Id", Id);
-                    cmd.Parameters.AddWithValue("@Email", Email);
-                    cmd.Parameters.AddWithValue("@Password", hashedPassword);
-                    cmd.Parameters.AddWithValue("@securityStamp", securityStamp);
-                    cmd.Parameters.AddWithValue("@normalizeEmail", normalizeEmail);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SqlCommand command = new SqlCommand("stp_GetUserDetails", connection))
                     {
-                        if (reader.HasRows)
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            reader.Read();
-                            result = reader["result"].ToString();
-                            if (result != null && result.Contains("success"))
+                            if (reader.HasRows)
                             {
-                                SendEmail(Email, "Accept");
+                                reader.Read();
+                                UsersListJson = reader["UsersListJson"].ToString();
                             }
                         }
                     }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return UsersListJson;
+        }
+
+        internal async Task<string> UpdateUserProfile(Dto_UpdateUserProfile model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateUserProfile", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@FullName", model.FullName);
+                        command.Parameters.AddWithValue("@OrganizationName", model.OrganizationName);
+                        command.Parameters.AddWithValue("@Email", model.Email);
+                        command.Parameters.AddWithValue("@Id", model.Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -1156,5 +1194,67 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
+        internal async Task<string> GetProfilByEmail(string Email)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetProfileByEmail", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Email", Email);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["UserProfile"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> DisableEnableUser(Dto_DisableEnableUser model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DisableEnableUser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", model.UserId);
+                        command.Parameters.AddWithValue("@IsDisabled", model.IsDisabled);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
     }
 }

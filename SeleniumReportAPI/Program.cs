@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using SeleniumReportAPI.DBContext;
 using SeleniumReportAPI.Helper;
+using SeleniumReportAPI.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,12 +28,17 @@ var connectionString = builder.Configuration.GetConnectionString("AppDBContextCo
 
 builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<AppDBContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<AppDBContext>()
+    .AddDefaultTokenProviders();
 
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    });
 builder.Services.AddEndpointsApiExplorer();
 
 // Add CORS
@@ -98,9 +104,6 @@ builder.Services.AddSwaggerGen(option =>
 
 builder.Services.AddTransient<TestExecutor>();
 builder.Services.AddScoped<DBHelper>();
-builder.Services.AddScoped<UserManager<IdentityUser>>();
-//builder.Services.AddScoped<IUserStore<IdentityUser>>();
-//builder.Services.AddScoped<IUserEmailStore<IdentityUser>>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

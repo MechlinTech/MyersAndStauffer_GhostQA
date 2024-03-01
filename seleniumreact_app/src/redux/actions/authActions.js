@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { header } from "../../utils/authheader";
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -44,3 +45,91 @@ export const logout = () => {
     dispatch({ type: LOG_OUT });
   };
 };
+
+
+export const InviteUser = (email)=>{
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/InviteUser?toEmail=${email}`,email);
+      console.log('response ' ,res)
+      if (res.data.status === "Success") {
+        toast.info('Successfully invited', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } else{
+      toast.error('Error inviting')
+    }
+    }catch (error) {
+      console.log("error inviting ",error);
+      toast('Invitation fail')
+    }
+  }
+}
+
+export const AcceptInvitation = (email,handeSetAccept)=>{
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/AcceptInvitation?toEmail=${email}`,email);
+      console.log('response ' ,res)
+      if (res.data.emailStatus.status === "Success") {
+        handeSetAccept()
+        toast.info('Successfully accept', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } 
+    }catch (error) {
+      console.log("error inviting ",error);
+      toast('accept fail')
+    }
+  }
+}
+
+export const ChangePasswordReq = (payload)=>{
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/ChangePassword`,payload);
+      console.log('payload ' ,payload)
+      if(res.data.status === "Success"){
+        toast.info('Successfully changed', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+      }
+    }catch (error) {
+      console.log("error changing password ",error);
+      toast('accept fail')
+    }
+  }
+}
+
+export const UpdateUserProfile = (payload)=>{
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Selenium/UpdateUserProfile`,payload,header());
+        console.log('res',res)
+      if(res.data.status === "success"){
+        toast.info('Successfully updated', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+      }
+    }catch (error) {
+      console.log("error updating profile ",error);
+      toast('Failed update')
+    }
+  }
+}

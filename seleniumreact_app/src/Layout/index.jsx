@@ -71,7 +71,7 @@ export default function MiniDrawer() {
                 })}
             >
                 <Toolbar >
-                        <Grid container spacing={2} alignItems="center" style={{minWidth:'500px'}} >
+                        <Grid container spacing={2} alignItems="center" style={{minWidth:'450px'}} >
                             <Grid item>
                                 <img src={"/images/GhostQA-Logo.png"} alt="logo" />{" "}
                             </Grid>

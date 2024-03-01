@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import { LOG_IN } from './redux/actions/authActions'
 import Load from './comman/spiner/Spin';
+import AuthNav from './Routes/AuthNav';
 const Auth = lazy(() => import("./pages/Auth"))
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
        <Suspense fallback={
         <Load/>}>
 
-      {isLogedIn ? <Layout /> : <Auth />}
+      {isLogedIn ? <Layout /> : <AuthNav />}
       {/* {isLogedIn ? <Auth />  : <Layout /> } */}
       <ToastContainer
         position="top-right"

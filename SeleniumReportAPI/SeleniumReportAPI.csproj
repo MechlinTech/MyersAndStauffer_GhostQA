@@ -2,19 +2,27 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
+		<!--<Nullable>enable</Nullable>-->
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>0900b981-f067-41f1-9ad8-7577741b5e82</UserSecretsId>
 		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="SqlScript\stp_AddUpdateApplication.Sql" />
+		<None Remove="SqlScript\stp_AddUpdateBrowser.Sql" />
+		<None Remove="SqlScript\stp_AddUpdateEnvironment.Sql" />
 		<None Remove="SqlScript\stp_AddUpdateTestSuites.Sql" />
+		<None Remove="SqlScript\stp_DeleteApplication.Sql" />
+		<None Remove="SqlScript\stp_DeleteBrowser.Sql" />
+		<None Remove="SqlScript\stp_DeleteEnvironment.Sql" />
 		<None Remove="SqlScript\stp_DeleteTestSuites.Sql" />
 		<None Remove="SqlScript\stp_GetApplications.sql" />
+		<None Remove="SqlScript\stp_GetBrowsers.Sql" />
 		<None Remove="SqlScript\stp_GetCustomTestSuites.Sql" />
 		<None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
 		<None Remove="SqlScript\stp_GetEnvironment.sql" />
+		<None Remove="SqlScript\stp_GetEnvironmentById.sql" />
 		<None Remove="SqlScript\stp_GetRunDetails.Sql" />
 		<None Remove="SqlScript\stp_GetRunId.Sql" />
 		<None Remove="SqlScript\stp_GetTestCaseDetails.Sql" />
@@ -22,15 +30,31 @@
 		<None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
 		<None Remove="SqlScript\stp_GetTestSuites.Sql" />
 		<None Remove="SqlScript\stp_GetTestSuitsByName.Sql" />
+		<None Remove="SqlScript\stp_GetUserDetails.Sql" />
+		<None Remove="SqlScript\stp_InsertBuiltInTestSuiteDetails.Sql" />
+		<None Remove="SqlScript\stp_SaveCustomTestSuiteExecutionData.Sql" />
 		<None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
+		<None Remove="SqlScript\stp_UpdateUserProfile.Sql" />
 		<None Remove="SqlScript\stp_UpsertTableData.Sql" />
 		<None Remove="SqlScript\stp_ValidateUser.Sql" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Include="SqlScript\stp_AddUpdateApplication.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_AddUpdateBrowser.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_AddUpdateEnvironment.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeleteApplication.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeleteBrowser.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeleteEnvironment.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_DeleteTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetBrowsers.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetEnvironmentById.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetUserDetails.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetCustomTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_InsertBuiltInTestSuiteDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_SaveCustomTestSuiteExecutionData.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_UpdateUserProfile.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_ValidateUser.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetDashBoardDetails.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetRunDetails.Sql" />

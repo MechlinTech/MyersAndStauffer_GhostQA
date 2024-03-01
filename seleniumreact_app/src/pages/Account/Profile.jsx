@@ -1,95 +1,120 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Grid,
   Paper,
   Typography,
   FormControl,
-  OutlinedInput,
   Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
-import { StyledTypography,StyledOutlinedInput } from "./style";
+import { StyledTypography, StyledOutlinedInput } from "./style";
+import { useDispatch } from "react-redux";
+import { UpdateUserProfile } from "../../redux/actions/authActions";
+import axios from "axios";
+import { header } from "../../utils/authheader";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-export default function Account() {
+export default function Profile() {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const navigate = useNavigate();
+  const [user, setuser] = useState(null)
   const [fullName, setfullName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(user?.Email);
   const [organizationName, setorganizationName] = useState("");
-  const [newMemEmail, setnewMemEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
-
+  const [isEditable, setisEditable] = useState(false)
   const [Error, setError] = useState({
     nameError: "",
     emailError: "",
     organizationNameError: "",
-    newMemEmailError: "",
   });
 
+  useEffect(() => {
+    const emailFromSession = sessionStorage.getItem("email");
+  
+    const getUserByEmail = async () => {
+      try {
+        const res = await axios.post(
+          `${BASE_URL}/Selenium/GetProfilByEmail?Email=${emailFromSession}`,
+          emailFromSession,
+          header()
+        );
+        setuser(res.data);
+        setEmail(res.data?.Email || ""); 
+        setfullName(res.data?.FullName || "")
+        setorganizationName(res.data?.OrganizationName || "")
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+  
+    getUserByEmail();
+  }, []);
   // Extracting the name of user
-  const getName = ()=>{
-    const email = sessionStorage.getItem('email')
-    const i = email.indexOf('@')
-    const name = email.substring(0,i)
-    return name.charAt(0).toUpperCase() + name.slice(1)
-}
-  const handleInvite = () => {
+  const getName = () => {
+    const email = sessionStorage.getItem("email");
+    const i = email.indexOf("@");
+    const name = email.substring(0, i);
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  };
+  const handleSave = () => {
     const payload = {
+      id: user?.Id,
       fullName,
       email,
       organizationName,
-      newMemEmail,
     };
-    console.log("payload ",payload)
-    // Implement your logic for sending the invitation
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // setIsEmailValid(emailRegex.test(email));
-    // console.log("is valid ", isEmailValid);
-
     let error = {};
 
-    if (!fullName.trim()) error.nameError = "name required";
-    if (!email.trim()) error.emailError = "email required";
-    if (!organizationName.trim())
-      error.organizationNameError = "organization name required";
-    if (!newMemEmail.trim())
-      error.newMemEmailError = "new member email required";
-
+    if (!fullName.trim()) error.nameError = "Name required";
+    if (!email.trim()) error.emailError = "Email required";
+    if (!organizationName.trim())  error.organizationNameError = "Organization name required";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setIsEmailValid(emailRegex.test(email));
+    if (!isEmailValid) {
+      error.emailError = "Enter a valid email";
+    }
     //updating error state before submitting
     setError(error);
-    if(Object.keys(error).length === 0){
-      // invite api
-      setfullName("")
-      setEmail("")
-      setorganizationName("")
-      setnewMemEmail("")
-    }else{
-      console.log('error inviting')
+    if (Object.keys(error).length === 0) {
+      dispatch(UpdateUserProfile(payload))
+      setisEditable(false)
+    } else {
+      console.log("some field are empty or not valid");
     }
   };
 
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={12} md={12} lg={8}>
-        <Paper elevation={2} className={classes.papercontainer}>
-          <Box sx={{ width: "70%" }}>
+        <Paper elevation={0} className={classes.papercontainer}>
+          {user && (<Box sx={{ width: "70%" }}>
             <Box
-            m={1}
+              m={1}
               sx={{
                 display: "flex",
                 alignItems: "center",
               }}
             >
-              <Avatar style={{ marginRight:"10px", backgroundColor: "#654DF7"}}src="" />
-              <Typography fontSize='18px' fontFamily='Lexend Deca'>{getName()}</Typography>
+              <Avatar
+                style={{ marginRight: "10px", backgroundColor: "#654DF7" }}
+                src=""
+              />
+              <Typography fontSize="18px" fontFamily="Lexend Deca">
+                {getName()}
+              </Typography>
             </Box>
-            <Paper variant="outlined" sx={{ padding: "20px",marginBottom:'20px' }}>
+            <Paper
+              variant="outlined"
+              sx={{ padding: "20px", marginBottom: "20px" }}
+            >
               <Grid container justifyContent="center" spacing={1}>
                 <Grid item xs={12}>
-                  <StyledTypography >Full name</StyledTypography>
+                  <StyledTypography>Full name</StyledTypography>
                   <FormControl
                     fullWidth
                     sx={{
@@ -110,15 +135,14 @@ export default function Account() {
                       id="outlined-adornment-name"
                       type="email"
                       placeholder="Enter your full name"
+                      disabled={!isEditable}
                       error={Error.nameError ? true : false}
                       value={fullName}
                       onChange={(e) => {
                         setfullName(e.target.value);
-                        setError(
-                          {...Error,["nameError"]:""}
-                        )
+                        setError((prev)=>({ ...prev, ["nameError"]: "" }));
                       }}
-                      
+
                       // sx={{ backgroundColor: "rgb(242, 242, 242)",fontFamily:'Lexend Deca',fontWeight:'400', height:'40px'}}
                     />
                   </FormControl>
@@ -143,57 +167,21 @@ export default function Account() {
                   >
                     <StyledOutlinedInput
                       id="outlined-adornment-name"
-                      type="email"
+                      type="text"
                       placeholder="Enter your email"
+                      disabled={!isEditable}
                       error={Error.emailError ? true : false}
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
-                        setError(
-                          {...Error,["emailError"]:""}
-                        )
+                        setError((prev)=>({ ...prev, ["emailError"]: "" }));
                       }}
-                      
                     />
                   </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                  <StyledTypography variant="subtitle1">Organization name</StyledTypography>
-                  <FormControl
-                    fullWidth
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        "&:hover fieldset": {
-                          borderColor: "#654DF7",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#654DF7",
-                        },
-                        "& fieldset": {
-                          borderColor: "transparent",
-                        },
-                      },
-                    }}
-                  >
-                    <StyledOutlinedInput
-                      id="outlined-adornment-name"
-                      type="email"
-                      placeholder="Enter your organization name"
-                      error={Error.organizationNameError ? true : false}
-                      value={organizationName}
-                      onChange={(e) => {
-                        setorganizationName(e.target.value);
-                        setError(
-                          {...Error,["organizationNameError"]:""}
-                        )
-                      }}
-                      
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={10} >
                   <StyledTypography variant="subtitle1">
-                    Type E-mail to invite
+                    Organization name
                   </StyledTypography>
                   <FormControl
                     fullWidth
@@ -210,40 +198,20 @@ export default function Account() {
                         },
                       },
                     }}
-                    className={classes.btn}
                   >
                     <StyledOutlinedInput
                       id="outlined-adornment-name"
-                      type="email"
-                      placeholder="Enter your email to invite"
-                      error={Error.newMemEmailError ? true : false}
-                      value={newMemEmail}
+                      type="text"
+                      placeholder="Enter your organization name"
+                      disabled={!isEditable}
+                      error={Error.organizationNameError ? true : false}
+                      value={organizationName}
                       onChange={(e) => {
-                        setnewMemEmail(e.target.value);
-                        setError(
-                          {...Error,["newMemEmailError"]:""}
-                        )
+                        setorganizationName(e.target.value);
+                        setError({ ...Error, ["organizationNameError"]: "" });
                       }}
-                      
                     />
                   </FormControl>
-                </Grid>
-                <Grid item xs={4} md={2} alignSelf="end">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleInvite} 
-                       sx={{
-                      backgroundColor: "rgb(101, 77, 247)",
-                      height:'38px',
-                      "&:hover": {
-                      backgroundColor: "rgb(101, 77, 247)",
-                      borderColor: "#654DF7",
-                      },
-                  }}
-                  >
-                    Invite
-                  </Button>
                 </Grid>
               </Grid>
               <Box
@@ -266,15 +234,13 @@ export default function Account() {
                     },
                     marginRight: "10px",
                   }}
-
                 >
-                  Back
+                Back
                 </Button>
-
-                <Button
+                {isEditable?(<Button
                   variant="contained"
                   color="primary"
-                  onClick={handleInvite}
+                  onClick={handleSave}
                   sx={{
                     backgroundColor: "rgb(101, 77, 247)",
                     "&:hover": {
@@ -284,10 +250,25 @@ export default function Account() {
                   }}
                 >
                   Save
+                </Button>):(
+                  <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={()=>setisEditable(true)}
+                  sx={{
+                    backgroundColor: "rgb(101, 77, 247)",
+                    "&:hover": {
+                      backgroundColor: "rgb(101, 77, 247)",
+                      borderColor: "#654DF7",
+                    },
+                  }}
+                >
+                  Edit
                 </Button>
+                )}
               </Box>
             </Paper>
-          </Box>
+          </Box>)}
         </Paper>
       </Grid>
     </Grid>

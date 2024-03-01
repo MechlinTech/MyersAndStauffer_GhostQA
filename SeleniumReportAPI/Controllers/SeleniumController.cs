@@ -400,5 +400,49 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetExecutionInProgress());
         }
+
+
+        /// <summary>
+        /// Get User in Json Format
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetUserDetails")]
+        public async Task<ActionResult> GetUserDetails()
+        {
+            return Ok(await _helper.GetUserDetails());
+        }
+
+        /// <summary>
+        /// Update User Profile
+        /// </summary>
+        /// <param updatedUserProfile="updatedUserProfile"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateUserProfile")]
+        public async Task<ActionResult> UpdateUserProfile(Dto_UpdateUserProfile model)
+        {
+            return Ok(await _helper.UpdateUserProfile(model));
+        }
+
+        /// <summary>
+        /// Get User Profile
+        /// </summary>
+        /// <param Email="Email"></param>
+        /// <returns></returns>
+        [HttpPost("GetProfilByEmail")]
+        public async Task<ActionResult> GetProfilByEmail(string Email)
+        {
+            return Ok(await _helper.GetProfilByEmail(Email));
+        }
+
+        /// <summary>
+        /// Get User Profile
+        /// </summary>
+        /// <param DisableEnableUser="Dto_DisableEnableUser"></param>
+        /// <returns></returns>
+        [HttpPost("DisableEnableUser")]
+        public async Task<ActionResult> DisableEnableUser(Dto_DisableEnableUser model)
+        {
+            return Ok(await _helper.DisableEnableUser(model));
+        }
     }
 }

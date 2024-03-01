@@ -51,7 +51,7 @@ export function TableData({ rows }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows?.map((row) => (
             <TableRow
               key={row.TestRunName}
               className={`${classes.tableRow} ${
@@ -60,7 +60,7 @@ export function TableData({ rows }) {
             >
               <StyledTableCell component="th" scope="row">
                 <Link
-                  to={`/${row?.TestSuiteName}/${row.TestRunName}`}
+                  to={`/test/${row?.TestSuiteName}/${row.TestRunName}`}
                   style={{ textDecoration: "none" }}
                   onClick={() => handleRowClick(row)}
                 >
