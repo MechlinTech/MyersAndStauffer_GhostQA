@@ -195,8 +195,6 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
     if (event.key === 'Enter') {
       setEditMode(0);
       const itemToEdit = data.find(item => item.id === itemId);
-
-
       const newData = data.filter((item) => {
         if (item.id !== itemId) {
           return item;
@@ -221,14 +219,29 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
   };
 
   const handleEditChange = (itemId, name) => {
-
     setEditData(name);
-
   };
 
   return (
     <div className="org-tree">
-      <Card handleEdit={handleEdit} handleKeyPressEdit={handleKeyPressEdit} handleEditChange={handleEditChange} editData={editData} setEditData={setEditData} editMode={editMode} setEditMode={setEditMode} data={listData} keyData={0} handleTask={TestCaseHandle} nodeData={0} handleCRUDAtParent={handleCRUDAtParent} nodeCount={nodeCount} handleNodeCount={handleNodeCount} expandedInputId={expandedInputId} setExpandedInputId={setExpandedInputId} setListData={setListData} />
+      <Card 
+      handleEdit={handleEdit} 
+      handleKeyPressEdit={handleKeyPressEdit} 
+      handleEditChange={handleEditChange} 
+      editData={editData} 
+      setEditData={setEditData} 
+      editMode={editMode} 
+      setEditMode={setEditMode} 
+      data={listData} 
+      keyData={0} 
+      handleTask={TestCaseHandle} 
+      nodeData={0} 
+      handleCRUDAtParent={handleCRUDAtParent} 
+      nodeCount={nodeCount} 
+      handleNodeCount={handleNodeCount} 
+      expandedInputId={expandedInputId} 
+      setExpandedInputId={setExpandedInputId} 
+      setListData={setListData} />
     </div>
   );
 };

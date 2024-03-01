@@ -39,7 +39,7 @@ export const useStylesTree = makeStyles({
 
 },
     editTheFolder: {
-    border: 'solid 1px #e9e9e9',
+    border: 'solid 1px #3a3a3a',
     padding: '4px 0px',
     fontSize: '24px',
     fontWeight: '400',
