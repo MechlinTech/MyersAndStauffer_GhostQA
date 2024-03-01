@@ -57,12 +57,11 @@ export default function ChangePassword() {
     // }
     //updating error state before submitting
     setError(error);
-    // if (Object.keys(error).length === 0) {
-    if (true) {
-       navigate('http://localhost:3000/')
+    if (Object.keys(error).length === 0) {
+       navigate('/')
       setNewPassword("")
       setOldPassword("")
-    // dispatch(ChangePasswordReq(payload))
+    dispatch(ChangePasswordReq(payload))
     } else {
       console.log("error saving");
     }

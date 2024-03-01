@@ -36,14 +36,12 @@ export default function Users() {
 
   const handleInvite = () => {
     let error = {};
-    console.log("error before checking : ",error)
-    console.log("state error : ",Error)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setIsEmailValid(emailRegex.test(email));
     if (!email.trim()) error.emailError = "email required";
     else if (!isEmailValid) error.emailError = "Enter a valid email";
     setError(error);
-    console.log("errors ", error);
+    console.log('errors ',Object.values(error))
     if (Object.keys(error).length === 0) {
       setEmail("");
       dispatch(InviteUser(email));
@@ -94,7 +92,7 @@ export default function Users() {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    setError((prev) => ({ ...prev, ["emailError"]: "" }));
+                    // setError((prev) => ({ ...prev, ["emailError"]: "" }));
                   }}
                 />
               </FormControl>

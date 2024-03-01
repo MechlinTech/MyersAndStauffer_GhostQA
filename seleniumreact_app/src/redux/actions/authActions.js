@@ -60,7 +60,9 @@ export const InviteUser = (email)=>{
             color: 'rgb(255, 255, 255)', 
           },
         });
-    } 
+    } else{
+      toast.error('Error inviting')
+    }
     }catch (error) {
       console.log("error inviting ",error);
       toast('Invitation fail')
@@ -74,7 +76,7 @@ export const AcceptInvitation = (email,handeSetAccept)=>{
       const res = await axios.post(
         `${BASE_URL}/AddInBuildTestSuite/AcceptInvitation?toEmail=${email}`,email);
       console.log('response ' ,res)
-      if (res.data.status === "Success") {
+      if (res.data.emailStatus.status === "Success") {
         handeSetAccept()
         toast.info('Successfully accept', {
           style: {
