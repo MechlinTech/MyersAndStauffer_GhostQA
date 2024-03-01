@@ -41,7 +41,7 @@ export default function Functional() {
                     <Link
                         to="/testLab"
                         style={{ marginLeft: "20px" }}
-                        className={`${classes.linkStyle} ${location.pathname === "/testLab" && classes.activeLink}`}
+                        className={`${classes.linkStyle} ${location.pathname.slice(0,8) === "/testLab" && classes.activeLink}`}
                     >
                          Test Lab
                     </Link>

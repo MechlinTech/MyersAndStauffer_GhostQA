@@ -3,12 +3,12 @@ import { Grid, Typography, Paper, Box, Card } from "@material-ui/core";
 import { useStylesTestCase } from "./styles";
 import Button from '@mui/material/Button';
 import TableTestCase from "./TableTestCase";
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function AddTestCase() {
   const classes = useStylesTestCase();
-
+  const navigate = useNavigate()
   
   return (
     <>
@@ -39,6 +39,7 @@ export default function AddTestCase() {
                 },
                 color: "#fff",
               }}
+              onClick={()=>navigate('/testLab/createTestcase')}
             >
               Add New TestCase
             </Button>

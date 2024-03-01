@@ -9,6 +9,8 @@ import EditNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment
 import CircularProgress from '@mui/material/CircularProgress';
 import Invitation from "../pages/Invitaion";
 import Account from "../pages/Account";
+import CreateTestCase from "../pages/TestLab/CreateTestcase";
+import EditTestCase from "../pages/TestLab/CreateTestcase/editTestLab";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() => import("../pages/Settings/Component/ExecutionEnvironment/index"));
 const Application = lazy(() => import("../pages/Settings/Component/Application/index"));
@@ -39,7 +41,6 @@ export default function Navigations() {
       <Routes>
          
         <Route path="/" element={<Functional />} > 
-          <Route path="testLab" element={<TestLab/>} />  
           <Route path="/" element={<Dashboard/>} />
           <Route path="settings" element={<Settings/>} >
             <Route path="Environment" element={<Environment/> }/>
@@ -48,6 +49,9 @@ export default function Navigations() {
             <Route path="Roles" element={<RoleManagement/>} />
             <Route path="User" element={<UserManagement/>} />
           </Route>
+          <Route path="testLab" element={<TestLab/>} />  
+          <Route path="testLab/createTestcase" element={<CreateTestCase/>} />  
+          <Route path="testLab/editTestcase" element={<EditTestCase/>} />  
          
         </Route>
         <Route path="api" element={<Api />} >
