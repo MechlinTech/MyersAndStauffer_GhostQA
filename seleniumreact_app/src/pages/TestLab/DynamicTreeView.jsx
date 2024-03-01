@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const data = [
   {
@@ -36,17 +36,17 @@ const data = [
   }
 ];
 
-const Card = ({ setListData, data, expandedData = true, nodeData = 0, handleCRUDAtParent, nodeCount = 0, handleNodeCount, expandedInputId, setExpandedInputId, handleTask }) => {
+const Card = ({ handleEdit, editMode, editData, setEditData, setEditMode, handleEditChange, handleKeyPressEdit, editModeValue, setListData, data, expandedData = true, nodeData = 0, handleCRUDAtParent, nodeCount = 0, handleNodeCount, expandedInputId, setExpandedInputId, handleTask }) => {
   const styleClass = useStylesTree();
   const [expanded, setExpanded] = useState(false);
   const [newElementName, setNewElementName] = useState(''); // State to store the value of the input field
-  const [editMode, setEditMode] = useState(0); // State to store the value of the input field
-
-
   const toggleExpand = () => {
     setExpanded(!expanded);
   };
-
+  const handleCRUDCancel = () => {
+    setNewElementName('');
+    setExpandedInputId(0);
+  };
   const handleCRUD = (parentId) => {
     // For demonstration purposes, let's add a new element if the node count is less than 4
     if (nodeCount < 4) {
@@ -61,7 +61,7 @@ const Card = ({ setListData, data, expandedData = true, nodeData = 0, handleCRUD
       setExpandedInputId(null); // Hide the input field
       if (newElementName) {
         const newId = Math.max(...data.map(item => item.id)) + 1;
-        const newItem = { name: newElementName, id: newId, parentId: parentId };
+        const newItem = { name: newElementName, id: -newId, parentId: parentId };
         handleCRUDAtParent(newItem);
         setExpanded(true);
         setNewElementName('');
@@ -76,31 +76,6 @@ const Card = ({ setListData, data, expandedData = true, nodeData = 0, handleCRUD
       handleCRUDNewItem(parentId);
     }
   };
-  const handleKeyPressEdit = (event) => {
-    if (event.key === 'Enter') {
-      setEditMode(0);
-    }
-  };
-  const handleEdit = (itemId) => {
-
-    setEditMode(current => itemId);
-  };
-  const handleEditChange = (itemId, name) => {
-    const itemToEdit = data.find(item => item.id === itemId);
-    console.log(itemToEdit, data, itemId, name, itemToEdit.name)
-
-    const newData = data.filter((item) => {
-      if (item.id !== itemId) {
-        return item;
-      } else if (item.id === itemId) {
-        item.name = name;
-        return item;
-      }
-    });
-    setListData(newData);
-
-  };
-
   const handleDelete = (itemId) => {
     console.log(itemId, data);
     const itemToDelete = data.find(item => item.id === itemId);
@@ -130,24 +105,28 @@ const Card = ({ setListData, data, expandedData = true, nodeData = 0, handleCRUD
                     </>
                   )}
                   {editMode === item.id &&
-                    <input type="text" value={item.name} className={styleClass.editTheFolder}
-                      onChange={(e) => handleEditChange(item.id, e.currentTarget.value)}
-                      onKeyPress={(event) => handleKeyPressEdit(event)}
-                    />
+                    <div className={styleClass.updateEdit}>
+                      <input type="text" value={editData} className={styleClass.editTheFolder}
+                        onChange={(e) => handleEditChange(item.id, e.currentTarget.value)}
+                        onKeyPress={(event) => handleKeyPressEdit(event, item.id)}
+                      />
+                      <CancelIcon sx={{ color: '#f74d4d' }} onClick={() => handleEdit(item.id, item.name, 'cancel')} />
+                    </div>
+
 
                   }
                   {editMode !== item.id &&
                     <span onClick={handleTask} style={{
                       cursor: 'pointer',
-                      fontSize:'18px'
+                      fontSize: '18px'
                     }}>
                       {item.name}
                     </span>
                   }
                   <div className={styleClass.crud} style={{
-                    
+
                   }}>
-                    <EditIcon sx={{ color: '#654df7' }} onClick={() => handleEdit(item.id)} style={{ cursor: 'pointer', marginLeft: '10px' }} />
+                    <EditIcon sx={{ color: '#654df7' }} onClick={() => handleEdit(item.id, item.name)} style={{ cursor: 'pointer', marginLeft: '10px' }} />
                     <DeleteIcon sx={{ color: '#f74d4d' }} onClick={() => handleDelete(item.id)} style={{ cursor: 'pointer' }} />
                     {nodeCount < 4 && (
                       <AddIcon sx={{ color: '#654df7' }} onClick={() => handleCRUD(item.id)} style={{
@@ -157,12 +136,18 @@ const Card = ({ setListData, data, expandedData = true, nodeData = 0, handleCRUD
                   </div>
 
                 </div>
-                <div style={{ display: (expandedInputId === item.id ? 'block' : 'none') }}>
-                  <input type="text" className={styleClass.editTheFolder} value={newElementName} onChange={(e) => setNewElementName(e.target.value)} onKeyPress={(event) => handleKeyPress(event, item.id)} />
+                <div className={styleClass.updateEdit} style={{ display: (expandedInputId === item.id ? 'block' : 'none') }}>
+                  <input type="text"
+                    className={styleClass.editTheFolder}
+                    value={newElementName}
+                    onChange={(e) => setNewElementName(e.target.value)}
+                    onKeyPress={(event) => handleKeyPress(event, item.id)} />
+                  <CancelIcon sx={{ color: '#f74d4d' }} onClick={() => handleCRUDCancel()} />
                 </div>
                 {data.some(child => child.parentId === item.id) && (
                   <Card
                     data={data}
+                    handleEdit={handleEdit}
                     keyData={item.id}
                     nodeData={item.id}
                     handleCRUDAtParent={handleCRUDAtParent}
@@ -174,6 +159,12 @@ const Card = ({ setListData, data, expandedData = true, nodeData = 0, handleCRUD
                     setExpandedInputId={setExpandedInputId}
                     handleTask={handleTask}
                     setListData={setListData}
+                    handleKeyPressEdit={handleKeyPressEdit}
+                    handleEditChange={handleEditChange}
+                    editData={editData}
+                    setEditData={setEditData}
+                    editMode={editMode}
+                    setEditMode={setEditMode}
                   />
                 )}
               </li>
@@ -190,6 +181,8 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
   const [listData, setListData] = useState(data);
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
+  const [editData, setEditData] = useState(''); // State to store the value of the input field
+  const [editMode, setEditMode] = useState(0); // State to store the value of the input field
 
   const handleCRUDAtParent = (newItem) => {
     setListData([...listData, newItem]);
@@ -198,10 +191,44 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
   const handleNodeCount = (count) => {
     setNodeCount(count);
   };
+  const handleKeyPressEdit = (event, itemId) => {
+    if (event.key === 'Enter') {
+      setEditMode(0);
+      const itemToEdit = data.find(item => item.id === itemId);
+
+
+      const newData = data.filter((item) => {
+        if (item.id !== itemId) {
+          return item;
+        } else if (item.id === itemId) {
+          item.name = editData;
+          return item;
+        }
+      });
+      setListData(newData);
+      setEditData('');
+    }
+  };
+  const handleEdit = (itemId, name, mode = 'edit') => {
+    if (mode == 'edit') {
+      setEditMode(current => itemId);
+      setEditData(name);
+    } else if (mode == 'cancel') {
+      setEditData('');
+      setEditMode(0);
+    }
+
+  };
+
+  const handleEditChange = (itemId, name) => {
+
+    setEditData(name);
+
+  };
 
   return (
     <div className="org-tree">
-      <Card data={listData} keyData={0} handleTask={TestCaseHandle} nodeData={0} handleCRUDAtParent={handleCRUDAtParent} nodeCount={nodeCount} handleNodeCount={handleNodeCount} expandedInputId={expandedInputId} setExpandedInputId={setExpandedInputId} setListData={setListData} />
+      <Card handleEdit={handleEdit} handleKeyPressEdit={handleKeyPressEdit} handleEditChange={handleEditChange} editData={editData} setEditData={setEditData} editMode={editMode} setEditMode={setEditMode} data={listData} keyData={0} handleTask={TestCaseHandle} nodeData={0} handleCRUDAtParent={handleCRUDAtParent} nodeCount={nodeCount} handleNodeCount={handleNodeCount} expandedInputId={expandedInputId} setExpandedInputId={setExpandedInputId} setListData={setListData} />
     </div>
   );
 };

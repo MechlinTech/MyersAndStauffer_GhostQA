@@ -10,6 +10,7 @@ export const useStylesTree = makeStyles({
     },
     crud: {
         listStyle: 'none',
+        alignItems: 'center'
     },
     crud: {
         display: 'none', // Hide crud by default
@@ -23,10 +24,12 @@ export const useStylesTree = makeStyles({
         padding: '8px 10px',
         boxShadow:'-4px 0px 7px 0px rgba(101, 77, 247,0.2), -6px -1px 6px 0px rgba(101, 77, 247,0.14), 7px 0px 6px 0px rgba(101, 77, 247,0.12)',
         borderRadius: '10px',
+        border: "solid 2px #fff",
         margin: '5px 0px',
        '&:hover': {
+        border: "solid 2px rgba(101, 77, 247,0.9)",
         '& $crud': { // Target the immediate child with class 'crud' when hovering over cardListHolderList
-            display: 'block', // Display crud elements when cardListHolderList is hovered
+            display: 'flex', // Display crud elements when cardListHolderList is hovered
         },
     },
 },
@@ -41,6 +44,10 @@ export const useStylesTree = makeStyles({
     fontSize: '24px',
     fontWeight: '400',
     borderRadius: '10px',
+},
+updateEdit:{
+    display: "flex",
+    alignItems: 'center'
 }
     
     
