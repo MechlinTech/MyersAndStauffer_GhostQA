@@ -17,6 +17,10 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<Models.Browsers> tbl_Browsers { get; set; }
         public DbSet<TestCase> tbl_TestCase { get; set; }
         public DbSet<TestExecution> tbl_TestExecution { get; set; }
+        public DbSet<RootRelation> tbl_RootRelation { get; set; }
+        public DbSet<TestCaseDetails> tbl_TestCaseDetails { get; set; }
+        public DbSet<TestStepsDetails> tbl_TestStepsDetails { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TestSuites>()

@@ -435,7 +435,7 @@ namespace SeleniumReportAPI.Controllers
         }
 
         /// <summary>
-        /// Get User Profile
+        /// Disable Enable User
         /// </summary>
         /// <param DisableEnableUser="Dto_DisableEnableUser"></param>
         /// <returns></returns>
