@@ -1,0 +1,15 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SeleniumReportAPI.Models
+{
+    public class TestCaseDetails
+    {
+        [Key]
+        public int TestCaseDetailsId { get; set; }
+        public int RootId { get; set; }
+
+        [Required(ErrorMessage = "TestCaseName Name is required."), Column("TestCaseName", TypeName = "varchar(100)")]
+        public string TestCaseName { get; set; }
+    }
+}
