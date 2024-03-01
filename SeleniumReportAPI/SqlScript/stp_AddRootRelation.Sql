@@ -1,5 +1,5 @@
 CREATE OR ALTER PROCEDURE [dbo].[stp_AddRootRelation]
-@RootId         int,
+@RootId         int = 0,
 @Node		    int,
 @Parent	        int,
 @Name           NVARCHAR(MAX)

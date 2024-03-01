@@ -1,5 +1,5 @@
 CREATE OR ALTER PROCEDURE [dbo].[stp_AddTestCaseDetails]
-@TestCaseDetailsId         int,
+@TestCaseDetailsId         int = 0,
 @RootId		               int,
 @TestCaseName              VARCHAR(100)
 AS

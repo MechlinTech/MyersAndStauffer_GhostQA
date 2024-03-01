@@ -1,5 +1,5 @@
 CREATE OR ALTER   PROCEDURE [dbo].[stp_AddTestStepsDetails]
-@TestStepsDetailsId         int,
+@TestStepsDetailsId         int = 0,
 @TestCaseDetailsId		    int,
 @TestStepsName	            VARCHAR(100),
 @ActionName                 VARCHAR(100)
