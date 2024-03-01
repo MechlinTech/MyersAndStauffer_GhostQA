@@ -20,6 +20,7 @@ const TestSuitsDetails = lazy(() => import("../pages/TestSuitsDetails"));
 const Settings = lazy(() => import("../pages/Settings"));
 const AddTestSuite = lazy(() => import("../pages/TestSuite/AddTestSuite"));
 const NotFound = lazy(() =>   import("../pages/NotFound"));
+const TestLab =lazy(()=>  import("../pages/TestLab/TestLab"));
 
 export default function Navigations() {
   return (
@@ -36,7 +37,9 @@ export default function Navigations() {
       }
     >
       <Routes>
-        <Route path="/" element={<Functional />} >
+         
+        <Route path="/" element={<Functional />} > 
+          <Route path="testLab" element={<TestLab/>} />  
           <Route path="/" element={<Dashboard/>} />
           <Route path="settings" element={<Settings/>} >
             <Route path="Environment" element={<Environment/> }/>
@@ -45,6 +48,7 @@ export default function Navigations() {
             <Route path="Roles" element={<RoleManagement/>} />
             <Route path="User" element={<UserManagement/>} />
           </Route>
+         
         </Route>
         <Route path="api" element={<Api />} >
           <Route path="" element={<Box m={10} component={'h1'}>api1</Box>} />

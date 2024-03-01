@@ -36,6 +36,16 @@ export default function Functional() {
                         Settings
                     </Link>
                 </Grid>
+                <Grid item>
+                   
+                    <Link
+                        to="/testLab"
+                        style={{ marginLeft: "20px" }}
+                        className={`${classes.linkStyle} ${location.pathname === "/testLab" && classes.activeLink}`}
+                    >
+                         Test Lab
+                    </Link>
+                </Grid>
             </Grid>
             
             <div style={{ paddingTop: '30px' }}>
