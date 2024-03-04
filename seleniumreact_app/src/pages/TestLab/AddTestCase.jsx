@@ -62,7 +62,7 @@ export default function AddTestCase({addTestCase}) {
                 },
                 color: "#fff",
               }}
-              onClick={()=>navigate('/testLab/createTestcase')}
+              onClick={()=>navigate(`/testLab/createTestcase/${addTestCase}`)}
             >
               Add New TestCase
             </Button>

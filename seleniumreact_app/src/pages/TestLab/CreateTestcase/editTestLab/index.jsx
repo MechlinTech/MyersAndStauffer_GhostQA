@@ -338,7 +338,7 @@ export default function EditTestCase() {
                         >
                           <Box className={classes.statusBox} sx={{
                             display:'inline-block',
-                            backgroundColor:row.status === 'Completed'?'green':'red'
+                            backgroundColor: selectedRunId === row.runid ? "":row.status === 'Completed'?'#48fab9':'#fa3737'
                           }}>{row.status}</Box>
                         </StyledTableCell>
                         <StyledTableCell

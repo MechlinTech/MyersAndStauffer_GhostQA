@@ -50,7 +50,7 @@ export default function Navigations() {
             <Route path="User" element={<UserManagement/>} />
           </Route>
           <Route path="testLab" element={<TestLab/>} />  
-          <Route path="testLab/createTestcase" element={<CreateTestCase/>} />  
+          <Route path="testLab/createTestcase/:rootId" element={<CreateTestCase/>} />  
           <Route path="testLab/editTestcase" element={<EditTestCase/>} />  
          
         </Route>

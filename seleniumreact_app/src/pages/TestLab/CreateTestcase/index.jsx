@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useState } from "react";
 import { StyledOutlinedInput, StyledTypography } from "./styleTestCase";
 import Select from "react-select";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import userActionsOptions from "../UserActionList";
 import { useDispatch } from "react-redux";
 import { AddTestCaseDetails } from "../../../redux/actions/seleniumAction";
@@ -18,6 +18,7 @@ export default function CreateTestCase() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const classes = useStyles();
+  const {rootId} = useParams()
   const [selectedAction, setselectedAct] = useState(null);
   const [testCaseTitle, settestCaseTitle] = useState("");
   const [steps, setSteps] = useState([{ id: 1, action: null }]);
@@ -32,7 +33,7 @@ export default function CreateTestCase() {
   const handleSave = () => {
     let payload = {
       testCaseDetailsId: 0,
-      rootId: 1,
+      rootId: rootId,
       testCaseName: testCaseTitle,
     };
     let action = steps.map((step) => step.action?.value); 
