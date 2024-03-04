@@ -36,7 +36,7 @@ export default function Profile() {
   useEffect(() => {
     const emailFromSession = sessionStorage.getItem("email");
   
-    const getUserByEmail = async () => {
+    const updateUserByEmail = async () => {
       try {
         const res = await axios.post(
           `${BASE_URL}/Selenium/GetProfilByEmail?Email=${emailFromSession}`,
@@ -52,7 +52,7 @@ export default function Profile() {
       }
     };
   
-    getUserByEmail();
+    updateUserByEmail();
   }, []);
   // Extracting the name of user
   const getName = () => {

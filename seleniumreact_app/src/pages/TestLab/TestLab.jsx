@@ -6,27 +6,78 @@ import Button from '@mui/material/Button';
 import { Add } from "@mui/icons-material";
 
 import AddTestCase from "./AddTestCase";
-
+import AddNewProject from "./AddNewProject";
 
 
 import DynamicTreeView from "./DynamicTreeView";
-
+import axios from "axios";
+import { header } from "../../utils/authheader";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
 export default function TestLab() {
   const classes = useStyles();
- 
-  const [addTestCase, setAddTestCase] = useState(false);
 
+  const [addTestCase, setAddTestCase] = useState(0);
+  const [addNewProject, setAddNewProject] = useState(false);
+
+  const [formData, setFormData] = useState({name:""});
 
   const [selectedItem, setSelectedItem] = useState(null);
+  const [listData, setListData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/AddTestLab/GetDataRootRelation`,
+          header()
+        );
+        // Assuming response.data is the array of data you want to set as listData
+        setListData((response.data == '' ? [] : response.data));
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setListData([]);
+      }
+    };
+
+    fetchData(); // Call the fetchData function when the component mounts
+  }, [addTestCase]);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/AddTestLab/AddRootRelation`,
+        {
+          "rootId": 0,
+          "node": 0,
+          "parent": 0,
+          "name": formData.name
+        },
+
+        header()
+      );
+      setListData([...listData, response.data.Data[0]]); // Reset form data
+      setFormData({name:""});
+      setAddNewProject(!addNewProject);
+    } catch (error) {
+      console.error("Error fetching data:", error);     
+    }
+  };
   const handleItemClick = (id) => {
     setSelectedItem(id); // Update selected item state
-   // onItemClick(id); // Call the onItemClick callback function with the clicked item's id
+    // onItemClick(id); // Call the onItemClick callback function with the clicked item's id
   };
-  
-  const handleTestCaseList= (id) => {
-    setAddTestCase(true);    
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ name: value, id: Math.random(), parentId: 0 });
+  };
+
+
+  const handleTestCaseList = (id) => {
+    setAddTestCase(id);
+    setAddNewProject(false);
+    console.log(id,'testswt');
   }
   return (
     <>
@@ -41,7 +92,7 @@ export default function TestLab() {
                 <Grid item xs={6} style={{ textAlign: "right" }}>
                   <Button
                     variant="contained"
-                    onClick={()=>setAddTestCase(current=>!current)}
+                    onClick={() => setAddNewProject(current => !current)}
                     style={{
                       fontSize: 14,
                       backgroundColor: "rgb(101, 77, 247)",
@@ -54,14 +105,19 @@ export default function TestLab() {
                 </Grid>
               </Grid>
               <Grid>
-                
-               <DynamicTreeView TestCaseHandle={handleTestCaseList}/>
+
+                <DynamicTreeView TestCaseHandle={handleTestCaseList} listData={listData} setListData={setListData} />
               </Grid>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
-            {addTestCase && <AddTestCase />}
-            
+            {addNewProject && <AddNewProject
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              formData={formData}
+            />}
+            {addTestCase!==0 && <AddTestCase  addTestCase={addTestCase}/>}
+
           </Grid>
         </Grid>
       </div>
@@ -69,4 +125,3 @@ export default function TestLab() {
   );
 }
 
- 

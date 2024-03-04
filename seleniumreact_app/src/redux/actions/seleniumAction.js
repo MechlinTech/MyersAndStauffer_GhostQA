@@ -286,3 +286,54 @@ export const DeleteTestSuite = (suiteName)=>{
   }
 }
 
+export const AddTestStepsDetails = (action,Data,goBack)=>{
+  
+  return async (dispatch)=>{
+     const stepDetails = {
+      testStepsDetailsId: 0,
+      testCaseDetailsId: Data[0].id,
+      testStepsName: Data[0].testCaseName,
+      actionName: action.join(',')
+    };
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddTestLab/AddTestStepsDetails`,stepDetails);
+      console.log('response ' ,res)
+      if (res.data.status === 'success') {
+        goBack()
+        toast.info('Successfully saved', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+    } 
+    }catch (error) {
+      console.log("error saving ",error);
+      toast('saving error')
+    }
+  }
+}
+export const AddTestCaseDetails = (payload,action,goBack)=>{
+  
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddTestLab/AddTestCaseDetails`,payload);
+      console.log('response ' ,res.data.Data)
+      const Data = res.data.Data
+      if (res.data.status === 'success') {
+        dispatch(AddTestStepsDetails(action,Data,goBack))
+        // toast.info('Successfully saved', {
+        //   style: {
+        //     background: 'rgb(101, 77, 247)', 
+        //     color: 'rgb(255, 255, 255)', 
+        //   },
+        // });
+    } 
+    }catch (error) {
+      console.log("error saving ",error);
+      toast.error('Network error')
+    }
+  }
+}

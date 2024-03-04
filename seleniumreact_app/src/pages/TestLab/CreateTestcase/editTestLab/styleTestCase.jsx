@@ -25,7 +25,6 @@ export const useStyles = makeStyles((theme)=>({
     cursor: "pointer",
     "&:hover": {
         border: "2px solid #654DF7",
-        backgroundColor: theme.palette.action.hover,
         cursor: "pointer",
     },
     "&.Mui-selected, &.Mui-selected:hover": {
@@ -35,7 +34,12 @@ export const useStyles = makeStyles((theme)=>({
 },
 activeRow: {
     border: "2px solid #654DF7",
+    backgroundColor:'#654DF7',
+    color:'white'
 },
+statusBox:{
+  padding:'0 3px',
+}
 }));
 
 export const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({

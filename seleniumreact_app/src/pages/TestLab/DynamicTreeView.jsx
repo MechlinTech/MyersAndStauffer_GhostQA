@@ -10,33 +10,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import axios from "axios";
 import { header } from "../../utils/authheader";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const datax = [
-  {
-    "name": "Root",
-    "id": 1,
-    "parentId": 0
-  },
-  {
-    "name": "Root 2",
-    "id": 10,
-    "parentId": 0
-  },
-  {
-    "name": "data 1",
-    "id": 2,
-    "parentId": 1
-  },
-  {
-    "name": "data 2",
-    "id": 3,
-    "parentId": 1
-  },
-  {
-    "name": "data 3",
-    "id": 4,
-    "parentId": 3
-  }
-];
+
 
 const Card = ({newElementName, setNewElementName,
   toggleExpand,
@@ -76,7 +50,9 @@ const Card = ({newElementName, setNewElementName,
 
                   }
                   {editMode !== item.id &&
-                    <span onClick={handleTask} style={{
+                    <span onClick={()=>{
+                      handleTask(item.id)
+                    }} style={{
                       cursor: 'pointer',
                       fontSize: '18px'
                     }}>
@@ -86,7 +62,7 @@ const Card = ({newElementName, setNewElementName,
                   <div className={styleClass.crud} style={{
 
                   }}>
-                    <EditIcon sx={{ color: '#654df7' }} onClick={() => handleEdit(item.id, item.name)} style={{ cursor: 'pointer', marginLeft: '10px' }} />
+                   { editMode== 0 && <EditIcon sx={{ color: '#654df7' }} onClick={() => handleEdit(item.id, item.name)} style={{ cursor: 'pointer', marginLeft: '10px' }} />}
                     <DeleteIcon sx={{ color: '#f74d4d' }} onClick={() => handleDelete(item.id)} style={{ cursor: 'pointer' }} />
                     {nodeCount < 5 && (
                       <AddIcon sx={{ color: '#654df7' }} onClick={(event) => handleCRUD(event,item.id)} style={{
@@ -150,34 +126,33 @@ const Card = ({newElementName, setNewElementName,
   );
 };
 
-const DynamicTreeView = ({ TestCaseHandle }) => {
-  const [listData, setListData] = useState([]);
+const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
+  const styleClass = useStylesTree();
+
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
   const [editData, setEditData] = useState(''); // State to store the value of the input field
   const [editMode, setEditMode] = useState(0); // State to store the value of the input field
   const [expanded, setExpanded] = useState([]);
-  console.log(listData.length)
-  
+  const [newElementName, setNewElementName] = useState(''); // State to store the value of the input field
   useEffect(() => {
-    const fetchData = async () => {     
+    const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/AddTestLab/GetDataRootRelation`,         
+          `${BASE_URL}/AddTestLab/GetDataRootRelation`,
           header()
         );
         // Assuming response.data is the array of data you want to set as listData
-        setListData((response.data==''?[]:response.data));
+        setListData((response.data == '' ? [] : response.data));
         console.log(response);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setListData(datax);
+        setListData([]);
       }
     };
 
-    fetchData(); // Call the fetchData function when the component mounts
-  }, []);
-  const [newElementName, setNewElementName] = useState(''); // State to store the value of the input field
+    fetchData(); 
+}, [setListData]);
   const handleCRUD = (event,parentId) => {
     event.preventDefault();
     console.log(parentId);
@@ -188,12 +163,29 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
       alert('Maximum node limit reached.');
     }
   };
-  const handleCRUDAtParent = (newItem) => {
-    setListData([...listData, newItem]);
+  const handleCRUDAtParent = async(newItem) => {
+   
+    
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/AddTestLab/AddRootRelation`,
+          {
+            "rootId": 0,
+            "node": 0,
+            "parent": newItem.parentId,
+            "name": newItem.name
+          },
+  
+          header()
+        );
+        setListData([...listData, response.data.Data[0]]); // Reset form data
+       
+      } catch (error) {
+        console.error("Error fetching data:", error);     
+      }  
   };
 
-  const handleCRUDNewItem = useCallback((parentId,nodeData) => {
-    
+  const handleCRUDNewItem = useCallback((parentId,nodeData) => {   
    
     if (nodeCount < 5) {
       setExpandedInputId(null); // Hide the input field
@@ -217,23 +209,37 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
     
     setNodeCount(count);
   };
-  const handleKeyPressEdit = (event, itemId,node) => {
-
-  
+  const handleKeyPressEdit = async (event, itemId,node) => {  
     if (event.key === 'Enter') {
       setEditMode(0);
-      const itemToEdit = listData.find(item => item.id === itemId);
-      const newData = listData.filter((item) => {
-        if (item.id !== itemId) {
-          return item;
-        } else if (item.id === itemId) {
-          item.name = editData;
-          return item;
-        }
-      });
-      console.log()
-      setListData(newData);
-      setEditData('');
+      const itemToEdit = listData.find(item => item.id === itemId);   
+        try {
+          const response = await axios.post(
+            `${BASE_URL}/AddTestLab/UpdateRootRelation`,
+            {
+              "rootId": itemToEdit.id,
+              "node": 0,
+              "parent": itemToEdit.parentId,
+              "name":editData
+            },
+    
+            header()
+          );
+          const newData = listData.filter((item) => {
+            if (item.id !== itemId) {
+              return item;
+            } else if (item.id === itemId) {
+              item.name = editData;
+              return item;
+            }
+          });
+          setListData(newData);
+          setEditData('');
+        
+        } catch (error) {
+          console.error("Error fetching data:", error);     
+        }  
+      
     }
   };
   const handleEdit = (itemId, name, mode = 'edit') => {
@@ -286,7 +292,7 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
   };
 
   return (
-    <div className="org-tree">
+    <div className={styleClass.orgTree}>
       {
       listData.length!=0 && <Card 
       handleEdit={handleEdit} 

@@ -8,18 +8,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import PlayArrowSharpIcon from '@mui/icons-material/PlayArrowSharp';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import { useNavigate } from 'react-router-dom';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+export default function TableTestCase({testCase}) {
+const navigate = useNavigate()
 
-const rows = [
-  createData('Testcase Title', 'Running', true, 'yymmddhhmmss',true),
-  createData('Testcase Title', 'Running', true, 'yymmddhhmmss',true),
-  createData('Testcase Title', 'Running', true, 'yymmddhhmmss',true),
-];
 
-export default function TableTestCase() {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -33,15 +27,17 @@ export default function TableTestCase() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {testCase?.map((row) => (
             <TableRow
-              key={row.name}
+              key={row.TestCaseDetailsId}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
-                {row.name}
+              <TableCell component="th" scope="row" onClick={()=>{
+                navigate(`/testLab/editTestcase/${row.TestCaseDetailsId}`)
+              }} sx={{cursor:'pointer'}}>
+                {row.TestCaseName}
               </TableCell>
-              <TableCell  align="center">{row.calories}</TableCell>
+              <TableCell  align="center">{"running"}</TableCell>
               <TableCell  align="center"><span style={{
                 border:"2px solid #1E1E1E",
                 color:'#1E1E1E',
@@ -53,7 +49,7 @@ export default function TableTestCase() {
                 justifyContent: 'center',
                 margin: 'auto',
               }}><PlayArrowOutlinedIcon /></span></TableCell>
-              <TableCell  align="center">{row.carbs}</TableCell>
+              <TableCell  align="center">{'yymmddhhmmss'}</TableCell>
               <TableCell  align="center"><span style={{
                 backgroundColor:'#654df7',
                 color:'#fff',
