@@ -7,8 +7,36 @@ import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
-
-
+import axios from "axios";
+import { header } from "../../utils/authheader";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+const datax = [
+  {
+    "name": "Root",
+    "id": 1,
+    "parentId": 0
+  },
+  {
+    "name": "Root 2",
+    "id": 10,
+    "parentId": 0
+  },
+  {
+    "name": "data 1",
+    "id": 2,
+    "parentId": 1
+  },
+  {
+    "name": "data 2",
+    "id": 3,
+    "parentId": 1
+  },
+  {
+    "name": "data 3",
+    "id": 4,
+    "parentId": 3
+  }
+];
 
 const Card = ({newElementName, setNewElementName,
   toggleExpand,
@@ -122,8 +150,8 @@ const Card = ({newElementName, setNewElementName,
   );
 };
 
-const DynamicTreeView = ({ TestCaseHandle,setListData,listData }) => {
-  
+const DynamicTreeView = ({ TestCaseHandle }) => {
+  const [listData, setListData] = useState([]);
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
   const [editData, setEditData] = useState(''); // State to store the value of the input field
@@ -131,7 +159,24 @@ const DynamicTreeView = ({ TestCaseHandle,setListData,listData }) => {
   const [expanded, setExpanded] = useState([]);
   console.log(listData.length)
   
+  useEffect(() => {
+    const fetchData = async () => {     
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/AddTestLab/GetDataRootRelation`,         
+          header()
+        );
+        // Assuming response.data is the array of data you want to set as listData
+        setListData((response.data==''?[]:response.data));
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setListData(datax);
+      }
+    };
 
+    fetchData(); // Call the fetchData function when the component mounts
+  }, []);
   const [newElementName, setNewElementName] = useState(''); // State to store the value of the input field
   const handleCRUD = (event,parentId) => {
     event.preventDefault();
