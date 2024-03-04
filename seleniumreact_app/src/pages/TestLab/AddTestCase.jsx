@@ -16,8 +16,8 @@ export default function AddTestCase({addTestCase}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}AddTestLab/GetTestCaseDetailsByRootId?RootId=${addTestCase}`,
+        const response = await axios.post(
+          `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${addTestCase}`,
           header()
         );
         // Assuming response.data is the array of data you want to set as listData
