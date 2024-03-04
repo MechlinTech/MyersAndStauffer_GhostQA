@@ -127,6 +127,7 @@ const Card = ({newElementName, setNewElementName,
 };
 
 const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
+  const styleClass = useStylesTree();
 
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
@@ -208,21 +209,37 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
     
     setNodeCount(count);
   };
-  const handleKeyPressEdit = (event, itemId,node) => {  
+  const handleKeyPressEdit = async (event, itemId,node) => {  
     if (event.key === 'Enter') {
       setEditMode(0);
-      const itemToEdit = listData.find(item => item.id === itemId);
-      const newData = listData.filter((item) => {
-        if (item.id !== itemId) {
-          return item;
-        } else if (item.id === itemId) {
-          item.name = editData;
-          return item;
-        }
-      });
-      console.log()
-      setListData(newData);
-      setEditData('');
+      const itemToEdit = listData.find(item => item.id === itemId);   
+        try {
+          const response = await axios.post(
+            `${BASE_URL}/AddTestLab/UpdateRootRelation`,
+            {
+              "rootId": itemToEdit.id,
+              "node": 0,
+              "parent": itemToEdit.parentId,
+              "name":editData
+            },
+    
+            header()
+          );
+          const newData = listData.filter((item) => {
+            if (item.id !== itemId) {
+              return item;
+            } else if (item.id === itemId) {
+              item.name = editData;
+              return item;
+            }
+          });
+          setListData(newData);
+          setEditData('');
+        
+        } catch (error) {
+          console.error("Error fetching data:", error);     
+        }  
+      
     }
   };
   const handleEdit = (itemId, name, mode = 'edit') => {
@@ -275,7 +292,7 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
   };
 
   return (
-    <div className="org-tree">
+    <div className={styleClass.orgTree}>
       {
       listData.length!=0 && <Card 
       handleEdit={handleEdit} 

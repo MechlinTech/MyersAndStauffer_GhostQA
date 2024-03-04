@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core";
 export const useStylesTree = makeStyles({
     rootNodeFolder: {
         listStyle: 'none',
+        padding:'0 20px'
 
     },
     child: {
@@ -48,6 +49,10 @@ export const useStylesTree = makeStyles({
 updateEdit:{
     display: "flex",
     alignItems: 'center'
+},
+orgTree:{
+    overflow:"auto",
+    height: '64vh'
 }
     
     
