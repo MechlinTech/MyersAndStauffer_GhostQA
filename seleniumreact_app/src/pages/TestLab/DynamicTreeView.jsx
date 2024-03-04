@@ -1,4 +1,4 @@
-import React, { useState,useCallback } from "react";
+import React, { useState,useCallback,useEffect } from "react";
 import { useStylesTree } from "./styleTree";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -7,8 +7,10 @@ import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
-
-const data = [
+import axios from "axios";
+import { header } from "../../utils/authheader";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+const datax = [
   {
     "name": "Root",
     "id": 1,
@@ -40,14 +42,18 @@ const Card = ({newElementName, setNewElementName,
   toggleExpand,
   handleCRUDCancel ,
   handleKeyPress,
-  handleDelete,
-  setExpanded,expanded,
-  handleCRUD, handleEdit, editMode, editData, setEditData, setEditMode, handleEditChange, handleKeyPressEdit,  setListData, data, expandedData = true, nodeData = 0, handleCRUDAtParent, nodeCount = 0, handleNodeCount, expandedInputId, setExpandedInputId, handleTask }) => {
+  handleDelete, expanded=[],
+  handleCRUD, handleEdit,
+  editMode, editData,
+  setEditData, setEditMode,
+  handleEditChange, handleKeyPressEdit,
+  setListData, data,
+  expandedData = true, nodeData = 0, handleCRUDAtParent, nodeCount = 0, handleNodeCount, expandedInputId, setExpandedInputId, handleTask,keyData=0 }) => {
   const styleClass = useStylesTree();
-  console.log(data)
+  console.log(data,expanded)
   return (
     <>
-      <ul style={{ display: (expandedData ? 'block' : 'none') }} className={(nodeData == 0 ? styleClass.rootNodeFolder : styleClass.child)}>
+      <ul style={{ display:  (!expanded.includes(keyData)? (keyData == 0 ?'block':'none') : (expanded.includes(keyData)?'block':'none'))  }} className={(nodeData == 0 ? styleClass.rootNodeFolder : styleClass.child)}>
         {data.map(item => {
           if (item.parentId === nodeData) {
             return (
@@ -55,7 +61,7 @@ const Card = ({newElementName, setNewElementName,
                 <div className={styleClass.cardListHolderList}>
                   {data.some(child => child.parentId === item.id) && (
                     <>
-                      {expanded ? <ExpandMoreIcon onClick={toggleExpand} /> : <ExpandLessIcon onClick={toggleExpand} />}
+                      {!expanded.includes(item.id) ? <ExpandMoreIcon onClick={()=>toggleExpand(item.id)} /> : <ExpandLessIcon onClick={()=>toggleExpand(item.id)} />}
                     </>
                   )}
                   {editMode === item.id &&
@@ -127,7 +133,7 @@ const Card = ({newElementName, setNewElementName,
                     setNewElementName={setNewElementName}                   
                     handleCRUD={handleCRUD}
                     expanded={expanded} 
-                    setExpanded={setExpanded}
+                   
                     toggleExpand={toggleExpand}
                     handleCRUDCancel ={handleCRUDCancel}
                     handleKeyPress={handleKeyPress}
@@ -145,13 +151,32 @@ const Card = ({newElementName, setNewElementName,
 };
 
 const DynamicTreeView = ({ TestCaseHandle }) => {
-  const [listData, setListData] = useState(data);
+  const [listData, setListData] = useState([]);
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
   const [editData, setEditData] = useState(''); // State to store the value of the input field
   const [editMode, setEditMode] = useState(0); // State to store the value of the input field
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState([]);
+  console.log(listData.length)
+  
+  useEffect(() => {
+    const fetchData = async () => {     
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/AddTestLab/GetDataRootRelation`,         
+          header()
+        );
+        // Assuming response.data is the array of data you want to set as listData
+        setListData((response.data==''?[]:response.data));
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setListData(datax);
+      }
+    };
 
+    fetchData(); // Call the fetchData function when the component mounts
+  }, []);
   const [newElementName, setNewElementName] = useState(''); // State to store the value of the input field
   const handleCRUD = (event,parentId) => {
     event.preventDefault();
@@ -176,7 +201,8 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
         const newId = Math.max(...listData.map(item => item.id)) + 1;
         const newItem = { name: newElementName, id: newId, parentId: parentId,new:'new' };
         handleCRUDAtParent(newItem);
-        setExpanded(true);
+        setExpanded([...expanded, parentId]);
+
         setNewElementName('');
       }
     } else {
@@ -226,8 +252,12 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
   };
 
 
-  const toggleExpand = () => {
-    setExpanded(!expanded);
+  const toggleExpand = (id) => {
+    if (expanded.includes(id)) {       
+        setExpanded(expanded.filter(item => item !== id));
+    } else {
+        setExpanded([...expanded, id]);
+    }
   };
   const handleCRUDCancel = () => {
     setNewElementName('');
@@ -241,10 +271,10 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
     }
   };
   const handleDelete = (itemId) => {
-    console.log(itemId, data);
-    const itemToDelete = data.find(item => item.id === itemId);
-    const childrenToDelete = data.filter(item => item.parentId === itemId);
-    const updatedData = data.filter(item => item.id !== itemId && item.parentId !== itemId);
+    console.log(itemId, listData);
+    const itemToDelete = listData.find(item => item.id === itemId);
+    const childrenToDelete = listData.filter(item => item.parentId === itemId);
+    const updatedData = listData.filter(item => item.id !== itemId && item.parentId !== itemId);
     const parentIdOfParent = itemToDelete ? itemToDelete.parentId : null;
     const updatedChildren = childrenToDelete.map(child => ({
       ...child,
@@ -257,7 +287,8 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
 
   return (
     <div className="org-tree">
-      <Card 
+      {
+      listData.length!=0 && <Card 
       handleEdit={handleEdit} 
       handleKeyPressEdit={handleKeyPressEdit} 
       handleEditChange={handleEditChange} 
@@ -280,12 +311,14 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
      
       handleCRUD={handleCRUD}
       expanded={expanded} 
-      setExpanded={setExpanded}
+      
       toggleExpand={toggleExpand}
       handleCRUDCancel ={handleCRUDCancel}
       handleKeyPress={handleKeyPress}
       handleDelete={handleDelete} 
       />
+      }
+      
     </div>
   );
 };
