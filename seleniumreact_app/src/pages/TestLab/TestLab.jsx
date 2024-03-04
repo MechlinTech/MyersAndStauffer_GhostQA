@@ -18,7 +18,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 export default function TestLab() {
   const classes = useStyles();
 
-  const [addTestCase, setAddTestCase] = useState(false);
+  const [addTestCase, setAddTestCase] = useState(0);
   const [addNewProject, setAddNewProject] = useState(false);
 
   const [formData, setFormData] = useState({name:""});
@@ -75,7 +75,8 @@ export default function TestLab() {
 
 
   const handleTestCaseList = (id) => {
-    setAddTestCase(true);
+    setAddTestCase(id);
+    console.log(id,'testswt');
   }
   return (
     <>
@@ -114,7 +115,7 @@ export default function TestLab() {
               handleSubmit={handleSubmit}
               formData={formData}
             />}
-            {addTestCase && <AddTestCase  addTestCase={addTestCase}/>}
+            {addTestCase!==0 && <AddTestCase  addTestCase={addTestCase}/>}
 
           </Grid>
         </Grid>
