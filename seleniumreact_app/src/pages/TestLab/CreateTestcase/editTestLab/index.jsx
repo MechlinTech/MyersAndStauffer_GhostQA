@@ -16,6 +16,9 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import TableRow from "@mui/material/TableRow";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { StyledTableCell } from "./styleTestCase";
@@ -36,6 +39,11 @@ export default function EditTestCase() {
     const newStepId = steps.length + 1;
     setSteps([...steps, { id: newStepId, action: null }]);
   };
+  const handleRemoveStep = (stepId) => {
+    const updatedSteps = steps.filter((step) => step.id !== stepId);
+    setSteps(updatedSteps);
+  };
+
   const handleActionChange = (act, stepId) => {
     const updatedSteps = steps.map((step) =>
       step.id === stepId ? { ...step, action: act } : step
@@ -114,8 +122,55 @@ export default function EditTestCase() {
       },
     }),
   };
-  // Add more objects as needed
-
+  const listOfSteps = steps.map((step,index) => (
+    <li
+      key={index}
+      style={{ listStyle: "none", margin: "10px 0" }}
+    >
+      <Box sx={{display:'flex',justifyContent:'space-between',width:'50%'}}>
+      <StyledTypography>
+        Step {index+1}
+      </StyledTypography>
+      {isEditable && <DeleteIcon  onClick={() => handleRemoveStep(step.id)} sx={{cursor:'pointer',color:'red'}}/>}
+      </Box>
+      <Paper elevation={1} sx={{ width: "50%", padding: "10px" }}>
+        <Box mb={1}>
+          <Select
+            isClearable={true}
+            options={userActionsOptions}
+            isDisabled={!isEditable}
+            value={step.action}
+            onChange={(act) => handleActionChange(act, step.id)}
+            styles={selectStyle}
+            menuPosition={"fixed"}
+          />
+        </Box>
+        {step.action && (
+          <Box
+            className={classes.textContainer}
+            sx={{ width: "70%" }}
+          >
+            <StyledTypography>
+              {step.action?.value}
+            </StyledTypography>
+          </Box>
+        )}
+        {/* <Button
+          onClick={() => handleRemoveStep(step.id)}
+          sx={{
+            backgroundColor: "rgb(220, 0, 78)",
+            "&:hover": {
+              backgroundColor: "rgb(220, 0, 78) !important",
+            },
+            color: "#fff",
+            marginTop: "10px",
+          }}
+        >
+          Remove
+        </Button> */}
+      </Paper>
+    </li>
+  ))
   return (
     <div className={classes.main}>
       <Paper sx={{ width: "100%", p: 2 }}>
@@ -197,39 +252,7 @@ export default function EditTestCase() {
           <Grid xs={12}>
             <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
               <ul>
-              {steps.map((step) => (
-                  <li
-                    key={step.id}
-                    style={{ listStyle: "none", margin: "10px 0" }}
-                  >
-                    <StyledTypography>
-                      Step {step.id}
-                    </StyledTypography>
-                    <Paper elevation={1} sx={{ width: "50%", padding: "10px" }}>
-                      <Box mb={1}>
-                        <Select
-                          isClearable={true}
-                          options={userActionsOptions}
-                          isDisabled={!isEditable?true:false}
-                          value={step.action}
-                          onChange={(act) => handleActionChange(act, step.id)}
-                          styles={selectStyle}
-                          menuPosition={"fixed"}
-                        />
-                      </Box>
-                      {step.action && (
-                        <Box
-                          className={classes.textContainer}
-                          sx={{ width: "70%" }}
-                        >
-                          <StyledTypography>
-                            {step.action?.value}
-                          </StyledTypography>
-                        </Box>
-                      )}
-                    </Paper>
-                  </li>
-                ))}
+              {listOfSteps}
                 {isEditable && (
                   <Button
                     onClick={handleAddMoreSteps}
@@ -313,12 +336,15 @@ export default function EditTestCase() {
                               selectedRunId === row.runid ? "white" : "black",
                           }}
                         >
-                          {row.status}
+                          <Box className={classes.statusBox} sx={{
+                            display:'inline-block',
+                            backgroundColor:row.status === 'Completed'?'green':'red'
+                          }}>{row.status}</Box>
                         </StyledTableCell>
                         <StyledTableCell
                           sx={{
                             color:
-                              selectedRunId === row.runid ? "white" : "black",
+                              selectedRunId === row.runid ? "white" : "#654DF7",
                           }}
                         >
                           <VideocamIcon />
@@ -357,7 +383,7 @@ export default function EditTestCase() {
                         spacing="3"
                       >
                         <StyledTableCell component="th" scope="row">
-                          {row.status}
+                          {row.status === 'Success'?<CheckCircleIcon color="success"/>:<CancelIcon color="error"/>}
                         </StyledTableCell>
                         <StyledTableCell component="th" scope="row">
                           {row.timestamp}

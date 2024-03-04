@@ -37,6 +37,9 @@ activeRow: {
     backgroundColor:'#654DF7',
     color:'white'
 },
+statusBox:{
+  padding:'0 3px',
+}
 }));
 
 export const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({

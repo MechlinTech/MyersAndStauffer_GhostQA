@@ -1,25 +1,23 @@
 import {
   Box,
   Button,
-  Card,
-  FormControl,
-  FormLabel,
   Grid,
   Paper,
+  FormControl,
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useState } from "react";
 import { StyledOutlinedInput, StyledTypography } from "./styleTestCase";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { useStyles } from "./styleTestCase";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import userActionsOptions from "../UserActionList";
 import { useDispatch } from "react-redux";
 import { AddTestCaseDetails } from "../../../redux/actions/seleniumAction";
+import { useStyles } from "../styles";
 export default function CreateTestCase() {
-  const classes = useStyles();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const classes = useStyles();
   const [selectedAction, setselectedAct] = useState(null);
   const [testCaseTitle, settestCaseTitle] = useState("");
   const [steps, setSteps] = useState([{ id: 1, action: null }]);
@@ -28,25 +26,28 @@ export default function CreateTestCase() {
     testCaseStepsError: "",
   });
 
+  const goBack =()=>{
+    navigate(-1)
+  }
   const handleSave = () => {
     let payload = {
       testCaseDetailsId: 0,
       rootId: 1,
       testCaseName: testCaseTitle,
     };
-    let action = steps[0].action
+    let action = steps.map((step) => step.action?.value); 
+    console.log('actions ',action)
     let errors = {};
     if (!testCaseTitle.trim()) {
       errors.testCaseTitleError = "Testcase title required";
     }
-    if (!steps[0].action) {
+    if (steps.every((step) => !step.action)) {
       errors.testCaseStepsError = "Testcase steps required";
     }
     setErrors(errors);
     if (Object.keys(errors).length === 0) {
-      console.log("payload ", payload, action);
-      dispatch(AddTestCaseDetails(payload, action));
-      navigate(-1)
+      dispatch(AddTestCaseDetails(payload, action,goBack));
+      // navigate(-1);
     } else {
       console.log("error posting", errors);
     }
@@ -56,18 +57,24 @@ export default function CreateTestCase() {
     const newStepId = steps.length + 1;
     setSteps([...steps, { id: newStepId, action: null }]);
   };
+
+  const handleRemoveStep = (stepId) => {
+    const updatedSteps = steps.filter((step) => step.id !== stepId);
+    setSteps(updatedSteps);
+  };
+
   const handleActionChange = (act, stepId) => {
     const updatedSteps = steps.map((step) =>
       step.id === stepId ? { ...step, action: act } : step
     );
     setSteps(updatedSteps);
   };
+
   const selectStyle = {
     container: (provided) => ({
       ...provided,
       width: "50%",
       backgroundColor: "rgb(242, 242, 242)",
-      // zIndex: 1, // Adjust the zIndex value
     }),
     control: (provided, state) => ({
       ...provided,
@@ -89,26 +96,69 @@ export default function CreateTestCase() {
       ...provided,
       cursor: "pointer",
       ":hover": {
-        color: "#654DF7", // Change the color on hover if desired
+        color: "#654DF7",
       },
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
       cursor: "pointer",
       ":hover": {
-        color: "#654DF7", // Change the color on hover if desired
+        color: "#654DF7",
       },
     }),
   };
 
+  const listOfSteps = steps.map((step,index) => (
+    <li
+      key={index}
+      style={{ listStyle: "none", margin: "10px 0" }}
+    >
+      <Box sx={{display:'flex',justifyContent:'space-between',width:'50%'}}>
+      <StyledTypography>
+        Step {index+1}
+      </StyledTypography>
+      <DeleteIcon  onClick={() => handleRemoveStep(step.id)} sx={{cursor:'pointer',color:'red'}}/>
+      </Box>
+      <Paper elevation={1} sx={{ width: "50%", padding: "10px" }}>
+        <Box mb={1}>
+          <Select
+            isClearable={true}
+            options={userActionsOptions}
+            value={step.action}
+            onChange={(act) => handleActionChange(act, step.id)}
+            styles={selectStyle}
+            menuPosition={"fixed"}
+          />
+        </Box>
+        {step.action && (
+          <Box
+            className={classes.textContainer}
+            sx={{ width: "70%" }}
+          >
+            <StyledTypography>
+              {step.action?.value}
+            </StyledTypography>
+          </Box>
+        )}
+        {/* <Button
+          onClick={() => handleRemoveStep(step.id)}
+          sx={{
+            backgroundColor: "rgb(220, 0, 78)",
+            "&:hover": {
+              backgroundColor: "rgb(220, 0, 78) !important",
+            },
+            color: "#fff",
+            marginTop: "10px",
+          }}
+        >
+          Remove
+        </Button> */}
+      </Paper>
+    </li>
+  ))
   return (
-    <div className={classes.main}>
-      <Grid
-        container
-        mt={3}
-        justifyContent="center"
-        sx={{ borderRadius: "5px" }}
-      >
+    <div>
+      <Grid container mt={3} justifyContent="center">
         <Paper sx={{ width: "100%", p: 2 }}>
           <StyledTypography sx={{ fontSize: "20px", fontWeight: "400" }}>
             Add New Testcase
@@ -121,7 +171,7 @@ export default function CreateTestCase() {
             sx={{ padding: "10px 0" }}
           >
             <Grid container justifyContent="space-between" alignItems="center">
-              <Grid item xs={12} md={3} display="flex" alignItems={"center"}>
+              <Grid item xs={12} md={3} display="flex" alignItems="center">
                 <StyledTypography mr={1}>Testcase Title :</StyledTypography>
                 <FormControl
                   sx={{
@@ -152,7 +202,7 @@ export default function CreateTestCase() {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={()=>navigate(-1)}
+                  onClick={() => navigate(-1)}
                   sx={{
                     backgroundColor: "rgb(108, 117, 125)",
                     color: "#f1f1f1",
@@ -180,7 +230,7 @@ export default function CreateTestCase() {
                     color: "#fff",
                   }}
                 >
-                  save
+                  Save
                 </Button>
               </Grid>
             </Grid>
@@ -188,38 +238,7 @@ export default function CreateTestCase() {
           <Grid xs={12}>
             <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
               <ul>
-                {steps.map((step) => (
-                  <li
-                    key={step.id}
-                    style={{ listStyle: "none", margin: "10px 0" }}
-                  >
-                    <StyledTypography>
-                      Step {step.id}
-                    </StyledTypography>
-                    <Paper elevation={1} sx={{ width: "50%", padding: "10px" }}>
-                      <Box mb={1}>
-                        <Select
-                          isClearable={true}
-                          options={userActionsOptions}
-                          value={step.action}
-                          onChange={(act) => handleActionChange(act, step.id)}
-                          styles={selectStyle}
-                          menuPosition={"fixed"}
-                        />
-                      </Box>
-                      {step.action && (
-                        <Box
-                          className={classes.textContainer}
-                          sx={{ width: "70%" }}
-                        >
-                          <StyledTypography>
-                            {step.action?.value}
-                          </StyledTypography>
-                        </Box>
-                      )}
-                    </Paper>
-                  </li>
-                ))}
+                {listOfSteps}
                 <Button
                   onClick={handleAddMoreSteps}
                   sx={{
