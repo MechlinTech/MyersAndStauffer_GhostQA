@@ -1,13 +1,10 @@
 import {
   Box,
   Button,
-  Card,
-  FormControl,
-  FormLabel,
   Grid,
   Paper,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyledTypography } from "./styleTestCase";
 import { useStyles } from "./styleTestCase";
 import userActionsOptions from "../../UserActionList";
@@ -22,18 +19,33 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import TableRow from "@mui/material/TableRow";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { StyledTableCell } from "./styleTestCase";
+import axios from "axios";
+import { useNavigate,useParams } from "react-router-dom";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function EditTestCase() {
-  const [selectedAct, setselectedAct] = useState(null);
+  const classes = useStyles();
+  const navigate = useNavigate()
+  const {testId} = useParams()
   const [selectedRunId, setSelectedRunId] = useState(null);
   const [steps, setSteps] = useState([{ id: 1, action: null }]);
   const [isEditable, setIsEditable] = useState(false);
-  const classes = useStyles();
+
+  useEffect(() => {
+    const getSteps = async () => {
+      const res = await axios.get(
+        `${BASE_URL}/Selenium/GetUserDetails`, // change this uri
+      );
+      console.log("actions list : ", res);
+    };
+
+    getSteps();
+  }, []);
   const handleSave = () => {
     console.log("clicked on save btn");
   };
   const handleCancle = () => {
-    console.log("clicked on cancle btn");
+    navigate(-1)
   };
   const handleAddMoreSteps = () => {
     const newStepId = steps.length + 1;
@@ -291,7 +303,7 @@ export default function EditTestCase() {
                       <StyledTableCell>Run Id </StyledTableCell>
                       <StyledTableCell>Start Time</StyledTableCell>
                       <StyledTableCell>End Time</StyledTableCell>
-                      <StyledTableCell>Satus</StyledTableCell>
+                      <StyledTableCell>Status</StyledTableCell>
                       <StyledTableCell>Video</StyledTableCell>
                     </TableRow>
                   </TableHead>

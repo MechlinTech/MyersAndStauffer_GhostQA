@@ -8,10 +8,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import PlayArrowSharpIcon from '@mui/icons-material/PlayArrowSharp';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
-
+import { useNavigate } from 'react-router-dom';
 
 export default function TableTestCase({testCase}) {
-
+const navigate = useNavigate()
 
 
   return (
@@ -27,12 +27,14 @@ export default function TableTestCase({testCase}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {testCase.map((row) => (
+          {testCase?.map((row) => (
             <TableRow
               key={row.TestCaseDetailsId}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" onClick={()=>{
+                navigate(`/testLab/editTestcase/${row.TestCaseDetailsId}`)
+              }} sx={{cursor:'pointer'}}>
                 {row.TestCaseName}
               </TableCell>
               <TableCell  align="center">{"running"}</TableCell>
