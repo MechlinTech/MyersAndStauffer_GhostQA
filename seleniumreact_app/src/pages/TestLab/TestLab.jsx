@@ -42,7 +42,7 @@ export default function TestLab() {
     };
 
     fetchData(); // Call the fetchData function when the component mounts
-  }, []);
+  }, [addTestCase]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
