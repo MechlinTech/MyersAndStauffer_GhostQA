@@ -50,7 +50,9 @@ const Card = ({newElementName, setNewElementName,
 
                   }
                   {editMode !== item.id &&
-                    <span onClick={handleTask} style={{
+                    <span onClick={()=>{
+                      handleTask(item.id)
+                    }} style={{
                       cursor: 'pointer',
                       fontSize: '18px'
                     }}>
