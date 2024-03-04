@@ -16,7 +16,7 @@ export default function AddTestCase({addTestCase}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${addTestCase}`,
           header()
         );
