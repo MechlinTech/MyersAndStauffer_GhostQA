@@ -93,5 +93,39 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.UpdateRootRelation(model));
         }
+
+        /// <summary>
+        ///  Get TestCaseDetails By RootId 
+        /// </summary>
+        /// <param RootId="RootId"></param>
+        /// <returns></returns>
+        [HttpPost("GetTestCaseDetailsByRootId")]
+        public async Task<ActionResult> GetTestCaseDetailsByRootId(int RootId)
+        {
+            return Ok(await _helper.GetTestCaseDetailsByRootId(RootId));
+        }
+
+        /// <summary>
+        ///  Get TestStepsDetails By TestStepsId 
+        /// </summary>
+        /// <param TestStepsId="TestStepsId"></param>
+        /// <returns></returns>
+        [HttpGet("GetTestStepsDetailsByTestStepsId")]
+        public async Task<ActionResult> GetTestStepsDetailsByTestStepsId(int TestStepsId)
+        {
+            return Ok(await _helper.GetTestStepsDetailsByTestStepsId(TestStepsId));
+        }
+
+        /// <summary>
+        ///  Update Root Relation 
+        /// </summary>
+        /// <param RootId="RootId"></param>
+        /// /// <param Name="Name"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateTestStepsDetails")]
+        public async Task<ActionResult> UpdateTestStepsDetails(TestStepsDetails model)
+        {
+            return Ok(await _helper.UpdateTestStepsDetails(model));
+        }
     }
 }
