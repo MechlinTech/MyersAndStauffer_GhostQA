@@ -76,6 +76,7 @@ export default function TestLab() {
 
   const handleTestCaseList = (id) => {
     setAddTestCase(id);
+    setAddNewProject(false);
     console.log(id,'testswt');
   }
   return (
