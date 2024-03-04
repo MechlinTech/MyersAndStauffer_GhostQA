@@ -6,10 +6,10 @@ import TableTestCase from "./TableTestCase";
 import { useNavigate } from "react-router-dom";
 
 
-export default function AddTestCase() {
+export default function AddTestCase({addTestCase}) {
   const classes = useStylesTestCase();
   const navigate = useNavigate()
-  
+
   return (
     <>
   <Grid
