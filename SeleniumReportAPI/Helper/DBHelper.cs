@@ -1444,5 +1444,36 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+        internal async Task<string> UpdateRootRelation(RootRelation model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateRootRelation", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@Name", model.Name);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
     }
 }

@@ -15,13 +15,18 @@ PROC EXEC		:  EXEC stp_AddRootRelation
 **************************************************************************************/
 BEGIN TRY
 	BEGIN
-		INSERT INTO [dbo].[tbl_RootRelation] (RootId, Node, Parent, Name) 
-		VALUES (@RootId, @Node, @Parent, @Name)
+		INSERT INTO [dbo].[tbl_RootRelation] ( Node, Parent, Name) 
+		VALUES (@Node, @Parent, @Name)
 		IF @@ERROR = 0
 		BEGIN
-			SELECT [result] = JSON_QUERY((
-				SELECT 'success' [status], 'Added Successfully' [message]
-				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			SELECT [Result] = JSON_QUERY((
+				SELECT 'success' [status], '' [message],
+					[Data] = JSON_QUERY((
+						SELECT RootId [id], Parent [parentId], [Name] [name]
+						FROM tbl_RootRelation where RootId = SCOPE_IDENTITY()
+						FOR JSON PATH
+					))
+			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
 			))
 		END
 		ELSE

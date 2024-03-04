@@ -15,12 +15,17 @@ PROC EXEC		:  EXEC stp_AddTestStepsDetails
 **************************************************************************************/
 BEGIN TRY
 	BEGIN
-		INSERT INTO [dbo].[tbl_TestStepsDetails] (TestStepsDetailsId, TestCaseDetailsId, TestStepsName, ActionName) 
-		VALUES (@TestStepsDetailsId, @TestCaseDetailsId, @TestStepsName, @ActionName)
+		INSERT INTO [dbo].[tbl_TestStepsDetails] (TestCaseDetailsId, TestStepsName, ActionName) 
+		VALUES (@TestCaseDetailsId, @TestStepsName, @ActionName)
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
-				SELECT 'success' [status], 'Added Successfully' [message]
+				SELECT 'success' [status], 'Added Successfully' [message],
+				[Data] = JSON_QUERY((
+						SELECT TestStepsDetailsId [id], TestCaseDetailsId [testCaseDetailsId], [TestStepsName] [testStepsName] , [ActionName] [actionName]
+						FROM tbl_TestStepsDetails where TestCaseDetailsId = SCOPE_IDENTITY()
+						FOR JSON PATH
+					))
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 			))
 		END

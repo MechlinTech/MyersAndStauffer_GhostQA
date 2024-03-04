@@ -81,5 +81,17 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.AddTestStepsDetails(model));
         }
+
+        /// <summary>
+        ///  Update Root Relation 
+        /// </summary>
+        /// <param RootId="RootId"></param>
+        /// /// <param Name="Name"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateRootRelation")]
+        public async Task<ActionResult> UpdateRootRelation(RootRelation model)
+        {
+            return Ok(await _helper.UpdateRootRelation(model));
+        }
     }
 }

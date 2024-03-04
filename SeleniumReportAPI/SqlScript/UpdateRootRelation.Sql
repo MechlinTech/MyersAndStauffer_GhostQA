@@ -1,28 +1,30 @@
-CREATE OR ALTER PROCEDURE [dbo].[stp_AddTestCaseDetails]
-@TestCaseDetailsId         int = 0,
-@RootId		               int,
-@TestCaseName              VARCHAR(100)
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateRootRelation]
+@RootId         int,
+@Name           NVARCHAR(MAX)
 AS
 /**************************************************************************************
-PROCEDURE NAME	:	stp_AddTestCaseDetails
+PROCEDURE NAME	:	stp_UpdateRootRelation
 CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	1st March 2024
+CREATED DATE	:	4th March 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
-PROC EXEC		:  EXEC stp_AddTestCaseDetails 
+PROC EXEC		:  EXEC stp_UpdateRootRelation 
 				
 **************************************************************************************/
 BEGIN TRY
 	BEGIN
-		INSERT INTO [dbo].[tbl_TestCaseDetails] ( RootId, TestCaseName) 
-		VALUES (@RootId, @TestCaseName)
+		UPDATE [dbo].[tbl_RootRelation]
+		SET 
+			Name    = @Name
+			WHERE RootId  = @RootId
+
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
-				SELECT 'success' [status], 'Added Successfully' [message],
+				SELECT 'success' [status], 'Updated Successfully' [message],
 				[Data] = JSON_QUERY((
-						SELECT TestCaseDetailsId [id], RootId [rootId], [TestCaseName] [testCaseName]
-						FROM tbl_TestCaseDetails where TestCaseDetailsId = SCOPE_IDENTITY()
+						SELECT RootId [id], Parent [parentId], [Name] [name]
+						FROM tbl_RootRelation where RootId  = @RootId
 						FOR JSON PATH
 					))
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
