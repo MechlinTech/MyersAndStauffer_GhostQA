@@ -20,6 +20,7 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<RootRelation> tbl_RootRelation { get; set; }
         public DbSet<TestCaseDetails> tbl_TestCaseDetails { get; set; }
         public DbSet<TestStepsDetails> tbl_TestStepsDetails { get; set; }
+        public DbSet<InternalTestExecution> tbl_InternalTestExecutions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -44,6 +45,8 @@ namespace SeleniumReportAPI.DBContext
             .UseIdentityColumn(seed: 1000);
 
             builder.Entity<Models.TestCase>().HasNoKey();
+
+            builder.Entity<InternalTestExecution>().HasNoKey();
 
             base.OnModelCreating(builder);
         }

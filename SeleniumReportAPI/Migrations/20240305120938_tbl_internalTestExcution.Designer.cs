@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeleniumReportAPI.DBContext;
 
@@ -11,9 +12,10 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240305120938_tbl_internalTestExcution")]
+    partial class tbl_internalTestExcution
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,38 +323,6 @@ namespace SeleniumReportAPI.Migrations
                     b.HasKey("EnvironmentId");
 
                     b.ToTable("tbl_Environments");
-                });
-
-            modelBuilder.Entity("SeleniumReportAPI.Models.InternalTestExecution", b =>
-                {
-                    b.Property<string>("EndDateTime")
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("EndDateTime");
-
-                    b.Property<string>("StartDateTime")
-                        .HasColumnType("VARCHAR(50)")
-                        .HasColumnName("StartDateTime");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("VARCHAR(10)")
-                        .HasColumnName("Status");
-
-                    b.Property<string>("TestCase")
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("TestCase");
-
-                    b.Property<string>("TestRun")
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("TestCaseName");
-
-                    b.Property<string>("TestStepJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TestSuite")
-                        .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("TestSuite");
-
-                    b.ToTable("tbl_InternalTestExecutions");
                 });
 
             modelBuilder.Entity("SeleniumReportAPI.Models.RootRelation", b =>

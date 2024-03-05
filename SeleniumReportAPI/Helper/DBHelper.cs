@@ -1617,7 +1617,7 @@ namespace SeleniumReportAPI.Helper
                             if (reader.HasRows)
                             {
                                 reader.Read();
-                                result = reader["result"].ToString();
+                                result = reader["TestSuite"].ToString();
                             }
                         }
                     }
