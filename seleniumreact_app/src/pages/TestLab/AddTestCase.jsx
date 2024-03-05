@@ -13,6 +13,7 @@ export default function AddTestCase({addTestCase}) {
   const classes = useStylesTestCase();
   const [testCase,setTestCase]=useState([])
   const navigate = useNavigate();
+  localStorage.setItem('rootId',addTestCase)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,8 +21,9 @@ export default function AddTestCase({addTestCase}) {
           `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${addTestCase}`,
           header()
         );
+        
         // Assuming response.data is the array of data you want to set as listData
-        setTestCase((response.data == '' ? [] : response.data));
+        setTestCase((response.data.status ==='fail' || response.data == '' ? [] : response.data));
         console.log(response);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -30,7 +32,7 @@ export default function AddTestCase({addTestCase}) {
     };
 
     fetchData(); // Call the fetchData function when the component mounts
-  }, []);
+  }, [addTestCase]);
 
 
   return (
@@ -73,7 +75,7 @@ export default function AddTestCase({addTestCase}) {
             <Card style={{ textAlign: "center", margin: "20px" }}>
              
               <Grid item>
-               <TableTestCase testCase={testCase}/>
+              {testCase.length!==0 && <TableTestCase testCase={testCase}/>}
               </Grid>
             </Card>
           </Grid>

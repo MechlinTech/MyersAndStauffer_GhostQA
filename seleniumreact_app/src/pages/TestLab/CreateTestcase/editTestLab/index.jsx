@@ -1,9 +1,4 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Paper,
-} from "@mui/material";
+import { Box, Button, Grid, Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { StyledTypography } from "./styleTestCase";
 import { useStyles } from "./styleTestCase";
@@ -13,63 +8,104 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import DeleteIcon from '@mui/icons-material/Delete';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 import TableRow from "@mui/material/TableRow";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { StyledTableCell } from "./styleTestCase";
 import axios from "axios";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { UpdateTestStepsDetails } from "../../../../redux/actions/seleniumAction";
+import { toast } from "react-toastify";
+import { header, headerForm } from "../../../../utils/authheader";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const executeUrl = "http://65.1.188.67:8010/api/test-suitesV2/execute/";
 
 export default function EditTestCase() {
   const classes = useStyles();
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const {testId} = useParams()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { testId } = useParams();
   const [selectedRunId, setSelectedRunId] = useState(null);
   const [steps, setSteps] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
-  const [testcaseDetail, setTestcaseDetail]=useState(null)
-
+  const [testcaseDetail, setTestcaseDetail] = useState(null);
+  const [Errors, setErrors] = useState(null);
+  const [rootId, setrootId] = useState(localStorage.getItem("rootId"));
   useEffect(() => {
     const getSteps = async () => {
       const res = await axios.get(
-        `${BASE_URL}/AddTestLab/GetTestStepsDetailsByTestStepsId?TestStepsId=${testId}`, // change this uri
+        `${BASE_URL}/AddTestLab/GetTestStepsDetailsByTestStepsId?TestStepsId=${testId}` // change this uri
       );
-      setTestcaseDetail(res.data)
+      setTestcaseDetail(res.data);
       //extracting the actionlist
-      const actionList = res.data[0].ActionName.split(',')
-      const actionObj = actionList.map((act,index)=>{
-        return userActionsOptions.find((action)=> action.value === act)
-      })
-      setSteps(actionObj)
+      const actionList = res.data[0].ActionName.split(",");
+      const actionObj = actionList.map((act, index) => {
+        return userActionsOptions.find((action) => action.value === act);
+      });
+      setSteps(actionObj);
+      setErrors(actionObj?.map(() => false));
       console.log("steps list : ", res);
     };
 
+    //for execution history
+    const getExecutionHistory = async () => {
+      try {
+        const jsonData = await axios.get(`${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}`);
+        const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" })
+        const formData = new FormData();     
+        formData.append("scenarios_file", blob, "data.json");
+        formData.append("name", 'testing');
+        const executedDetail = await axios.post(executeUrl, formData,headerForm());
+        console.log("executedDetail:", executedDetail);
+          
+        const runId = executedDetail.data.container_runs[0].id
+        setTimeout(async() => {
+          const res = await axios.get(`http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`)
+          console.log("executedDetail:", res);
+        }, 20000);
+       
+      } catch (error) {
+        console.log("error fetching execution data", error);
+      }
+    };
+    
+
     getSteps();
+    getExecutionHistory();
   }, []);
 
-  const savetoEdit = ()=>{
-    setIsEditable(false)
-  }
+  const savetoEdit = () => {
+    setIsEditable(false);
+  };
+  console.log("errors", Errors);
+
   const handleSave = () => {
-    console.log(testcaseDetail)
-    let payload = {
-      testStepsDetailsId: testcaseDetail[0].TestStepsDetailsId,
-      testCaseDetailsId: testcaseDetail[0].TestCaseDetailsId,
-      testStepsName: testcaseDetail[0].TestStepsName,
-      actionName: steps.map((step)=>{
-        return step?.value
-      }).join(',')
+    let errors = steps?.map((step) => {
+      return step ? false : true;
+    });
+    setErrors(errors);
+    if (errors.includes(true)) {
+      console.log("all field are required");
+      toast.error("All field is required");
+    } else {
+      let payload = {
+        testStepsDetailsId: testcaseDetail[0].TestStepsDetailsId,
+        testCaseDetailsId: testcaseDetail[0].TestCaseDetailsId,
+        testStepsName: testcaseDetail[0].TestStepsName,
+        actionName: steps
+          .map((step) => {
+            return step?.value;
+          })
+          .join(","),
+      };
+      dispatch(UpdateTestStepsDetails(payload, savetoEdit));
     }
-    dispatch(UpdateTestStepsDetails(payload,savetoEdit))
   };
   const handleCancle = () => {
-    navigate(-1)
+    navigate(-1);
   };
   const handleAddMoreSteps = () => {
     setSteps([...steps, null]);
@@ -79,11 +115,9 @@ export default function EditTestCase() {
     setSteps(updatedSteps);
   };
 
-  const handleActionChange = (act,index) => {
-    console.log('act',act)
-    const updatedSteps = steps.map((step,i) =>
-      i === index ? act  : step
-    );
+  const handleActionChange = (act, index) => {
+    console.log("act", act);
+    const updatedSteps = steps.map((step, i) => (i === index ? act : step));
     setSteps(updatedSteps);
   };
   const runsArray = [
@@ -158,52 +192,94 @@ export default function EditTestCase() {
       },
     }),
   };
-  const listOfSteps = steps?.map((step,index) => (
-    <li
-      key={index}
-      style={{ listStyle: "none", margin: "10px 0" }}
-    >
-      <Box sx={{display:'flex',justifyContent:'space-between',width:'50%'}}>
-      <StyledTypography>
-        Step {index+1}
-      </StyledTypography>
-      {isEditable && <DeleteIcon  onClick={() => handleRemoveStep(step)} sx={{cursor:'pointer',color:'red'}}/>}
+  const listOfSteps = steps?.map((step, index) => (
+    <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>
+      <Box
+        sx={{ display: "flex", justifyContent: "space-between", width: "50%" }}
+      >
+        <StyledTypography>Step {index + 1}</StyledTypography>
+        {isEditable && (
+          <DeleteIcon
+            onClick={() => handleRemoveStep(step)}
+            sx={{ cursor: "pointer", color: "red" }}
+          />
+        )}
       </Box>
-      <Paper elevation={1} sx={{ width:"50%", padding: "10px", '@media (max-width: 600px)': {
-        width: '100%',  
-      }, }}>
+      <Paper
+        elevation={1}
+        sx={{
+          width: "50%",
+          padding: "10px",
+          "@media (max-width: 600px)": {
+            width: "100%",
+          },
+        }}
+      >
         <Box mb={1}>
           <Select
             isClearable={true}
             options={userActionsOptions}
             isDisabled={!isEditable}
-            
             value={step}
-            onChange={(act) => handleActionChange(act,index)}
-            styles={selectStyle}
+            onChange={(act) => handleActionChange(act, index)}
+            styles={{
+              container: (provided) => ({
+                ...provided,
+                width: "50%",
+                backgroundColor: "rgb(242, 242, 242)",
+                // zIndex: 1, // Adjust the zIndex value
+              }),
+              control: (provided, state) => ({
+                ...provided,
+                backgroundColor: "rgb(242, 242, 242)",
+                "&:hover": {
+                  borderColor: "#654DF7",
+                },
+                borderColor: !Errors
+                  ? false
+                  : Errors[index]
+                  ? "red"
+                  : state.isFocused
+                  ? "#654DF7"
+                  : "rgb(242, 242, 242)",
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                backgroundColor: state.isSelected ? "#654DF7" : "transparent",
+              }),
+              clearIndicator: (provided) => ({
+                ...provided,
+                cursor: "pointer",
+                ":hover": {
+                  color: "#654DF7", // Change the color on hover if desired
+                },
+              }),
+              dropdownIndicator: (provided) => ({
+                ...provided,
+                cursor: "pointer",
+                ":hover": {
+                  color: "#654DF7", // Change the color on hover if desired
+                },
+              }),
+            }}
             menuPosition={"fixed"}
           />
         </Box>
         {step && (
-          <Box
-            className={classes.textContainer}
-            sx={{ width: "70%" }}
-          >
-            <StyledTypography>
-              {step.value}
-            </StyledTypography>
+          <Box className={classes.textContainer} sx={{ width: "70%" }}>
+            <StyledTypography>{step.value}</StyledTypography>
           </Box>
         )}
       </Paper>
     </li>
-  ))
+  ));
   return (
     <div className={classes.main}>
       <Paper sx={{ width: "100%", p: 2 }}>
         <Grid
           container
           display="flex"
-          justifyContent='center'
+          justifyContent="center"
           alignItems="start"
           sx={{ padding: "10px 0" }}
         >
@@ -278,7 +354,7 @@ export default function EditTestCase() {
           <Grid xs={12}>
             <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
               <ul>
-              {listOfSteps}
+                {listOfSteps}
                 {isEditable && (
                   <Button
                     onClick={handleAddMoreSteps}
@@ -302,12 +378,12 @@ export default function EditTestCase() {
               </ul>
             </Box>
           </Grid>
-          <Grid item xs={12} mt={2} >
+          <Grid item xs={12} mt={2}>
             <StyledTypography sx={{ fontSize: "18px", fontWeight: "400" }}>
               Execution history
             </StyledTypography>
           </Grid>
-          <Grid item xs={12} md={7} >
+          <Grid item xs={12} md={7}>
             <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
               <TableContainer sx={{ marginBottom: "8vh" }}>
                 <Table>
@@ -362,10 +438,20 @@ export default function EditTestCase() {
                               selectedRunId === row.runid ? "white" : "black",
                           }}
                         >
-                          <Box className={classes.statusBox} sx={{
-                            display:'inline-block',
-                            backgroundColor: selectedRunId === row.runid ? "":row.status === 'Completed'?'#48fab9':'#fa3737'
-                          }}>{row.status}</Box>
+                          <Box
+                            className={classes.statusBox}
+                            sx={{
+                              display: "inline-block",
+                              backgroundColor:
+                                selectedRunId === row.runid
+                                  ? ""
+                                  : row.status === "Completed"
+                                  ? "#48fab9"
+                                  : "#fa3737",
+                            }}
+                          >
+                            {row.status}
+                          </Box>
                         </StyledTableCell>
                         <StyledTableCell
                           sx={{
@@ -382,47 +468,53 @@ export default function EditTestCase() {
               </TableContainer>
             </Box>
           </Grid>
-          <Grid item xs={12} md={5}  justifySelf='start'>
-            {selectedRunId && <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
-              <TableContainer sx={{ marginBottom: "8vh" }}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell colSpan={3}>
-                        <StyledTypography variant="h6" color="primary">
-                        {selectedRunId}
-                        </StyledTypography>
-                      </StyledTableCell>
-                    </TableRow>
-                    <TableRow>
-                      <StyledTableCell>Status </StyledTableCell>
-                      <StyledTableCell>Timestramp</StyledTableCell>
-                      <StyledTableCell>Detail</StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data?.map((row) => (
-                      <TableRow
-                        key={row.Email}
-                        className={`${classes.tableRow}`}
-                        style={{ height: "10px" }}
-                        spacing="3"
-                      >
-                        <StyledTableCell component="th" scope="row">
-                          {row.status === 'Success'?<CheckCircleIcon color="success"/>:<CancelIcon color="error"/>}
-                        </StyledTableCell>
-                        <StyledTableCell component="th" scope="row">
-                          {row.timestamp}
-                        </StyledTableCell>
-                        <StyledTableCell component="th" scope="row">
-                          {row.detail}
+          <Grid item xs={12} md={5} justifySelf="start">
+            {selectedRunId && (
+              <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
+                <TableContainer sx={{ marginBottom: "8vh" }}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell colSpan={3}>
+                          <StyledTypography variant="h6" color="primary">
+                            {selectedRunId}
+                          </StyledTypography>
                         </StyledTableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>}
+                      <TableRow>
+                        <StyledTableCell>Status </StyledTableCell>
+                        <StyledTableCell>Timestramp</StyledTableCell>
+                        <StyledTableCell>Detail</StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data?.map((row) => (
+                        <TableRow
+                          key={row.Email}
+                          className={`${classes.tableRow}`}
+                          style={{ height: "10px" }}
+                          spacing="3"
+                        >
+                          <StyledTableCell component="th" scope="row">
+                            {row.status === "Success" ? (
+                              <CheckCircleIcon color="success" />
+                            ) : (
+                              <CancelIcon color="error" />
+                            )}
+                          </StyledTableCell>
+                          <StyledTableCell component="th" scope="row">
+                            {row.timestamp}
+                          </StyledTableCell>
+                          <StyledTableCell component="th" scope="row">
+                            {row.detail}
+                          </StyledTableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </Paper>

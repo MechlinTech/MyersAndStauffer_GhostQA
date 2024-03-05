@@ -14,6 +14,7 @@ import userActionsOptions from "../UserActionList";
 import { useDispatch } from "react-redux";
 import { AddTestCaseDetails } from "../../../redux/actions/seleniumAction";
 import { useStyles } from "../styles";
+import { toast } from "react-toastify";
 export default function CreateTestCase() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,52 +22,46 @@ export default function CreateTestCase() {
   const {rootId} = useParams()
   const [selectedAction, setselectedAct] = useState(null);
   const [testCaseTitle, settestCaseTitle] = useState("");
-  const [steps, setSteps] = useState([{ id: 1, action: null }]);
-  const [Errors, setErrors] = useState({
-    testCaseTitleError: "",
-    testCaseStepsError: "",
-  });
-
+  const [steps, setSteps] = useState([null]);
+  const [Errors, setErrors] = useState([]);
+  const [testCaseTitleError, settestCaseTitleError] = useState("")
   const goBack =()=>{
     navigate(-1)
   }
   const handleSave = () => {
-    let payload = {
-      testCaseDetailsId: 0,
-      rootId: rootId,
-      testCaseName: testCaseTitle,
-    };
-    let action = steps.map((step) => step.action?.value); 
-    console.log('actions ',action)
-    let errors = {};
+    let errors = steps.map((step)=> step?false:true)
+    setErrors(errors)
+    let titleError = ""
     if (!testCaseTitle.trim()) {
-      errors.testCaseTitleError = "Testcase title required";
+      settestCaseTitleError("Testcase title required")
+      titleError="Testcase title required"
     }
-    if (steps.every((step) => !step.action)) {
-      errors.testCaseStepsError = "Testcase steps required";
-    }
-    setErrors(errors);
-    if (Object.keys(errors).length === 0) {
-      dispatch(AddTestCaseDetails(payload, action,goBack));
-      // navigate(-1);
-    } else {
+    if(!titleError && !errors.includes(true)){
+      let payload = {
+        testCaseDetailsId: 0,
+        rootId: rootId,
+        testCaseName: testCaseTitle,
+      };
+      let actions = steps.map((step) => step?.value); 
+      dispatch(AddTestCaseDetails(payload, actions,goBack));
+    }else{
       console.log("error posting", errors);
+      toast.error('Every field is required')
     }
   };
 
   const handleAddMoreSteps = () => {
-    const newStepId = steps.length + 1;
-    setSteps([...steps, { id: newStepId, action: null }]);
+    setSteps([...steps,null]);
   };
 
-  const handleRemoveStep = (stepId) => {
-    const updatedSteps = steps.filter((step) => step.id !== stepId);
+  const handleRemoveStep = (curr) => {
+    const updatedSteps = steps.filter((step) => step!== curr);
     setSteps(updatedSteps);
   };
 
-  const handleActionChange = (act, stepId) => {
-    const updatedSteps = steps.map((step) =>
-      step.id === stepId ? { ...step, action: act } : step
+  const handleActionChange = (act, index) => {
+    const updatedSteps = steps.map((step,i) =>
+      i === index ? act : step
     );
     setSteps(updatedSteps);
   };
@@ -118,26 +113,64 @@ export default function CreateTestCase() {
       <StyledTypography>
         Step {index+1}
       </StyledTypography>
-      <DeleteIcon  onClick={() => handleRemoveStep(step.id)} sx={{cursor:'pointer',color:'red'}}/>
+      <DeleteIcon  onClick={() => handleRemoveStep(step)} sx={{cursor:'pointer',color:'red'}}/>
       </Box>
-      <Paper elevation={1} sx={{ width: "50%", padding: "10px" }}>
+      <Paper elevation={1} sx={{ width: "50%", padding: "10px",'@media (max-width: 600px)': {
+        width: '100%',  
+      }, }}>
         <Box mb={1}>
           <Select
             isClearable={true}
             options={userActionsOptions}
-            value={step.action}
-            onChange={(act) => handleActionChange(act, step.id)}
-            styles={selectStyle}
+            value={step}
+            onChange={(act) => handleActionChange(act, index)}
+            styles={{
+              container: (provided) => ({
+                ...provided,
+                width: "50%",
+                backgroundColor: "rgb(242, 242, 242)",
+              }),
+              control: (provided, state) => ({
+                ...provided,
+                backgroundColor: "rgb(242, 242, 242)",
+                "&:hover": {
+                  borderColor: "#654DF7",
+                },
+                borderColor: Errors[index]
+                  ? "red"
+                  : state.isFocused
+                  ? "#654DF7"
+                  : "rgb(242, 242, 242)",
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                backgroundColor: state.isSelected ? "#654DF7" : "transparent",
+              }),
+              clearIndicator: (provided) => ({
+                ...provided,
+                cursor: "pointer",
+                ":hover": {
+                  color: "#654DF7",
+                },
+              }),
+              dropdownIndicator: (provided) => ({
+                ...provided,
+                cursor: "pointer",
+                ":hover": {
+                  color: "#654DF7",
+                },
+              }),
+            }}
             menuPosition={"fixed"}
           />
         </Box>
-        {step.action && (
+        {step && (
           <Box
             className={classes.textContainer}
             sx={{ width: "70%" }}
           >
             <StyledTypography>
-              {step.action?.value}
+              {step?.value}
             </StyledTypography>
           </Box>
         )}
@@ -194,7 +227,7 @@ export default function CreateTestCase() {
                     type="text"
                     placeholder="Enter title name"
                     value={testCaseTitle}
-                    error={Errors.testCaseTitleError ? true : false}
+                    error={testCaseTitleError ? true : false}
                     onChange={(e) => settestCaseTitle(e.target.value)}
                   />
                 </FormControl>
