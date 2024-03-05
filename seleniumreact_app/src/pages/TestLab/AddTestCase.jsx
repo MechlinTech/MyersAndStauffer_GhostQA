@@ -13,6 +13,7 @@ export default function AddTestCase({addTestCase}) {
   const classes = useStylesTestCase();
   const [testCase,setTestCase]=useState([])
   const navigate = useNavigate();
+  localStorage.setItem('rootId',addTestCase)
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -287,14 +287,14 @@ export const DeleteTestSuite = (suiteName)=>{
 }
 
 //following are part of testlab
-export const AddTestStepsDetails = (action,Data,goBack)=>{
+export const AddTestStepsDetails = (actions,Data,goBack)=>{
   
   return async (dispatch)=>{
      const stepDetails = {
       testStepsDetailsId: 0,
       testCaseDetailsId: Data[0].id,
       testStepsName: Data[0].testCaseName,
-      actionName: action.join(',')
+      actionName: actions.join(',')
     };
     try {
       const res = await axios.post(
@@ -315,7 +315,7 @@ export const AddTestStepsDetails = (action,Data,goBack)=>{
     }
   }
 }
-export const AddTestCaseDetails = (payload,action,goBack)=>{
+export const AddTestCaseDetails = (payload,actions,goBack)=>{
   
   return async (dispatch)=>{
     try {
@@ -324,7 +324,7 @@ export const AddTestCaseDetails = (payload,action,goBack)=>{
       console.log('response ' ,res.data.Data)
       const Data = res.data.Data
       if (res.data.status === 'success') {
-        dispatch(AddTestStepsDetails(action,Data,goBack))
+        dispatch(AddTestStepsDetails(actions,Data,goBack))
         // toast.info('Successfully saved', {
         //   style: {
         //     background: 'rgb(101, 77, 247)', 
@@ -345,8 +345,6 @@ export const UpdateTestStepsDetails = (payload,savetoEdit)=>{
     try {
       const res = await axios.post(
         `${BASE_URL}/AddTestLab/UpdateTestStepsDetails`,payload);
-      console.log('response ' ,res.data.Data)
-      const Data = res.data.Data
       if (res.data.status === 'success') {
         toast.info('Successfully saved', {
           style: {
