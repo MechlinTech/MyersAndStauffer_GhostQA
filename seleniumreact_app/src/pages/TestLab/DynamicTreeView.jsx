@@ -22,9 +22,29 @@ const Card = ({newElementName, setNewElementName,
   setEditData, setEditMode,
   handleEditChange, handleKeyPressEdit,
   setListData, data,
-  expandedData = true, nodeData = 0, handleCRUDAtParent, nodeCount = 0, handleNodeCount, expandedInputId, setExpandedInputId, handleTask,keyData=0 }) => {
+  expandedData = true, nodeData = 0, handleCRUDAtParent, nodeCount =1, handleNodeCount, expandedInputId, setExpandedInputId, handleTask,keyData=0 }) => {
   const styleClass = useStylesTree();
-  console.log(data,expanded)
+  useEffect(() => {
+    function updateNodeDepth(data, parentId, depth) {
+      const children = data.filter(node => node.parentId === parentId);
+      for (const child of children) {
+        child.node = depth;
+        updateNodeDepth(data, child.id, depth + 1);
+      }
+    }
+    
+    function calculateDepth(data) {
+      const roots = data.filter(node => node.parentId === 0);
+      for (const root of roots) {
+        updateNodeDepth(data, root.id, 1);
+      }
+    }
+    nodeCount = calculateDepth(data);
+   
+    
+  }, [data]);
+ 
+
   return (
     <>
       <ul style={{ display:  (!expanded.includes(keyData)? (keyData == 0 ?'block':'none') : (expanded.includes(keyData)?'block':'none'))  }} className={(nodeData == 0 ? styleClass.rootNodeFolder : styleClass.child)}>
@@ -64,7 +84,7 @@ const Card = ({newElementName, setNewElementName,
                   }}>
                    { editMode== 0 && <EditIcon sx={{ color: '#654df7' }} onClick={() => handleEdit(item.id, item.name)} style={{ cursor: 'pointer', marginLeft: '10px' }} />}
                     <DeleteIcon sx={{ color: '#f74d4d' }} onClick={() => handleDelete(item.id)} style={{ cursor: 'pointer' }} />
-                    {nodeCount < 5 && (
+                    {nodeCount < 4 && (
                       <AddIcon sx={{ color: '#654df7' }} onClick={(event) => handleCRUD(event,item.id)} style={{
                         marginLeft: 'auto'
                       }} />
@@ -93,7 +113,7 @@ const Card = ({newElementName, setNewElementName,
                     handleCRUDAtParent={handleCRUDAtParent}
                     expandedData={expanded}
                     getparentId={item.parentId}
-                    nodeCount={nodeData + 1}
+                    nodeCount={nodeCount+1}
                     handleNodeCount={handleNodeCount}
                     expandedInputId={expandedInputId}
                     setExpandedInputId={setExpandedInputId}
@@ -105,15 +125,14 @@ const Card = ({newElementName, setNewElementName,
                     setEditData={setEditData}
                     editMode={editMode}
                     setEditMode={setEditMode}
-                    newElementName={newElementName} 
-                    setNewElementName={setNewElementName}                   
+                    newElementName={newElementName}
+                    setNewElementName={setNewElementName}
                     handleCRUD={handleCRUD}
-                    expanded={expanded} 
-                   
+                    expanded={expanded}
                     toggleExpand={toggleExpand}
                     handleCRUDCancel ={handleCRUDCancel}
                     handleKeyPress={handleKeyPress}
-                    handleDelete={handleDelete} 
+                    handleDelete={handleDelete}
                   />
                 )}
               </li>
@@ -157,7 +176,7 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
     event.preventDefault();
     console.log(parentId);
     // For demonstration purposes, let's add a new element if the node count is less than 4
-    if (nodeCount < 5) {
+    if (nodeCount < 4) {
       setExpandedInputId(parentId);
     } else {
       alert('Maximum node limit reached.');
@@ -276,19 +295,36 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
       handleCRUDNewItem(parentId,nodeData);
     }
   };
-  const handleDelete = (itemId) => {
+  const handleDelete = async(itemId) => {
     console.log(itemId, listData);
     const itemToDelete = listData.find(item => item.id === itemId);
-    const childrenToDelete = listData.filter(item => item.parentId === itemId);
-    const updatedData = listData.filter(item => item.id !== itemId && item.parentId !== itemId);
-    const parentIdOfParent = itemToDelete ? itemToDelete.parentId : null;
-    const updatedChildren = childrenToDelete.map(child => ({
-      ...child,
-      parentId: parentIdOfParent,
-    }));
-    const newData = [...updatedData, ...updatedChildren];
-    console.log(newData, itemId, itemToDelete, childrenToDelete);
-    setListData(newData);
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/AddTestLab/DeleteRootRelation`,
+        {
+          "rootId": itemToDelete.id,
+          "node": 0,
+          "parent": itemToDelete.parentId,
+          "name":itemToDelete.name
+        },
+
+        header()
+      );
+      const childrenToDelete = listData.filter(item => item.parentId === itemId);
+      const updatedData = listData.filter(item => item.id !== itemId && item.parentId !== itemId);
+      const parentIdOfParent = itemToDelete ? itemToDelete.parentId : null;
+      const updatedChildren = childrenToDelete.map(child => ({
+        ...child,
+        parentId: parentIdOfParent,
+      }));
+      const newData = [...updatedData, ...updatedChildren];
+      
+      console.log(newData, itemId, itemToDelete, childrenToDelete);
+      setListData(newData);
+      }catch (error) {
+        console.error("Error fetching data:", error);     
+      }  
+   
   };
 
   return (
