@@ -21,44 +21,68 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import { StyledTableCell } from "./styleTestCase";
 import axios from "axios";
 import { useNavigate,useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { UpdateTestStepsDetails } from "../../../../redux/actions/seleniumAction";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function EditTestCase() {
   const classes = useStyles();
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const {testId} = useParams()
   const [selectedRunId, setSelectedRunId] = useState(null);
-  const [steps, setSteps] = useState([{ id: 1, action: null }]);
+  const [steps, setSteps] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
+  const [testcaseDetail, setTestcaseDetail]=useState(null)
 
   useEffect(() => {
     const getSteps = async () => {
       const res = await axios.get(
-        `${BASE_URL}/Selenium/GetUserDetails`, // change this uri
+        `${BASE_URL}/AddTestLab/GetTestStepsDetailsByTestStepsId?TestStepsId=${testId}`, // change this uri
       );
-      console.log("actions list : ", res);
+      setTestcaseDetail(res.data)
+      //extracting the actionlist
+      const actionList = res.data[0].ActionName.split(',')
+      const actionObj = actionList.map((act,index)=>{
+        return userActionsOptions.find((action)=> action.value === act)
+      })
+      setSteps(actionObj)
+      console.log("steps list : ", res);
     };
 
     getSteps();
   }, []);
+
+  const savetoEdit = ()=>{
+    setIsEditable(false)
+  }
   const handleSave = () => {
-    console.log("clicked on save btn");
+    console.log(testcaseDetail)
+    let payload = {
+      testStepsDetailsId: testcaseDetail[0].TestStepsDetailsId,
+      testCaseDetailsId: testcaseDetail[0].TestCaseDetailsId,
+      testStepsName: testcaseDetail[0].TestStepsName,
+      actionName: steps.map((step)=>{
+        return step?.value
+      }).join(',')
+    }
+    dispatch(UpdateTestStepsDetails(payload,savetoEdit))
   };
   const handleCancle = () => {
     navigate(-1)
   };
   const handleAddMoreSteps = () => {
-    const newStepId = steps.length + 1;
-    setSteps([...steps, { id: newStepId, action: null }]);
+    setSteps([...steps, null]);
   };
-  const handleRemoveStep = (stepId) => {
-    const updatedSteps = steps.filter((step) => step.id !== stepId);
+  const handleRemoveStep = (curr) => {
+    const updatedSteps = steps.filter((step) => step !== curr);
     setSteps(updatedSteps);
   };
 
-  const handleActionChange = (act, stepId) => {
-    const updatedSteps = steps.map((step) =>
-      step.id === stepId ? { ...step, action: act } : step
+  const handleActionChange = (act,index) => {
+    console.log('act',act)
+    const updatedSteps = steps.map((step,i) =>
+      i === index ? act  : step
     );
     setSteps(updatedSteps);
   };
@@ -134,7 +158,7 @@ export default function EditTestCase() {
       },
     }),
   };
-  const listOfSteps = steps.map((step,index) => (
+  const listOfSteps = steps?.map((step,index) => (
     <li
       key={index}
       style={{ listStyle: "none", margin: "10px 0" }}
@@ -143,43 +167,33 @@ export default function EditTestCase() {
       <StyledTypography>
         Step {index+1}
       </StyledTypography>
-      {isEditable && <DeleteIcon  onClick={() => handleRemoveStep(step.id)} sx={{cursor:'pointer',color:'red'}}/>}
+      {isEditable && <DeleteIcon  onClick={() => handleRemoveStep(step)} sx={{cursor:'pointer',color:'red'}}/>}
       </Box>
-      <Paper elevation={1} sx={{ width: "50%", padding: "10px" }}>
+      <Paper elevation={1} sx={{ width:"50%", padding: "10px", '@media (max-width: 600px)': {
+        width: '100%',  
+      }, }}>
         <Box mb={1}>
           <Select
             isClearable={true}
             options={userActionsOptions}
             isDisabled={!isEditable}
-            value={step.action}
-            onChange={(act) => handleActionChange(act, step.id)}
+            
+            value={step}
+            onChange={(act) => handleActionChange(act,index)}
             styles={selectStyle}
             menuPosition={"fixed"}
           />
         </Box>
-        {step.action && (
+        {step && (
           <Box
             className={classes.textContainer}
             sx={{ width: "70%" }}
           >
             <StyledTypography>
-              {step.action?.value}
+              {step.value}
             </StyledTypography>
           </Box>
         )}
-        {/* <Button
-          onClick={() => handleRemoveStep(step.id)}
-          sx={{
-            backgroundColor: "rgb(220, 0, 78)",
-            "&:hover": {
-              backgroundColor: "rgb(220, 0, 78) !important",
-            },
-            color: "#fff",
-            marginTop: "10px",
-          }}
-        >
-          Remove
-        </Button> */}
       </Paper>
     </li>
   ))

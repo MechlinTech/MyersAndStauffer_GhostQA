@@ -286,6 +286,7 @@ export const DeleteTestSuite = (suiteName)=>{
   }
 }
 
+//following are part of testlab
 export const AddTestStepsDetails = (action,Data,goBack)=>{
   
   return async (dispatch)=>{
@@ -331,6 +332,30 @@ export const AddTestCaseDetails = (payload,action,goBack)=>{
         //   },
         // });
     } 
+    }catch (error) {
+      console.log("error saving ",error);
+      toast.error('Network error')
+    }
+  }
+}
+
+export const UpdateTestStepsDetails = (payload,savetoEdit)=>{
+  
+  return async (dispatch)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddTestLab/UpdateTestStepsDetails`,payload);
+      console.log('response ' ,res.data.Data)
+      const Data = res.data.Data
+      if (res.data.status === 'success') {
+        toast.info('Successfully saved', {
+          style: {
+            background: 'rgb(101, 77, 247)', 
+            color: 'rgb(255, 255, 255)', 
+          },
+        });
+        savetoEdit()
+      } 
     }catch (error) {
       console.log("error saving ",error);
       toast.error('Network error')
