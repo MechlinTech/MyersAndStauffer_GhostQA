@@ -11,7 +11,7 @@ PROC EXEC		:
 				EXEC stp_GetTestStepsDetailsByTestStepsId
 **************************************************************************************/
 BEGIN TRY
-    IF EXISTS (SELECT 1 FROM tbl_TestStepsDetails WHERE [TestStepsDetailsId] = @TestStepsId)
+    IF EXISTS (SELECT 1 FROM tbl_TestStepsDetails WHERE [TestCaseDetailsId] = @TestStepsId)
     BEGIN
         SELECT [result] = JSON_QUERY((
            SELECT  [TestStepsDetailsId],
@@ -19,7 +19,7 @@ BEGIN TRY
 					[TestStepsName],
 					[ActionName]
 		    FROM tbl_TestStepsDetails
-            WHERE [TestStepsDetailsId] = @TestStepsId
+            WHERE [TestCaseDetailsId] = @TestStepsId
             FOR JSON PATH
         ))
     END

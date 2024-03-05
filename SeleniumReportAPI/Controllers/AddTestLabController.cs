@@ -119,13 +119,34 @@ namespace SeleniumReportAPI.Controllers
         /// <summary>
         ///  Update Root Relation 
         /// </summary>
-        /// <param RootId="RootId"></param>
-        /// /// <param Name="Name"></param>
+        /// <param TestStepsDetails="TestStepsDetails"></param>
         /// <returns></returns>
         [HttpPost("UpdateTestStepsDetails")]
         public async Task<ActionResult> UpdateTestStepsDetails(TestStepsDetails model)
         {
             return Ok(await _helper.UpdateTestStepsDetails(model));
+        }
+
+        /// <summary>
+        ///  Delete Root Relation By Root Id  and Parent Id
+        /// </summary>
+        /// <param TestStepsDetails="TestStepsDetails"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteRootRelation")]
+        public async Task<ActionResult> DeleteRootRelation(RootRelation model)
+        {
+            return Ok(await _helper.DeleteRootRelation(model));
+        }
+
+        /// <summary>
+        ///  Get Excuted By RootId 
+        /// </summary>
+        /// <param RootId="RootId"></param>
+        /// <returns></returns>
+        [HttpGet("GetExcutedByRootId")]
+        public async Task<ActionResult> GetExcutedByRootId(int RootId)
+        {
+            return Ok(await _helper.GetExcutedByRootId(RootId));
         }
     }
 }
