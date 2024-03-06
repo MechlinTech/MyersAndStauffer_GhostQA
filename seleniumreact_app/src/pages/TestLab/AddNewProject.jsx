@@ -28,6 +28,7 @@ const AddNewProject = ({ handleChange, handleSubmit, formData }) => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
+                    required
                 />
                 <Button type="submit" variant="contained" color="primary">
                     Add
