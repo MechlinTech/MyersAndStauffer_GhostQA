@@ -1,37 +1,3 @@
-// const userActionsOptions = [
-//     { label: "Click", value: "click" },
-//     { label: "Hover", value: "hover" },
-//     { label: "Drag and Drop", value: "dragDrop" },
-//     { label: "Key Press", value: "keyPress" },
-//     { label: "Assign", value: "Assign" },
-//     { label: "Capture screenshot", value: "Capturescreenshot" },
-//     { label: "Execute Javascript", value: "ExecuteJavascript" },
-//     { label: "Pause (times in ms)", value: "Pause" },
-//     { label: "Exit Test", value: "ExitTest" },
-//     { label: "Open URL", value: "openURL" },
-//     { label: "Go Back", value: "goBack" },
-//     { label: "Refresh", value: "refresh" },
-//     // { label: "Open New Tab", value: "openNewTab" },
-//     // { label: "Close Tab", value: "closeTab" },
-//     { label: "Element is present", value: "Elementispresent" },
-//     { label: "Element is not present", value: "ElementIsNotPresent" },
-//     { label: "Element is visible", value: "ElementIsVisible" },
-//     { label: "Element is not visible", value: "ElementIsNotVisible" },
-//     { label: "Element text equal", value: "ElementTextEqual" },
-//     { label: "Element text does not equal", value: "ElementTextDoesNotEqual" },
-//     { label: "Element text contains", value: "ElementTextContains" },
-//     { label: "Element text does not contains", value: "ElementTextDoesNotContains" },
-//     { label: "JavaScript returns true", value: "JavaScriptReturnsTrue" },
-//     { label: "Check Accessibility", value: "CheckAccessibility" },
-//     { label: "Set Variable", value: "SetVariable" },
-//     { label: "Extract from element", value: "ExtractFromElement" },
-//     { label: "Extract from JavaScript", value: "ExtractFromJavaScript" },
-//     { label: "Import steps from test", value: "ImportTestFromSteps" },
-//   ];
-  
-//   export default userActionsOptions;
-  
-
 const userActionsOptions = [
   "click",
   "hover",

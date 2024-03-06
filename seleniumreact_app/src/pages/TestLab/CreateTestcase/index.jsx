@@ -24,20 +24,21 @@ export default function CreateTestCase() {
   };
 
   const handleSave = () => {
-    // let errors = steps.map((step) => {
-    //   return {
-    //     typeError: step.type ? false : true,
-    //     saparatorError: step.separator ? false : true,
-    //   };
-    // });
-    // console.log('errors',errors)
-    // setErrors(errors);
-    // let titleError = "";
-    // if (!testCaseTitle.trim()) {
-    //   settestCaseTitleError("Testcase title required");
-    //   titleError = "Testcase title required";
-    // }
-    // if (!titleError && !errors.includes(true)) {
+    let errors = steps?.map((step) => ({
+      actionError: !step?.type,
+      textError: !step?.separator,
+    }));
+    setErrors(errors);
+    let titleError = ""
+    if(!testCaseTitle.trim()){
+      settestCaseTitleError('test case title required')
+      titleError='test case title required'
+    }
+    const hasError = errors.some(
+      (error) => error.actionError || error.textError
+    );
+
+    if (!hasError && !titleError) {
       let payload = {
         testCaseDetailsId: 0,
         rootId: rootId,
@@ -45,10 +46,10 @@ export default function CreateTestCase() {
       };
 
       dispatch(AddTestCaseDetails(payload, steps, goBack));
-    // } else {
-    //   console.log("error posting", errors);
-    //   toast.error("Every field is required");
-    // }
+    } else {
+      console.log("error posting", errors);
+      toast.error("Every field is required");
+    }
   };
 
   const handleAddMoreSteps = () => {
@@ -100,7 +101,9 @@ export default function CreateTestCase() {
           <Select
             isClearable={true}
             options={userActionsOptions}
-            value={{ label: step.type, value: step.type }}
+            value={
+              step ? step.type?{ label: step.type, value: step.type } : null:null
+            }
             onChange={(act) => handleActionChange(act, index)}
             styles={{
               container: (provided) => ({
@@ -114,7 +117,7 @@ export default function CreateTestCase() {
                 "&:hover": {
                   borderColor: "#654DF7",
                 },
-                borderColor: Errors[index]
+                borderColor: Errors[index]?.actionError
                   ? "red"
                   : state.isFocused
                   ? "#654DF7"
@@ -144,6 +147,7 @@ export default function CreateTestCase() {
         </Box>
         <Box className={classes.textContainer} sx={{ width: "70%" }}>
           <FormControl
+            fullWidth
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": {
@@ -162,6 +166,7 @@ export default function CreateTestCase() {
               id="outlined-adornment-name"
               type="text"
               placeholder="Enter title name"
+              error={Errors[index]?.textError}
               value={step?.separator}
               onChange={(e) => handleTextChange(e, index)}
             />

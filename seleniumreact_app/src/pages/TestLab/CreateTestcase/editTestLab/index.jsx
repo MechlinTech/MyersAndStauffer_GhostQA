@@ -28,10 +28,10 @@ export default function EditTestCase() {
   const dispatch = useDispatch();
   const { testId } = useParams();
   const [selectedRunId, setSelectedRunId] = useState(null);
-  const [steps, setSteps] = useState(null);
+  const [steps, setSteps] = useState([]);
   const [isEditable, setIsEditable] = useState(false);
   const [testcaseDetail, setTestcaseDetail] = useState(null);
-  const [Errors, setErrors] = useState(null);
+  const [Errors, setErrors] = useState([null]);
   const [rootId, setrootId] = useState(localStorage.getItem("rootId"));
   useEffect(() => {
     const getSteps = async () => {
@@ -40,7 +40,10 @@ export default function EditTestCase() {
       );
       setTestcaseDetail(res.data);
       setSteps(res.data);
-      // setErrors(actionObj?.map(() => false));
+      setErrors(res.data?.map((step) => ({
+        actionError: !step?.ActionName,
+        textError: !step?.TestStepsName,
+      })))
       console.log("steps list : ", res);
     };
     //for execution history
@@ -80,8 +83,8 @@ export default function EditTestCase() {
 
   const savetoEdit = () => {
     setIsEditable(false);
+    navigate(-1)
   };
-  console.log("errors", Errors);
 
   const handleSave = () => {
     let errors = steps?.map((step) => ({
@@ -104,14 +107,8 @@ export default function EditTestCase() {
       dispatch(UpdateTestStepsDetails(payload, savetoEdit));
     } else {
       console.log("There is an error in at least one element.",errors);
+      toast.error('Every field is required')
      }
-
-    // if (errors.includes(true)) {
-    //   console.log("all field are required");
-    //   toast.error("All field is required");
-    // } else {
-    
-    // }
   };
   const handleCancle = () => {
     navigate(-1);
@@ -200,7 +197,7 @@ export default function EditTestCase() {
             options={userActionsOptions}
             isDisabled={!isEditable}
             value={
-              step ? { label: step.ActionName, value: step.ActionName } : null
+              step ? step.ActionName?{ label: step.ActionName, value: step.ActionName } : null:null
             }
             onChange={(act) => handleActionChange(act, index)}
             styles={{
@@ -216,7 +213,7 @@ export default function EditTestCase() {
                 "&:hover": {
                   borderColor: "#654DF7",
                 },
-                borderColor: false
+                borderColor: Errors[index]?.actionError
                   ? "red"
                   : state.isFocused
                   ? "#654DF7"
@@ -246,6 +243,7 @@ export default function EditTestCase() {
         </Box>
         <Box className={classes.textContainer} sx={{ width: "70%" }}>
           <FormControl
+          fullWidth
             sx={{
               "& .MuiOutlinedInput-root": {
                 "&:hover fieldset": {
@@ -265,6 +263,7 @@ export default function EditTestCase() {
               type="text"
               placeholder="Enter title name"
               disabled={isEditable ? false : true}
+              error={Errors[index]?.textError}
               value={step?.TestStepsName}
               onChange={(e) => handleTextChange(e, index)}
             />
