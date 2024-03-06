@@ -1411,7 +1411,7 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
-        internal async Task<string> AddTestStepsDetails(TestStepsDetails model)
+        internal async Task<string> AddTestStepsDetails(Dto_AddTestStepsJson AddStepsJson)
         {
             string result = string.Empty;
             try
@@ -1422,10 +1422,7 @@ namespace SeleniumReportAPI.Helper
                     using (SqlCommand command = new SqlCommand("stp_AddTestStepsDetails", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestStepsDetailsId", model.TestStepsDetailsId);
-                        command.Parameters.AddWithValue("@TestCaseDetailsId", model.TestCaseDetailsId);
-                        command.Parameters.AddWithValue("@TestStepsName", model.TestStepsName);
-                        command.Parameters.AddWithValue("@ActionName", model.ActionName);
+                        command.Parameters.AddWithValue("@AddStepsJson", JsonConvert.SerializeObject(AddStepsJson));
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)

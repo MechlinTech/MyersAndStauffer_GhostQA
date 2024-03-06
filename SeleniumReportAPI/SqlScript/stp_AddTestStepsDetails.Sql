@@ -1,8 +1,5 @@
 CREATE OR ALTER   PROCEDURE [dbo].[stp_AddTestStepsDetails]
-@TestStepsDetailsId         int = 0,
-@TestCaseDetailsId		    int,
-@TestStepsName	            VARCHAR(100),
-@ActionName                 VARCHAR(100)
+@AddStepsJson                 NVARCHAR(MAX)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_AddTestStepsDetails
@@ -15,17 +12,24 @@ PROC EXEC		:  EXEC stp_AddTestStepsDetails
 **************************************************************************************/
 BEGIN TRY
 	BEGIN
-		INSERT INTO [dbo].[tbl_TestStepsDetails] (TestCaseDetailsId, TestStepsName, ActionName) 
-		VALUES (@TestCaseDetailsId, @TestStepsName, @ActionName)
+		DELETE FROM tbl_TestStepsDetails 
+		WHERE TestCaseDetailsId = JSON_VALUE(@AddStepsJson, '$.testCaseID')
+
+		INSERT INTO tbl_TestStepsDetails(TestCaseDetailsId, TestStepsName, ActionName)
+		SELECT 
+			JSON_VALUE(@AddStepsJson, '$.testCaseID'),
+			action.[separator],
+			action.[type]
+		FROM 
+			OPENJSON(@AddStepsJson, '$.actions') 
+			WITH (
+				[type] NVARCHAR(50) '$.type',
+				[separator] NVARCHAR(50) '$.separator'
+			) AS action;
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
-				SELECT 'success' [status], 'Added Successfully' [message],
-				[Data] = JSON_QUERY((
-						SELECT TestStepsDetailsId [id], TestCaseDetailsId [testCaseDetailsId], [TestStepsName] [testStepsName] , [ActionName] [actionName]
-						FROM tbl_TestStepsDetails where TestCaseDetailsId = SCOPE_IDENTITY()
-						FOR JSON PATH
-					))
+				SELECT 'success' [status], 'Added Successfully' [message]
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 			))
 		END

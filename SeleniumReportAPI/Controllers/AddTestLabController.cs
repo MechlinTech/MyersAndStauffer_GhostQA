@@ -77,9 +77,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param TestStepsDetails="TestStepsDetails"></param>
         /// <returns></returns>
         [HttpPost("AddTestStepsDetails")]
-        public async Task<ActionResult> AddTestStepsDetails(TestStepsDetails model)
+        public async Task<ActionResult> AddTestStepsDetails(Dto_AddTestStepsJson addStepsJson)
         {
-            return Ok(await _helper.AddTestStepsDetails(model));
+            return Ok(await _helper.AddTestStepsDetails(addStepsJson));
         }
 
         /// <summary>
