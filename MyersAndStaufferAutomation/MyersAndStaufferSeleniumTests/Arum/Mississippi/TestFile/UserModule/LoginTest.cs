@@ -19,7 +19,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
         {
             _testData.TestCaseName = "Verify_User_Is_Able_To_Login";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
-            //VideoRecorder.CreateRecording(TestExecutor.Basepath);
+            VideoRecorder.CreateRecording(TestExecutor.Basepath);
             var logInPage = new LoginPage();
             //_testData.TestCaseVideoURL = @"\" + (VideoRecorder.videoPath.StartsWith(VideoRecorder.basePath) ? VideoRecorder.videoPath.Substring(VideoRecorder.basePath.Length).ToString() : VideoRecorder.videoPath.ToString());
 
