@@ -1,6 +1,6 @@
-import { Box, Button, Grid, Paper } from "@mui/material";
+import { Box, Button, FormControl, Grid, Paper } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { StyledTypography } from "./styleTestCase";
+import { StyledOutlinedInput, StyledTypography } from "./styleTestCase";
 import { useStyles } from "./styleTestCase";
 import userActionsOptions from "../../UserActionList";
 import Select from "react-select";
@@ -21,7 +21,6 @@ import { UpdateTestStepsDetails } from "../../../../redux/actions/seleniumAction
 import { toast } from "react-toastify";
 import { header, headerForm } from "../../../../utils/authheader";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const executeUrl = "http://65.1.188.67:8010/api/test-suitesV2/execute/";
 
 export default function EditTestCase() {
   const classes = useStyles();
@@ -40,38 +39,40 @@ export default function EditTestCase() {
         `${BASE_URL}/AddTestLab/GetTestStepsDetailsByTestStepsId?TestStepsId=${testId}` // change this uri
       );
       setTestcaseDetail(res.data);
-      //extracting the actionlist
-      const actionList = res.data[0].ActionName.split(",");
-      const actionObj = actionList.map((act, index) => {
-        return userActionsOptions.find((action) => action.value === act);
-      });
-      setSteps(actionObj);
-      setErrors(actionObj?.map(() => false));
+      setSteps(res.data);
+      // setErrors(actionObj?.map(() => false));
       console.log("steps list : ", res);
     };
-
     //for execution history
     const getExecutionHistory = async () => {
       try {
-        const jsonData = await axios.get(`${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}`);
-        const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" })
-        const formData = new FormData();     
+        const jsonData = await axios.get(
+          `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}`
+        );
+        const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
+          type: "application/json",
+        });
+        const formData = new FormData();
         formData.append("scenarios_file", blob, "data.json");
-        formData.append("name", 'testing');
-        const executedDetail = await axios.post(executeUrl, formData,headerForm());
+        formData.append("name", "testing");
+        const executedDetail = await axios.post(
+          "http://65.1.188.67:8010/api/test-suitesV2/execute/",
+          formData,
+          headerForm()
+        );
         console.log("executedDetail:", executedDetail);
-          
-        const runId = executedDetail.data.container_runs[0].id
-        setTimeout(async() => {
-          const res = await axios.get(`http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`)
+
+        const runId = executedDetail.data.container_runs[0].id;
+        setTimeout(async () => {
+          const res = await axios.get(
+            `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
+          );
           console.log("executedDetail:", res);
         }, 20000);
-       
       } catch (error) {
         console.log("error fetching execution data", error);
       }
     };
-    
 
     getSteps();
     getExecutionHistory();
@@ -83,26 +84,34 @@ export default function EditTestCase() {
   console.log("errors", Errors);
 
   const handleSave = () => {
-    let errors = steps?.map((step) => {
-      return step ? false : true;
-    });
+    let errors = steps?.map((step) => ({
+      actionError: !step?.ActionName,
+      textError: !step?.TestStepsName,
+    }));
     setErrors(errors);
-    if (errors.includes(true)) {
-      console.log("all field are required");
-      toast.error("All field is required");
-    } else {
+    const hasError = errors.some(
+      (error) => error.actionError || error.textError
+    );
+
+    if (!hasError) {
       let payload = {
-        testStepsDetailsId: testcaseDetail[0].TestStepsDetailsId,
-        testCaseDetailsId: testcaseDetail[0].TestCaseDetailsId,
-        testStepsName: testcaseDetail[0].TestStepsName,
-        actionName: steps
-          .map((step) => {
-            return step?.value;
-          })
-          .join(","),
+        testCaseID: testId,
+        actions: steps.map((step) => ({
+          type: step?.ActionName,
+          separator: step?.TestStepsName,
+        })),
       };
       dispatch(UpdateTestStepsDetails(payload, savetoEdit));
-    }
+    } else {
+      console.log("There is an error in at least one element.",errors);
+     }
+
+    // if (errors.includes(true)) {
+    //   console.log("all field are required");
+    //   toast.error("All field is required");
+    // } else {
+    
+    // }
   };
   const handleCancle = () => {
     navigate(-1);
@@ -117,7 +126,15 @@ export default function EditTestCase() {
 
   const handleActionChange = (act, index) => {
     console.log("act", act);
-    const updatedSteps = steps.map((step, i) => (i === index ? act : step));
+    const updatedSteps = steps.map((step, i) =>
+      i === index ? { ...step, ActionName: act?.value } : step
+    );
+    setSteps(updatedSteps);
+  };
+  const handleTextChange = (e, index) => {
+    const updatedSteps = steps.map((step, i) =>
+      i === index ? { ...step, TestStepsName: e.target.value } : step
+    );
     setSteps(updatedSteps);
   };
   const runsArray = [
@@ -154,44 +171,6 @@ export default function EditTestCase() {
     },
     // Add more objects as needed
   ];
-  const selectStyle = {
-    container: (provided) => ({
-      ...provided,
-      width: "50%",
-      backgroundColor: "rgb(242, 242, 242)",
-      // zIndex: 1, // Adjust the zIndex value
-    }),
-    control: (provided, state) => ({
-      ...provided,
-      backgroundColor: "rgb(242, 242, 242)",
-      "&:hover": {
-        borderColor: "#654DF7",
-      },
-      borderColor: Error.environment
-        ? "red"
-        : state.isFocused
-        ? "#654DF7"
-        : "rgb(242, 242, 242)",
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? "#654DF7" : "transparent",
-    }),
-    clearIndicator: (provided) => ({
-      ...provided,
-      cursor: "pointer",
-      ":hover": {
-        color: "#654DF7", // Change the color on hover if desired
-      },
-    }),
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      cursor: "pointer",
-      ":hover": {
-        color: "#654DF7", // Change the color on hover if desired
-      },
-    }),
-  };
   const listOfSteps = steps?.map((step, index) => (
     <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>
       <Box
@@ -220,7 +199,9 @@ export default function EditTestCase() {
             isClearable={true}
             options={userActionsOptions}
             isDisabled={!isEditable}
-            value={step}
+            value={
+              step ? { label: step.ActionName, value: step.ActionName } : null
+            }
             onChange={(act) => handleActionChange(act, index)}
             styles={{
               container: (provided) => ({
@@ -235,9 +216,7 @@ export default function EditTestCase() {
                 "&:hover": {
                   borderColor: "#654DF7",
                 },
-                borderColor: !Errors
-                  ? false
-                  : Errors[index]
+                borderColor: false
                   ? "red"
                   : state.isFocused
                   ? "#654DF7"
@@ -265,11 +244,32 @@ export default function EditTestCase() {
             menuPosition={"fixed"}
           />
         </Box>
-        {step && (
-          <Box className={classes.textContainer} sx={{ width: "70%" }}>
-            <StyledTypography>{step.value}</StyledTypography>
-          </Box>
-        )}
+        <Box className={classes.textContainer} sx={{ width: "70%" }}>
+          <FormControl
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": {
+                  borderColor: "#654DF7",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#654DF7",
+                },
+                "& fieldset": {
+                  borderColor: "transparent",
+                },
+              },
+            }}
+          >
+            <StyledOutlinedInput
+              id="outlined-adornment-name"
+              type="text"
+              placeholder="Enter title name"
+              disabled={isEditable ? false : true}
+              value={step?.TestStepsName}
+              onChange={(e) => handleTextChange(e, index)}
+            />
+          </FormControl>
+        </Box>
       </Paper>
     </li>
   ));
