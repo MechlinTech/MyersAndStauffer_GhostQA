@@ -121,11 +121,11 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <param TestStepsDetails="TestStepsDetails"></param>
         /// <returns></returns>
-        [HttpPost("UpdateTestStepsDetails")]
-        public async Task<ActionResult> UpdateTestStepsDetails(TestStepsDetails model)
-        {
-            return Ok(await _helper.UpdateTestStepsDetails(model));
-        }
+        //[HttpPost("UpdateTestStepsDetails")]
+        //public async Task<ActionResult> UpdateTestStepsDetails(TestStepsDetails model)
+        //{
+        //    return Ok(await _helper.UpdateTestStepsDetails(model));
+        //}
 
         /// <summary>
         ///  Delete Root Relation By Root Id  and Parent Id
