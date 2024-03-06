@@ -291,10 +291,8 @@ export const AddTestStepsDetails = (actions,Data,goBack)=>{
   
   return async (dispatch)=>{
      const stepDetails = {
-      testStepsDetailsId: 0,
-      testCaseDetailsId: Data[0].id,
-      testStepsName: Data[0].testCaseName,
-      actionName: actions.join(',')
+      testCaseID:Data[0].id,
+      actions:actions
     };
     try {
       const res = await axios.post(
@@ -344,7 +342,7 @@ export const UpdateTestStepsDetails = (payload,savetoEdit)=>{
   return async (dispatch)=>{
     try {
       const res = await axios.post(
-        `${BASE_URL}/AddTestLab/UpdateTestStepsDetails`,payload);
+        `${BASE_URL}/AddTestLab/AddTestStepsDetails`,payload);
       if (res.data.status === 'success') {
         toast.info('Successfully saved', {
           style: {
