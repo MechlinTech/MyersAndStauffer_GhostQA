@@ -17,9 +17,9 @@ import { StyledTableCell } from "./styleTestCase";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { UpdateTestStepsDetails } from "../../../../redux/actions/seleniumAction";
+import { UpdateTestStepsDetails } from "../Api";
 import { toast } from "react-toastify";
-import { header, headerForm } from "../../../../utils/authheader";
+import { headerForm } from "../../../../utils/authheader";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function EditTestCase() {
@@ -30,7 +30,6 @@ export default function EditTestCase() {
   const [selectedRunId, setSelectedRunId] = useState(null);
   const [steps, setSteps] = useState([]);
   const [isEditable, setIsEditable] = useState(false);
-  const [testcaseDetail, setTestcaseDetail] = useState(null);
   const [Errors, setErrors] = useState([null]);
   const [rootId, setrootId] = useState(localStorage.getItem("rootId"));
   useEffect(() => {
@@ -38,7 +37,6 @@ export default function EditTestCase() {
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestStepsDetailsByTestStepsId?TestStepsId=${testId}` // change this uri
       );
-      setTestcaseDetail(res.data);
       setSteps(res.data);
       setErrors(res.data?.map((step) => ({
         actionError: !step?.ActionName,
@@ -104,7 +102,7 @@ export default function EditTestCase() {
           separator: step?.TestStepsName,
         })),
       };
-      dispatch(UpdateTestStepsDetails(payload, savetoEdit));
+      UpdateTestStepsDetails(payload, savetoEdit)
     } else {
       console.log("There is an error in at least one element.",errors);
       toast.error('Every field is required')
@@ -191,7 +189,7 @@ export default function EditTestCase() {
           },
         }}
       >
-        <Box mb={1}>
+        <Box mb={1} display='flex'>
           <Select
             isClearable={true}
             options={userActionsOptions}
@@ -240,6 +238,32 @@ export default function EditTestCase() {
             }}
             menuPosition={"fixed"}
           />
+          <FormControl
+            sx={{
+              marginLeft:'5px',
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": {
+                  borderColor: "#654DF7",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#654DF7",
+                },
+                "& fieldset": {
+                  borderColor: "transparent",
+                },
+              },
+            }}
+          >
+            <StyledOutlinedInput
+              id="outlined-adornment-name"
+              type="text"
+              placeholder="Enter title name"
+              disabled={isEditable ? false : true}
+              error={Errors[index]?.textError}
+              value={step?.TestStepsName}
+              onChange={(e) => handleTextChange(e, index)}
+            />
+          </FormControl>
         </Box>
         <Box className={classes.textContainer} sx={{ width: "70%" }}>
           <FormControl

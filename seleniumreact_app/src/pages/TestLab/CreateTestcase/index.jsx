@@ -1,22 +1,37 @@
-import { Box, Button, Grid, Paper, FormControl } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  Paper,
+  FormControl,
+  Checkbox,
+  Typography,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useState } from "react";
-import { StyledOutlinedInput, StyledTypography } from "./styleTestCase";
+import {
+  StyledFormControl,
+  StyledOutlinedInput,
+  StyledTypography,
+} from "./styleTestCase";
 import Select from "react-select";
 import { useNavigate, useParams } from "react-router-dom";
 import userActionsOptions from "../UserActionList";
 import { useDispatch } from "react-redux";
-import { AddTestCaseDetails } from "../../../redux/actions/seleniumAction";
+import { AddTestCaseDetails } from "./Api";
 import { useStyles } from "../styles";
 import { toast } from "react-toastify";
 export default function CreateTestCase() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const classes = useStyles();
   const { rootId } = useParams();
-  const [selectedAction, setselectedAct] = useState(null);
   const [testCaseTitle, settestCaseTitle] = useState("");
-  const [steps, setSteps] = useState([{ type: null, separator: "" }]);
+  const [steps, setSteps] = useState([
+    { type: null, separatorValue: "", separatorType: "" },
+  ]);
   const [Errors, setErrors] = useState([]);
   const [testCaseTitleError, settestCaseTitleError] = useState("");
   const goBack = () => {
@@ -29,10 +44,10 @@ export default function CreateTestCase() {
       textError: !step?.separator,
     }));
     setErrors(errors);
-    let titleError = ""
-    if(!testCaseTitle.trim()){
-      settestCaseTitleError('test case title required')
-      titleError='test case title required'
+    let titleError = "";
+    if (!testCaseTitle.trim()) {
+      settestCaseTitleError("test case title required");
+      titleError = "test case title required";
     }
     const hasError = errors.some(
       (error) => error.actionError || error.textError
@@ -44,8 +59,7 @@ export default function CreateTestCase() {
         rootId: rootId,
         testCaseName: testCaseTitle,
       };
-
-      dispatch(AddTestCaseDetails(payload, steps, goBack));
+      AddTestCaseDetails(payload, steps, goBack);
     } else {
       console.log("error posting", errors);
       toast.error("Every field is required");
@@ -61,25 +75,40 @@ export default function CreateTestCase() {
     setSteps(updatedSteps);
   };
 
-  const handleActionChange = (act, index) => {
-    const updatedSteps = steps.map((step, i) =>
-      i === index ? { ...step, type: act?.value } : step
-    );
-    setSteps(updatedSteps);
-  };
-
-  const handleTextChange = (e, index) => {
-    const updatedSteps = steps.map((step, i) =>
-      i === index ? { ...step, separator: e.target.value } : step
-    );
-    console.log(updatedSteps);
+  const handleActionChange = (inputValue, index, inputType) => {
+    let updatedSteps = [];
+    switch (inputType) {
+      case "type":
+        updatedSteps = steps.map((step, i) =>
+          i === index ? { ...step, type: inputValue?.value } : step
+        );
+        break;
+      case "separatorType":
+        updatedSteps = steps.map((step, i) =>
+          i === index
+            ? { ...step, separatorType: inputValue.target.value }
+            : step
+        );
+        break;
+      case "separatorValue":
+        updatedSteps = steps.map((step, i) =>
+          i === index
+            ? { ...step, separatorValue: inputValue.target.value }
+            : step
+        );
+        break;
+      default:
+        console.log("steps : ", updatedSteps);
+    }
     setSteps(updatedSteps);
   };
 
   const listOfSteps = steps.map((step, index) => (
     <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>
       <Box
-        sx={{ display: "flex", justifyContent: "space-between", width: "50%" }}
+        sx={{ display: "flex", justifyContent: "space-between", width: "70%","@media (max-width: 960px)": {
+          width: "100%",
+        }, }}
       >
         <StyledTypography>Step {index + 1}</StyledTypography>
         <DeleteIcon
@@ -90,101 +119,102 @@ export default function CreateTestCase() {
       <Paper
         elevation={1}
         sx={{
-          width: "50%",
+          width: "70%",
           padding: "10px",
-          "@media (max-width: 600px)": {
+          "@media (max-width: 960px)": {
             width: "100%",
           },
         }}
       >
-        <Box mb={1}>
-          <Select
-            isClearable={true}
-            options={userActionsOptions}
-            value={
-              step ? step.type?{ label: step.type, value: step.type } : null:null
-            }
-            onChange={(act) => handleActionChange(act, index)}
-            styles={{
-              container: (provided) => ({
-                ...provided,
-                width: "50%",
-                backgroundColor: "rgb(242, 242, 242)",
-              }),
-              control: (provided, state) => ({
-                ...provided,
-                backgroundColor: "rgb(242, 242, 242)",
-                "&:hover": {
-                  borderColor: "#654DF7",
-                },
-                borderColor: Errors[index]?.actionError
-                  ? "red"
-                  : state.isFocused
-                  ? "#654DF7"
-                  : "rgb(242, 242, 242)",
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isSelected ? "#654DF7" : "transparent",
-              }),
-              clearIndicator: (provided) => ({
-                ...provided,
-                cursor: "pointer",
-                ":hover": {
-                  color: "#654DF7",
-                },
-              }),
-              dropdownIndicator: (provided) => ({
-                ...provided,
-                cursor: "pointer",
-                ":hover": {
-                  color: "#654DF7",
-                },
-              }),
-            }}
-            menuPosition={"fixed"}
-          />
-        </Box>
-        <Box className={classes.textContainer} sx={{ width: "70%" }}>
-          <FormControl
-            fullWidth
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": {
-                  borderColor: "#654DF7",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#654DF7",
-                },
-                "& fieldset": {
-                  borderColor: "transparent",
-                },
-              },
-            }}
-          >
-            <StyledOutlinedInput
-              id="outlined-adornment-name"
-              type="text"
-              placeholder="Enter title name"
-              error={Errors[index]?.textError}
-              value={step?.separator}
-              onChange={(e) => handleTextChange(e, index)}
+        <Grid container spacing={1}>
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Selector type"
+                value={step?.separatorType}
+                onChange={(event) => {
+                  handleActionChange(event, index, "separatorType");
+                }}
+              />
+            </StyledFormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Selector value"
+                value={step?.separatorValue}
+                onChange={(event) => {
+                  handleActionChange(event, index, "separatorValue");
+                }}
+              />
+            </StyledFormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <Select
+              isClearable={true}
+              placeholder="type"
+              options={userActionsOptions}
+              value={
+                step
+                  ? step.type
+                    ? { label: step.type, value: step.type }
+                    : null
+                  : null
+              }
+              onChange={(act) => handleActionChange(act, index, "type")}
+              styles={{
+                container: (provided) => ({
+                  ...provided,
+                  backgroundColor: "rgb(242, 242, 242)",
+                  width: "100%",
+                }),
+                control: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: "rgb(242, 242, 242)",
+                  "&:hover": {
+                    borderColor: "#654DF7",
+                  },
+                  borderColor: Errors[index]?.actionError
+                    ? "red"
+                    : state.isFocused
+                    ? "#654DF7"
+                    : "rgb(242, 242, 242)",
+                }),
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.isSelected ? "#654DF7" : "transparent",
+                }),
+                clearIndicator: (provided) => ({
+                  ...provided,
+                  cursor: "pointer",
+                  ":hover": {
+                    color: "#654DF7",
+                  },
+                }),
+                dropdownIndicator: (provided) => ({
+                  ...provided,
+                  cursor: "pointer",
+                  ":hover": {
+                    color: "#654DF7",
+                  },
+                }),
+              }}
+              menuPosition={"fixed"}
             />
-          </FormControl>
-        </Box>
-        {/* <Button
-          onClick={() => handleRemoveStep(step.id)}
-          sx={{
-            backgroundColor: "rgb(220, 0, 78)",
-            "&:hover": {
-              backgroundColor: "rgb(220, 0, 78) !important",
-            },
-            color: "#fff",
-            marginTop: "10px",
-          }}
-        >
-          Remove
-        </Button> */}
+            <Box display="flex" alignItems="center">
+              <Checkbox
+                size="small"
+                sx={{ "&.Mui-checked": { color: "#654DF7" } }}
+              />
+              <Typography fontSize="10px" fontFamily="Lexend Deca">
+                Make this step optional (Continue on failure)
+              </Typography>
+            </Box>
+          </Grid>
+          {renderActionFields(step?.type)}
+        </Grid>
       </Paper>
     </li>
   ));
@@ -205,21 +235,7 @@ export default function CreateTestCase() {
             <Grid container justifyContent="space-between" alignItems="center">
               <Grid item xs={12} md={3} display="flex" alignItems="center">
                 <StyledTypography mr={1}>Testcase Title :</StyledTypography>
-                <FormControl
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      "&:hover fieldset": {
-                        borderColor: "#654DF7",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#654DF7",
-                      },
-                      "& fieldset": {
-                        borderColor: "transparent",
-                      },
-                    },
-                  }}
-                >
+                <StyledFormControl>
                   <StyledOutlinedInput
                     id="outlined-adornment-name"
                     type="text"
@@ -228,7 +244,7 @@ export default function CreateTestCase() {
                     error={testCaseTitleError ? true : false}
                     onChange={(e) => settestCaseTitle(e.target.value)}
                   />
-                </FormControl>
+                </StyledFormControl>
               </Grid>
               <Grid item xs={12} md={2} display="flex" justifyContent="end">
                 <Button
@@ -297,3 +313,44 @@ export default function CreateTestCase() {
     </div>
   );
 }
+
+const renderActionFields = (action) => {
+  switch (action) {
+    case "click":
+      return (
+        <Grid item xs={6}>
+          <FormControl component="fieldset">
+            <RadioGroup
+              row
+              aria-label="radio-buttons"
+              name="radio-buttons-group"
+              // value={selectedValue}
+              // onChange={handleChange}
+              sx={{gap:0}}
+            >
+              <FormControlLabel
+                value="option1"
+                control={<Radio style={{ color: "#654DF7" }}/>}
+                label={<span style={{ fontSize: '14px',fontFamily:'Lexend Deca' }}>Left Click</span>}
+              />
+              <FormControlLabel
+                value="option2"
+                control={<Radio style={{ color: "#654DF7" }}/>}
+                label={<span style={{ fontSize: '14px',fontFamily:'Lexend Deca' }}>Right Click</span>}
+              />
+              <FormControlLabel
+                value="option3"
+                control={<Radio style={{ color: "#654DF7" }}/>}
+                label={<span style={{ fontSize: '14px',fontFamily:'Lexend Deca' }}>Double Click</span>}
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+      );
+    case "hover":
+      return <StyledOutlinedInput />;
+    // Add other cases for each action type
+    default:
+      return null;
+  }
+};
