@@ -6,8 +6,12 @@
         public List<ActionModel> actions { get; set; }
         public class ActionModel
         {
-            public string type { get; set; }
-            public string separator { get; set; }
+            public string description { get; set; }
+            public string actionName { get; set; }
+            public string selectorType { get; set; }
+            public string selectorValue { get; set; }
+            public string text { get; set; }
+            public string isOption { get; set; }
         }
     }
 }

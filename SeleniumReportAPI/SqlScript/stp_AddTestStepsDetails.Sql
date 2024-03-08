@@ -15,16 +15,24 @@ BEGIN TRY
 		DELETE FROM tbl_TestStepsDetails 
 		WHERE TestCaseDetailsId = JSON_VALUE(@AddStepsJson, '$.testCaseID')
 
-		INSERT INTO tbl_TestStepsDetails(TestCaseDetailsId, TestStepsName, ActionName)
+		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [ActionName], [Description], [IsOption], [SelectorType], [SelectorValue], [Text])
 		SELECT 
 			JSON_VALUE(@AddStepsJson, '$.testCaseID'),
-			action.[separator],
-			action.[type]
+			action.[description],
+			action.[actionName],
+			action.[selectorType],
+			action.[selectorValue],
+			action.[text],
+			action.[isOption]
 		FROM 
 			OPENJSON(@AddStepsJson, '$.actions') 
 			WITH (
-				[type] NVARCHAR(50) '$.type',
-				[separator] NVARCHAR(50) '$.separator'
+				[description] NVARCHAR(50) '$.description',
+				[actionName] NVARCHAR(50) '$.actionName',
+				[selectorType] NVARCHAR(50) '$.selectorType',
+				[selectorValue] NVARCHAR(50) '$.selectorValue',
+				[text] NVARCHAR(50) '$.text',
+				[isOption] NVARCHAR(50) '$.isOption'
 			) AS action;
 		IF @@ERROR = 0
 		BEGIN

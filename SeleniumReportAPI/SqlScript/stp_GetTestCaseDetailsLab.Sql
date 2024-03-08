@@ -1,13 +1,13 @@
 CREATE OR ALTER   PROCEDURE [dbo].[stp_GetTestCaseDetails]
 AS
 /**************************************************************************************
-PROCEDURE NAME	:	stp_GetTestCaseDetails
+PROCEDURE NAME	:	stp_GetTestCaseDetailsLab
 CREATED BY		:	Mohammed Yaseer
 CREATED DATE	:	1st March 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
 PROC EXEC		:
-				EXEC stp_GetTestCaseDetails
+				EXEC stp_GetTestCaseDetailsLab
 **************************************************************************************/
 BEGIN TRY
 	SELECT [result] = JSON_QUERY((

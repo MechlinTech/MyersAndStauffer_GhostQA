@@ -11,10 +11,14 @@ PROC EXEC		:
 **************************************************************************************/
 BEGIN TRY
 	SELECT [result] = JSON_QUERY((
-		SELECT  [TestStepsDetailsId]
+		SELECT  [TestStepsDetailsId],
 			    [TestCaseDetailsId],
-                [TestStepsName],
-                [ActionName]
+                [ActionName],
+                [Description],
+                [IsOption],
+				[SelectorType],
+				[SelectorValue],
+				[Text]
 		FROM tbl_TestStepsDetails
 	FOR JSON PATH))
 END TRY

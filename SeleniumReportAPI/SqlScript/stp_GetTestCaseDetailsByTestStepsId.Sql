@@ -16,8 +16,12 @@ BEGIN TRY
         SELECT [result] = JSON_QUERY((
            SELECT  [TestStepsDetailsId],
 					[TestCaseDetailsId],
-					[TestStepsName],
-					[ActionName]
+					[ActionName],
+					[Description],
+					[IsOption],
+					[SelectorType],
+					[SelectorValue],
+					[Text]
 		    FROM tbl_TestStepsDetails
             WHERE [TestCaseDetailsId] = @TestStepsId
             FOR JSON PATH
