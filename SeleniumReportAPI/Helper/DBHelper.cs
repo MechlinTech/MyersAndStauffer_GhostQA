@@ -1392,6 +1392,7 @@ namespace SeleniumReportAPI.Helper
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestCaseDetailsId", model.TestCaseDetailsId);
                         command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@StartUrl", model.StartUrl);
                         command.Parameters.AddWithValue("@TestCaseName", model.TestCaseName);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {

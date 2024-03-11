@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeleniumReportAPI.DBContext;
 
@@ -11,9 +12,10 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240311085403_tbl_testCaseDetails_startUrl")]
+    partial class tbl_testCaseDetails_startUrl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -517,55 +519,13 @@ namespace SeleniumReportAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TestStepsDetailsId"), 1L, 1);
 
-                    b.Property<string>("Accessibility")
+                    b.Property<string>("ActionName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AccessibilityModifier")
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AssignInputValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClickType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ElementSelector")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExecuteJavaScript")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExitTestStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExtractVariable")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImportingStepFrom")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsOptional")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("JavaScriptCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("JavascriptVariable")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("KeyPressValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NavigatTo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PauseTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SelectedDragDroptype")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SelectedModifierKey")
+                    b.Property<string>("IsOption")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SelectorType")
@@ -574,16 +534,10 @@ namespace SeleniumReportAPI.Migrations
                     b.Property<string>("SelectorValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StepDescripton")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("TestCaseDetailsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VariableName")
+                    b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TestStepsDetailsId");

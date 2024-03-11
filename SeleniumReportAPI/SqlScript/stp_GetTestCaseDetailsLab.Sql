@@ -13,6 +13,7 @@ BEGIN TRY
 	SELECT [result] = JSON_QUERY((
 		SELECT [TestCaseDetailsId], 
 		       ISNULL([RootId], '') AS [RootId],
+			   ISNULL([StartUrl], '') AS [StartUrl],
                [TestCaseName]
 		FROM tbl_TestCaseDetails
 	FOR JSON PATH))

@@ -5,8 +5,8 @@ AS
 PROCEDURE NAME	:	stp_AddTestStepsDetails
 CREATED BY		:	Mohammed Yaseer
 CREATED DATE	:	1st March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
+MODIFIED BY		:	Mohammed Yaseer
+MODIFIED DATE	:	11th March 2024
 PROC EXEC		:  EXEC stp_AddTestStepsDetails 
 				
 **************************************************************************************/
@@ -15,24 +15,57 @@ BEGIN TRY
 		DELETE FROM tbl_TestStepsDetails 
 		WHERE TestCaseDetailsId = JSON_VALUE(@AddStepsJson, '$.testCaseID')
 
-		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [ActionName], [Description], [IsOption], [SelectorType], [SelectorValue], [Text])
+		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [SelectedModifierKey], [StepDescripton], [Type], [SelectorType], [SelectorValue], [VariableName],
+		[Accessibility], [AccessibilityModifier], [AssignInputValue], [ClickType], [ElementSelector], [ExecuteJavaScript], [ExitTestStatus], [ExtractVariable], [ImportingStepFrom], [IsOptional], [JavaScriptCode], [JavascriptVariable], [KeyPressValue], [NavigatTo], [PauseTime], [SelectedDragDroptype])
 		SELECT 
 			JSON_VALUE(@AddStepsJson, '$.testCaseID'),
-			action.[description],
-			action.[actionName],
+			action.[selectedModifierKey],
+			action.[stepDescription],
+			action.[type],
 			action.[selectorType],
 			action.[selectorValue],
-			action.[text],
-			action.[isOption]
+			action.[variableName],
+			action.[accessibility],
+			action.[accessibilityModifier],
+			action.[assignInputValue],
+			action.[clickType],
+			action.[elementSelector],
+			action.[executeJavaScript],
+			action.[exitTestStatus],
+			action.[extractVariable],
+			action.[importingStepFrom],
+			action.[isOptional],
+			action.[javaScriptCode],
+			action.[javaScriptVariable],
+			action.[keyPressValue],
+			action.[navigateTo],
+			action.[pauseTime],
+			action.[selectedDragDropType]
 		FROM 
 			OPENJSON(@AddStepsJson, '$.actions') 
 			WITH (
-				[description] NVARCHAR(50) '$.description',
-				[actionName] NVARCHAR(50) '$.actionName',
+				[selectedModifierKey] NVARCHAR(50) '$.selectedModifierKey',
+				[stepDescription] NVARCHAR(50) '$.stepDescription',
+				[type] NVARCHAR(50) '$.type',
 				[selectorType] NVARCHAR(50) '$.selectorType',
 				[selectorValue] NVARCHAR(50) '$.selectorValue',
-				[text] NVARCHAR(50) '$.text',
-				[isOption] NVARCHAR(50) '$.isOption'
+				[variableName] NVARCHAR(50) '$.variableName',
+				[accessibility] NVARCHAR(50) '$.accessibility',
+				[accessibilityModifier] NVARCHAR(50) '$.accessibilityModifier',
+				[assignInputValue] NVARCHAR(50) '$.assignInputValue',
+				[clickType] NVARCHAR(50) '$.clickType',
+				[elementSelector] NVARCHAR(50) '$.elementSelector',
+				[executeJavaScript] NVARCHAR(50) '$.executeJavaScript',
+				[exitTestStatus] NVARCHAR(50) '$.exitTestStatus',
+				[extractVariable] NVARCHAR(50) '$.extractVariable',
+				[importingStepFrom] NVARCHAR(50) '$.importingStepFrom',
+				[isOptional] bit '$.isOptional',
+				[javaScriptCode] NVARCHAR(50) '$.javaScriptCode',
+				[javaScriptVariable] NVARCHAR(50) '$.javaScriptVariable',
+				[keyPressValue] NVARCHAR(50) '$.keyPressValue',
+				[navigateTo] NVARCHAR(50) '$.navigateTo',
+				[pauseTime] NVARCHAR(50) '$.pauseTime',
+				[selectedDragDropType] NVARCHAR(50) '$.selectedDragDropType'
 			) AS action;
 		IF @@ERROR = 0
 		BEGIN

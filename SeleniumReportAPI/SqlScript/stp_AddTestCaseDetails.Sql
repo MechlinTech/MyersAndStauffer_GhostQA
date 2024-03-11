@@ -1,6 +1,7 @@
 CREATE OR ALTER PROCEDURE [dbo].[stp_AddTestCaseDetails]
 @TestCaseDetailsId         int = 0,
 @RootId		               int,
+@StartUrl                  VARCHAR(100),
 @TestCaseName              VARCHAR(100)
 AS
 /**************************************************************************************
@@ -14,14 +15,14 @@ PROC EXEC		:  EXEC stp_AddTestCaseDetails
 **************************************************************************************/
 BEGIN TRY
 	BEGIN
-		INSERT INTO [dbo].[tbl_TestCaseDetails] ( RootId, TestCaseName) 
-		VALUES (@RootId, @TestCaseName)
+		INSERT INTO [dbo].[tbl_TestCaseDetails] ( RootId, TestCaseName, StartUrl) 
+		VALUES (@RootId, @TestCaseName,@StartUrl)
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
 				SELECT 'success' [status], 'Added Successfully' [message],
 				[Data] = JSON_QUERY((
-						SELECT TestCaseDetailsId [id], RootId [rootId], [TestCaseName] [testCaseName]
+						SELECT TestCaseDetailsId [id], RootId [rootId], [TestCaseName] [testCaseName], [StartUrl] [startUrl]
 						FROM tbl_TestCaseDetails where TestCaseDetailsId = SCOPE_IDENTITY()
 						FOR JSON PATH
 					))
