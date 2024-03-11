@@ -38,9 +38,9 @@ export default function Browser() {
   };
 
 
-  const filteredData = browserList?.filter((data) =>
+  const filteredData = browserList? browserList.filter((data) =>
     data?.BrowserName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
-  );
+  ):[]
 
   return (
     <>

@@ -66,7 +66,7 @@ export default function Dashboard() {
     dispatch(getTestSuites());
   }, [dispatch,openDelModal,executingSuite]);
 
-  const filteredTestSuiteData = testSuits?.filter((suite) =>
+  const filteredTestSuiteData = testSuits && testSuits?.filter((suite) =>
     suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
 
@@ -162,7 +162,7 @@ export default function Dashboard() {
                 item
                 style={{ overflow: "auto", maxHeight: "calc(70vh - 50px)", paddingBottom:'10px' }}
               >
-                {filteredTestSuiteData.map((suite, index) => (
+                {filteredTestSuiteData ? filteredTestSuiteData.map((suite, index) => (
                   <Paper
                     key={suite.TestSuiteName}
                     className={`${classess.paper} ${
@@ -243,7 +243,7 @@ export default function Dashboard() {
                       </Grid>
                     </Grid>
                   </Paper>
-                ))}
+                )):<Box textAlign='center'>No test suite</Box>}
               </Grid>
             </Card>
           </Grid>

@@ -45,6 +45,13 @@ const accessibilityList =[
   'Fail if any issues are found, including minor issues'
 
 ].map((item) => ({ label: item, value: item }));
+const selectorTypeList = [
+  'Xpath',
+  "ID",
+  'Class',
+  'Css',
+  "Name"
+].map((item) => ({ label: item, value: item }));
 
 const testCases = [
   'Test Case 1',
@@ -53,6 +60,6 @@ const testCases = [
   'Test Case 4',
   'Test Case 5',
 ].map((item) => ({ label: item, value: item }));
-export {userActionsOptions,keyList,accessibilityList,testCases};
+export {userActionsOptions,keyList,accessibilityList,testCases,selectorTypeList};
 
 

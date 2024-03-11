@@ -10,40 +10,14 @@ import React, { useState } from "react";
 import { StyledFormControl, StyledOutlinedInput } from "./styleTestCase";
 import { keyList, accessibilityList } from "../DropDownOptions";
 import Select from "react-select";
-import {testCases} from '../DropDownOptions'
+import { testCases } from "../DropDownOptions";
 export default function RenderActionFields({
   action,
   step,
   index,
-  steps,
-  setSteps,
+  Errors,
   handleInputChange,
 }) {
-  const [selectedClickType, setSelectedClickType] = useState(step?.clickType);
-  const [elementSelector, setElementSelector] = useState(step?.elementSelector);
-  const [selectedDragDroptype, setselectedDragDroptype] = useState(
-    step?.selectedDragDroptype
-  );
-  const [assignInputValue, setassignInputValue] = useState(
-    step?.assignInputValue
-  );
-  const [keyPressValue, setkeyPressValue] = useState({
-    label: step?.keyPressValue,
-    value: step?.keyPressValue,
-  });
-  const [selectedModifierKey, setselectedModifierKey] = useState(
-    step?.selectedModifierKey
-  );
-  const [pauseTime, setpauseTime] = useState(step?.pauseTime);
-  const [exitTestStatus, setExitTestStatus] = useState(step?.exitTestStatus);
-  const [navigatTo, setnavigatTo] = useState(step?.navigatTo);
-
-  const [accessibilityModifier, setaccessibilityModifier] = useState(
-    step?.accessibilityModifier
-  );
-  const [variableName, setvariableName] = useState(step?.variableName);
-  const [extractVariable, setextractVariable] = useState(step?.extractVariable)
-  const [javascriptVariable, setjavascriptVariable] = useState(step?.javascriptVariable)
   switch (action) {
     case "click":
       return (
@@ -53,11 +27,15 @@ export default function RenderActionFields({
               row
               aria-label="radio-buttons"
               name="radio-buttons-group"
-              value={selectedClickType}
+              value={step?.clickType}
               onChange={(e) => {
                 handleInputChange(e, index, "clickType");
               }}
-              sx={{ gap: 0 }}
+              sx={{
+                border: Errors[index]?.clickTypeError
+                  ? "1px solid red"
+                  : "1px solid transparent",
+              }}
             >
               <FormControlLabel
                 value="Left Click"
@@ -98,7 +76,8 @@ export default function RenderActionFields({
               <StyledOutlinedInput
                 type="text"
                 placeholder="Element Selector (Drop area)"
-                value={elementSelector}
+                value={step?.elementSelector}
+                error={Errors[index]?.elementSelectorError}
                 onChange={(e) => {
                   handleInputChange(e, index, "elementSelector");
                 }}
@@ -111,11 +90,15 @@ export default function RenderActionFields({
                 row
                 aria-label="radio-buttons"
                 name="radio-buttons-group"
-                value={selectedDragDroptype}
+                value={step?.selectedDragDroptype}
                 onChange={(e) => {
                   handleInputChange(e, index, "selectedDragDroptype");
                 }}
-                sx={{ gap: 0 }}
+                sx={{
+                  border: Errors[index]?.selectedDragDroptype
+                    ? "1px solid red"
+                    : "1px solid transparent",
+                }}
               >
                 <FormControlLabel
                   value="Native"
@@ -151,7 +134,8 @@ export default function RenderActionFields({
             <StyledOutlinedInput
               type="text"
               placeholder="Input value"
-              value={assignInputValue}
+              error={Errors[index]?.assignInputValueError}
+              value={step?.assignInputValue}
               onChange={(e) => {
                 handleInputChange(e, index, "assignInputValue");
               }}
@@ -183,7 +167,7 @@ export default function RenderActionFields({
                   "&:hover": {
                     borderColor: "#654DF7",
                   },
-                  borderColor: false
+                  borderColor: Errors[index]?.keyPressValueError
                     ? "red"
                     : state.isFocused
                     ? "#654DF7"
@@ -216,11 +200,15 @@ export default function RenderActionFields({
               <RadioGroup
                 row
                 name="radio-buttons-group"
-                value={selectedModifierKey}
+                value={step?.selectedModifierKey}
                 onChange={(e) => {
                   handleInputChange(e, index, "selectedModifierKey");
                 }}
-                sx={{ gap: 0 }}
+                sx={{
+                  border: Errors[index]?.selectedModifierKeyError
+                    ? "1px solid red"
+                    : "1px solid transparent",
+                }}
               >
                 <FormControlLabel
                   value="Shift"
@@ -268,7 +256,10 @@ export default function RenderActionFields({
             multiline
             rows={5}
             fullWidth
-            value={""}
+            value={step?.executeJavaScript}
+            onChange={(e) => {
+              handleInputChange(e, index, "executeJavaScript");
+            }}
           />
         </Grid>
       );
@@ -279,7 +270,8 @@ export default function RenderActionFields({
             <StyledOutlinedInput
               type="text"
               placeholder="Input value"
-              value={pauseTime}
+              error={Errors[index]?.pauseTimeError}
+              value={step?.pauseTime}
               onChange={(e) => {
                 handleInputChange(e, index, "pauseTime");
               }}
@@ -295,11 +287,15 @@ export default function RenderActionFields({
               row
               aria-label="radio-buttons"
               name="radio-buttons-group"
-              value={exitTestStatus}
+              value={step?.exitTestStatus}
               onChange={(e) => {
                 handleInputChange(e, index, "exitTestStatus");
               }}
-              sx={{ gap: 0 }}
+              sx={{
+                border: Errors[index]?.exitTestStatusError
+                  ? "1px solid red"
+                  : "1px solid transparent",
+              }}
             >
               <FormControlLabel
                 value="Passing"
@@ -330,9 +326,10 @@ export default function RenderActionFields({
             <StyledOutlinedInput
               type="text"
               placeholder="Input value"
-              value={navigatTo}
+              value={step?.navigateTo}
+              error={Errors[index]?.navigateToError}
               onChange={(e) => {
-                handleInputChange(e, index, "navigatTo");
+                handleInputChange(e, index, "navigateTo");
               }}
             />
           </StyledFormControl>
@@ -341,7 +338,16 @@ export default function RenderActionFields({
     case "JavaScript returns true":
       return (
         <Grid item xs={6}>
-          <TextField label="JavaScript Code" multiline rows={1} fullWidth />
+          <TextField
+            label="JavaScript Code"
+            multiline
+            rows={1}
+            fullWidth
+            value={step?.javaScriptCode}
+            onChange={(e) => {
+              handleInputChange(e, index, "javaScriptCode");
+            }}
+          />
         </Grid>
       );
     case "Check accessibility":
@@ -368,7 +374,7 @@ export default function RenderActionFields({
                   "&:hover": {
                     borderColor: "#654DF7",
                   },
-                  borderColor: false
+                  borderColor: Errors[index]?.accessibilityError
                     ? "red"
                     : state.isFocused
                     ? "#654DF7"
@@ -396,7 +402,7 @@ export default function RenderActionFields({
               menuPosition={"fixed"}
             />
           </Grid>
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <FormControl component="fieldset">
               <RadioGroup
                 row
@@ -443,23 +449,39 @@ export default function RenderActionFields({
                 />
               </RadioGroup>
             </FormControl>
-          </Grid>
+          </Grid> */}
         </>
       );
     case "Set variable":
       return (
-        <Grid item xs={6}>
-          <StyledFormControl>
-            <StyledOutlinedInput
-              type="text"
-              placeholder="Variale name"
-              value={variableName}
-              onChange={(e) => {
-                handleInputChange(e, index, "variableName");
-              }}
-            />
-          </StyledFormControl>
-        </Grid>
+        <>
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Variale name"
+                value={step?.variableInput}
+                error={Errors[index]?.variableInputError}
+                onChange={(e) => {
+                  handleInputChange(e, index, "variableInput");
+                }}
+              />
+            </StyledFormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Variale name"
+                error={Errors[index]?.variableNameError}
+                value={step?.variableName}
+                onChange={(e) => {
+                  handleInputChange(e, index, "variableName");
+                }}
+              />
+            </StyledFormControl>
+          </Grid>
+        </>
       );
     case "Extract from element":
       return (
@@ -468,7 +490,8 @@ export default function RenderActionFields({
             <StyledOutlinedInput
               type="text"
               placeholder="Variale name"
-              value={extractVariable}
+              error={Errors[index]?.extractVariableError}
+              value={step?.extractVariable}
               onChange={(e) => {
                 handleInputChange(e, index, "extractVariable");
               }}
@@ -480,19 +503,29 @@ export default function RenderActionFields({
       return (
         <>
           <Grid item xs={6}>
-            Javascript field
-          </Grid>
-          <Grid item xs={6}>
-          <StyledFormControl>
-            <StyledOutlinedInput
-              type="text"
-              placeholder="Variale name"
-              value={javascriptVariable}
+            <TextField
+              label="JavaScript Code"
+              multiline
+              rows={1}
+              fullWidth
+              value={step?.extractJavaScript}
               onChange={(e) => {
-                handleInputChange(e, index, "javascriptVariable");
+                handleInputChange(e, index, "extractJavaScript");
               }}
             />
-          </StyledFormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Variale name"
+                value={step?.javascriptVariable}
+                error={Errors[index]?.javascriptVariableError}
+                onChange={(e) => {
+                  handleInputChange(e, index, "javascriptVariable");
+                }}
+              />
+            </StyledFormControl>
           </Grid>
         </>
       );
@@ -503,8 +536,13 @@ export default function RenderActionFields({
             isClearable={true}
             placeholder="type"
             options={testCases}
-            value={{label:step?.importingStepFrom, value:step?.importingStepFrom}}
-            onChange={(val)=>{handleInputChange(val,index,'importingStepFrom')}}
+            value={{
+              label: step?.importingStepFrom,
+              value: step?.importingStepFrom,
+            }}
+            onChange={(val) => {
+              handleInputChange(val, index, "importingStepFrom");
+            }}
             styles={{
               container: (provided) => ({
                 ...provided,
@@ -517,7 +555,7 @@ export default function RenderActionFields({
                 "&:hover": {
                   borderColor: "#654DF7",
                 },
-                borderColor: false
+                borderColor: Errors[index]?.importingStepFromError
                   ? "red"
                   : state.isFocused
                   ? "#654DF7"
