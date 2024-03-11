@@ -1,0 +1,590 @@
+import {
+  FormControl,
+  FormControlLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  TextField,
+} from "@mui/material";
+import React, { useState } from "react";
+import { StyledFormControl, StyledOutlinedInput } from "./styleTestCase";
+import { keyList, accessibilityList } from "../DropDownOptions";
+import Select from "react-select";
+import { testCases } from "../DropDownOptions";
+export default function RenderActionFields({
+  action,
+  step,
+  index,
+  Errors,
+  handleInputChange,
+}) {
+  switch (action) {
+    case "click":
+      return (
+        <Grid item xs={6}>
+          <FormControl component="fieldset">
+            <RadioGroup
+              row
+              aria-label="radio-buttons"
+              name="radio-buttons-group"
+              value={step?.clickType}
+              onChange={(e) => {
+                handleInputChange(e, index, "clickType");
+              }}
+              sx={{
+                border: Errors[index]?.clickTypeError
+                  ? "1px solid red"
+                  : "1px solid transparent",
+              }}
+            >
+              <FormControlLabel
+                value="Left Click"
+                control={<Radio style={{ color: "#654DF7" }} />}
+                label={
+                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
+                    Left Click
+                  </span>
+                }
+              />
+              <FormControlLabel
+                value="Right Click"
+                control={<Radio style={{ color: "#654DF7" }} />}
+                label={
+                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
+                    Right Click
+                  </span>
+                }
+              />
+              <FormControlLabel
+                value="Double Click"
+                control={<Radio style={{ color: "#654DF7" }} />}
+                label={
+                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
+                    Double Click
+                  </span>
+                }
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+      );
+    case "dragDrop":
+      return (
+        <>
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Element Selector (Drop area)"
+                value={step?.elementSelector}
+                error={Errors[index]?.elementSelectorError}
+                onChange={(e) => {
+                  handleInputChange(e, index, "elementSelector");
+                }}
+              />
+            </StyledFormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl component="fieldset">
+              <RadioGroup
+                row
+                aria-label="radio-buttons"
+                name="radio-buttons-group"
+                value={step?.selectedDragDroptype}
+                onChange={(e) => {
+                  handleInputChange(e, index, "selectedDragDroptype");
+                }}
+                sx={{
+                  border: Errors[index]?.selectedDragDroptype
+                    ? "1px solid red"
+                    : "1px solid transparent",
+                }}
+              >
+                <FormControlLabel
+                  value="Native"
+                  control={<Radio style={{ color: "#654DF7" }} />}
+                  label={
+                    <span
+                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
+                    >
+                      Native
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  value="Simulated"
+                  control={<Radio style={{ color: "#654DF7" }} />}
+                  label={
+                    <span
+                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
+                    >
+                      Simulated
+                    </span>
+                  }
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </>
+      );
+    case "Assign":
+      return (
+        <Grid item xs={6}>
+          <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="Input value"
+              error={Errors[index]?.assignInputValueError}
+              value={step?.assignInputValue}
+              onChange={(e) => {
+                handleInputChange(e, index, "assignInputValue");
+              }}
+            />
+          </StyledFormControl>
+        </Grid>
+      );
+    case "keyPress":
+      return (
+        <>
+          <Grid item xs={6}>
+            <Select
+              isClearable={true}
+              placeholder="type"
+              options={keyList}
+              value={{ label: step?.keyPressValue, value: step?.keyPressValue }}
+              onChange={(val) => {
+                handleInputChange(val, index, "keyPressValue");
+              }}
+              styles={{
+                container: (provided) => ({
+                  ...provided,
+                  backgroundColor: "rgb(242, 242, 242)",
+                  width: "100%",
+                }),
+                control: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: "rgb(242, 242, 242)",
+                  "&:hover": {
+                    borderColor: "#654DF7",
+                  },
+                  borderColor: Errors[index]?.keyPressValueError
+                    ? "red"
+                    : state.isFocused
+                    ? "#654DF7"
+                    : "rgb(242, 242, 242)",
+                }),
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.isSelected ? "#654DF7" : "transparent",
+                }),
+                clearIndicator: (provided) => ({
+                  ...provided,
+                  cursor: "pointer",
+                  ":hover": {
+                    color: "#654DF7",
+                  },
+                }),
+                dropdownIndicator: (provided) => ({
+                  ...provided,
+                  cursor: "pointer",
+                  ":hover": {
+                    color: "#654DF7",
+                  },
+                }),
+              }}
+              menuPosition={"fixed"}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl component="fieldset">
+              <RadioGroup
+                row
+                name="radio-buttons-group"
+                value={step?.selectedModifierKey}
+                onChange={(e) => {
+                  handleInputChange(e, index, "selectedModifierKey");
+                }}
+                sx={{
+                  border: Errors[index]?.selectedModifierKeyError
+                    ? "1px solid red"
+                    : "1px solid transparent",
+                }}
+              >
+                <FormControlLabel
+                  value="Shift"
+                  control={<Radio style={{ color: "#654DF7" }} />}
+                  label={
+                    <span
+                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
+                    >
+                      Shift
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  value="Control"
+                  control={<Radio style={{ color: "#654DF7" }} />}
+                  label={
+                    <span
+                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
+                    >
+                      Control
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  value="Alt"
+                  control={<Radio style={{ color: "#654DF7" }} />}
+                  label={
+                    <span
+                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
+                    >
+                      Alt
+                    </span>
+                  }
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </>
+      );
+    case "Execute Javascript":
+      return (
+        <Grid item xs={6}>
+          <TextField
+            label="JavaScript Code"
+            multiline
+            rows={5}
+            fullWidth
+            value={step?.executeJavaScript}
+            onChange={(e) => {
+              handleInputChange(e, index, "executeJavaScript");
+            }}
+          />
+        </Grid>
+      );
+    case "Pause (Time in ms)":
+      return (
+        <Grid item xs={6}>
+          <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="Input value"
+              error={Errors[index]?.pauseTimeError}
+              value={step?.pauseTime}
+              onChange={(e) => {
+                handleInputChange(e, index, "pauseTime");
+              }}
+            />
+          </StyledFormControl>
+        </Grid>
+      );
+    case "ExitTest":
+      return (
+        <Grid item xs={12}>
+          <FormControl component="fieldset">
+            <RadioGroup
+              row
+              aria-label="radio-buttons"
+              name="radio-buttons-group"
+              value={step?.exitTestStatus}
+              onChange={(e) => {
+                handleInputChange(e, index, "exitTestStatus");
+              }}
+              sx={{
+                border: Errors[index]?.exitTestStatusError
+                  ? "1px solid red"
+                  : "1px solid transparent",
+              }}
+            >
+              <FormControlLabel
+                value="Passing"
+                control={<Radio style={{ color: "#654DF7" }} />}
+                label={
+                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
+                    Passing
+                  </span>
+                }
+              />
+              <FormControlLabel
+                value="Failing"
+                control={<Radio style={{ color: "#654DF7" }} />}
+                label={
+                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
+                    Failing
+                  </span>
+                }
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+      );
+    case "Go To URL":
+      return (
+        <Grid item xs={6}>
+          <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="Input value"
+              value={step?.navigateTo}
+              error={Errors[index]?.navigateToError}
+              onChange={(e) => {
+                handleInputChange(e, index, "navigateTo");
+              }}
+            />
+          </StyledFormControl>
+        </Grid>
+      );
+    case "JavaScript returns true":
+      return (
+        <Grid item xs={6}>
+          <TextField
+            label="JavaScript Code"
+            multiline
+            rows={1}
+            fullWidth
+            value={step?.javaScriptCode}
+            onChange={(e) => {
+              handleInputChange(e, index, "javaScriptCode");
+            }}
+          />
+        </Grid>
+      );
+    case "Check accessibility":
+      return (
+        <>
+          <Grid item xs={6}>
+            <Select
+              isClearable={true}
+              placeholder="type"
+              options={accessibilityList}
+              value={{ label: step?.accessibility, value: step?.accessibility }}
+              onChange={(val) => {
+                handleInputChange(val, index, "accessibility");
+              }}
+              styles={{
+                container: (provided) => ({
+                  ...provided,
+                  backgroundColor: "rgb(242, 242, 242)",
+                  width: "100%",
+                }),
+                control: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: "rgb(242, 242, 242)",
+                  "&:hover": {
+                    borderColor: "#654DF7",
+                  },
+                  borderColor: Errors[index]?.accessibilityError
+                    ? "red"
+                    : state.isFocused
+                    ? "#654DF7"
+                    : "rgb(242, 242, 242)",
+                }),
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.isSelected ? "#654DF7" : "transparent",
+                }),
+                clearIndicator: (provided) => ({
+                  ...provided,
+                  cursor: "pointer",
+                  ":hover": {
+                    color: "#654DF7",
+                  },
+                }),
+                dropdownIndicator: (provided) => ({
+                  ...provided,
+                  cursor: "pointer",
+                  ":hover": {
+                    color: "#654DF7",
+                  },
+                }),
+              }}
+              menuPosition={"fixed"}
+            />
+          </Grid>
+          {/* <Grid item xs={6}>
+            <FormControl component="fieldset">
+              <RadioGroup
+                row
+                aria-label="radio-buttons"
+                name="radio-buttons-group"
+                value={accessibilityModifier}
+                onChange={(e) => {
+                  handleInputChange(e, index, "accessibilityModifier");
+                }}
+                sx={{ gap: 0 }}
+              >
+                <FormControlLabel
+                  value="Shift"
+                  control={<Radio style={{ color: "#654DF7" }} />}
+                  label={
+                    <span
+                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
+                    >
+                      Shift
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  value="Control"
+                  control={<Radio style={{ color: "#654DF7" }} />}
+                  label={
+                    <span
+                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
+                    >
+                      Control
+                    </span>
+                  }
+                />
+                <FormControlLabel
+                  value="Alt"
+                  control={<Radio style={{ color: "#654DF7" }} />}
+                  label={
+                    <span
+                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
+                    >
+                      Alt
+                    </span>
+                  }
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid> */}
+        </>
+      );
+    case "Set variable":
+      return (
+        <>
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Variale name"
+                value={step?.variableInput}
+                error={Errors[index]?.variableInputError}
+                onChange={(e) => {
+                  handleInputChange(e, index, "variableInput");
+                }}
+              />
+            </StyledFormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Variale name"
+                error={Errors[index]?.variableNameError}
+                value={step?.variableName}
+                onChange={(e) => {
+                  handleInputChange(e, index, "variableName");
+                }}
+              />
+            </StyledFormControl>
+          </Grid>
+        </>
+      );
+    case "Extract from element":
+      return (
+        <Grid item xs={6}>
+          <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="Variale name"
+              error={Errors[index]?.extractVariableError}
+              value={step?.extractVariable}
+              onChange={(e) => {
+                handleInputChange(e, index, "extractVariable");
+              }}
+            />
+          </StyledFormControl>
+        </Grid>
+      );
+    case "Extract from javaScript":
+      return (
+        <>
+          <Grid item xs={6}>
+            <TextField
+              label="JavaScript Code"
+              multiline
+              rows={1}
+              fullWidth
+              value={step?.extractJavaScript}
+              onChange={(e) => {
+                handleInputChange(e, index, "extractJavaScript");
+              }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Variale name"
+                value={step?.javascriptVariable}
+                error={Errors[index]?.javascriptVariableError}
+                onChange={(e) => {
+                  handleInputChange(e, index, "javascriptVariable");
+                }}
+              />
+            </StyledFormControl>
+          </Grid>
+        </>
+      );
+    case "Import steps from test":
+      return (
+        <Grid item xs={6}>
+          <Select
+            isClearable={true}
+            placeholder="type"
+            options={testCases}
+            value={{
+              label: step?.importingStepFrom,
+              value: step?.importingStepFrom,
+            }}
+            onChange={(val) => {
+              handleInputChange(val, index, "importingStepFrom");
+            }}
+            styles={{
+              container: (provided) => ({
+                ...provided,
+                backgroundColor: "rgb(242, 242, 242)",
+                width: "100%",
+              }),
+              control: (provided, state) => ({
+                ...provided,
+                backgroundColor: "rgb(242, 242, 242)",
+                "&:hover": {
+                  borderColor: "#654DF7",
+                },
+                borderColor: Errors[index]?.importingStepFromError
+                  ? "red"
+                  : state.isFocused
+                  ? "#654DF7"
+                  : "rgb(242, 242, 242)",
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                backgroundColor: state.isSelected ? "#654DF7" : "transparent",
+              }),
+              clearIndicator: (provided) => ({
+                ...provided,
+                cursor: "pointer",
+                ":hover": {
+                  color: "#654DF7",
+                },
+              }),
+              dropdownIndicator: (provided) => ({
+                ...provided,
+                cursor: "pointer",
+                ":hover": {
+                  color: "#654DF7",
+                },
+              }),
+            }}
+            menuPosition={"fixed"}
+          />
+        </Grid>
+      );
+    default:
+      return null;
+  }
+}
