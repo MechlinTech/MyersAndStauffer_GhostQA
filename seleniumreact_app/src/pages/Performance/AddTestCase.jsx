@@ -9,11 +9,10 @@ import { header } from "../../utils/authheader";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
-export default function AddTestCase({addTestCase,nameSuite}) {
+export default function AddTestCase({addTestCase}) {
   const classes = useStylesTestCase();
   const [testCase,setTestCase]=useState([])
   const navigate = useNavigate();
-  localStorage.setItem('rootId',addTestCase)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,7 +44,7 @@ export default function AddTestCase({addTestCase,nameSuite}) {
           spacing={2}
         >
           <Grid item xs={6}  className={`${classes.header}`}>
-          <div className={classes.highlight}>{nameSuite}</div>
+          <div className={classes.highlight}>Folder (Testcase)</div>
           </Grid>
           <Grid item>
             <Button

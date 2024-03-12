@@ -29,7 +29,7 @@ export default function CreateTestCase() {
       selectorValue: "",
       clickType: "",
       elementSelector: "",
-      selectedDragDroptype: "",
+      selectedDragDropType: "",
       assignInputValue: "",
       keyPressValue: "",
       selectedModifierKey: "",
@@ -40,9 +40,11 @@ export default function CreateTestCase() {
       javaScriptCode:"",
       accessibility: "",
       accessibilityModifier: "",
+      variableInput:"",
       variableName: "",
       extractVariable: "",
-      javascriptVariable: "",
+      extractJavaScript:"",
+      javaScriptVariable: "",
       importingStepFrom: "",
     },
   ]);
@@ -73,7 +75,7 @@ export default function CreateTestCase() {
           break;
         case "dragDrop":
           additionalErrors.elementSelectorError = !step.elementSelector
-          additionalErrors.selectedDragDroptype = !step.selectedDragDroptype
+          additionalErrors.selectedDragDropTypeError = !step.selectedDragDropType
           break
         case "keyPress":
           additionalErrors.keyPressValueError = !step.keyPressValue
@@ -120,7 +122,7 @@ export default function CreateTestCase() {
           break;
         case "Extract from javaScript":
           additionalErrors.extractJavaScriptError = !step.extractJavaScript
-          additionalErrors.javascriptVariableError = !step.javascriptVariable
+          additionalErrors.javascriptVariableError = !step.javaScriptVariable
           break;
         case "Import steps from test":
           additionalErrors.importingStepFromError = !step.importingStepFrom
@@ -173,7 +175,7 @@ export default function CreateTestCase() {
           selectorValue: "",
           clickType: "",
           elementSelector: "",
-          selectedDragDroptype: "",
+          selectedDragDropType: "",
           assignInputValue: "",
           keyPressValue: "",
           selectedModifierKey: "",
@@ -187,7 +189,8 @@ export default function CreateTestCase() {
           variableInput:"",
           variableName: "",
           extractVariable: "",
-          javascriptVariable: "",
+          extractJavaScript:"",
+          javaScriptVariable: "",
           importingStepFrom: "",
         },
     ]);
@@ -219,17 +222,6 @@ export default function CreateTestCase() {
           return i === index
             ? { ...step, isOptional: inputValue.target.checked }
             : step;
-        // case "radioType":
-        //   return i === index
-        //     ? { ...step, radioType: inputValue.target.value }
-        //     : step;
-        // case "inputField":
-        //   return i === index
-        //     ? {
-        //         ...step,
-        //         inputField: inputValue?.target?.value || inputValue?.value,
-        //       }
-        //     : step;
         case "clickType":
           return i === index
             ? { ...step, clickType: inputValue.target.value }
@@ -238,9 +230,9 @@ export default function CreateTestCase() {
           return i === index
             ? { ...step, elementSelector: inputValue.target.value }
             : step;
-        case "selectedDragDroptype":
+        case "selectedDragDropType":
           return i === index
-            ? { ...step, selectedDragDroptype: inputValue.target.value }
+            ? { ...step, selectedDragDropType: inputValue.target.value }
             : step;
         case "assignInputValue":
           return i === index
@@ -298,9 +290,9 @@ export default function CreateTestCase() {
           return i === index
             ? {...step, extractJavaScript:inputValue.target.value}
             : step
-        case "javascriptVariable":
+        case "javaScriptVariable":
           return i === index
-            ? { ...step, javascriptVariable: inputValue.target.value }
+            ? { ...step, javaScriptVariable: inputValue.target.value }
             : step;
         case "importingStepFrom":
           return i === index
@@ -367,7 +359,7 @@ export default function CreateTestCase() {
           <Grid item xs={6}>
             <Select
               isClearable={true}
-              placeholder="type"
+              placeholder="Actions"
               options={userActionsOptions}
               value={
                 step
@@ -425,6 +417,7 @@ export default function CreateTestCase() {
             Errors={Errors}
             setSteps={setSteps}
             handleInputChange={handleInputChange}
+            isEditable={true}
           />
           {step.type && !selectorNoOptionList.includes(step.type) && (
             <Grid item xs={12}>
@@ -432,7 +425,7 @@ export default function CreateTestCase() {
                 <Grid item xs={6}>
                 <Select
               isClearable={true}
-              placeholder="type"
+              placeholder="Selector type"
               options={selectorTypeList}
               value={
                 step

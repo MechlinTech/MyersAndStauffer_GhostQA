@@ -4,10 +4,9 @@ import {
   Grid,
   Radio,
   RadioGroup,
-  TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import { StyledFormControl, StyledOutlinedInput } from "./styleTestCase";
+import { StyledFormControl, StyledOutlinedInput, StyledTextField } from "./styleTestCase";
 import { keyList, accessibilityList } from "../DropDownOptions";
 import Select from "react-select";
 import { testCases } from "../DropDownOptions";
@@ -17,6 +16,7 @@ export default function RenderActionFields({
   index,
   Errors,
   handleInputChange,
+  isEditable,
 }) {
   switch (action) {
     case "click":
@@ -39,6 +39,7 @@ export default function RenderActionFields({
             >
               <FormControlLabel
                 value="Left Click"
+                disabled={!isEditable}
                 control={<Radio style={{ color: "#654DF7" }} />}
                 label={
                   <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
@@ -48,6 +49,7 @@ export default function RenderActionFields({
               />
               <FormControlLabel
                 value="Right Click"
+                disabled={!isEditable}
                 control={<Radio style={{ color: "#654DF7" }} />}
                 label={
                   <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
@@ -57,6 +59,7 @@ export default function RenderActionFields({
               />
               <FormControlLabel
                 value="Double Click"
+                disabled={!isEditable}
                 control={<Radio style={{ color: "#654DF7" }} />}
                 label={
                   <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
@@ -76,6 +79,7 @@ export default function RenderActionFields({
               <StyledOutlinedInput
                 type="text"
                 placeholder="Element Selector (Drop area)"
+                disabled={!isEditable}
                 value={step?.elementSelector}
                 error={Errors[index]?.elementSelectorError}
                 onChange={(e) => {
@@ -90,18 +94,19 @@ export default function RenderActionFields({
                 row
                 aria-label="radio-buttons"
                 name="radio-buttons-group"
-                value={step?.selectedDragDroptype}
+                value={step?.selectedDragDropType}
                 onChange={(e) => {
-                  handleInputChange(e, index, "selectedDragDroptype");
+                  handleInputChange(e, index, "selectedDragDropType");
                 }}
                 sx={{
-                  border: Errors[index]?.selectedDragDroptype
+                  border: Errors[index]?.selectedDragDropTypeError
                     ? "1px solid red"
                     : "1px solid transparent",
                 }}
               >
                 <FormControlLabel
                   value="Native"
+                  disabled={!isEditable}
                   control={<Radio style={{ color: "#654DF7" }} />}
                   label={
                     <span
@@ -113,6 +118,7 @@ export default function RenderActionFields({
                 />
                 <FormControlLabel
                   value="Simulated"
+                  disabled={!isEditable}
                   control={<Radio style={{ color: "#654DF7" }} />}
                   label={
                     <span
@@ -134,6 +140,7 @@ export default function RenderActionFields({
             <StyledOutlinedInput
               type="text"
               placeholder="Input value"
+              disabled={!isEditable}
               error={Errors[index]?.assignInputValueError}
               value={step?.assignInputValue}
               onChange={(e) => {
@@ -150,6 +157,7 @@ export default function RenderActionFields({
             <Select
               isClearable={true}
               placeholder="type"
+              isDisabled={!isEditable}
               options={keyList}
               value={{ label: step?.keyPressValue, value: step?.keyPressValue }}
               onChange={(val) => {
@@ -212,6 +220,7 @@ export default function RenderActionFields({
               >
                 <FormControlLabel
                   value="Shift"
+                  disabled={!isEditable}
                   control={<Radio style={{ color: "#654DF7" }} />}
                   label={
                     <span
@@ -223,6 +232,7 @@ export default function RenderActionFields({
                 />
                 <FormControlLabel
                   value="Control"
+                  disabled={!isEditable}
                   control={<Radio style={{ color: "#654DF7" }} />}
                   label={
                     <span
@@ -234,6 +244,7 @@ export default function RenderActionFields({
                 />
                 <FormControlLabel
                   value="Alt"
+                  disabled={!isEditable}
                   control={<Radio style={{ color: "#654DF7" }} />}
                   label={
                     <span
@@ -251,14 +262,21 @@ export default function RenderActionFields({
     case "Execute Javascript":
       return (
         <Grid item xs={6}>
-          <TextField
+          <StyledTextField
             label="JavaScript Code"
             multiline
+            disabled={!isEditable}
             rows={5}
             fullWidth
             value={step?.executeJavaScript}
             onChange={(e) => {
               handleInputChange(e, index, "executeJavaScript");
+            }}
+            InputLabelProps={{
+              style: {
+                color: "black",
+                fontFamily: "Lexend Deca",
+              },
             }}
           />
         </Grid>
@@ -270,6 +288,7 @@ export default function RenderActionFields({
             <StyledOutlinedInput
               type="text"
               placeholder="Input value"
+              disabled={!isEditable}
               error={Errors[index]?.pauseTimeError}
               value={step?.pauseTime}
               onChange={(e) => {
@@ -299,6 +318,7 @@ export default function RenderActionFields({
             >
               <FormControlLabel
                 value="Passing"
+                disabled={!isEditable}
                 control={<Radio style={{ color: "#654DF7" }} />}
                 label={
                   <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
@@ -308,6 +328,7 @@ export default function RenderActionFields({
               />
               <FormControlLabel
                 value="Failing"
+                disabled={!isEditable}
                 control={<Radio style={{ color: "#654DF7" }} />}
                 label={
                   <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
@@ -326,6 +347,7 @@ export default function RenderActionFields({
             <StyledOutlinedInput
               type="text"
               placeholder="Input value"
+              disabled={!isEditable}
               value={step?.navigateTo}
               error={Errors[index]?.navigateToError}
               onChange={(e) => {
@@ -338,10 +360,11 @@ export default function RenderActionFields({
     case "JavaScript returns true":
       return (
         <Grid item xs={6}>
-          <TextField
+          <StyledTextField
             label="JavaScript Code"
             multiline
             rows={1}
+            disabled={!isEditable}
             fullWidth
             value={step?.javaScriptCode}
             onChange={(e) => {
@@ -357,6 +380,7 @@ export default function RenderActionFields({
             <Select
               isClearable={true}
               placeholder="type"
+              isDisabled={!isEditable}
               options={accessibilityList}
               value={{ label: step?.accessibility, value: step?.accessibility }}
               onChange={(val) => {
@@ -459,8 +483,9 @@ export default function RenderActionFields({
             <StyledFormControl>
               <StyledOutlinedInput
                 type="text"
-                placeholder="Variale name"
+                placeholder="Input value"
                 value={step?.variableInput}
+                disabled={!isEditable}
                 error={Errors[index]?.variableInputError}
                 onChange={(e) => {
                   handleInputChange(e, index, "variableInput");
@@ -473,6 +498,7 @@ export default function RenderActionFields({
               <StyledOutlinedInput
                 type="text"
                 placeholder="Variale name"
+                disabled={!isEditable}
                 error={Errors[index]?.variableNameError}
                 value={step?.variableName}
                 onChange={(e) => {
@@ -490,6 +516,7 @@ export default function RenderActionFields({
             <StyledOutlinedInput
               type="text"
               placeholder="Variale name"
+              disabled={!isEditable}
               error={Errors[index]?.extractVariableError}
               value={step?.extractVariable}
               onChange={(e) => {
@@ -503,10 +530,11 @@ export default function RenderActionFields({
       return (
         <>
           <Grid item xs={6}>
-            <TextField
+            <StyledTextField
               label="JavaScript Code"
               multiline
               rows={1}
+              disabled={!isEditable}
               fullWidth
               value={step?.extractJavaScript}
               onChange={(e) => {
@@ -519,10 +547,11 @@ export default function RenderActionFields({
               <StyledOutlinedInput
                 type="text"
                 placeholder="Variale name"
-                value={step?.javascriptVariable}
+                disabled={!isEditable}
+                value={step?.javaScriptVariable}
                 error={Errors[index]?.javascriptVariableError}
                 onChange={(e) => {
-                  handleInputChange(e, index, "javascriptVariable");
+                  handleInputChange(e, index, "javaScriptVariable");
                 }}
               />
             </StyledFormControl>
@@ -535,6 +564,7 @@ export default function RenderActionFields({
           <Select
             isClearable={true}
             placeholder="type"
+            isDisabled={!isEditable}
             options={testCases}
             value={{
               label: step?.importingStepFrom,

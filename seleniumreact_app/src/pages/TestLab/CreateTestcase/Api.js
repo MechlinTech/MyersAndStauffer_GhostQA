@@ -15,7 +15,6 @@ export const AddTestCaseDetails = async (payload, actions, goBack) => {
         testCaseID: Data[0].id,
         actions: actions,
       };
-      console.log('step detail ',stepDetails)
       const resSteps = await axios.post(
         `${BASE_URL}/AddTestLab/AddTestStepsDetails`,
         stepDetails

@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 
 import { Add } from "@mui/icons-material";
 
-import AddTestCase from "./AddTestCase";
+import TabsPanel from "./TabsPanel";
 import AddNewProject from "./AddNewProject";
 
 
@@ -15,22 +15,21 @@ import { header } from "../../utils/authheader";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
-export default function TestLab() {
+export default function Performance() {
   const classes = useStyles();
 
   const [addTestCase, setAddTestCase] = useState(0);
   const [addNewProject, setAddNewProject] = useState(false);
 
   const [formData, setFormData] = useState({name:""});
-  const [nameSuite, setNameSuite] = useState('');
-  
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [listData, setListData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/AddTestLab/GetDataRootRelation`,
+          `${BASE_URL}/Performance/GetProjectData`,
           header()
         );
         // Assuming response.data is the array of data you want to set as listData
@@ -48,11 +47,10 @@ export default function TestLab() {
     event.preventDefault();
     try {
       const response = await axios.post(
-        `${BASE_URL}/AddTestLab/AddRootRelation`,
+        `${BASE_URL}/Performance/AddProjectData`,
         {
-          "rootId": 0,
-          "node": 0,
-          "parent": 0,
+          "id": 0,
+          "parentId": 0,
           "name": formData.name
         },
 
@@ -75,9 +73,8 @@ export default function TestLab() {
   };
 
 
-  const handleTestCaseList = (id,name) => {
+  const handleTestCaseList = (id) => {
     setAddTestCase(id);
-    setNameSuite(name);
     setAddNewProject(false);
     console.log(id,'testswt');
   }
@@ -104,7 +101,7 @@ export default function TestLab() {
                   >
                     <Add /> Add New Project
                   </Button>
-                </Grid>
+                </Grid> 
                 <Grid item xs={12}>
                 {addNewProject && <AddNewProject
               handleChange={handleChange}
@@ -120,8 +117,8 @@ export default function TestLab() {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
-           
-            {addTestCase!==0 && <AddTestCase  addTestCase={addTestCase} nameSuite={nameSuite}/>}
+         
+            {addTestCase!==0 && <TabsPanel />}
 
           </Grid>
         </Grid>
