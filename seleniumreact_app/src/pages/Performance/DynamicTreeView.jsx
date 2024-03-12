@@ -316,8 +316,16 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
       }));
       const newData = [...updatedData, ...updatedChildren];
       
-      console.log(newData, itemId, itemToDelete, childrenToDelete);
-      setListData(newData);
+  
+     
+        const responsedata = await axios.get(
+          `${BASE_URL}/Performance/GetProjectData`,
+          header()
+        );
+        // Assuming response.data is the array of data you want to set as listData
+        setListData((responsedata.data == '' ? [] : responsedata.data));
+        console.log(responsedata);
+      
       }catch (error) {
         console.error("Error fetching data:", error);     
       }  
