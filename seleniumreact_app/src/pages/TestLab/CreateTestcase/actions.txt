@@ -1,5 +1,0 @@
-description
-Type
-isoptional
-selectortype
-selectorValue

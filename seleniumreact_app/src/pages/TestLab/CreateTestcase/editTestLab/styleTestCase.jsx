@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import { styled } from "@mui/material/styles";
-import { OutlinedInput, TableCell, Typography, tableCellClasses } from "@mui/material";
+import { FormControl, OutlinedInput, TableCell, Typography, tableCellClasses } from "@mui/material";
 
 export const useStyles = makeStyles((theme)=>({
   main: {
@@ -75,3 +75,18 @@ export const StyledTypography = styled(Typography)(({ theme }) => ({
         fontFamily: `"Lexend Deca", sans-serif, -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
     },
 }));
+
+export const StyledFormControl = styled(FormControl)(({theme})=>({
+  width:'100%',
+  "& .MuiOutlinedInput-root": {
+    "&:hover fieldset": {
+      borderColor: "#654DF7",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#654DF7",
+    },
+    "& fieldset": {
+      borderColor: "transparent",
+    },
+  },
+}))
