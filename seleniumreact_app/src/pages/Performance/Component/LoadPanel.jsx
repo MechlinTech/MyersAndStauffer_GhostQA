@@ -7,7 +7,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Chart from "react-apexcharts";
-
 import { useNavigate } from 'react-router-dom';
 
 
@@ -86,7 +85,7 @@ export default function LoadPanel({ testCase }) {
                             key={0}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell component="th" >
+                            <TableCell  >
                                 <input type="number" value={100} />
                             </TableCell>
                             <TableCell align="left">
@@ -99,16 +98,8 @@ export default function LoadPanel({ testCase }) {
                             <TableCell align="left">
                                 <input type="number" value={10} />
                             </TableCell>
-
                         </TableRow>
-
                     </>
-
-
-
-
-
-
 
                 </TableBody>
             </Table>
