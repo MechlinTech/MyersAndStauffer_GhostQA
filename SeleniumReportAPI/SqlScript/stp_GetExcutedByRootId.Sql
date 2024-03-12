@@ -21,7 +21,7 @@ BEGIN TRY
 			[testCases] = JSON_QUERY((
 				SELECT tcd.[TestCaseName] [name], 
 				[actions] = JSON_QUERY((
-					SELECT tsd.[Type] [type], tsd.[SelectorValue] [selector], tsd.[StepDescription] [text]
+					SELECT tsd.[Type] [type], CONCAT('input#',tsd.[SelectorType]) [selector], tsd.[StepDescription] [text]
 					FROM tbl_TestStepsDetails tsd
 					WHERE tsd.[TestCaseDetailsId] = tcd.[TestCaseDetailsId]
 				FOR JSON PATH))
