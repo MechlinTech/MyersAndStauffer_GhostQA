@@ -5,7 +5,7 @@ import { useStyles } from "./styles";
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { Add } from "@mui/icons-material";
 import TableTestCase from "./TableTestCase";
-import DesignTabs from "./Component/DesignTabs";
+
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -16,10 +16,7 @@ import { Typography } from "@mui/material";
 
 export default function Design() {
     const classes = useStyles();
-    const [designTabsActive, setDesignTabsActive] = useState(false);
-    const handleActiveTabs=()=>{
-        setDesignTabsActive(!designTabsActive)
-    }
+    
     return (
         <Grid container alignItems="center" style={{
             margin: '20px 0px',
@@ -87,10 +84,10 @@ export default function Design() {
             </Grid>
             <Grid container alignItems="center">
                 <Grid item xs={12}>
-                    <TableTestCase  showTab={handleActiveTabs}/>
+                    <TableTestCase />
                 </Grid>
                 <Grid item xs={12}>
-                   {designTabsActive && <DesignTabs />}
+                 
                 </Grid>
             </Grid>
             <Button

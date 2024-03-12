@@ -5,6 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import LoadPanel from './LoadPanel';
 
 
 function TabPanel(props) {
@@ -41,7 +42,7 @@ function a11yProps(index) {
 
 export default function DesignTabs() {
   const theme = useTheme();
-  const [value, setValue] = useState('Load Configuration(*)');
+  const [value, setValue] = useState('Load');
   
 
   const handleChange = (event, newValue) => {
@@ -70,7 +71,7 @@ export default function DesignTabs() {
               borderRadius:"4px",
               border:"solid 1px #646464",
               margin:'10px 8px' ,
-              width: '230px',
+             
               '&.Mui-selected': {
                 backgroundColor: 'rgb(101, 77, 247)',
                 color: '#fff',
@@ -81,13 +82,15 @@ export default function DesignTabs() {
             },
           }}
         >
-          <Tab value="Load Configuration(*)" label="Load Configuration(*)" />
+          <Tab value="Load" label="Load" />
           <Tab value="Location" label="Location" />
           <Tab value="Data Entity" label="Data Entity" />
+          <Tab value="Properties" label="Properties" />
+          
         </Tabs>
 
-        <TabPanel value={value} index={'Load Configuration(*)'} dir={theme.direction}>
-        {"Load Configuration(*)"} 
+        <TabPanel value={value} index={'Load'} dir={theme.direction}>
+       <LoadPanel />
         </TabPanel>
         <TabPanel value={value} index={"Location"} dir={theme.direction}>
         {"Location"} 
@@ -95,6 +98,10 @@ export default function DesignTabs() {
         <TabPanel value={value} index={"Data Entity"} dir={theme.direction}>
         {"Data Entity"}
         </TabPanel>
+        <TabPanel value={value} index={"Properties"} dir={theme.direction}>
+        {"Properties"}
+        </TabPanel>
+        
     </Box>
   );
 }
