@@ -86,7 +86,7 @@ export default function MiniDrawer() {
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link className={`${classes.linkStyle} ${location.pathname === "/performance" && classes.activeLink}`}>
+                                <Link to="/performance" className={`${classes.linkStyle} ${location.pathname === "/performance" && classes.activeLink}`}>
                                     Performance
                                 </Link>
                             </Grid>
