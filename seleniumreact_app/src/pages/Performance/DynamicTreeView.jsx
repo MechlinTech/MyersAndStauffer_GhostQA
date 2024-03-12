@@ -71,7 +71,7 @@ const Card = ({newElementName, setNewElementName,
                   }
                   {editMode !== item.id &&
                     <span onClick={()=>{
-                      handleTask(item.id,item.name)
+                      handleTask(item.id)
                     }} style={{
                       cursor: 'pointer',
                       fontSize: '18px'
@@ -158,11 +158,12 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/AddTestLab/GetDataRootRelation`,
+          `${BASE_URL}/Performance/GetProjectData`,
           header()
         );
         // Assuming response.data is the array of data you want to set as listData
         setListData((response.data == '' ? [] : response.data));
+        console.log(response);
       } catch (error) {
         console.error("Error fetching data:", error);
         setListData([]);
@@ -186,11 +187,10 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
     
       try {
         const response = await axios.post(
-          `${BASE_URL}/AddTestLab/AddRootRelation`,
+          `${BASE_URL}/Performance/AddProjectData`,
           {
-            "rootId": 0,
-            "node": 0,
-            "parent": newItem.parentId,
+            "id": 0,
+            "parentId": newItem.parentId,
             "name": newItem.name
           },
   
@@ -233,11 +233,10 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
       const itemToEdit = listData.find(item => item.id === itemId);   
         try {
           const response = await axios.post(
-            `${BASE_URL}/AddTestLab/UpdateRootRelation`,
+            `${BASE_URL}/Performance/UpdateProjectData`,
             {
-              "rootId": itemToEdit.id,
-              "node": 0,
-              "parent": itemToEdit.parentId,
+              "id": itemToEdit.id,            
+              "parentId": itemToEdit.parentId,
               "name":editData
             },
     
@@ -299,11 +298,10 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
     const itemToDelete = listData.find(item => item.id === itemId);
     try {
       const response = await axios.post(
-        `${BASE_URL}/AddTestLab/DeleteRootRelation`,
+        `${BASE_URL}/Performance/DeleteProjectData`,
         {
-          "rootId": itemToDelete.id,
-          "node": 0,
-          "parent": itemToDelete.parentId,
+          "id": itemToDelete.id,         
+          "parentId": itemToDelete.parentId,
           "name":itemToDelete.name
         },
 
@@ -319,17 +317,7 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
       const newData = [...updatedData, ...updatedChildren];
       
       console.log(newData, itemId, itemToDelete, childrenToDelete);
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/AddTestLab/GetDataRootRelation`,
-          header()
-        );
-        // Assuming response.data is the array of data you want to set as listData
-        setListData((response.data == '' ? [] : response.data));
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setListData([]);
-      }
+      setListData(newData);
       }catch (error) {
         console.error("Error fetching data:", error);     
       }  

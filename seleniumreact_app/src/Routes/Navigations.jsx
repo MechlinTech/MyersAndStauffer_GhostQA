@@ -23,7 +23,7 @@ const Settings = lazy(() => import("../pages/Settings"));
 const AddTestSuite = lazy(() => import("../pages/TestSuite/AddTestSuite"));
 const NotFound = lazy(() =>   import("../pages/NotFound"));
 const TestLab =lazy(()=>  import("../pages/TestLab/TestLab"));
-
+const Performance =lazy(()=>  import("../pages/Performance/Performance"));
 export default function Navigations() {
   return (
     <Suspense
@@ -53,6 +53,9 @@ export default function Navigations() {
           <Route path="testLab/createTestcase/:rootId" element={<CreateTestCase/>} />  
           <Route path="testLab/editTestcase/:testId" element={<EditTestCase/>} />  
          
+        </Route>
+        <Route path="performance" element={<Performance />} >
+          
         </Route>
         <Route path="api" element={<Api />} >
           <Route path="" element={<Box m={10} component={'h1'}>api1</Box>} />
