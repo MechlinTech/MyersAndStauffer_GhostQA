@@ -100,7 +100,7 @@ const Card = ({newElementName, setNewElementName,
                   key={item.id}
                   onChange={(e) => setNewElementName(e.target.value)}
                   onKeyPress={(event) => handleKeyPress(event, item.id,nodeCount)} />
-                <CancelIcon sx={{ color: '#f74d4d' }} onClick={() => handleCRUDCancel()} />
+                <CancelIcon sx={{ color: '#f74d4d' }} onClick={() => handleCRUDCancel()} style={{ marginLeft: '20px'}} />
               </div>
                 }
                 
