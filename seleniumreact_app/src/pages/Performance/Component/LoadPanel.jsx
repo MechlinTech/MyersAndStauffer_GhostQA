@@ -117,7 +117,7 @@ export default function LoadPanel({ testCase }) {
               options={graphState.options}
               series={graphState.series}
               type="area"
-              width="500"
+              
             />
         </>
        
