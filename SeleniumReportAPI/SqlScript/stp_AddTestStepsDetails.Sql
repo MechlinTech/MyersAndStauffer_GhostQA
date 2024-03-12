@@ -15,8 +15,8 @@ BEGIN TRY
 		DELETE FROM tbl_TestStepsDetails 
 		WHERE TestCaseDetailsId = JSON_VALUE(@AddStepsJson, '$.testCaseID')
 
-		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [SelectedModifierKey], [StepDescripton], [Type], [SelectorType], [SelectorValue], [VariableName],
-		[Accessibility], [AccessibilityModifier], [AssignInputValue], [ClickType], [ElementSelector], [ExecuteJavaScript], [ExitTestStatus], [ExtractVariable], [ImportingStepFrom], [IsOptional], [JavaScriptCode], [JavascriptVariable], [KeyPressValue], [NavigatTo], [PauseTime], [SelectedDragDroptype])
+		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [SelectedModifierKey], [StepDescription], [Type], [SelectorType], [SelectorValue], [VariableName],
+		[Accessibility], [AccessibilityModifier], [AssignInputValue], [ClickType], [ElementSelector], [ExecuteJavaScript], [ExitTestStatus], [ExtractVariable], [ImportingStepFrom], [IsOptional], [JavaScriptCode], [JavascriptVariable], [KeyPressValue], [NavigateTo], [PauseTime], [SelectedDragDroptype], [VariableInput])
 		SELECT 
 			JSON_VALUE(@AddStepsJson, '$.testCaseID'),
 			action.[selectedModifierKey],
@@ -40,7 +40,8 @@ BEGIN TRY
 			action.[keyPressValue],
 			action.[navigateTo],
 			action.[pauseTime],
-			action.[selectedDragDropType]
+			action.[selectedDragDropType],
+			action.[variableInput]
 		FROM 
 			OPENJSON(@AddStepsJson, '$.actions') 
 			WITH (
@@ -65,7 +66,8 @@ BEGIN TRY
 				[keyPressValue] NVARCHAR(50) '$.keyPressValue',
 				[navigateTo] NVARCHAR(50) '$.navigateTo',
 				[pauseTime] NVARCHAR(50) '$.pauseTime',
-				[selectedDragDropType] NVARCHAR(50) '$.selectedDragDropType'
+				[selectedDragDropType] NVARCHAR(50) '$.selectedDragDropType',
+				[variableInput] NVARCHAR(50) '$.variableInput'
 			) AS action;
 		IF @@ERROR = 0
 		BEGIN

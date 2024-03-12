@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeleniumReportAPI.DBContext;
 
@@ -11,9 +12,10 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240312102236_tbl_performanceFile")]
+    partial class tbl_performanceFile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,13 +365,13 @@ namespace SeleniumReportAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("RootId")
                         .HasColumnType("int");
 
                     b.Property<string>("TestCaseName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("fileName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -609,9 +611,6 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VariableName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("extractJavaScript")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TestStepsDetailsId");

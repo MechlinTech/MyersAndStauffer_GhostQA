@@ -9,7 +9,7 @@ namespace SeleniumReportAPI.Models
         public int TestStepsDetailsId { get; set; }
         public int TestCaseDetailsId { get; set; }
         public string Type { get; set; }
-        public string StepDescripton { get; set; }
+        public string StepDescription { get; set; }
         public string SelectorType { get; set; }
         public string SelectorValue { get; set; }
         public string ClickType { get; set; }
@@ -22,7 +22,7 @@ namespace SeleniumReportAPI.Models
         public string ExecuteJavaScript { get; set; }
         public string PauseTime { get; set; }
         public string ExitTestStatus { get; set; }
-        public string NavigatTo { get; set; }
+        public string NavigateTo { get; set; }
         public string JavaScriptCode { get; set; }
         public string Accessibility { get; set; }
         public string AccessibilityModifier { get; set; }
@@ -30,6 +30,7 @@ namespace SeleniumReportAPI.Models
         public string ExtractVariable { get; set; }
         public string JavascriptVariable { get; set; }
         public string ImportingStepFrom { get; set; }
-
+        public string VariableInput { get; set; }
+        public string extractJavaScript { get; set; }
     }
 }

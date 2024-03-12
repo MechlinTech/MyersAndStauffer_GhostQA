@@ -14,12 +14,14 @@ BEGIN TRY
 	SELECT [testsuite] = JSON_QUERY((
 		SELECT trr.[name],
 		[beforeEach] = JSON_QUERY((
-					SELECT  'visit' [type], 'https://www.saucedemo.com/v1/' [selector]
+				SELECT  'visit' [type], tccd.[StartUrl] [selector]
+				FROM tbl_TestCaseDetails tccd
+				WHERE tccd.[RootId] = trr.[RootId]
 				FOR JSON PATH)),
 			[testCases] = JSON_QUERY((
 				SELECT tcd.[TestCaseName] [name], 
 				[actions] = JSON_QUERY((
-					SELECT tsd.[ActionName] [type], tsd.[TestStepsName] [selector]
+					SELECT tsd.[Type] [type], tsd.[SelectorValue] [selector], tsd.[StepDescription] [text]
 					FROM tbl_TestStepsDetails tsd
 					WHERE tsd.[TestCaseDetailsId] = tcd.[TestCaseDetailsId]
 				FOR JSON PATH))

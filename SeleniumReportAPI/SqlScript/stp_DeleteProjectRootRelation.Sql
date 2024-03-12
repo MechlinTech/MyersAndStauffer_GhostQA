@@ -12,28 +12,46 @@ PROC EXEC		:
 				EXEC stp_DeleteProjectRootRelation 1
 **************************************************************************************/
 BEGIN TRY
-	UPDATE tbl_ProjectRootRelation
-	SET  ParentId = @ParentId
-	WHERE [ParentId] = @Id
+    -- Common Table Expression to select all nodes and child nodes
+    ;WITH ALL_NODE_CHILDNODES AS (
+        SELECT [Id], [ParentId], [Name]
+        FROM tbl_ProjectRootRelation
+        WHERE [Id] = @Id
 
-	DELETE FROM tbl_ProjectRootRelation 
-	WHERE [Id] = @Id
+        UNION ALL
 
-	IF @@ERROR = 0
-	BEGIN
-		SELECT [result] = JSON_QUERY((
-			SELECT 'success' [status], 'Deleted Successfully' [message]
-			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-		))
-	END
-	ELSE
-	BEGIN
-		SELECT [result] = JSON_QUERY((
-			SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
-			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-		))
-	END
+        SELECT trr.[Id], trr.[ParentId], trr.[Name]
+        FROM tbl_ProjectRootRelation trr
+        INNER JOIN ALL_NODE_CHILDNODES CN ON trr.[ParentId] = CN.[Id]
+    )
+    -- Deleting all related nodes
+    DELETE FROM tbl_ProjectRootRelation
+    WHERE [Id] IN (SELECT [Id] FROM ALL_NODE_CHILDNODES);
+
+    -- Deleting the root node
+    DELETE FROM tbl_ProjectRootRelation WHERE [Id] = @Id;
+
+    IF @@ERROR = 0
+    BEGIN
+        -- Return success message if deletion is successful
+        SELECT [result] = JSON_QUERY((
+            SELECT 'success' [status], 'Deleted Successfully' [message]
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        ))
+    END
+    ELSE
+    BEGIN
+        -- Return error message if deletion fails
+        SELECT [result] = JSON_QUERY((
+            SELECT 'fail' [status], 'Deletion failed' [message]
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        ))
+    END
 END TRY
 BEGIN CATCH
-	SELECT ERROR_MESSAGE() [ProjectRootRelation]
+    -- Return error message if an exception is caught
+    SELECT [result] = JSON_QUERY((
+        SELECT 'error' [status], ERROR_MESSAGE() [message]
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+    ))
 END CATCH

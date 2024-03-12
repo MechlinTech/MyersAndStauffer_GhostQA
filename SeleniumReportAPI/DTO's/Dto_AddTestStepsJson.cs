@@ -28,6 +28,8 @@
             public string extractVariable { get; set; }
             public string javaScriptVariable { get; set; }
             public string importingStepFrom { get; set; }
+            public string variableInput { get; set; }
+            public string extractJavaScript { get; set; }
         }
     }
 }

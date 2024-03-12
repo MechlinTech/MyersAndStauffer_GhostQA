@@ -22,6 +22,7 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<TestStepsDetails> tbl_TestStepsDetails { get; set; }
         public DbSet<InternalTestExecution> tbl_InternalTestExecutions { get; set; }
         public DbSet<ProjectRootRelation> tbl_ProjectRootRelation { get; set; }
+        public DbSet<PerformanceFile> tbl_PerformanceFile { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
