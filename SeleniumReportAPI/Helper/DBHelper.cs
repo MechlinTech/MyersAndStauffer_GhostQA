@@ -7,6 +7,7 @@ using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Models;
+using SharpCompress.Common;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,6 +18,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using TestSeleniumReport.DTO_s;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Environments = SeleniumReportAPI.Models.Environments;
 using SmtpClient = System.Net.Mail.SmtpClient;
 
@@ -1701,6 +1703,112 @@ namespace SeleniumReportAPI.Helper
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@Id", model.Id);
                         command.Parameters.AddWithValue("@ParentId", model.ParentId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> AddPerformanceFile(Dto_AddPerformance model)
+        {
+            string result = string.Empty;
+            try
+            {
+                string directoryPath = @"C:\GhostQA\SeleniumReportAPI\wwwroot\TestDataFile\";
+                string filePath = Path.Combine(directoryPath, model.FileName);
+
+                // Ensure directory exists
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                // Save uploaded file to disk
+                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.BinaryData.CopyToAsync(stream);
+                }
+
+                // Save file path to database
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (SqlCommand command = new SqlCommand("stp_AddPerformance", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@TestCaseName", model.TestCaseName);
+                        command.Parameters.AddWithValue("@FileName", filePath); // Save file name instead of full path
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                result = "Success";
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions appropriately, logging or rethrowing as necessary
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                result = "Failed"; // Update result to indicate failure
+            }
+            return result;
+        }
+
+        internal async Task<string> GetPerformanceFileByRootId(int RootId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetPerformaceFile", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", RootId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> DeletePerformanceFile(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeletePerformanceFile", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", Id);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
 using SeleniumReportAPI.Models;
 
@@ -62,5 +63,36 @@ namespace SeleniumReportAPI.Controllers
             return Ok(await _helper.DeleteProjectData(model));
         }
 
+        /// <summary>
+        /// Add Performance File
+        /// </summary>
+        /// <param Dto_AddPerformance="Dto_AddPerformance"></param>
+        /// <returns></returns>
+        [HttpPost("AddPerformanceFile")]
+        public async Task<ActionResult> AddPerformanceFile([FromForm] Dto_AddPerformance model)
+        {
+            return Ok(await _helper.AddPerformanceFile(model));
+        }
+
+        /// <summary>
+        /// Get Performance File By Id RootId
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetPerformanceFileByRootId")]
+        public async Task<ActionResult> GetPerformanceFileByRootId(int RootId)
+        {
+            return Ok(await _helper.GetPerformanceFileByRootId(RootId));
+        }
+
+        /// <summary>
+        ///  Delete Performance File By Id
+        /// </summary>
+        /// <param Id="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeletePerformanceFile")]
+        public async Task<ActionResult> DeletePerformanceFile(int Id)
+        {
+            return Ok(await _helper.DeletePerformanceFile(Id));
+        }
     }
 }
