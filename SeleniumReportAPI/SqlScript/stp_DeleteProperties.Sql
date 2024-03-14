@@ -1,24 +1,24 @@
-CREATE OR ALTER PROCEDURE [dbo].[stp_DeletePerformanceFile]
+CREATE OR ALTER   PROCEDURE [dbo].[stp_DeleteProperties]
 @Id			INT
 AS
 /**************************************************************************************
-PROCEDURE NAME	:	stp_DeletePerformanceFile
+PROCEDURE NAME	:	stp_DeleteProperties
 CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	13th March 2024
+CREATED DATE	:	14th March 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
 PROC EXEC		:
-				EXEC stp_DeletePerformanceFile 
+				EXEC stp_DeleteProperties 
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS(SELECT 1 FROM tbl_PerformanceFile WHERE [Id] = @Id)
+	IF EXISTS(SELECT 1 FROM tbl_PerformanceProperties WHERE [Id] = @Id)
 	BEGIN
-		DELETE FROM tbl_PerformanceFile WHERE [Id] = @Id
+		DELETE FROM tbl_PerformanceProperties WHERE [Id] = @Id
 	END
 	ELSE
 	BEGIN
 		SELECT [result] = JSON_QUERY((
-			SELECT 'fail' [status], 'Performance File not available' [message]
+			SELECT 'fail' [status], 'Property not available' [message]
 			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 		))
 	END
@@ -26,7 +26,7 @@ BEGIN TRY
 	IF @@ERROR = 0
 	BEGIN
 		SELECT [result] = JSON_QUERY((
-			SELECT 'success' [status], 'Performance File Deleted Successfully' [message]
+			SELECT 'success' [status], 'Property Deleted Successfully' [message]
 			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 		))
 	END
@@ -39,5 +39,5 @@ BEGIN TRY
 	END
 END TRY
 BEGIN CATCH
-	SELECT ERROR_MESSAGE() [performanceFileListJson]
+	SELECT ERROR_MESSAGE() [PropertyListJson]
 END CATCH

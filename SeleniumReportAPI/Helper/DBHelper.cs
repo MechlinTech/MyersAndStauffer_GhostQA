@@ -1873,5 +1873,180 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+        internal async Task<string> AddLocation(PerformanceLocation model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (SqlCommand command = new SqlCommand("stp_AddLocation", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@PerformanceFileId", model.PerformanceFileId);
+                        command.Parameters.AddWithValue("@Name", model.Name);
+                        command.Parameters.AddWithValue("@NumberUser", model.NumberUser);
+                        command.Parameters.AddWithValue("@PercentageTraffic", model.PercentageTraffic);
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                result = "Success";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> GetLocationByPerformanceFileId(int PerformanceFileId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetLocationByPerformanceFileId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@PerformanceFileId", PerformanceFileId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> DeleteLocation(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteLocation", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> AddProperty(PerformanceProperties model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (SqlCommand command = new SqlCommand("stp_AddProperties", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@PerformanceFileId", model.PerformanceFileId);
+                        command.Parameters.AddWithValue("@Name", model.Name);
+                        command.Parameters.AddWithValue("@Value", model.Value);
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                result = "Success";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> GetPropertyByPerformanceFileId(int PerformanceFileId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetPropertyByPerformanceFileId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@PerformanceFileId", PerformanceFileId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> DeleteProperties(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteProperties", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
     }
 }

@@ -94,5 +94,69 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.DeletePerformanceFile(Id));
         }
+
+        /// <summary>
+        /// Add Location
+        /// </summary>
+        /// <param PerformanceLocation="PerformanceLocation"></param>
+        /// <returns></returns>
+        [HttpPost("AddLocation")]
+        public async Task<ActionResult> AddLocation(PerformanceLocation model)
+        {
+            return Ok(await _helper.AddLocation(model));
+        }
+
+        /// <summary>
+        /// Get Location By PerformanceFileId
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetLocationByPerformanceFileId")]
+        public async Task<ActionResult> GetLocationByPerformanceFileId(int PerformanceFileId)
+        {
+            return Ok(await _helper.GetLocationByPerformanceFileId(PerformanceFileId));
+        }
+
+        /// <summary>
+        ///  Delete Performance File By Id
+        /// </summary>
+        /// <param Id="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteLocation")]
+        public async Task<ActionResult> DeleteLocation(int Id)
+        {
+            return Ok(await _helper.DeleteLocation(Id));
+        }
+
+        /// <summary>
+        /// Add Property
+        /// </summary>
+        /// <param PerformanceProperties = "PerformanceProperties"></param>
+        /// <returns></returns>
+        [HttpPost("AddProperty")]
+        public async Task<ActionResult> AddProperty(PerformanceProperties model)
+        {
+            return Ok(await _helper.AddProperty(model));
+        }
+
+        /// <summary>
+        /// Get Property By PerformanceFileId
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetPropertyByPerformanceFileId")]
+        public async Task<ActionResult> GetPropertyByPerformanceFileId(int PerformanceFileId)
+        {
+            return Ok(await _helper.GetPropertyByPerformanceFileId(PerformanceFileId));
+        }
+
+        /// <summary>
+        ///  Delete Property By Id
+        /// </summary>
+        /// <param Id="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteProperties")]
+        public async Task<ActionResult> DeleteProperties(int Id)
+        {
+            return Ok(await _helper.DeleteProperties(Id));
+        }
     }
 }
