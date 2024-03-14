@@ -56,7 +56,7 @@ namespace SeleniumReportAPI.Controllers
             try
             {
                 var result = await _helper.AcceptInvitation(toEmail);
-               
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -93,6 +93,32 @@ namespace SeleniumReportAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("UploadFile")]
+        public async Task<IActionResult> Upload(string fileBasePath, IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                    return BadRequest("File not selected");
+                // string filePath = @"";
+                var result = await _helper.UploadFiles(file, fileBasePath);
+                string status = string.Empty;
+                string messages = string.Empty;
+                if (result == "Success")
+                    messages = "File Uploaded Successfully";
+                else
+                    messages = "File Uploaded Failed";
 
+                return Ok(new
+                {
+                    status = result,
+                    message = messages
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

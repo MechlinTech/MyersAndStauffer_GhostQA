@@ -1827,5 +1827,51 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+        internal async Task<string> UploadFiles(IFormFile file, string basePath)
+        {
+            string result = string.Empty;
+            try
+            {
+                string recordingFolderPath = string.Empty;
+                string filePath = string.Empty;
+                if (file.ContentType.Contains("video"))
+                {
+                    recordingFolderPath = Path.Combine(basePath, "Recordings");
+                    //Video Save Directory
+                    string videodir = Path.Combine(recordingFolderPath, $"{DateTime.Now:yyyy-MM-dd}");
+                    if (!Directory.Exists(videodir))
+                    {
+                        Directory.CreateDirectory(videodir);
+                    }
+
+                    //Record to a file and save on local
+                    filePath = Path.Combine(videodir, $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.webm");
+                }
+                else
+                {
+                    var FailureSSPath = Path.Combine(basePath, "FailureScreenShots", DateTime.Now.ToString("MMMM_dd_yyyy"));
+                    if (!Directory.Exists(FailureSSPath))
+                    {
+                        Directory.CreateDirectory(FailureSSPath);
+                    }
+                    filePath = Path.Combine(FailureSSPath, file.FileName + DateTime.Now.ToString("yy-MM-dd hh-mm-ss") + ".png");
+                }
+
+                // Save uploaded file to disk
+                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                result = "Success";
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions appropriately, logging or rethrowing as necessary
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                result = "Failed"; // Update result to indicate failure
+            }
+            return result;
+        }
     }
 }
