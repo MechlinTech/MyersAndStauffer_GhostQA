@@ -16,7 +16,7 @@ import {
     Popper,
     MenuList,
 } from "@material-ui/core/";
-import { Avatar, Stack } from "@mui/material";
+import { Avatar } from "@mui/material";
 import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
 
 // Redux import
@@ -58,7 +58,7 @@ export default function MiniDrawer() {
         setShowMenu(false);
     };
     const isActive =
-        location.pathname === "/" || location.pathname.slice(0, 9) === "/settings";
+        location.pathname === "/" || location.pathname.startsWith("/settings") || location.pathname.startsWith('/testLab');
     return (
         <div className={classes.root}>
             <CssBaseline />

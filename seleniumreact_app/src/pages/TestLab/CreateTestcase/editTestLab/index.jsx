@@ -3,16 +3,7 @@ import React, { useEffect, useState } from "react";
 import { StyledOutlinedInput, StyledTypography } from "./styleTestCase";
 import { useStyles } from "./styleTestCase";
 import Select from "react-select";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import TableRow from "@mui/material/TableRow";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import { StyledTableCell } from "./styleTestCase";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -22,6 +13,7 @@ import { headerForm } from "../../../../utils/authheader";
 import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
 import { StyledFormControl } from "../styleTestCase";
 import RenderActionFields from "../RenderActionFields";
+import ExecutionHistory from "./ExecutionHistory";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function EditTestCase() {
@@ -29,11 +21,9 @@ export default function EditTestCase() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { testId } = useParams();
-  const [selectedRunId, setSelectedRunId] = useState(null);
   const [steps, setSteps] = useState([]);
   const [isEditable, setIsEditable] = useState(false);
   const [Errors, setErrors] = useState([]);
-  const [rootId, setrootId] = useState(localStorage.getItem("rootId"));
   useEffect(() => {
     const getSteps = async () => {
       const res = await axios.get(
@@ -42,36 +32,7 @@ export default function EditTestCase() {
       setSteps(res.data);
       console.log("steps list : ", res.data);
     };
-    //for execution history
-    const getExecutionHistory = async () => {
-      try {
-        const jsonData = await axios.get(
-          `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}`
-        );
-        const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
-          type: "application/json",
-        });
-        const formData = new FormData();
-        formData.append("scenarios_file", blob, "data.json");
-        formData.append("name", "testing");
-        const executedDetail = await axios.post(
-          "http://65.1.188.67:8010/api/test-suitesV2/execute/",
-          formData,
-          headerForm()
-        );
-        console.log("executedDetail:", executedDetail);
-
-        const runId = executedDetail.data.container_runs[0].id;
-        setTimeout(async () => {
-          const res = await axios.get(
-            `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
-          );
-          console.log("executedDetail:", res);
-        }, 20000);
-      } catch (error) {
-        console.log("error fetching execution data", error);
-      }
-    };
+    //for execution history    
 
     getSteps();
     // getExecutionHistory();
@@ -330,40 +291,7 @@ export default function EditTestCase() {
     });
     setSteps(updatedSteps);
   };
-  const runsArray = [
-    {
-      runid: 123456789,
-      startTime: "08:00 AM",
-      endTime: "10:30 AM",
-      status: "Completed",
-    },
-    {
-      runid: 987654321,
-      startTime: "11:45 AM",
-      endTime: "01:15 PM",
-      status: "Running",
-    },
-    {
-      runid: 555555555,
-      startTime: "02:20 PM",
-      endTime: "03:45 PM",
-      status: "Failed",
-    },
-    // Add more objects as needed
-  ];
-  const data = [
-    {
-      status: "Success",
-      timestamp: "2022-03-01T10:30:00Z",
-      detail: "Operation completed successfully.",
-    },
-    {
-      status: "Error",
-      timestamp: "2022-03-01T12:45:00Z",
-      detail: "An error occurred during the operation.",
-    },
-    // Add more objects as needed
-  ];
+ 
   const selectorNoOptionList = [
     "Execute Javascript",
     "Pause (Time in ms)",
@@ -689,144 +617,7 @@ export default function EditTestCase() {
               </ul>
             </Box>
           </Grid>
-          <Grid item xs={12} mt={2}>
-            <StyledTypography sx={{ fontSize: "18px", fontWeight: "400" }}>
-              Execution history
-            </StyledTypography>
-          </Grid>
-          <Grid item xs={12} md={7}>
-            <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
-              <TableContainer sx={{ marginBottom: "8vh" }}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      {/* <StyledTableCell>Project Name</StyledTableCell> */}
-                      <StyledTableCell>Run Id </StyledTableCell>
-                      <StyledTableCell>Start Time</StyledTableCell>
-                      <StyledTableCell>End Time</StyledTableCell>
-                      <StyledTableCell>Status</StyledTableCell>
-                      <StyledTableCell>Video</StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {runsArray?.map((row) => (
-                      <TableRow
-                        key={row.Email}
-                        className={`${classes.tableRow} ${
-                          selectedRunId === row.runid ? classes.activeRow : ""
-                        }`}
-                        style={{ height: "10px" }}
-                        spacing="3"
-                        onClick={() => setSelectedRunId(row.runid)}
-                      >
-                        <StyledTableCell
-                          sx={{
-                            color:
-                              selectedRunId === row.runid ? "white" : "black",
-                          }}
-                        >
-                          {row.runid}
-                        </StyledTableCell>
-                        <StyledTableCell
-                          sx={{
-                            color:
-                              selectedRunId === row.runid ? "white" : "black",
-                          }}
-                        >
-                          {row.startTime}
-                        </StyledTableCell>
-                        <StyledTableCell
-                          sx={{
-                            color:
-                              selectedRunId === row.runid ? "white" : "black",
-                          }}
-                        >
-                          {row.endTime}
-                        </StyledTableCell>
-                        <StyledTableCell
-                          sx={{
-                            color:
-                              selectedRunId === row.runid ? "white" : "black",
-                          }}
-                        >
-                          <Box
-                            className={classes.statusBox}
-                            sx={{
-                              display: "inline-block",
-                              backgroundColor:
-                                selectedRunId === row.runid
-                                  ? ""
-                                  : row.status === "Completed"
-                                  ? "#48fab9"
-                                  : "#fa3737",
-                            }}
-                          >
-                            {row.status}
-                          </Box>
-                        </StyledTableCell>
-                        <StyledTableCell
-                          sx={{
-                            color:
-                              selectedRunId === row.runid ? "white" : "#654DF7",
-                          }}
-                        >
-                          <VideocamIcon />
-                        </StyledTableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={5} justifySelf="start">
-            {selectedRunId && (
-              <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
-                <TableContainer sx={{ marginBottom: "8vh" }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <StyledTableCell colSpan={3}>
-                          <StyledTypography variant="h6" color="primary">
-                            {selectedRunId}
-                          </StyledTypography>
-                        </StyledTableCell>
-                      </TableRow>
-                      <TableRow>
-                        <StyledTableCell>Status </StyledTableCell>
-                        <StyledTableCell>Timestramp</StyledTableCell>
-                        <StyledTableCell>Detail</StyledTableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {data?.map((row) => (
-                        <TableRow
-                          key={row.Email}
-                          className={`${classes.tableRow}`}
-                          style={{ height: "10px" }}
-                          spacing="3"
-                        >
-                          <StyledTableCell component="th" scope="row">
-                            {row.status === "Success" ? (
-                              <CheckCircleIcon color="success" />
-                            ) : (
-                              <CancelIcon color="error" />
-                            )}
-                          </StyledTableCell>
-                          <StyledTableCell component="th" scope="row">
-                            {row.timestamp}
-                          </StyledTableCell>
-                          <StyledTableCell component="th" scope="row">
-                            {row.detail}
-                          </StyledTableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            )}
-          </Grid>
+          <ExecutionHistory/>
         </Grid>
       </Paper>
     </div>

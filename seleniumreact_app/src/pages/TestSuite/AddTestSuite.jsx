@@ -26,7 +26,6 @@ import {
   GetTestCases,
   AddUpdateTestSuites,
 } from "../../redux/actions/seleniumAction";
-import LoadingWave from "../Dashboard/Modal/LoadingWave";
 
 
 export default function AddTestSuite() {
