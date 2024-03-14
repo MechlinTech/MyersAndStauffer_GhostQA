@@ -15,7 +15,7 @@
           "Microsoft.EntityFrameworkCore.Tools": "6.0.25",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "6.0.16",
           "MyersAndStaufferSeleniumTests": "1.0.0",
-          "System.Data.SqlClient": "4.8.5"
+          "System.Data.SqlClient": "4.8.6"
         },
         "runtime": {
           "TestSeleniumReport.dll": {}
@@ -42,7 +42,7 @@
       },
       "DotNetSeleniumExtras.PageObjects/3.11.0": {
         "dependencies": {
-          "Selenium.WebDriver": "4.8.2"
+          "Selenium.WebDriver": "4.18.1"
         },
         "runtime": {
           "lib/netstandard2.0/SeleniumExtras.PageObjects.dll": {
@@ -53,7 +53,7 @@
       },
       "DotNetSeleniumExtras.WaitHelpers/3.11.0": {
         "dependencies": {
-          "Selenium.WebDriver": "4.8.2"
+          "Selenium.WebDriver": "4.18.1"
         },
         "runtime": {
           "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll": {
@@ -68,7 +68,7 @@
           "System.CodeDom": "4.7.0",
           "System.ComponentModel.Annotations": "4.7.0",
           "System.Configuration.ConfigurationManager": "7.0.0",
-          "System.Data.SqlClient": "4.8.5"
+          "System.Data.SqlClient": "4.8.6"
         },
         "runtime": {
           "lib/netstandard2.1/EntityFramework.SqlServer.dll": {
@@ -2699,7 +2699,7 @@
       "ScreenRecorderLib/5.4.0": {},
       "Selenium.Support/4.8.2": {
         "dependencies": {
-          "Selenium.WebDriver": "4.8.2"
+          "Selenium.WebDriver": "4.18.1"
         },
         "runtime": {
           "lib/net6.0/WebDriver.Support.dll": {
@@ -2708,18 +2708,18 @@
           }
         }
       },
-      "Selenium.WebDriver/4.8.2": {
+      "Selenium.WebDriver/4.18.1": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
-          "lib/net6.0/WebDriver.dll": {
+          "lib/netstandard2.0/WebDriver.dll": {
             "assemblyVersion": "4.0.0.0",
             "fileVersion": "4.0.0.0"
           }
         }
       },
-      "Selenium.WebDriver.ChromeDriver/120.0.6099.10900": {},
+      "Selenium.WebDriver.ChromeDriver/121.0.6167.18400": {},
       "Selenium.WebDriver.MSEdgeDriver/120.0.2210.144": {},
       "SharpCompress/0.23.0": {
         "dependencies": {
@@ -2946,7 +2946,7 @@
         }
       },
       "System.Data.DataSetExtensions/4.5.0": {},
-      "System.Data.SqlClient/4.8.5": {
+      "System.Data.SqlClient/4.8.6": {
         "dependencies": {
           "Microsoft.Win32.Registry": "4.7.0",
           "System.Security.Principal.Windows": "5.0.0",
@@ -2954,22 +2954,22 @@
         },
         "runtime": {
           "lib/netcoreapp2.1/System.Data.SqlClient.dll": {
-            "assemblyVersion": "4.6.1.5",
-            "fileVersion": "4.700.22.51706"
+            "assemblyVersion": "4.6.1.6",
+            "fileVersion": "4.700.23.52603"
           }
         },
         "runtimeTargets": {
           "runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll": {
             "rid": "unix",
             "assetType": "runtime",
-            "assemblyVersion": "4.6.1.5",
-            "fileVersion": "4.700.22.51706"
+            "assemblyVersion": "4.6.1.6",
+            "fileVersion": "4.700.23.52603"
           },
           "runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.dll": {
             "rid": "win",
             "assetType": "runtime",
-            "assemblyVersion": "4.6.1.5",
-            "fileVersion": "4.700.22.51706"
+            "assemblyVersion": "4.6.1.6",
+            "fileVersion": "4.700.23.52603"
           }
         }
       },
@@ -3886,8 +3886,8 @@
           "Nancy": "2.0.0",
           "NunitXml.TestLogger": "3.0.131",
           "Selenium.Support": "4.8.2",
-          "Selenium.WebDriver": "4.8.2",
-          "Selenium.WebDriver.ChromeDriver": "120.0.6099.10900",
+          "Selenium.WebDriver": "4.18.1",
+          "Selenium.WebDriver.ChromeDriver": "121.0.6167.18400",
           "Selenium.WebDriver.MSEdgeDriver": "120.0.2210.144"
         },
         "runtime": {
@@ -5464,19 +5464,19 @@
       "path": "selenium.support/4.8.2",
       "hashPath": "selenium.support.4.8.2.nupkg.sha512"
     },
-    "Selenium.WebDriver/4.8.2": {
+    "Selenium.WebDriver/4.18.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gNCaZrR32U2e9pyS+HXSqNHdcrIbqulOkcmycFoDL/tM5la4tELaZ3FpPRbq7tjJK3cKs5lLqVVFM9PfY1WW5g==",
-      "path": "selenium.webdriver/4.8.2",
-      "hashPath": "selenium.webdriver.4.8.2.nupkg.sha512"
+      "sha512": "sha512-x9Pkz+kzcZ6dToJFLiem36pp0xmIfu/DXFf3U7EaoFqdtYyLsDJB0e/v58NAghcPTrAwJMSduEAokBRFFCxAxg==",
+      "path": "selenium.webdriver/4.18.1",
+      "hashPath": "selenium.webdriver.4.18.1.nupkg.sha512"
     },
-    "Selenium.WebDriver.ChromeDriver/120.0.6099.10900": {
+    "Selenium.WebDriver.ChromeDriver/121.0.6167.18400": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-wCOew6C9ABCRK59DdzdJyoQKmVQEUrVQEvoDQdhnLWpW1OkFKG5pd9EK6B3j2vcqdNTBNM6++tAOhBMFezHm3w==",
-      "path": "selenium.webdriver.chromedriver/120.0.6099.10900",
-      "hashPath": "selenium.webdriver.chromedriver.120.0.6099.10900.nupkg.sha512"
+      "sha512": "sha512-XyFfkj7DYqgX/20q9QY5WcAJQ0B+cBtuRvZjkfBKh+HzT71L4K9+wPtA4dB5E8sT69zN8t6vkvKUtdTIBrR8Hg==",
+      "path": "selenium.webdriver.chromedriver/121.0.6167.18400",
+      "hashPath": "selenium.webdriver.chromedriver.121.0.6167.18400.nupkg.sha512"
     },
     "Selenium.WebDriver.MSEdgeDriver/120.0.2210.144": {
       "type": "package",
@@ -5632,12 +5632,12 @@
       "path": "system.data.datasetextensions/4.5.0",
       "hashPath": "system.data.datasetextensions.4.5.0.nupkg.sha512"
     },
-    "System.Data.SqlClient/4.8.5": {
+    "System.Data.SqlClient/4.8.6": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-fRqxut4lrndPHrXD+ht1XRmCL3obuKldm4XjCRYS9p5f7FSR7shBxAwTkDrpFMsHC9BhNgjjmUtiIjvehn5zkg==",
-      "path": "system.data.sqlclient/4.8.5",
-      "hashPath": "system.data.sqlclient.4.8.5.nupkg.sha512"
+      "sha512": "sha512-2Ij/LCaTQRyAi5lAv7UUTV9R2FobC8xN9mE0fXBZohum/xLl8IZVmE98Rq5ugQHjCgTBRKqpXRb4ORulRdA6Ig==",
+      "path": "system.data.sqlclient/4.8.6",
+      "hashPath": "system.data.sqlclient.4.8.6.nupkg.sha512"
     },
     "System.Diagnostics.Debug/4.3.0": {
       "type": "package",

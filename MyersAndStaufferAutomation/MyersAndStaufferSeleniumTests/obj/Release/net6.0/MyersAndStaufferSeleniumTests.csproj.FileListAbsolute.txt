@@ -1,0 +1,6 @@
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Release\net6.0\MyersAndStaufferSeleniumTests.csproj.AssemblyReference.cache
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Release\net6.0\MyersAndStaufferSeleniumTests.GeneratedMSBuildEditorConfig.editorconfig
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Release\net6.0\MyersAndStaufferSeleniumTests.AssemblyInfoInputs.cache
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Release\net6.0\MyersAndStaufferSeleniumTests.AssemblyInfo.cs
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Release\net6.0\MyersAndStaufferSeleniumTests.csproj.CoreCompileInputs.cache
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\obj\Release\net6.0\MyersAndStaufferSeleniumTests.sourcelink.json

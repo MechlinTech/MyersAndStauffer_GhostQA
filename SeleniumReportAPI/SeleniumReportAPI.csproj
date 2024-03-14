@@ -16,6 +16,7 @@
 		<None Remove="SqlScript\stp_DeleteApplication.Sql" />
 		<None Remove="SqlScript\stp_DeleteBrowser.Sql" />
 		<None Remove="SqlScript\stp_DeleteEnvironment.Sql" />
+		<None Remove="SqlScript\stp_DeletePerformanceFile.Sql" />
 		<None Remove="SqlScript\stp_DeleteTestSuites.Sql" />
 		<None Remove="SqlScript\stp_GetApplications.sql" />
 		<None Remove="SqlScript\stp_GetBrowsers.Sql" />
@@ -47,6 +48,7 @@
 		<EmbeddedResource Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_DeleteApplication.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_DeleteBrowser.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeletePerformanceFile.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_DeleteEnvironment.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_DeleteTestSuites.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetPerformaceFile.Sql" />

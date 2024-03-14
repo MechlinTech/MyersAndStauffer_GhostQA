@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {}
+    "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
+    "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
+        "projectUniqueName": "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
         "projectName": "MyersAndStaufferFramework",
-        "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
-        "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\obj\\",
+        "projectPath": "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj",
+        "packagesPath": "C:\\Users\\Hosting\\.nuget\\packages\\",
+        "outputPath": "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Hosting\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -124,26 +128,44 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.26, 6.0.26]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.26, 6.0.26]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[6.0.26, 6.0.26]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {
+    "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
+        "projectUniqueName": "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
         "projectName": "MyersAndStaufferSeleniumTests",
-        "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
-        "packagesPath": "C:\\Users\\Nitin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\obj\\",
+        "projectPath": "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj",
+        "packagesPath": "C:\\Users\\Hosting\\.nuget\\packages\\",
+        "outputPath": "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Nitin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Hosting\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -157,8 +179,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
-                "projectPath": "C:\\Users\\Nitin\\source\\repos\\MyersAndStauffer_GhostQA1\\MyersAndStauffer_GhostQA1\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj"
+              "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj": {
+                "projectPath": "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferFramework\\MyersAndStaufferFramework.csproj"
               }
             }
           }
@@ -227,11 +249,11 @@
             },
             "Selenium.WebDriver": {
               "target": "Package",
-              "version": "[4.8.2, )"
+              "version": "[4.18.1, )"
             },
             "Selenium.WebDriver.ChromeDriver": {
               "target": "Package",
-              "version": "[120.0.6099.10900, )"
+              "version": "[121.0.6167.18400, )"
             },
             "Selenium.WebDriver.MSEdgeDriver": {
               "target": "Package",
@@ -249,12 +271,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.26, 6.0.26]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.26, 6.0.26]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[6.0.26, 6.0.26]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

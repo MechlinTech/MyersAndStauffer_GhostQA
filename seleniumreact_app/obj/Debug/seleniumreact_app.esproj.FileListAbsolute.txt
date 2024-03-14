@@ -1,0 +1,1 @@
+C:\GhostQA\seleniumreact_app\obj\Debug\seleniumreact_app.esproj.CoreCompileInputs.cache

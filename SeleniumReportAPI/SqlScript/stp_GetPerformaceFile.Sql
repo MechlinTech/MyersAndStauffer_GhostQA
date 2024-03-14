@@ -16,6 +16,7 @@ BEGIN TRY
                ISNULL([TestCaseName], '') AS [testCaseName],
 			   ISNULL([FileName], '') AS [fileName]
 		FROM tbl_PerformanceFile
+		WHERE [RootId] = @RootId
 	FOR JSON PATH))
 END TRY
 BEGIN CATCH

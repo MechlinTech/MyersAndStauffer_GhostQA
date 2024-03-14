@@ -1,0 +1,58 @@
+{
+  "Version": 1,
+  "Hash": "XxdMvuyitTuZ7/qDpCGQDbqKpiC4LvliUJktTUZLqQ4=",
+  "Source": "SeleniumReportAPI",
+  "BasePath": "_content/SeleniumReportAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "SeleniumReportAPI\\wwwroot",
+      "Source": "SeleniumReportAPI",
+      "ContentRoot": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\",
+      "BasePath": "_content/SeleniumReportAPI",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\Driver\\chromedriver.exe",
+      "SourceId": "SeleniumReportAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\",
+      "BasePath": "_content/SeleniumReportAPI",
+      "RelativePath": "Driver/chromedriver.exe",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Driver\\chromedriver.exe"
+    },
+    {
+      "Identity": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\TestDataFile\\fontawesome-webfont.bin",
+      "SourceId": "SeleniumReportAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\",
+      "BasePath": "_content/SeleniumReportAPI",
+      "RelativePath": "TestDataFile/fontawesome-webfont.bin",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\TestDataFile\\fontawesome-webfont.bin"
+    }
+  ]
+}

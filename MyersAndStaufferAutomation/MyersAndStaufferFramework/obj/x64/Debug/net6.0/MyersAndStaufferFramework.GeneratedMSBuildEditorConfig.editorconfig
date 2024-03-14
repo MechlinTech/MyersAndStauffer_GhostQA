@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = MyersAndStaufferFramework
-build_property.ProjectDir = C:\Users\Nitin\source\repos\MyersAndStauffer_GhostQA1\MyersAndStauffer_GhostQA1\MyersAndStaufferAutomation\MyersAndStaufferFramework\
+build_property.ProjectDir = C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

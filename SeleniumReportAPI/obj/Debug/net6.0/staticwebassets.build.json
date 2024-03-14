@@ -1,11 +1,39 @@
 {
   "Version": 1,
-  "Hash": "6J0sJx/xlxvDkejnDO4D9fdD/utJbruQMqUreV9GZbo=",
+  "Hash": "bhzQbURnnk3ofqep3E+czhyoZEt7uq9gjF4wdcBqSPA=",
   "Source": "SeleniumReportAPI",
   "BasePath": "_content/SeleniumReportAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "SeleniumReportAPI\\wwwroot",
+      "Source": "SeleniumReportAPI",
+      "ContentRoot": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\",
+      "BasePath": "_content/SeleniumReportAPI",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\Driver\\chromedriver.exe",
+      "SourceId": "SeleniumReportAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\",
+      "BasePath": "_content/SeleniumReportAPI",
+      "RelativePath": "Driver/chromedriver.exe",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Driver\\chromedriver.exe"
+    }
+  ]
 }

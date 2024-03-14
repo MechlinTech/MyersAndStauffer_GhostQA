@@ -76,3 +76,7 @@ C:\Users\ermob\Downloads\MyersAndStauffer 1\MyersAndStauffer\MyersAndStaufferAut
 C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.dll
 C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\refint\MyersAndStaufferFramework.dll
 C:\Users\dhima\Source\Repos\MyersAndStauffer_GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.pdb
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.AssemblyReference.cache
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.GeneratedMSBuildEditorConfig.editorconfig
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.csproj.CoreCompileInputs.cache
+C:\GhostQA\MyersAndStaufferAutomation\MyersAndStaufferFramework\obj\Debug\net6.0\MyersAndStaufferFramework.sourcelink.json
