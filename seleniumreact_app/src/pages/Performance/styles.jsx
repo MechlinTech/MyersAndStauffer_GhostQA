@@ -121,6 +121,12 @@ export const useStyles = makeStyles({
             scrollMargin: "20px",
         },
     },
+    inputField: {
+        width:'100%',
+        textAlign:'center',
+        borderRadius:"4px",
+        border:'solid 2px #DADADA'
+    },
 });
 
 export const useStylesTestCase = makeStyles((theme) => ({

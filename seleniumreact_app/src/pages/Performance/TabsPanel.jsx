@@ -41,7 +41,7 @@ function a11yProps(index) {
   };
 }
 
-export default function TabsPanel() {
+export default function TabsPanel({addTestCase}) {
   const theme = useTheme();
   const [value, setValue] = useState('Design');
   
@@ -81,7 +81,7 @@ export default function TabsPanel() {
         onChangeIndex={handleChangeIndex}
       > */}
         <TabPanel value={value} index={'Design'} dir={theme.direction}>
-        <Design />
+        <Design addTestCase={addTestCase}/>
         </TabPanel>
         <TabPanel value={value} index={"Results"} dir={theme.direction}>
         {"Results"} 
