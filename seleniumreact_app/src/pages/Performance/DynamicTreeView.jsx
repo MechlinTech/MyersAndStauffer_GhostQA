@@ -84,7 +84,7 @@ const Card = ({newElementName, setNewElementName,
                   }}>
                    { editMode== 0 && <EditIcon sx={{ color: '#654df7' }} onClick={() => handleEdit(item.id, item.name)} style={{ cursor: 'pointer', marginLeft: '10px' }} />}
                     <DeleteIcon sx={{ color: '#f74d4d' }} onClick={() => handleDelete(item.id)} style={{ cursor: 'pointer' }} />
-                    {nodeCount < 4 && (
+                    {nodeCount < 2 && (
                       <AddIcon sx={{ color: '#654df7' }} onClick={(event) => handleCRUD(event,item.id)} style={{
                         marginLeft: 'auto'
                       }} />
@@ -175,8 +175,8 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
   const handleCRUD = (event,parentId) => {
     event.preventDefault();
     console.log(parentId);
-    // For demonstration purposes, let's add a new element if the node count is less than 4
-    if (nodeCount < 4) {
+    // For demonstration purposes, let's add a new element if the node count is less than 2
+    if (nodeCount < 2) {
       setExpandedInputId(parentId);
     } else {
       alert('Maximum node limit reached.');
@@ -205,7 +205,7 @@ const DynamicTreeView = ({ TestCaseHandle,listData,setListData }) => {
 
   const handleCRUDNewItem = useCallback((parentId,nodeData) => {   
    
-    if (nodeCount < 5) {
+    if (nodeCount < 3) {
       setExpandedInputId(null); // Hide the input field
       if (newElementName) {
         const newId = Math.max(...listData.map(item => item.id)) + 1;

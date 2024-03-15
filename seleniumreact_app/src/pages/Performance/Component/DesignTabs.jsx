@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import LoadPanel from './LoadPanel';
 import LocationPanel from './LocationPanel';
+import DataEntryPanel from './DataEntryPanel';
+import Properties from './Properties';
 
 
 function TabPanel(props) {
@@ -41,7 +43,7 @@ function a11yProps(index) {
   };
 }
 
-export default function DesignTabs() {
+export default function DesignTabs({PerformanceFileId}) {
   const theme = useTheme();
   const [value, setValue] = useState('Load');
   
@@ -94,13 +96,13 @@ export default function DesignTabs() {
        <LoadPanel />
         </TabPanel>
         <TabPanel value={value} index={"Location"} dir={theme.direction}>
-        <LocationPanel />
+        <LocationPanel PerformanceFileId={PerformanceFileId}/>
         </TabPanel>
         <TabPanel value={value} index={"Data Entity"} dir={theme.direction}>
-        {"Data Entity"}
+        <DataEntryPanel/>
         </TabPanel>
         <TabPanel value={value} index={"Properties"} dir={theme.direction}>
-        {"Properties"}
+        <Properties PerformanceFileId={PerformanceFileId}/>
         </TabPanel>
         
     </Box>

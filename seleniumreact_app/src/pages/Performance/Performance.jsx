@@ -43,6 +43,7 @@ export default function Performance() {
 
     fetchData(); // Call the fetchData function when the component mounts
   }, [addTestCase,addNewProject]);
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -116,7 +117,7 @@ export default function Performance() {
               </Grid>
             </Card>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={7}>
          
             {addTestCase!==0 && <TabsPanel addTestCase={addTestCase} />}
 

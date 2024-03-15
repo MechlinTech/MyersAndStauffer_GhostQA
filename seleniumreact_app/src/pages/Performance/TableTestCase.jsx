@@ -42,7 +42,8 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
     };
 
     fetchData(); // Call the fetchData function when the component mounts
-  }, []);
+    console.log('table tes tcase ',addTestCase)
+  }, [addTestCase]);
   
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -65,7 +66,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
      
       try {
         const response = await axios.post(
-          `${BASE_URL}/Performance/AddProjectData`,
+          `${BASE_URL}/Performance/AddPerformanceFile`,
           formData,
           headerForm()
         );
@@ -147,7 +148,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
 
                   handleActiveTabs();
                 }} sx={{ cursor: 'pointer' }}>
-                  {item.name}
+                  {item.testCaseName}
                 </TableCell>
                 <TableCell align="left"> {item.fileName}</TableCell>
 
@@ -162,7 +163,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
               {expanded.includes(item.id) &&
                 <TableRow>
                   <TableCell colSpan='4'>
-                    <DesignTabs />
+                    <DesignTabs PerformanceFileId={item.id}/>
                   </TableCell>
 
                 </TableRow>

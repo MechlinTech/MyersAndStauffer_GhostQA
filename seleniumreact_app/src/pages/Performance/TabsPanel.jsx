@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
@@ -44,6 +44,7 @@ function a11yProps(index) {
 export default function TabsPanel({addTestCase}) {
   const theme = useTheme();
   const [value, setValue] = useState('Design');
+  
   
 
   const handleChange = (event, newValue) => {

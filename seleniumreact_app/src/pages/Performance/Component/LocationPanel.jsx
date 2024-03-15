@@ -1,167 +1,254 @@
 import React, { useState, useRef, useEffect } from "react";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import { useStyles } from "../styles";
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
+import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 import Select from "react-select";
-import DeleteIcon from '@mui/icons-material/Delete';
-const data =[{
-    value: 'mumbaiindia',
-    label: 'Mumbai India',
-},{
-    value: 'mumbaiindia1',
-    label: 'Mumbai India',
-}];
-export default function LocationPanel({ testCase }) {
-   
-    const classes = useStyles();
-    const [locationData, setLocationData] = useState([{
-        location: 'mumbaiindia',
-        traffic: 25,
-        numUser: 10,
-        id: 1
-    }, {
-        location: 'mumbaiindia',
-        traffic: 25,
-        numUser: 15,
-        id: 2
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
+import { header } from "../../../utils/authheader";
+import { toast } from "react-toastify";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+const data = [
+  {
+    value: "mumbai",
+    label: "mumbai",
+  },
+  {
+    value: "mumbaiindia1",
+    label: "Mumbai India",
+  },
+];
+export default function LocationPanel({
+  PerformanceFileId = { PerformanceFileId },
+}) {
+  const classes = useStyles();
+  const [locationData, setLocationData] = useState([]);
+  const [formData, setFormData] = useState({
+    selectedLocation: null,
+  });
+  const [valueLocation, setValueLocation] = useState(data);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [trafficPercentage, settrafficPercentage] = useState(0);
+  const [noOfUser, setnoOfUser] = useState(0);
+  const [addLocation, setAddLocation] = useState(false);
+
+  const [designTabsActive, setDesignTabsActive] = useState(false);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
+        header()
+      );
+      console.log(response.data);
+      setLocationData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-    ]);
-    const [formData, setFormData] = useState({
-        selectedLocation: null,
-    });
-    const [valueLocation, setValueLocation] = useState(data);
-    const [selectedLocation, setSelectedLocation] = useState([]);
-    const [addLocation, setAddLocation] = useState(false);
+  };
 
-    const [designTabsActive, setDesignTabsActive] = useState(false);
-    const handleActiveTabs = () => {
-        setDesignTabsActive(!designTabsActive)
+  useEffect(() => {
+    fetchData();
+  }, []);
+  // {
+  //     "Id": 1,
+  //     "PerformanceFileId": 1,
+  //     "Name": "mumbai",
+  //     "NumberUser": 0,
+  //     "PercentageTraffic": 0
+  // }
+  const handleActiveTabs = () => {
+    setDesignTabsActive(!designTabsActive);
+  };
+  const handleFieldChange = (fieldName, fieldInput) => {
+    if (fieldName === "selectedLocation") setSelectedLocation(fieldInput);
+    else if (fieldName === "noOfUser") {
+        setnoOfUser(fieldInput.target.value)
+    } else {
+        settrafficPercentage(fieldInput.target.value)
     }
-    const handleFieldChange = (index, fieldName, value) => {
-        console.log(index,locationData,'sdfsdfsfs')
-        const newData = [...locationData];
-        newData[index] = { ...newData[index], [fieldName]: value };
-        setLocationData(newData);
+  };
+  
+  const handleKeyPress = (event)=>{
+    if (event.key === "Enter") {
+        // Submit form or take action
+        let payload = {
+                id: 0,
+                performanceFileId: 1,
+                name: selectedLocation.value,
+                numberUser: noOfUser,
+                percentageTraffic: trafficPercentage
 
-    };
-    useEffect(()=>{
+        }
+        submitLocation(payload)
+      }
+  }
 
-    },[locationData])
-    return (
-        <>
-            <Button
-                variant="contained"
-                onClick={() => setAddLocation(!addLocation)}
+  const submitLocation = async (payload) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Performance/AddLocation`,
+        payload,
+        header()
+      );
+        console.log('res',res)
+      if (res.data === "Success") {
+        toast.info("Successfully saved", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+        
+        // Update propertyList after successful submission
+        fetchData();
+        setSelectedLocation(null)
+        setnoOfUser(0)
+        settrafficPercentage(0)
+      }
+    } catch (error) {
+      console.log("error saving ", error);
+      toast.error("Network error");
+    }
+  };
+  return (
+    <>
+      <Button
+        variant="contained"
+        onClick={() => setAddLocation(!addLocation)}
+        style={{
+          fontSize: 14,
+          backgroundColor: "rgb(101, 77, 247)",
+          color: "#ffffff",
+          cursor: "pointer",
+          padding: "8px 14px",
+          marginTop: "0px",
+          marginBottom: "10px",
+          marginLeft: "auto",
+          display: "block",
+        }}
+      >
+        <AddIcon /> Add more test
+      </Button>
+      <TableContainer
+        component={Paper}
+        style={{
+          border: "solid 2px #DADADA",
+          borderRadius: "5px",
+        }}
+      >
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" style={{ width: "50%" }}>
+                Locations
+              </TableCell>
+              <TableCell align="center" style={{ width: "20%" }}>
+                % of Traffic
+              </TableCell>
+              <TableCell align="center" style={{ width: "20%" }}>
+                no. of Users (s)
+              </TableCell>
+              <TableCell align="center" style={{ width: "10%" }}></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {locationData.map((item, index) => {
+              return (
+                <TableRow
+                  key={item.Id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell style={{ width: "50%" }}>
+                    <Select
+                      options={valueLocation}
+                      value={{ label: item.Name, value: item.Name }}
+                      isClearable={true}
+                      menuPosition={"fixed"}
+                    />
+                  </TableCell>
+                  <TableCell align="left" style={{ width: "20%" }}>
+                    <input
+                      type="number"
+                      value={item.PercentageTraffic}
+                      className={classes.inputField}
+                    />
+                  </TableCell>
 
+                  <TableCell align="left" style={{ width: "20%" }}>
+                    <input
+                      type="number"
+                      value={item.NumberUser}
+                      className={classes.inputField}
+                    />
+                  </TableCell>
+                  <TableCell align="left" style={{ width: "10%" }}>
+                    <DeleteIcon
+                      sx={{ color: "#f74d4d" }}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+            {addLocation && (
+              <TableRow
+                key={"a"}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell style={{ width: "50%" }}>
+                  <Select
+                    options={valueLocation}
+                    value={selectedLocation}
+                    isClearable={true}
+                    onChange={(selected) =>
+                      handleFieldChange("selectedLocation", selected)
+                    }
+                    menuPosition={"fixed"}
+                  />
+                </TableCell>
+                <TableCell align="left" style={{ width: "20%" }}>
+                  <input
+                    type="number"
+                    value={trafficPercentage}
+                    className={classes.inputField}
+                    onChange={(e) => {
+                      handleFieldChange("trafficPercentage",e);
+                    }}
+                    onKeyDown={handleKeyPress}
+                  />
+                </TableCell>
 
-                style={{
-                    fontSize: 14,
-                    backgroundColor: "rgb(101, 77, 247)",
-                    color: "#ffffff",
-                    cursor: "pointer",
-                    padding: "8px 14px",
-                    marginTop: '0px',
-                    marginBottom: '10px',
-                    marginLeft: "auto",
-                    display: 'block',
-                }}
-            >
+                <TableCell align="left" style={{ width: "20%" }}>
+                  <input
+                    type="number"
+                    value={noOfUser}
+                    className={classes.inputField}
+                    onChange={(e) => {
+                        handleFieldChange("noOfUser",e);
+                      }}
+                    onKeyDown={handleKeyPress}
 
-                <AddIcon />  Add more test
-            </Button>
-            <TableContainer component={Paper} style={{
-                border: 'solid 2px #DADADA',
-                borderRadius: '5px'
-            }}>
-                <Table aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center" style={{ width: '50%' }}>Locations</TableCell>
-                            <TableCell align="center" style={{ width: '20%' }}>% of Traffic</TableCell>
-                            <TableCell align="center" style={{ width: '20%' }}>no. of Users (s)</TableCell>
-                            <TableCell align="center" style={{ width: '10%' }}></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {  locationData.map((item,index)=>{
-                       
-                        return(
-                        <TableRow
-                            key={item.id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell style={{ width: '50%' }} >
-                                
-                                <Select
-                                    options={valueLocation}
-                                    value={item.location}                                 
-                                    isClearable={true}                   
-                                    key={item.id}
-                                    menuPosition={"fixed"}
-                                />
-
-                            </TableCell>
-                            <TableCell align="left" style={{ width: '20%' }}>
-                                <input type="number" value={item.traffic} className={classes.inputField} />
-                            </TableCell>
-
-                            <TableCell align="left" style={{ width: '20%' }}>
-                                <input type="number" value={item.numUser} className={classes.inputField} />
-                            </TableCell>
-                            <TableCell align="left" style={{ width: '10%' }}>
-                                <DeleteIcon sx={{ color: '#f74d4d' }} style={{ cursor: 'pointer' }} />
-                            </TableCell>
-
-                        </TableRow>
-                      )
-                    })
-                        }
-                        {addLocation &&
-                            <TableRow
-                                key={'a'}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell style={{ width: '50%' }} >
-
-                                    <Select
-                                        options={valueLocation}
-                                        value={formData.selectedLocation}
-                                        isClearable={true}
-                                        key={'a'}
-                                        onChange={(selected) =>
-                                            handleFieldChange("selectedLocation", selected.value)
-                                        }
-                                        menuPosition={"fixed"}
-                                    />
-
-                                </TableCell>
-                                <TableCell align="left" style={{ width: '20%' }}>
-                                    <input type="number" value={25} className={classes.inputField} />
-                                </TableCell>
-
-                                <TableCell align="left" style={{ width: '20%' }}>
-                                    <input type="number" value={10} className={classes.inputField} />
-                                </TableCell>
-                                <TableCell align="left" style={{ width: '10%' }}>
-                                    <DeleteIcon sx={{ color: '#f74d4d' }} style={{ cursor: 'pointer' }} />
-                                </TableCell>
-
-                            </TableRow>
-                        }
-
-                    </TableBody>
-                </Table>
-            </TableContainer>
-
-        </>
-
-
-    );
+                  />
+                </TableCell>
+                <TableCell align="left" style={{ width: "10%" }}>
+                  <DeleteIcon
+                    sx={{ color: "#f74d4d" }}
+                    style={{ cursor: "pointer" }}
+                  />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  );
 }
