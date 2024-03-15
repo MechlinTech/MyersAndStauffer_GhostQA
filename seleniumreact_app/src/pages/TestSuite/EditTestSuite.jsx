@@ -27,7 +27,6 @@ import {
   AddUpdateTestSuites,
   Getsuitebyname,
 } from "../../redux/actions/seleniumAction";
-import LoadingWave from "../Dashboard/Modal/LoadingWave";
 import { useParams } from "react-router-dom";
 
 export default function EditTestSuite() {

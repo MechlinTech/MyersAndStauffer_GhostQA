@@ -6,6 +6,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import LoadPanel from './LoadPanel';
+import LocationPanel from './LocationPanel';
 
 
 function TabPanel(props) {
@@ -93,7 +94,7 @@ export default function DesignTabs() {
        <LoadPanel />
         </TabPanel>
         <TabPanel value={value} index={"Location"} dir={theme.direction}>
-        {"Location"} 
+        <LocationPanel />
         </TabPanel>
         <TabPanel value={value} index={"Data Entity"} dir={theme.direction}>
         {"Data Entity"}

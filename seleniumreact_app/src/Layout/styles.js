@@ -148,10 +148,6 @@ export const useStyles = makeStyles((theme) => ({
         height: "40px",
         width: "40px",
     },
-    doller: {
-        height: "40px",
-        width: "40px",
-    },
     // footer: {
     //   marginTop: "1rem",
     //   padding: "1rem",

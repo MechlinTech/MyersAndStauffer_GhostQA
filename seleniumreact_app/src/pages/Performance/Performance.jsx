@@ -118,7 +118,7 @@ export default function Performance() {
           </Grid>
           <Grid item xs={12} sm={6}>
          
-            {addTestCase!==0 && <TabsPanel />}
+            {addTestCase!==0 && <TabsPanel addTestCase={addTestCase} />}
 
           </Grid>
         </Grid>

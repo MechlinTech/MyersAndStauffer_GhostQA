@@ -14,9 +14,9 @@ import FeaturedPlayListOutlinedIcon from '@mui/icons-material/FeaturedPlayListOu
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import { Typography } from "@mui/material";
 
-export default function Design() {
+export default function Design({addTestCase}) {
     const classes = useStyles();
-    
+    const [showAddNewElement,setShowAddNewElement] = useState(true);
     return (
         <Grid container alignItems="center" style={{
             margin: '20px 0px',
@@ -36,29 +36,29 @@ export default function Design() {
                     </Typography>
 
 
-                    <List sx={{ width: '100%', }} style={{ display: 'flex' }}>
+                    <List sx={{ width: '100%', }} style={{ display: 'flex',justifyContent:'flex-end' }}>
                         <ListItem
                             key={'LocationOnOutlinedIcon'}
                             disableGutters
-
+                            style={{ display: 'flex',justifyContent:'flex-end',width:'28%' }}
                         >
-                            <LocationOnOutlinedIcon sx={{ color: '#654df7' }} />
+                            <LocationOnOutlinedIcon sx={{ color: '#654df7' }} style={{ marginRight:'8px'}}/>
                             <ListItemText primary={`10 locations`} />
                         </ListItem>
                         <ListItem
                             key={'FeaturedPlayListOutlinedIcon'}
                             disableGutters
-
+                            style={{ display: 'flex',justifyContent:'flex-end',width:'28%' }}
                         >
-                            <FeaturedPlayListOutlinedIcon sx={{ color: '#654df7' }}/>
+                            <FeaturedPlayListOutlinedIcon sx={{ color: '#654df7' }} style={{ marginRight:'8px'}}/>
                             <ListItemText primary={` 20 scenarios`} />
                         </ListItem>
                         <ListItem
                             key={'PersonOutlineOutlinedIcon'}
                             disableGutters
-
+                            style={{ display: 'flex',justifyContent:'flex-end',width:'25%' }}
                         >
-                            <PersonOutlineOutlinedIcon sx={{ color: '#654df7' }}/>
+                            <PersonOutlineOutlinedIcon sx={{ color: '#654df7' }} style={{ marginRight:'8px'}}/>
                             <ListItemText primary={`100 VU`} />
                         </ListItem>
 
@@ -67,7 +67,6 @@ export default function Design() {
                 <Grid item xs={4} style={{ textAlign: "right" }}>
                     <Button
                         variant="contained"
-
                         style={{
                             fontSize: 14,
                             backgroundColor: "rgb(101, 77, 247)",
@@ -84,14 +83,16 @@ export default function Design() {
             </Grid>
             <Grid container alignItems="center">
                 <Grid item xs={12}>
-                    <TableTestCase />
+                    <TableTestCase addTestCase={addTestCase} setShowAddNewElement={setShowAddNewElement} showAddNewElement={showAddNewElement}/>
                 </Grid>
                 <Grid item xs={12}>
                  
                 </Grid>
             </Grid>
+            {showAddNewElement && 
             <Button
                 variant="contained"
+                onClick={()=>setShowAddNewElement(!showAddNewElement)}
 
                 style={{
                     fontSize: 14,
@@ -103,9 +104,9 @@ export default function Design() {
                     marginLeft: "auto",
                 }}
             >
-                Add
+               Add more test
             </Button>
-
+}
         </Grid>
     );
 }

@@ -42,6 +42,7 @@ export default function Navigations() {
          
         <Route path="/" element={<Functional />} > 
           <Route path="/" element={<Dashboard/>} />
+          <Route path="/check" element={<h1>check</h1>} />
           <Route path="settings" element={<Settings/>} >
             <Route path="Environment" element={<Environment/> }/>
             <Route path="Application" element={<Application/>} />
