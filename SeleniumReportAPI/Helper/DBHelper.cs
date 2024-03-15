@@ -2075,7 +2075,7 @@ namespace SeleniumReportAPI.Helper
                 dt = dataSet.Tables[0];
 
             }
-            
+
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
             Dictionary<string, object> row;
             foreach (DataRow dr in dt.Rows)
@@ -2142,7 +2142,37 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
-        internal async Task<string> DeleteTestData(int Id)
+
+        internal async Task<object> AddUpdateLoadData(Dto_Load loadData)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateLoadData", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@PerformanceFileId", loadData.PerformancefileId);
+                        command.Parameters.AddWithValue("@TotalUser", loadData.TotalUsers);
+                        command.Parameters.AddWithValue("@DurationMin", loadData.DurationInMinutes);
+                        command.Parameters.AddWithValue("@RampupTime", loadData.RampupTime);
+                        command.Parameters.AddWithValue("@Steps", loadData.RampupSteps);
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                result = "Success";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> DeleteLoadTestData(int Id)
         {
             string result = string.Empty;
             try
@@ -2150,7 +2180,7 @@ namespace SeleniumReportAPI.Helper
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_DeleteTestData", connection))
+                    using (SqlCommand command = new SqlCommand("stp_DeleteLoad", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@Id", Id);

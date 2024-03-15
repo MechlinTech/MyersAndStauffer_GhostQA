@@ -181,14 +181,25 @@ namespace SeleniumReportAPI.Controllers
         }
 
         /// <summary>
-        ///  Delete Test Data By Id
+        /// Add Load Test Data
         /// </summary>
-        /// <param Id="Id"></param>
+        /// <param name="loadData"></param>
         /// <returns></returns>
-        [HttpPost("DeleteTestData")]
-        public async Task<ActionResult> DeleteTestData(int Id)
+        [HttpPost("AddUpdateLoadData")]
+        public async Task<ActionResult> AddUpdateLoadData(Dto_Load loadData)
         {
-            return Ok(await _helper.DeleteTestData(Id));
+            return Ok(await _helper.AddUpdateLoadData(loadData));
+        }
+
+        /// <summary>
+        /// Delete Load Test Data
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteLoadData")]
+        public async Task<ActionResult> DeleteLoadData(int Id)
+        {
+            return Ok(await _helper.DeleteLoadTestData(Id));
         }
     }
 }
