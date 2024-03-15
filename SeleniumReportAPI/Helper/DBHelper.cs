@@ -3,6 +3,7 @@ using Mailosaur.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using MyersAndStaufferFramework;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using SeleniumReportAPI.DTO_s;
@@ -21,6 +22,10 @@ using TestSeleniumReport.DTO_s;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Environments = SeleniumReportAPI.Models.Environments;
 using SmtpClient = System.Net.Mail.SmtpClient;
+using System.Linq;
+using ExcelDataReader;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -2027,6 +2032,125 @@ namespace SeleniumReportAPI.Helper
                 {
                     connection.Open();
                     using (SqlCommand command = new SqlCommand("stp_DeleteProperties", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> AddTestData(Dto_AddTestData model)
+        {
+            string result = string.Empty;
+            IExcelDataReader reader = null;
+            DataTable dt = null;
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            using (var stream = new MemoryStream())
+            {
+                await model.File.CopyToAsync(stream);
+
+                reader = ExcelReaderFactory.CreateCsvReader(stream);
+                var dataSet = reader.AsDataSet(new ExcelDataSetConfiguration
+                {
+                    ConfigureDataTable = _ => new ExcelDataTableConfiguration
+                    {
+                        UseHeaderRow = true
+                    }
+                });
+                dt = dataSet.Tables[0];
+
+            }
+            
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+            foreach (DataRow dr in dt.Rows)
+            {
+                row = new Dictionary<string, object>();
+                foreach (DataColumn col in dt.Columns)
+                {
+                    row.Add(col.ColumnName, dr[col]);
+                }
+                rows.Add(row);
+            }
+            var JsonData = JsonConvert.SerializeObject(rows);
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (SqlCommand command = new SqlCommand("stp_AddTestData", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@PerformanceFileId", model.PerformanceFileId);
+                        command.Parameters.AddWithValue("@Name", model.Name);
+                        command.Parameters.AddWithValue("@JsonData", JsonData);
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                result = "Success";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> GetTestDataByPerformanceFileId(int PerformanceFileId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestDataByPerformanceFileId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@PerformanceFileId", PerformanceFileId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> DeleteTestData(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteTestData", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@Id", Id);

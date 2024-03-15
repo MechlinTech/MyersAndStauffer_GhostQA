@@ -25,6 +25,8 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<PerformanceFile> tbl_PerformanceFile { get; set; }
         public DbSet<PerformanceLocation> tbl_PerformanceLocation { get; set; }
         public DbSet<PerformanceProperties> tbl_PerformanceProperties { get; set; }
+        public DbSet<TestData> tbl_TestData { get; set; }
+        public DbSet<Load> tbl_Load { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TestSuites>()

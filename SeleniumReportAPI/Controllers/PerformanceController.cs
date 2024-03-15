@@ -158,5 +158,37 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.DeleteProperties(Id));
         }
+
+        /// <summary>
+        /// Add Test Data
+        /// </summary>
+        /// <param Dto_AddTestData="Dto_AddTestData"></param>
+        /// <returns></returns>
+        [HttpPost("AddTestData")]
+        public async Task<ActionResult> AddTestData([FromForm] Dto_AddTestData model)
+        {
+            return Ok(await _helper.AddTestData(model));
+        }
+
+        /// <summary>
+        /// Get Test Data By PerformanceFileId
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetTestDataByPerformanceFileId")]
+        public async Task<ActionResult> GetTestDataByPerformanceFileId(int PerformanceFileId)
+        {
+            return Ok(await _helper.GetTestDataByPerformanceFileId(PerformanceFileId));
+        }
+
+        /// <summary>
+        ///  Delete Test Data By Id
+        /// </summary>
+        /// <param Id="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteTestData")]
+        public async Task<ActionResult> DeleteTestData(int Id)
+        {
+            return Ok(await _helper.DeleteTestData(Id));
+        }
     }
 }
