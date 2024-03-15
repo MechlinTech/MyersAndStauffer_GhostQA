@@ -73,7 +73,7 @@ export default function MiniDrawer() {
                 <Toolbar >
                         <Grid container spacing={2} alignItems="center" style={{minWidth:'450px'}} >
                             <Grid item>
-                                <img src={"/images/GhostQA-Logo.png"} alt="logo" />{" "}
+                                <img src={"/images/Logo_GhostQA.svg"} alt="logo" />{" "}
                             </Grid>
                             <Grid item>
                                 <Link to="/" className={`${classes.linkStyle} ${isActive && classes.activeLink}`} >

@@ -57,13 +57,6 @@ export default function LocationPanel({
   useEffect(() => {
     fetchData();
   }, []);
-  // {
-  //     "Id": 1,
-  //     "PerformanceFileId": 1,
-  //     "Name": "mumbai",
-  //     "NumberUser": 0,
-  //     "PercentageTraffic": 0
-  // }
   const handleActiveTabs = () => {
     setDesignTabsActive(!designTabsActive);
   };
@@ -112,12 +105,40 @@ export default function LocationPanel({
         setSelectedLocation(null)
         setnoOfUser(0)
         settrafficPercentage(0)
+      }else{
+      toast.error("Submitting error");
       }
     } catch (error) {
       console.log("error saving ", error);
       toast.error("Network error");
     }
   };
+
+  const handleDelete = async (locationId) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Performance/DeleteLocation?Id=${locationId}`,
+        header()
+      );
+
+      if (res.data.status === "success") {
+        toast.info("Successfully deleted", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+
+        // Update propertyList after successful deletion
+        fetchData();
+
+      }
+    } catch (error) {
+      console.log("error deleting ", error);
+      toast.error("Network error");
+    }
+  };
+
   return (
     <>
       <Button
@@ -191,8 +212,8 @@ export default function LocationPanel({
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
                     <DeleteIcon
-                      sx={{ color: "#f74d4d" }}
-                      style={{ cursor: "pointer" }}
+                    onClick={()=>{handleDelete(item.Id)}}
+                      style={{ cursor: "pointer", color: "#f74d4d" }}
                     />
                   </TableCell>
                 </TableRow>
@@ -236,12 +257,6 @@ export default function LocationPanel({
                       }}
                     onKeyDown={handleKeyPress}
 
-                  />
-                </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
-                  <DeleteIcon
-                    sx={{ color: "#f74d4d" }}
-                    style={{ cursor: "pointer" }}
                   />
                 </TableCell>
               </TableRow>
