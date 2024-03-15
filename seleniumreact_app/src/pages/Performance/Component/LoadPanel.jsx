@@ -9,12 +9,16 @@ import Paper from "@mui/material/Paper";
 import Chart from "react-apexcharts";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./../styles";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { header } from "../../../utils/authheader";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-export default function LoadPanel({ testCase }) {
+export default function LoadPanel({ PerformanceFileId }) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [graphData,setGraphData]= useState([])
-  const [xaxisCategories,setxaxisCategories]= useState([])
+  const [graphData, setGraphData] = useState([]);
+  const [xaxisCategories, setxaxisCategories] = useState([]);
   const [graphState, setGraphState] = useState({
     options: {
       chart: {
@@ -23,9 +27,9 @@ export default function LoadPanel({ testCase }) {
       stroke: {
         curve: "stepline",
       },
-    
-    xaxis: {
-        categories: [1,2,3,4,5,6,7,8],
+
+      xaxis: {
+        categories: [1, 2, 3, 4, 5, 6, 7, 8],
         title: {
           text: "Duration (min)",
         },
@@ -42,10 +46,10 @@ export default function LoadPanel({ testCase }) {
       },
     ],
   });
-  const [totalusers, settotalusers] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [rampUpTime, setRampUpTime] = useState(0)
-  const [rampUpSteps, setRampUpSteps] = useState(0)
+  const [totalusers, settotalusers] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [rampUpTime, setRampUpTime] = useState(0);
+  const [rampUpSteps, setRampUpSteps] = useState(0);
   const testNamefield = useRef();
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -53,39 +57,39 @@ export default function LoadPanel({ testCase }) {
 
   useEffect(() => {
     const userPerStep = totalusers / rampUpSteps;
-    const stepsUntilRampUp = Math.floor(totalusers/userPerStep);
+    const stepsUntilRampUp = Math.floor(totalusers / userPerStep);
     let data = [];
-  
+
     // Generate data for the slope until rampUpTime
     for (let i = 0; i <= stepsUntilRampUp; i++) {
       data.push(i * userPerStep);
     }
-    console.log(data)
+    console.log(data);
     // Add a straight line after rampUpTime
     for (let i = 0; i < stepsUntilRampUp; i++) {
       data.push(totalusers);
     }
-    let xCatagory = [0]
-    for(let i = 0; i< rampUpSteps-1; i++){
-        xCatagory.push(1/(5-i))
+    let xCatagory = [0];
+    for (let i = 0; i < rampUpSteps - 1; i++) {
+      xCatagory.push(1 / (5 - i));
     }
-    console.log(xCatagory)
-    setxaxisCategories(['0',...xCatagory,rampUpTime,duration])
+    console.log(xCatagory);
+    setxaxisCategories(["0", ...xCatagory, rampUpTime, duration]);
     setGraphData(data);
   }, [totalusers, rampUpSteps, duration, rampUpTime]);
-  
+
   useEffect(() => {
     // Update the series data whenever graphData changes
     setGraphState((prevState) => ({
       ...prevState,
       options: {
-          ...prevState.options,
-          xaxis: {
-              ...prevState.options.xaxis,
-              categories: xaxisCategories,
-            },
+        ...prevState.options,
+        xaxis: {
+          ...prevState.options.xaxis,
+          categories: xaxisCategories,
         },
-        series: [{ data: graphData }],
+      },
+      series: [{ data: graphData }],
     }));
   }, [graphData]);
 
@@ -117,19 +121,55 @@ export default function LoadPanel({ testCase }) {
   const handleInputData = (event, type) => {
     switch (type) {
       case "totalUsers":
-        settotalusers(event.target.value)
+        settotalusers(event.target.value);
         break;
       case "duration":
-        setDuration(event.target.value)
+        setDuration(event.target.value);
         break;
       case "rampUpTime":
-        setRampUpTime(event.target.value)
+        setRampUpTime(event.target.value);
         break;
       case "rampUpSteps":
-        setRampUpSteps(event.target.value)
+        setRampUpSteps(event.target.value);
         break;
       default:
         break;
+    }
+  };
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+        submitGraphData()
+    }
+  };
+  const submitGraphData = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Performance/AddUpdateLoadData`,
+        {
+          performanceFileId: PerformanceFileId,
+          totalUsers:totalusers,
+          rampupSteps:rampUpSteps,
+          durationInMinutes:duration,
+          rampupTime:rampUpTime,
+        },
+        header()
+      );
+      console.log("res", res);
+      if (res.data === "Success") {
+        toast.info("Successfully saved", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+        // setDuration(0)
+        // setRampUpSteps(0)
+        // setRampUpTime(0)
+        // settotalusers(0)
+      }
+    } catch (error) {
+      console.log("error saving ", error);
+      toast.error("Network error");
     }
   };
   const toggleExpand = (id) => {
@@ -168,7 +208,8 @@ export default function LoadPanel({ testCase }) {
                   type="number"
                   value={totalusers}
                   className={classes.inputField}
-                  onChange={(event)=>handleInputData(event,'totalUsers')}
+                  onChange={(event) => handleInputData(event, "totalUsers")}
+                  onKeyDown={handleKeyPress}
                 />
               </TableCell>
               <TableCell align="left">
@@ -176,7 +217,8 @@ export default function LoadPanel({ testCase }) {
                   type="number"
                   value={duration}
                   className={classes.inputField}
-                  onChange={(event)=>handleInputData(event,'duration')}
+                  onChange={(event) => handleInputData(event, "duration")}
+                  onKeyDown={handleKeyPress}
                 />
               </TableCell>
 
@@ -185,7 +227,8 @@ export default function LoadPanel({ testCase }) {
                   type="number"
                   value={rampUpTime}
                   className={classes.inputField}
-                  onChange={(event)=>handleInputData(event,'rampUpTime')}
+                  onChange={(event) => handleInputData(event, "rampUpTime")}
+                  onKeyDown={handleKeyPress}
                 />
               </TableCell>
               <TableCell align="left">
@@ -193,7 +236,8 @@ export default function LoadPanel({ testCase }) {
                   type="number"
                   value={rampUpSteps}
                   className={classes.inputField}
-                  onChange={(event)=>handleInputData(event,'rampUpSteps')}
+                  onChange={(event) => handleInputData(event, "rampUpSteps")}
+                  onKeyDown={handleKeyPress}
                 />
               </TableCell>
             </TableRow>

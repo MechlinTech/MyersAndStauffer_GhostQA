@@ -155,7 +155,7 @@ export default function Properties({ PerformanceFileId }) {
           </React.Fragment>
         ))}
         <Divider />
-        <Grid item xs={5}>
+        <Grid item xs={6}>
           <StyledFormControl>
             <StyledOutlinedInput
               value={pName}
@@ -164,7 +164,7 @@ export default function Properties({ PerformanceFileId }) {
             />
           </StyledFormControl>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={6}>
           <StyledFormControl>
             <StyledOutlinedInput
               value={pValue}
@@ -172,12 +172,6 @@ export default function Properties({ PerformanceFileId }) {
               onKeyDown={handleKeyPress}
             />
           </StyledFormControl>
-        </Grid>
-        <Grid item xs={2}>
-          <DeleteIcon
-            onClick={() => {}}
-            sx={{ cursor: "pointer", color: "red" }}
-          />
         </Grid>
       </Grid>
     </Box>

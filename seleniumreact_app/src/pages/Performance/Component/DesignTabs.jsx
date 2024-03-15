@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import LoadPanel from './LoadPanel';
 import LocationPanel from './LocationPanel';
-import DataEntryPanel from './DataEntryPanel';
+import DataEntryPanel from './TestData';
 import Properties from './Properties';
 
 
@@ -87,19 +87,19 @@ export default function DesignTabs({PerformanceFileId}) {
         >
           <Tab value="Load" label="Load" />
           <Tab value="Location" label="Location" />
-          <Tab value="Data Entity" label="Data Entity" />
+          <Tab value="Data Entity" label="Test Data" />
           <Tab value="Properties" label="Properties" />
           
         </Tabs>
 
         <TabPanel value={value} index={'Load'} dir={theme.direction}>
-       <LoadPanel />
+       <LoadPanel PerformanceFileId={PerformanceFileId}/>
         </TabPanel>
         <TabPanel value={value} index={"Location"} dir={theme.direction}>
         <LocationPanel PerformanceFileId={PerformanceFileId}/>
         </TabPanel>
         <TabPanel value={value} index={"Data Entity"} dir={theme.direction}>
-        <DataEntryPanel/>
+        <DataEntryPanel PerformanceFileId={PerformanceFileId}/>
         </TabPanel>
         <TabPanel value={value} index={"Properties"} dir={theme.direction}>
         <Properties PerformanceFileId={PerformanceFileId}/>
