@@ -67,7 +67,6 @@ export default function LoadPanel({ testCase }) {
     }
     let xCatagory = [0]
     for(let i = 0; i< rampUpSteps-1; i++){
-        debugger
         xCatagory.push(1/(5-i))
     }
     console.log(xCatagory)
