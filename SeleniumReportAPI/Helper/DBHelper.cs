@@ -2057,13 +2057,14 @@ namespace SeleniumReportAPI.Helper
         internal async Task<string> AddTestData(Dto_AddTestData model)
         {
             string result = string.Empty;
+            string name = string.Empty;
             IExcelDataReader reader = null;
             DataTable dt = null;
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             using (var stream = new MemoryStream())
             {
                 await model.File.CopyToAsync(stream);
-
+                name = model.File.FileName;
                 reader = ExcelReaderFactory.CreateCsvReader(stream);
                 var dataSet = reader.AsDataSet(new ExcelDataSetConfiguration
                 {
@@ -2097,7 +2098,7 @@ namespace SeleniumReportAPI.Helper
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@PerformanceFileId", model.PerformanceFileId);
-                        command.Parameters.AddWithValue("@Name", model.Name);
+                        command.Parameters.AddWithValue("@Name", name);
                         command.Parameters.AddWithValue("@JsonData", JsonData);
                         await command.ExecuteNonQueryAsync();
                     }
@@ -2143,6 +2144,36 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
+        internal async Task<string> DeleteTestData(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteTestData", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
         internal async Task<object> AddUpdateLoadData(Dto_Load loadData)
         {
             string result = string.Empty;
@@ -2172,6 +2203,36 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
+        internal async Task<string> GetLoadByPerformanceFileId(int PerformanceFileId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetLoadByPerformanceFileId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@PerformanceFileId", PerformanceFileId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
         internal async Task<string> DeleteLoadTestData(int Id)
         {
             string result = string.Empty;

@@ -181,6 +181,17 @@ namespace SeleniumReportAPI.Controllers
         }
 
         /// <summary>
+        /// Delete Test Data
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteTestData")]
+        public async Task<ActionResult> DeleteTestData(int Id)
+        {
+            return Ok(await _helper.DeleteTestData(Id));
+        }
+
+        /// <summary>
         /// Add Load Test Data
         /// </summary>
         /// <param name="loadData"></param>
@@ -189,6 +200,16 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> AddUpdateLoadData(Dto_Load loadData)
         {
             return Ok(await _helper.AddUpdateLoadData(loadData));
+        }
+
+        /// <summary>
+        /// Get Load By PerformanceFileId
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetLoadByPerformanceFileId")]
+        public async Task<ActionResult> GetLoadByPerformanceFileId(int PerformanceFileId)
+        {
+            return Ok(await _helper.GetLoadByPerformanceFileId(PerformanceFileId));
         }
 
         /// <summary>
