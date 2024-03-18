@@ -1,13 +1,17 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using SeleniumReportAPI.DBContext;
 using SeleniumReportAPI.Helper;
 using SeleniumReportAPI.Models;
-using System.Text;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +28,6 @@ builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(conn
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AppDBContext>()
     .AddDefaultTokenProviders();
-
 
 // Add services to the container.
 builder.Services.AddControllers()
@@ -63,7 +66,7 @@ builder.Services.AddAuthentication(options =>
             ValidateAudience = true,
             ValidAudience = builder.Configuration["JWT:ValidAudience"],
             ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
         };
     });
 
@@ -106,7 +109,6 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseRouting();
 
 // Use CORS before any other middleware
@@ -114,6 +116,8 @@ app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseHttpsRedirection();
 
 app.UseEndpoints(endpoints =>
 {
