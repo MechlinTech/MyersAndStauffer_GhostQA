@@ -61,41 +61,47 @@ export default function LoadPanel({ PerformanceFileId }) {
         `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
         header()
       );
-      const loadData = res.data
-      console.log('load',loadData)
-      if(Array.isArray(loadData)){
-        settotalusers(loadData[0].TotalUsers)
-      setDuration(loadData[0].DurationInMinutes)
-      setRampUpTime(loadData[0].RampUpTimeInSeconds)
-      setRampUpSteps(loadData[0].RampUpSteps)
+      const loadData = res.data;
+      console.log("load", loadData);
+      if (Array.isArray(loadData)) {
+        settotalusers(loadData[0].TotalUsers);
+        setDuration(loadData[0].DurationInMinutes);
+        setRampUpTime(loadData[0].RampUpTimeInSeconds);
+        setRampUpSteps(loadData[0].RampUpSteps);
       }
-      
     } catch {}
   };
-  useEffect(()=>{
-    fetchData()
-  },[])
+  useEffect(() => {
+    fetchData();
+  }, []);
   useEffect(() => {
     const userPerStep = totalusers / rampUpSteps;
-    const stepsUntilRampUp = Math.floor(totalusers / userPerStep);
-    let data = [];
+const stepsUntilRampUp = Math.floor(totalusers / userPerStep);
+let data = [];
 
-    // Generate data for the slope until rampUpTime
-    for (let i = 0; i <= stepsUntilRampUp; i++) {
-      data.push(i * userPerStep);
-    }
-    console.log(data);
-    // Add a straight line after rampUpTime
-    for (let i = 0; i < stepsUntilRampUp; i++) {
-      data.push(totalusers);
-    }
-    let xCatagory = [0];
-    for (let i = 0; i < rampUpSteps - 1; i++) {
-      xCatagory.push(1 / (5 - i));
-    }
-    console.log(xCatagory);
-    setxaxisCategories([0, ...xCatagory, rampUpTime, duration]);
-    setGraphData(data);
+// Generate data for the slope until rampUpTime
+for (let i = 0; i <= stepsUntilRampUp; i++) {
+  data.push(i * userPerStep);
+}
+
+// Add a straight line after rampUpTime
+for (let i = 0; i < stepsUntilRampUp; i++) {
+  data.push(totalusers);
+}
+
+let xCatagory = [];
+for (let i = 0; i < rampUpSteps - 1; i++) {
+  const value = (1 / (5 - i)).toFixed(1); // Round to 1 decimal place
+  xCatagory.push(value.toString()); // Convert to string
+}
+
+// Convert rampUpTime and duration to strings with at most one decimal place
+const rampUpTimeString = rampUpTime.toFixed(1).toString();
+const durationString = duration.toFixed(1).toString();
+
+setxaxisCategories(["0", ...xCatagory, rampUpTimeString, durationString]);
+setGraphData(data);
+
   }, [totalusers, rampUpSteps, duration, rampUpTime]);
 
   useEffect(() => {
