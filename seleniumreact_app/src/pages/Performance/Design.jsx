@@ -39,7 +39,11 @@ export default function Design({ addTestCase }) {
         }}
       >
         <Grid item xs={8} style={{ display: "flex", alignItems: "center" }}>
-          <Typography>Summary</Typography>
+          <Typography sx={{
+            fontFamily: 'Lexend Deca',
+            fontSize:'18px',
+            fontWeight:'500'
+          }}>Summary</Typography>
 
           <List
             sx={{ width: "100%" }}
@@ -58,7 +62,10 @@ export default function Design({ addTestCase }) {
                 sx={{ color: "#654df7" }}
                 style={{ marginRight: "8px" }}
               />
-              <ListItemText primary={`10 locations`} />
+              <ListItemText primary={<span style={{
+                fontFamily: 'Lexend Deca',
+                fontSize:'14px',
+              }}>10 locations</span>} />
             </ListItem>
             <ListItem
               key={"FeaturedPlayListOutlinedIcon"}
@@ -73,7 +80,10 @@ export default function Design({ addTestCase }) {
                 sx={{ color: "#654df7" }}
                 style={{ marginRight: "8px" }}
               />
-              <ListItemText primary={` 20 scenarios`} />
+              <ListItemText primary={<span style={{
+                fontFamily: 'Lexend Deca',
+                fontSize:'14px',
+              }}>20 scenarios</span>} />
             </ListItem>
             <ListItem
               key={"PersonOutlineOutlinedIcon"}
@@ -88,7 +98,10 @@ export default function Design({ addTestCase }) {
                 sx={{ color: "#654df7" }}
                 style={{ marginRight: "8px" }}
               />
-              <ListItemText primary={`100 VU`} />
+              <ListItemText primary={<span style={{
+                fontFamily: 'Lexend Deca',
+                fontSize:'14px',
+              }}>100 VU</span>} />
             </ListItem>
           </List>
         </Grid>
