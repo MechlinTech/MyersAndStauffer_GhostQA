@@ -10,8 +10,8 @@ import Chart from "react-apexcharts";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./../styles";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { header } from "../../../utils/authheader";
+import { toast } from "react-toastify";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function LoadPanel({ PerformanceFileId }) {
@@ -55,6 +55,26 @@ export default function LoadPanel({ PerformanceFileId }) {
   const fileInputRef = useRef(null);
   const [designTabsActive, setDesignTabsActive] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
+        header()
+      );
+      const loadData = res.data
+      console.log('load',loadData)
+      if(Array.isArray(loadData)){
+        settotalusers(loadData[0].TotalUsers)
+      setDuration(loadData[0].DurationInMinutes)
+      setRampUpTime(loadData[0].RampUpTimeInSeconds)
+      setRampUpSteps(loadData[0].RampUpSteps)
+      }
+      
+    } catch {}
+  };
+  useEffect(()=>{
+    fetchData()
+  },[])
   useEffect(() => {
     const userPerStep = totalusers / rampUpSteps;
     const stepsUntilRampUp = Math.floor(totalusers / userPerStep);
@@ -74,7 +94,7 @@ export default function LoadPanel({ PerformanceFileId }) {
       xCatagory.push(1 / (5 - i));
     }
     console.log(xCatagory);
-    setxaxisCategories(["0", ...xCatagory, rampUpTime, duration]);
+    setxaxisCategories([0, ...xCatagory, rampUpTime, duration]);
     setGraphData(data);
   }, [totalusers, rampUpSteps, duration, rampUpTime]);
 
@@ -138,7 +158,7 @@ export default function LoadPanel({ PerformanceFileId }) {
   };
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-        submitGraphData()
+      submitGraphData();
     }
   };
   const submitGraphData = async () => {
@@ -147,10 +167,10 @@ export default function LoadPanel({ PerformanceFileId }) {
         `${BASE_URL}/Performance/AddUpdateLoadData`,
         {
           performanceFileId: PerformanceFileId,
-          totalUsers:totalusers,
-          rampupSteps:rampUpSteps,
-          durationInMinutes:duration,
-          rampupTime:rampUpTime,
+          totalUsers: totalusers,
+          rampupSteps: rampUpSteps,
+          durationInMinutes: duration,
+          rampupTime: rampUpTime,
         },
         header()
       );
@@ -162,10 +182,6 @@ export default function LoadPanel({ PerformanceFileId }) {
             color: "rgb(255, 255, 255)",
           },
         });
-        // setDuration(0)
-        // setRampUpSteps(0)
-        // setRampUpTime(0)
-        // settotalusers(0)
       }
     } catch (error) {
       console.log("error saving ", error);

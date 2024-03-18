@@ -24,7 +24,9 @@ export default function Properties({ PerformanceFileId }) {
         `${BASE_URL}/Performance/GetPropertyByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
         header()
       );
-      setPropertyList(response.data);
+      const resData = response.data
+      if(Array.isArray(resData))
+      setPropertyList(resData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -129,7 +131,7 @@ export default function Properties({ PerformanceFileId }) {
         <Grid item xs={5}>
           Value
         </Grid>
-        {propertyList.map((property, index) => (
+        {propertyList?.map((property, index) => (
           <React.Fragment key={index}>
             <Grid item xs={5}>
               <StyledFormControl>

@@ -9,6 +9,7 @@ import LoadPanel from './LoadPanel';
 import LocationPanel from './LocationPanel';
 import DataEntryPanel from './TestData';
 import Properties from './Properties';
+import { StyledTypography } from './style';
 
 
 function TabPanel(props) {
@@ -22,8 +23,8 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+        <Box sx={{p:1,width:'100%' }}>
+          {children}
         </Box>
       )}
     </div>
@@ -57,12 +58,12 @@ export default function DesignTabs({PerformanceFileId}) {
   };
 
   return (
-    <Box >
+    <Box style={{width:'100%' }}>
      
       <Tabs
          value={value}
          onChange={handleChange}
-         centered
+         variant="fullWidth"
         sx={{
             '& .MuiTabs-indicator': {
               backgroundColor: 'rgba(101, 77, 247,0)',
@@ -85,10 +86,10 @@ export default function DesignTabs({PerformanceFileId}) {
             },
           }}
         >
-          <Tab value="Load" label="Load" />
-          <Tab value="Location" label="Location" />
-          <Tab value="Data Entity" label="Test Data" />
-          <Tab value="Properties" label="Properties" />
+          <Tab value="Load" label={<StyledTypography>Load</StyledTypography>} />
+          <Tab value="Location" label={<StyledTypography>Location</StyledTypography>} />
+          <Tab value="Data Entity" label={<StyledTypography>Test Data</StyledTypography>} />
+          <Tab value="Properties" label={<StyledTypography>Properties</StyledTypography>} />
           
         </Tabs>
 

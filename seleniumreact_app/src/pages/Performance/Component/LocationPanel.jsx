@@ -47,8 +47,10 @@ export default function LocationPanel({
         `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
         header()
       );
-      console.log(response.data);
-      setLocationData(response.data);
+      const resData = response.data
+      if(Array.isArray(resData)){
+        setLocationData(resData)
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -181,7 +183,7 @@ export default function LocationPanel({
             </TableRow>
           </TableHead>
           <TableBody>
-            {locationData.map((item, index) => {
+            {locationData?.map((item) => {
               return (
                 <TableRow
                   key={item.Id}

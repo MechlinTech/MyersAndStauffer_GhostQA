@@ -1,4 +1,5 @@
-import { makeStyles } from "@material-ui/core";
+import { Typography, makeStyles } from "@material-ui/core";
+import { styled } from "@mui/material/styles";
 
 export const useStyles = makeStyles({
     main: {
@@ -198,3 +199,9 @@ export const useStylesTestCase = makeStyles((theme) => ({
         color: "rgb(56, 56, 56)"
     }
 }));
+
+export const StyledTypography = styled(Typography)(({ theme }) => ({
+    fontFamily: 'Lexend Deca',
+    fontSize:'14px'
+    // Add other styles as needed
+  }));

@@ -6,43 +6,42 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import PlayArrowSharpIcon from '@mui/icons-material/PlayArrowSharp';
-import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
 import { useNavigate } from 'react-router-dom';
-import Collapse from '@mui/material/Collapse';
 import axios from "axios";
 import AddIcon from '@mui/icons-material/Add';
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { useStyles } from "./styles";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import DesignTabs from "./Component/DesignTabs";
 import { header,headerForm } from "../../utils/authheader";
+import { StyledTypography } from "./styles";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 export default function TableTestCase({ testCase, showAddNewElement, setShowAddNewElement,addTestCase }) {
   const navigate = useNavigate()
   const classes = useStyles();
   const testNamefield = useRef();
   const [testCaseData, setTestCaseData] = useState([]);
+  const [expandedAccord, setExpandedAccord] = useState("");
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${addTestCase}`,
+        header()
+      );
+      // Assuming response.data is the array of data you want to set as listData
+      setTestCaseData((response.data == '' ? [] : response.data));
+      console.log(response);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setTestCaseData([]);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${addTestCase}`,
-          header()
-        );
-        // Assuming response.data is the array of data you want to set as listData
-        setTestCaseData((response.data == '' ? [] : response.data));
-        console.log(response);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setTestCaseData([]);
-      }
-    };
-
     fetchData(); // Call the fetchData function when the component mounts
-    console.log('table tes tcase ',addTestCase)
   }, [addTestCase]);
   
   const [selectedFile, setSelectedFile] = useState(null);
@@ -70,14 +69,9 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
           formData,
           headerForm()
         );
-        setTestCaseData([...testCaseData, {
-          id: response.data,
-          name: testNamefield.current.value,
-          file: selectedFile,
-          fileName: selectedFile.name
-        }]);
+        fetchData()
         setSelectedFile(null);
-        setShowAddNewElement(!showAddNewElement)
+        setExpandedAccord(testNamefield.current.value)
         testNamefield.current.value = '';
        
       } catch (error) {
@@ -86,25 +80,15 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
       
     }
   }
-  const handleDeleteElement = async(event, id) => {
-   
+  const handleDeleteElement = async(id,event) => {
+      event.stopPropagation()
     try {
       const response = await axios.post(
-        `${BASE_URL}/Performance/DeletePerformanceFile`,
+        `${BASE_URL}/Performance/DeletePerformanceFile?Id=${id}`,
         {Id:id},
         header()
       );
-      setTestCaseData([...testCaseData, {
-        id: response.data,
-        name: testNamefield.current.value,
-        file: selectedFile,
-        fileName: selectedFile.name
-      }]);
-      const data = testCaseData.filter((item) => {
-        if (item.id !== id) {
-          return item;
-        }
-      });
+      fetchData()
     } catch (error) {
       console.error("Error fetching data:", error);     
     } 
@@ -114,15 +98,8 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
-  const [expanded, setExpanded] = useState([]);
-
-  const toggleExpand = (id) => {
-    if (expanded.includes(id)) {
-      setExpanded(expanded.filter(item => item !== id));
-    } else {
-      setExpanded([...expanded, id]);
-    }
-    handleActiveTabs();
+  const handleExpandAccord = (panel) => (e, isExpanded) => {
+    setExpandedAccord(isExpanded ? panel : "");
   };
   return (
     <TableContainer component={Paper} style={{
@@ -132,46 +109,36 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Test Name</TableCell>
-            <TableCell align="left">File name</TableCell>
+            <TableCell><StyledTypography>Test Name</StyledTypography></TableCell>
+            <TableCell align="left"><StyledTypography>File name</StyledTypography></TableCell>
             <TableCell align="left"></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {testCaseData?.map((item) => (
-            <>
-              <TableRow
-                key={0}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+          
+        </TableBody>
+      </Table>
+        {testCaseData?.map((item, index) => (
+            <React.Fragment key={index}>
+              <Accordion
+                expanded={expandedAccord === item.testCaseName}
+                onChange={handleExpandAccord(item.testCaseName)}
+                sx={{
+                  boxShadow: "none",
+                }}
               >
-                <TableCell component="th" scope="row" onClick={() => {
-
-                  handleActiveTabs();
-                }} sx={{ cursor: 'pointer' }}>
-                  {item.testCaseName}
-                </TableCell>
-                <TableCell align="left"> {item.fileName}</TableCell>
-
-
-                <TableCell align="right">
-                  <DeleteIcon sx={{ color: '#f74d4d' }} style={{ cursor: 'pointer' }} onClick={(event) => handleDeleteElement(event, item.id)} />
-                  {!expanded.includes(item.id) ? <ExpandMoreIcon onClick={() => toggleExpand(item.id)} /> : <ExpandLessIcon onClick={() => toggleExpand(item.id)} />}
-
-                </TableCell>
-
-              </TableRow>
-              {expanded.includes(item.id) &&
-                <TableRow>
-                  <TableCell colSpan='4'>
-                    <DesignTabs PerformanceFileId={item.id}/>
-                  </TableCell>
-
-                </TableRow>
-              }
-
-            </>
-
-
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Stack width='100%' display='felx' flexDirection="row" justifyContent="space-between">
+                    <StyledTypography align="left">{item.testCaseName}</StyledTypography>
+                    <StyledTypography align="left">{item.fileName}</StyledTypography>
+                    <DeleteIcon style={{color:'red'}} onClick={(e)=>handleDeleteElement(item.id,e)}/>
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails>
+                      <DesignTabs PerformanceFileId={item.id} />
+                </AccordionDetails>
+              </Accordion>
+            </React.Fragment>
           ))}
 
 
@@ -211,8 +178,6 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
             </TableCell>
           </TableRow>
           }
-        </TableBody>
-      </Table>
     </TableContainer>
   );
 }

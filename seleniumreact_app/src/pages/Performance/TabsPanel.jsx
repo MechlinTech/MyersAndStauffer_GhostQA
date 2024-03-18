@@ -8,6 +8,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Design from './Design';
+import { StyledTypography } from './Component/style';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -71,9 +72,9 @@ export default function TabsPanel({addTestCase}) {
            }
          }}
         >
-          <Tab value="Design" label="Design" />
-          <Tab value="Results" label="Results" />
-          <Tab value="Trends" label="Trends" />
+          <Tab value="Design" label={<StyledTypography>Design</StyledTypography>}/>
+          <Tab value="Results" label={<StyledTypography>Results</StyledTypography>} />
+          <Tab value="Trends" label={<StyledTypography>Trends</StyledTypography>} />
         </Tabs>
      
       {/* <SwipeableViews
