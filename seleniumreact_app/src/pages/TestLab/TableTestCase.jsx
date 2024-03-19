@@ -37,7 +37,7 @@ export default function TableTestCase({ testCase, rootId }) {
       formData.append("scenarios_file", blob, "data.json");
       formData.append("name", "testing");
       const executedDetail = await axios.post(
-        "http://65.1.188.67:8010/api/test-suitesV2/execute/",
+        "http://65.1.188.67:8010/api/test-suitesV2/execute2/",
         formData,
         headerForm()
       );
