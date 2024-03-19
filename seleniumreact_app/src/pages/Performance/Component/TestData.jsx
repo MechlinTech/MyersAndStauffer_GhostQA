@@ -1,4 +1,16 @@
-import { Box, Grid, OutlinedInput, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@material-ui/core";
+import {
+  Box,
+  Grid,
+  OutlinedInput,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -23,15 +35,18 @@ export default function DataEntryPanel({ PerformanceFileId }) {
       );
       // console.log("res", JSON.parse(response.data[3].JsonData));
       const resData = response.data;
-      if(Array.isArray(resData)){
-        settestDataList(resData.map((data)=>({...data, JsonData:JSON.parse(data.JsonData)})))
+      if (Array.isArray(resData)) {
+        settestDataList(
+          resData.map((data) => ({
+            ...data,
+            JsonData: JSON.parse(data.JsonData),
+          }))
+        );
       }
-        
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -50,7 +65,7 @@ export default function DataEntryPanel({ PerformanceFileId }) {
     formData.append("PerformanceFileId", PerformanceFileId);
     formData.append("file", selectedFile);
     submitTestData(formData);
-    setSelectedFile(null)
+    setSelectedFile(null);
   };
 
   const submitTestData = async (formData) => {
@@ -76,8 +91,8 @@ export default function DataEntryPanel({ PerformanceFileId }) {
       toast.error("Network error");
     }
   };
-  const handleDelete = async (testId,event) => {
-    event.stopPropagation()
+  const handleDelete = async (testId, event) => {
+    event.stopPropagation();
     try {
       const res = await axios.post(
         `${BASE_URL}/Performance/DeleteTestData?Id=${testId}`,
@@ -100,8 +115,56 @@ export default function DataEntryPanel({ PerformanceFileId }) {
       toast.error("Network error");
     }
   };
+
   const handleExpandAccord = (panel) => (e, isExpanded) => {
     setExpandedAccord(isExpanded ? panel : "");
+  };
+
+  const renderJsonData = (jsonData) => {
+    const tableData = transformArrayToObject(jsonData)
+    let columns = Object.keys(tableData);
+    return columns.map((key, index) => {
+      const rows = tableData[key];
+        const maxLength = 3; // Set the maximum number of items to display
+        
+        // Create a string with the displayed items and the remaining count
+        const displayString = rows.slice(0, maxLength).join(', ');
+        const remainingCount = rows.length - maxLength;
+        const remainingText = remainingCount > 0 ? `...+${remainingCount}` : '';
+        
+      console.log('row',rows)
+      return <TableBody>
+        <TableRow>
+          <TableCell>{`\${${key}}`}</TableCell>
+          <TableCell>-</TableCell>
+          <Tooltip title={rows.join(',')} placement="top-end" arrow >
+          <TableCell>{displayString}{remainingText} </TableCell>
+          </Tooltip>
+          </TableRow>
+      </TableBody>
+    });
+  };
+
+  const transformArrayToObject = (dataArray) => {
+    // Initialize an object to store the transformed data
+    const transformedObject = {};
+  
+    // Iterate over the array of objects
+    dataArray.forEach((item) => {
+      // Iterate over each key-value pair in the current object
+      Object.entries(item).forEach(([key, value]) => {
+        // Check if the key exists in the transformed object
+        if (!(key in transformedObject)) {
+          // If the key doesn't exist, initialize it as an empty array
+          transformedObject[key] = [];
+        }
+        // Push the value to the array corresponding to the key
+        transformedObject[key].push(value);
+      });
+    });
+  
+    return transformedObject
+    // console.log('new obj',transformedObject)
   };
   return (
     <Box
@@ -166,19 +229,18 @@ export default function DataEntryPanel({ PerformanceFileId }) {
                             justifyContent: "space-between",
                           }}
                         >
-                          <StyledTypography>{test.Name}</StyledTypography>
+                          <StyledTypography>Variables</StyledTypography>
                           <Box>
                             <Delete
                               style={{ color: "red" }}
-                              onClick={(e) => handleDelete(test.Id,e)}
+                              onClick={(e) => handleDelete(test.Id, e)}
                             />
-                            <Edit style={{ color: "blue" }} />
                           </Box>
                         </Box>
                       </AccordionSummary>
                       <AccordionDetails sx={{ p: "0" }}>
                         <Divider />
-                        {console.log('json',test.JsonData)}
+                        {console.log("json", test.JsonData)}
                         <TableContainer
                           style={{
                             border: "solid 2px #DADADA",
@@ -186,20 +248,7 @@ export default function DataEntryPanel({ PerformanceFileId }) {
                           }}
                         >
                           <Table aria-label="simple table">
-                            <TableHead>
-                              <TableRow>
-                                <TableCell> Name</TableCell>
-                                <TableCell align="left">Numeric</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {test.JsonData?.map((item)=>(
-                                <TableRow>
-                                  <TableCell>{item.Name}</TableCell>
-                                  <TableCell>{item.Numeric}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
+                            {renderJsonData(test.JsonData)}
                           </Table>
                         </TableContainer>
                       </AccordionDetails>
@@ -233,31 +282,30 @@ export default function DataEntryPanel({ PerformanceFileId }) {
               alignItems: "center",
             }}
           >
-            <label htmlFor="file-input" >
-              <StyledTypography sx={{cursor:'pointer', paddingLeft:'15px'}}>
-              {selectedFile ? `${selectedFile.name}` : 'Add a File'}
-                
+            <label htmlFor="file-input">
+              <StyledTypography sx={{ cursor: "pointer", paddingLeft: "15px" }}>
+                {selectedFile ? `${selectedFile.name}` : "Add a File"}
               </StyledTypography>
             </label>
 
             <Tooltip title="Submit" placement="top">
-            <Box
-              variant="contained"
-              color="primary"
-              component="span"
-              style={{
-                borderRadius: "3px",
-                padding: "5px 8px",
-                fontSize: 25,
-                backgroundColor: "rgb(101, 77, 247)",
-                color: "#ffffff",
-                cursor: "pointer",
-              }}
-              // disabled={!selectedFile}
-              onClick={handleUpload}
-            >
-              +
-            </Box>
+              <Box
+                variant="contained"
+                color="primary"
+                component="span"
+                style={{
+                  borderRadius: "3px",
+                  padding: "5px 8px",
+                  fontSize: 25,
+                  backgroundColor: "rgb(101, 77, 247)",
+                  color: "#ffffff",
+                  cursor: "pointer",
+                }}
+                // disabled={!selectedFile}
+                onClick={handleUpload}
+              >
+                +
+              </Box>
             </Tooltip>
           </Box>
         </Grid>

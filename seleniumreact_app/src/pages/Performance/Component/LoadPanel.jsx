@@ -12,6 +12,7 @@ import { useStyles } from "./../styles";
 import axios from "axios";
 import { header } from "../../../utils/authheader";
 import { toast } from "react-toastify";
+import { StyledTypography } from "./style";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function LoadPanel({ PerformanceFileId }) {
@@ -26,6 +27,7 @@ export default function LoadPanel({ PerformanceFileId }) {
       },
       stroke: {
         curve: "stepline",
+        width: 0,
       },
 
       xaxis: {
@@ -39,9 +41,22 @@ export default function LoadPanel({ PerformanceFileId }) {
           text: "Users",
         },
       },
+      fill: {
+        type: "solid",
+        colors: ["#654DF7"], // Change the color to your desired color code
+        opacity: 1, // Adjust opacity as needed
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return "" + val + " ";
+          },
+        },
+      },
     },
     series: [
       {
+        name: "Users",
         data: graphData,
       },
     ],
@@ -76,32 +91,31 @@ export default function LoadPanel({ PerformanceFileId }) {
   }, []);
   useEffect(() => {
     const userPerStep = totalusers / rampUpSteps;
-const stepsUntilRampUp = Math.floor(totalusers / userPerStep);
-let data = [];
+    const stepsUntilRampUp = Math.floor(totalusers / userPerStep);
+    let data = [];
 
-// Generate data for the slope until rampUpTime
-for (let i = 0; i <= stepsUntilRampUp; i++) {
-  data.push(i * userPerStep);
-}
+    // Generate data for the slope until rampUpTime
+    for (let i = 0; i <= stepsUntilRampUp; i++) {
+      data.push(i * userPerStep);
+    }
 
-// Add a straight line after rampUpTime
-for (let i = 0; i < stepsUntilRampUp; i++) {
-  data.push(totalusers);
-}
+    // Add a straight line after rampUpTime
+    for (let i = 0; i < stepsUntilRampUp; i++) {
+      data.push(totalusers);
+    }
 
-let xCatagory = [];
-for (let i = 0; i < rampUpSteps - 1; i++) {
-  const value = (1 / (5 - i)).toFixed(1); // Round to 1 decimal place
-  xCatagory.push(value.toString()); // Convert to string
-}
+    let xCatagory = [];
+    for (let i = 0; i < rampUpSteps - 1; i++) {
+      const value = (1 / (rampUpTime - i)).toFixed(1); // Round to 1 decimal place
+      xCatagory.push(value.toString()); // Convert to string
+    }
 
-// Convert rampUpTime and duration to strings with at most one decimal place
-const rampUpTimeString = rampUpTime.toFixed(1).toString();
-const durationString = duration.toFixed(1).toString();
+    // Convert rampUpTime and duration to strings with at most one decimal place
+    const rampUpTimeString = rampUpTime.toString();
+    const durationString = duration.toString();
 
-setxaxisCategories(["0", ...xCatagory, rampUpTimeString, durationString]);
-setGraphData(data);
-
+    setxaxisCategories(["0", ...xCatagory, rampUpTimeString, durationString]);
+    setGraphData(data);
   }, [totalusers, rampUpSteps, duration, rampUpTime]);
 
   useEffect(() => {
@@ -214,10 +228,18 @@ setGraphData(data);
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Total Users*</TableCell>
-              <TableCell align="center">Duration(m)*</TableCell>
-              <TableCell align="center">Ramp up Time (s)</TableCell>
-              <TableCell align="center">Ramp up steps</TableCell>
+              <TableCell align="center">
+                <StyledTypography> Total Users* </StyledTypography>
+              </TableCell>
+              <TableCell align="center">
+                <StyledTypography>Duration(m)*</StyledTypography>
+              </TableCell>
+              <TableCell align="center">
+                <StyledTypography>Ramp up Time (s)</StyledTypography>
+              </TableCell>
+              <TableCell align="center">
+                <StyledTypography>Ramp up steps</StyledTypography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

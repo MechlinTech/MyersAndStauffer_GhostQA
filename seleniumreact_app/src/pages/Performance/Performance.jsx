@@ -83,7 +83,7 @@ export default function Performance() {
     <>
       <div className={classes.main}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={4}>
             <Card className={classes.card} style={{ paddingBottom: "30px", maxHeight: "78vh" }}>
               <Grid container alignItems="center" className={classes.bodyHeader}>
                 <Grid item xs={6}>
@@ -117,7 +117,7 @@ export default function Performance() {
               </Grid>
             </Card>
           </Grid>
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={12} sm={8}>
          
             {addTestCase!==0 && <TabsPanel addTestCase={addTestCase} />}
 

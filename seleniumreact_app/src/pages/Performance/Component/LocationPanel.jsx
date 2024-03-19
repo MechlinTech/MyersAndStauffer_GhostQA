@@ -14,6 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { header } from "../../../utils/authheader";
 import { toast } from "react-toastify";
+import { StyledTypography } from "./style";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const data = [
@@ -171,13 +172,13 @@ export default function LocationPanel({
           <TableHead>
             <TableRow>
               <TableCell align="center" style={{ width: "50%" }}>
-                Locations
+               <StyledTypography> Locations</StyledTypography>
               </TableCell>
               <TableCell align="center" style={{ width: "20%" }}>
-                % of Traffic
+                <StyledTypography>% of Traffic</StyledTypography>
               </TableCell>
               <TableCell align="center" style={{ width: "20%" }}>
-                no. of Users (s)
+                <StyledTypography>no. of Users (s)</StyledTypography>
               </TableCell>
               <TableCell align="center" style={{ width: "10%" }}></TableCell>
             </TableRow>
