@@ -2286,42 +2286,75 @@ namespace SeleniumReportAPI.Helper
         internal async Task<object> AddExecuteResult(Dto_RootObject model)
         {
             string result = string.Empty;
-            try
+            var jObj = (JObject)model.json;
+            string str = jObj.First.First.Path.ToString().Replace("['", "").Replace("']", "");
+            if (str.Contains("-"))
             {
-                var jObj = (JObject)model.json;
-                var str = jObj.First.First.Path.ToString().Replace("['","").Replace("']","");
-                int index = str.IndexOf(" -");
-                string suiteName = str.Substring(0, index);
-                var jsonData = JsonConvert.DeserializeObject<JsonOption>(jObj.First.First.ToString());
-                InternalTestExecution internalTestExecution = new InternalTestExecution();
-                internalTestExecution.TestSuite = suiteName;
-                internalTestExecution.TestCase = model.id.ToString();
-                internalTestExecution.TestRun = jsonData.results[0].suites[0].title;
-                internalTestExecution.StartDateTime = jsonData.stats.start.ToString();
-                internalTestExecution.EndDateTime = jsonData.stats.end.ToString();
-                internalTestExecution.SuiteDuration = jsonData.stats.duration.ToString();
-                internalTestExecution.TestDuration = jsonData.results[0].suites[0].duration.ToString();
-                internalTestExecution.TestScreenShotUrl = model.runs_artifacts.Where(x => x.type == "screenShot").Count() > 0 ? model.runs_artifacts.Where(x => x.type == "screenShot").Select(y => y.files).FirstOrDefault() : string.Empty;
-                internalTestExecution.TestVideoUrl = model.runs_artifacts.Where(x => x.type == "video").Count() > 0 ? model.runs_artifacts.Where(x => x.type == "video").Select(y => y.files).FirstOrDefault() : string.Empty;
-                List<dynamic> results = new List<dynamic>();
-                foreach(var t in jsonData.results[0].suites[0].tests)
+                int index = str.IndexOf("-");
+                str = str.Substring(0, index).Trim();
+            }
+
+            var jsonData = JsonConvert.DeserializeObject<JsonOption>(jObj.First.First.ToString());
+            Dto_AddExecuteData data = new Dto_AddExecuteData();
+            data.TestSuite = str;
+            data.TestCase = model.id.ToString();
+            data.TestCaseName = jsonData.results[0].suites[0].title;
+            data.StartDateTime = jsonData.stats.start.ToString();
+            data.EndDateTime = jsonData.stats.end.ToString();
+            data.SuiteDuration = jsonData.stats.duration.ToString();
+            data.TestDuration = jsonData.results[0].suites[0].duration.ToString();
+            data.TestScreenShot = GetArtifactUrl(model, "screenshot");
+            data.TestVideoUrl = GetArtifactUrl(model, "video");
+
+            List<dynamic> results = new List<dynamic>();
+            foreach (var t in jsonData.results[0].suites[0].tests)
+            {
+                var addJsonData = new
                 {
-                    var addJsonData = new
-                    {
-                        Status = t.state,
-                        Duration = t.duration,
-                        stepName = t.title 
-                    };
-                    results.Add(addJsonData);
-                }
-              internalTestExecution.TestStepJson = JsonConvert.SerializeObject(results);
-                result = "Success";
+                    Status = t.state,
+                    Duration = t.duration,
+                    stepName = t.title
+                };
+                results.Add(addJsonData);
             }
-            catch (Exception ex)
+            data.TestStepJson = JsonConvert.SerializeObject(results);
+
+            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
-                throw ex;
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("stp_AddExecuteData", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@TestSuite", data.TestSuite);
+                    command.Parameters.AddWithValue("@TestCase", data.TestCase);
+                    command.Parameters.AddWithValue("@TestCaseName", data.TesterName);
+                    command.Parameters.AddWithValue("@Status", data.Status);
+                    command.Parameters.AddWithValue("@StartDateTime", data.StartDateTime);
+                    command.Parameters.AddWithValue("@EndDateTime", data.EndDateTime);
+                    command.Parameters.AddWithValue("@TestStepJson", data.TestStepJson);
+                    command.Parameters.AddWithValue("@SuiteDuration", data.SuiteDuration);
+                    command.Parameters.AddWithValue("@TestDuration", data.TestDuration);
+                    command.Parameters.AddWithValue("@TestScreenShot", data.TestScreenShot);
+                    command.Parameters.AddWithValue("@TesterName", data.TesterName);
+                    command.Parameters.AddWithValue("@TestVideoUrl", data.TestVideoUrl);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            result = reader["result"].ToString();
+                        }
+                    }
+                }
+                connection.Close();
             }
+
             return result;
+        }
+
+        private string GetArtifactUrl(Dto_RootObject model, string str)
+        {
+            return model.runs_artifacts.Where(x => x.type == str).Count() > 0 ? model.runs_artifacts.Where(x => x.type == str).Select(y => y.files).FirstOrDefault() : string.Empty;
         }
     }
 }

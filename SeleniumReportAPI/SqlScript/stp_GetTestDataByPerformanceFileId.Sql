@@ -17,7 +17,8 @@ BEGIN TRY
             SELECT [Id], 
                    ISNULL([PerformanceFileId], '') AS [PerformanceFileId],
                    ISNULL([Name], '') AS [Name],
-				   ISNULL([JsonData], '') AS [JsonData]
+				   ISNULL([JsonData], '') AS [JsonData],
+				   ISNULL( [FilePath], '') AS [FilePath]
             FROM tbl_TestData
             WHERE PerformanceFileId = @PerformanceFileId
             FOR JSON PATH

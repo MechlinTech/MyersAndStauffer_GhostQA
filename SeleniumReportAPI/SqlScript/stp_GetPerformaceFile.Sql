@@ -14,7 +14,8 @@ BEGIN TRY
 		SELECT [Id] AS [id],
                ISNULL([RootId], '') AS [rootId],
                ISNULL([TestCaseName], '') AS [testCaseName],
-			   ISNULL([FileName], '') AS [fileName]
+			   ISNULL([FileName], '') AS [fileName],
+			   ISNULL( [FilePath], '') AS [FilePath]
 		FROM tbl_PerformanceFile
 		WHERE [RootId] = @RootId
 	FOR JSON PATH))
