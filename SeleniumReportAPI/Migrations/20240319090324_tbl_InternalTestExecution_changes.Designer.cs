@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeleniumReportAPI.DBContext;
 
@@ -11,9 +12,10 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240319090324_tbl_InternalTestExecution_changes")]
+    partial class tbl_InternalTestExecution_changes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -360,9 +362,6 @@ namespace SeleniumReportAPI.Migrations
                     b.Property<string>("TestSuite")
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("TestSuite");
-
-                    b.Property<string>("TestVideoUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TesterName")
                         .HasColumnType("nvarchar(max)");

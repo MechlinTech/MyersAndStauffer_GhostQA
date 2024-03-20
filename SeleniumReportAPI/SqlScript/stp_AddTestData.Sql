@@ -1,7 +1,8 @@
 CREATE OR ALTER   PROCEDURE [dbo].[stp_AddTestData]
 @PerformanceFileId    INT,
 @Name	              NVARCHAR(MAX),
-@JsonData	          NVARCHAR(MAX)
+@JsonData	          NVARCHAR(MAX),
+@FilePath			  NVARCHAR(MAX)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_AddTestData
@@ -14,8 +15,8 @@ PROC EXEC		:  EXEC stp_AddTestData
 **************************************************************************************/
 BEGIN TRY
 	BEGIN
-		INSERT INTO [dbo].[tbl_TestData] ([PerformanceFileId],[Name], [JsonData]) 
-		VALUES (@PerformanceFileId, @Name, @JsonData)
+		INSERT INTO [dbo].[tbl_TestData] ([PerformanceFileId],[Name], [JsonData], [FilePath]) 
+		VALUES (@PerformanceFileId, @Name, @JsonData, @FilePath)
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [Result] = JSON_QUERY((

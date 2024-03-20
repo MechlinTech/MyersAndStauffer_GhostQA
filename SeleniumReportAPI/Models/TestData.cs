@@ -9,5 +9,6 @@ namespace SeleniumReportAPI.Models
         public int PerformanceFileId { get; set; }
         public string Name { get; set; }
         public string JsonData { get; set; }
+        public string FilePath { get; set;}
     }
 }

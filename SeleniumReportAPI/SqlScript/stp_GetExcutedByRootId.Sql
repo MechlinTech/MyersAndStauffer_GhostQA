@@ -16,20 +16,28 @@ BEGIN TRY
 		[beforeEach] = JSON_QUERY((
 				SELECT  'visit' [type], tccd.[StartUrl] [selector]
 				FROM tbl_TestCaseDetails tccd
-				WHERE tccd.[RootId] = trr.[RootId]
+				WHERE tccd.[RootId] = trr.[RootId] AND tccd.[TestCaseName] = @TestName
 				FOR JSON PATH)),
 			[testCases] = JSON_QUERY((
 				SELECT tcd.[TestCaseName] [name], 
 				[actions] = JSON_QUERY((
-					SELECT tsd.[Type] [type], CONCAT('input#',tsd.[SelectorType]) [selector], tsd.[StepDescription] [text]
+					SELECT tsd.[Type] [type], (
+													(CASE
+														WHEN tsd.[SelectorType] = 'ID' THEN CONCAT('#',tsd.[SelectorValue])
+														WHEN tsd.[SelectorType] = 'CLASS' THEN CONCAT('.',tsd.[SelectorValue])
+														WHEN tsd.[SelectorType] = 'NAME' THEN CONCAT('[name=',tsd.[SelectorValue],']')
+													ELSE tsd.[SelectorValue]
+													END)
+                                        ) [selector], tsd.[StepDescription] [text],
+										tsd.[IsOptional]
 					FROM tbl_TestStepsDetails tsd
 					WHERE tsd.[TestCaseDetailsId] = tcd.[TestCaseDetailsId]
 				FOR JSON PATH))
 			FROM tbl_TestCaseDetails tcd
-			WHERE tcd.[RootId] = trr.[RootId]
+			WHERE tcd.[RootId] = trr.[RootId] AND tcd.[TestCaseName] = @TestName
 		FOR JSON PATH))
 	FROM tbl_RootRelation trr
-	WHERE trr.RootId = @RootId
+	WHERE trr.RootId = @RootId 
 FOR JSON PATH))
 END TRY
 BEGIN CATCH

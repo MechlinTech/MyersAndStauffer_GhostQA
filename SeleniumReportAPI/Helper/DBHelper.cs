@@ -1,31 +1,22 @@
-﻿using GitHub;
-using Mailosaur.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using MyersAndStaufferFramework;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Models;
-using SharpCompress.Common;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Mail;
-using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using TestSeleniumReport.DTO_s;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Environments = SeleniumReportAPI.Models.Environments;
 using SmtpClient = System.Net.Mail.SmtpClient;
-using System.Linq;
 using ExcelDataReader;
-using Microsoft.AspNetCore.Http;
-using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -1572,7 +1563,7 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
-        internal async Task<string> GetExcutedByRootId(int RootId)
+        internal async Task<string> GetExcutedByRootId(int RootId, string TestName)
         {
             string result = string.Empty;
             try
@@ -1584,6 +1575,7 @@ namespace SeleniumReportAPI.Helper
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@RootId", RootId);
+                        command.Parameters.AddWithValue("@TestName", TestName);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -1732,6 +1724,12 @@ namespace SeleniumReportAPI.Helper
             string result = string.Empty;
             try
             {
+                bool containsJMXExtension = Path.GetExtension(model.FileName).Equals(".jmx", StringComparison.OrdinalIgnoreCase);
+                if (!containsJMXExtension)
+                {
+                    return result = "Only JMX file can be uploaded";
+                }
+                string fileName = model.BinaryData.FileName;
                 string directoryPath = @"C:\GhostQA\SeleniumReportAPI\wwwroot\TestDataFile\";
                 string filePath = Path.Combine(directoryPath, model.FileName);
 
@@ -1756,7 +1754,8 @@ namespace SeleniumReportAPI.Helper
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@RootId", model.RootId);
                         command.Parameters.AddWithValue("@TestCaseName", model.TestCaseName);
-                        command.Parameters.AddWithValue("@FileName", filePath); // Save file name instead of full path
+                        command.Parameters.AddWithValue("@FileName", fileName); // Save file name instead of full path
+                        command.Parameters.AddWithValue("@FilePath", filePath);
                         await command.ExecuteNonQueryAsync();
                     }
                 }
@@ -2060,6 +2059,25 @@ namespace SeleniumReportAPI.Helper
             string name = string.Empty;
             IExcelDataReader reader = null;
             DataTable dt = null;
+            bool containsCSVExtension = Path.GetExtension(model.File.FileName).Equals(".CSV", StringComparison.OrdinalIgnoreCase);
+            if (!containsCSVExtension)
+            {
+                return result = "Only CSV file can be uploaded";
+            }
+            string directoryPath = @"C:\GhostQA\SeleniumReportAPI\wwwroot\TestDataCSVFile\";
+            string filePath = Path.Combine(directoryPath, model.File.FileName);
+
+            // Ensure directory exists
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            // Save uploaded file to disk
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            {
+                await model.File.CopyToAsync(stream);
+            }
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             using (var stream = new MemoryStream())
             {
@@ -2100,11 +2118,12 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@PerformanceFileId", model.PerformanceFileId);
                         command.Parameters.AddWithValue("@Name", name);
                         command.Parameters.AddWithValue("@JsonData", JsonData);
+                        command.Parameters.AddWithValue("@FilePath", filePath);
                         await command.ExecuteNonQueryAsync();
                     }
                 }
 
-                result = "Success";
+                result = "Successfully Save";
             }
             catch (Exception ex)
             {
@@ -2256,6 +2275,47 @@ namespace SeleniumReportAPI.Helper
                     }
                     connection.Close();
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<object> AddExecuteResult(Dto_RootObject model)
+        {
+            string result = string.Empty;
+            try
+            {
+                var jObj = (JObject)model.json;
+                var str = jObj.First.First.Path.ToString().Replace("['","").Replace("']","");
+                int index = str.IndexOf(" -");
+                string suiteName = str.Substring(0, index);
+                var jsonData = JsonConvert.DeserializeObject<JsonOption>(jObj.First.First.ToString());
+                InternalTestExecution internalTestExecution = new InternalTestExecution();
+                internalTestExecution.TestSuite = suiteName;
+                internalTestExecution.TestCase = model.id.ToString();
+                internalTestExecution.TestRun = jsonData.results[0].suites[0].title;
+                internalTestExecution.StartDateTime = jsonData.stats.start.ToString();
+                internalTestExecution.EndDateTime = jsonData.stats.end.ToString();
+                internalTestExecution.SuiteDuration = jsonData.stats.duration.ToString();
+                internalTestExecution.TestDuration = jsonData.results[0].suites[0].duration.ToString();
+                internalTestExecution.TestScreenShotUrl = model.runs_artifacts.Where(x => x.type == "screenShot").Count() > 0 ? model.runs_artifacts.Where(x => x.type == "screenShot").Select(y => y.files).FirstOrDefault() : string.Empty;
+                internalTestExecution.TestVideoUrl = model.runs_artifacts.Where(x => x.type == "video").Count() > 0 ? model.runs_artifacts.Where(x => x.type == "video").Select(y => y.files).FirstOrDefault() : string.Empty;
+                List<dynamic> results = new List<dynamic>();
+                foreach(var t in jsonData.results[0].suites[0].tests)
+                {
+                    var addJsonData = new
+                    {
+                        Status = t.state,
+                        Duration = t.duration,
+                        stepName = t.title 
+                    };
+                    results.Add(addJsonData);
+                }
+              internalTestExecution.TestStepJson = JsonConvert.SerializeObject(results);
+                result = "Success";
             }
             catch (Exception ex)
             {

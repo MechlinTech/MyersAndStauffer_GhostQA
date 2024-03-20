@@ -144,9 +144,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param RootId="RootId"></param>
         /// <returns></returns>
         [HttpGet("GetExcutedByRootId")]
-        public async Task<ActionResult> GetExcutedByRootId(int RootId)
+        public async Task<ActionResult> GetExcutedByRootId(int RootId, string TestName)
         {
-            return Ok(await _helper.GetExcutedByRootId(RootId));
+            return Ok(await _helper.GetExcutedByRootId(RootId,TestName));
         }
     }
 }

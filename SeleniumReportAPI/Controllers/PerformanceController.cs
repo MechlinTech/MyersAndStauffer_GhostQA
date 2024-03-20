@@ -222,5 +222,16 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.DeleteLoadTestData(Id));
         }
+
+        /// <summary>
+        /// Add 
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [HttpPost("AddExecuteResult")]
+        public async Task<ActionResult> AddExecuteResult(Dto_RootObject json)
+        {
+            return Ok(await _helper.AddExecuteResult(json));
+        }
     }
 }
