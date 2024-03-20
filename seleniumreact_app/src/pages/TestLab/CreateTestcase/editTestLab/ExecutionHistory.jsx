@@ -26,62 +26,62 @@ export default function ExecutionHistory() {
   const [openModal, setOpenModal] = useState(false);
   const [rootId, setrootId] = useState(localStorage.getItem("rootId"));
   const [runDetail, setrunDetail] = useState(null);
-  useEffect(() => {
-    let isMounted = true;
+  // useEffect(() => {
+  //   let isMounted = true;
 
-    const getExecutionHistory = async () => {
-      try {
-        const jsonData = await axios.get(
-          `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}`
-        );
-        const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
-          type: "application/json",
-        });
-        const formData = new FormData();
-        formData.append("scenarios_file", blob, "data.json");
-        formData.append("name", "testing");
-        const executedDetail = await axios.post(
-          "http://65.1.188.67:8010/api/test-suitesV2/execute2/",
-          formData,
-          headerForm()
-        );
+  //   const getExecutionHistory = async () => {
+  //     try {
+  //       const jsonData = await axios.get(
+  //         `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}`
+  //       );
+  //       const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
+  //         type: "application/json",
+  //       });
+  //       const formData = new FormData();
+  //       formData.append("scenarios_file", blob, "data.json");
+  //       formData.append("name", "testing");
+  //       const executedDetail = await axios.post(
+  //         "http://65.1.188.67:8010/api/test-suitesV2/execute2/",
+  //         formData,
+  //         headerForm()
+  //       );
 
-        const runId = executedDetail.data.container_runs[0].id;
-        getRunDetail(runId, 1000, 20);
-      } catch (error) {
-        console.log("error fetching execution data", error);
-      }
-    };
+  //       const runId = executedDetail.data.container_runs[0].id;
+  //       getRunDetail(runId, 1000, 20);
+  //     } catch (error) {
+  //       console.log("error fetching execution data", error);
+  //     }
+  //   };
 
-    const getRunDetail = async (runId, delay, timeout) => {
-      try {
-        const res = await axios.get(
-          `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
-        );
+  //   const getRunDetail = async (runId, delay, timeout) => {
+  //     try {
+  //       const res = await axios.get(
+  //         `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
+  //       );
 
-        if (res.data.json) {
-          console.log("rundetails : ", res.data);
-          setrunDetail(res.data.json);
-        } else if (timeout > 0 && isMounted) {
-          console.log(timeout);
-          setTimeout(() => {
-            getRunDetail(runId, delay, timeout - 1);
-          }, delay);
-        } else {
-          console.log("timeout");
-        }
-      } catch (error) {
-        console.error("Error getting run details:", error);
-        toast.error("Network error");
-      }
-    };
+  //       if (res.data.json) {
+  //         console.log("rundetails : ", res.data);
+  //         setrunDetail(res.data.json);
+  //       } else if (timeout > 0 && isMounted) {
+  //         console.log(timeout);
+  //         setTimeout(() => {
+  //           getRunDetail(runId, delay, timeout - 1);
+  //         }, delay);
+  //       } else {
+  //         console.log("timeout");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error getting run details:", error);
+  //       toast.error("Network error");
+  //     }
+  //   };
 
-    getExecutionHistory();
+  //   getExecutionHistory();
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, []);
 
   const handleCloseModal = () => {
     setOpenModal(false);

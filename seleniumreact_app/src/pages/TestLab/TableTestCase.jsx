@@ -14,6 +14,7 @@ import axios from "axios";
 import { headerForm } from "../../utils/authheader";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import { StyledTypography } from "./styles";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TableTestCase({ testCase, rootId }) {
@@ -47,6 +48,11 @@ export default function TableTestCase({ testCase, rootId }) {
       getRunDetail(runId, 5000,testCaseName);
     } catch (error) {
       console.log("error fetching execution data", error);
+      toast.error('network error')
+      setexecutingTest(prev=>({
+        ...prev,
+        [testCaseName]:false
+      }))
     }
   };
 
@@ -57,6 +63,7 @@ export default function TableTestCase({ testCase, rootId }) {
       );
 
       if (res.data.container_status === "exited") {
+        console.log('test cs n ', testCaseName)
         setexecutingTest(prev=>({
           ...prev,
           [testCaseName]:false
@@ -70,19 +77,23 @@ export default function TableTestCase({ testCase, rootId }) {
     } catch (error) {
       console.error("Error getting run details:", error);
       toast.error("Network error");
+      setexecutingTest(prev=>({
+        ...prev,
+        [testCaseName]:false
+      }))
     }
   };
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
+        <TableHead sx={{backgroundColor:'#dedede'}}>
           <TableRow>
-            <TableCell>Testcase Title</TableCell>
-            <TableCell align="center">Status</TableCell>
-            <TableCell align="center">Video</TableCell>
-            <TableCell align="center">Last run on</TableCell>
-            <TableCell align="center">Run Now</TableCell>
+            <TableCell><StyledTypography> Testcase Title</StyledTypography></TableCell>
+            <TableCell align="center"><StyledTypography>Status</StyledTypography></TableCell>
+            <TableCell align="center"><StyledTypography>Video</StyledTypography></TableCell>
+            <TableCell align="center"><StyledTypography>Last run on</StyledTypography></TableCell>
+            <TableCell align="center"><StyledTypography>Run Now</StyledTypography></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -99,9 +110,9 @@ export default function TableTestCase({ testCase, rootId }) {
                 }}
                 sx={{ cursor: "pointer" }}
               >
-                {row.TestCaseName}
+               <StyledTypography> {row.TestCaseName}</StyledTypography>
               </TableCell>
-              <TableCell align="center">{"running"}</TableCell>
+              <TableCell align="center"><StyledTypography>{"running"}</StyledTypography></TableCell>
               <TableCell align="center">
                 <span
                   style={{
@@ -119,17 +130,19 @@ export default function TableTestCase({ testCase, rootId }) {
                   <PlayArrowOutlinedIcon />
                 </span>
               </TableCell>
-              <TableCell align="center">{"yymmddhhmmss"}</TableCell>
+              <TableCell align="center"><StyledTypography> {"yymmddhhmmss"}</StyledTypography></TableCell>
               <TableCell align="center">
                 {!executingTest[row.TestCaseName] ? (
                   <PlayCircleIcon
+                  style={{color:"rgb(101, 77, 247)",cursor:'pointer'}}
                     onClick={(e) => {
                       handleExecution(row.TestCaseName);
                     }}
                   />
                 ) : (
                   <CircularProgress
-                    size={25}
+                  style={{color:"rgb(101, 77, 247)"}}
+                  size={25}
                   />
                 )}
               </TableCell>
