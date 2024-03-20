@@ -105,8 +105,9 @@ export default function LoadPanel({ PerformanceFileId }) {
     }
 
     let xCatagory = [];
-    for (let i = 0; i < rampUpSteps - 1; i++) {
-      const value = (1 / (rampUpTime - i)).toFixed(1); // Round to 1 decimal place
+    const timePerStep = rampUpTime/rampUpSteps
+    for (let i = 0; i < rampUpSteps; i++) {
+      const value = (timePerStep*i).toFixed(1); // Round to 1 decimal place
       xCatagory.push(value.toString()); // Convert to string
     }
 
@@ -114,7 +115,7 @@ export default function LoadPanel({ PerformanceFileId }) {
     const rampUpTimeString = rampUpTime.toString();
     const durationString = duration.toString();
 
-    setxaxisCategories(["0", ...xCatagory, rampUpTimeString, durationString]);
+    setxaxisCategories([...xCatagory, rampUpTimeString, durationString]);
     setGraphData(data);
   }, [totalusers, rampUpSteps, duration, rampUpTime]);
 

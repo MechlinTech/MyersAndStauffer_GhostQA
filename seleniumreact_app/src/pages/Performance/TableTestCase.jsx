@@ -107,7 +107,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
       borderRadius: '5px'
     }}>
       <Table aria-label="simple table">
-        <TableHead>
+        <TableHead sx={{backgroundColor:'#dedede'}}>
           <TableRow>
             <TableCell><StyledTypography>Test Name</StyledTypography></TableCell>
             <TableCell align="left"><StyledTypography>File name</StyledTypography></TableCell>
