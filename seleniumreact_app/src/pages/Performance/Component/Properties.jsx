@@ -161,6 +161,7 @@ export default function Properties({ PerformanceFileId }) {
           <StyledFormControl>
             <StyledOutlinedInput
               value={pName}
+              placeholder="Property"
               onChange={(event) => handleInputChange(event, "name")}
               onKeyDown={handleKeyPress}
             />
@@ -170,6 +171,7 @@ export default function Properties({ PerformanceFileId }) {
           <StyledFormControl>
             <StyledOutlinedInput
               value={pValue}
+              placeholder="value"
               onChange={(event) => handleInputChange(event, "value")}
               onKeyDown={handleKeyPress}
             />

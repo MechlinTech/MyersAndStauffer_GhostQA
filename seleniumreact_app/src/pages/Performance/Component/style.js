@@ -41,7 +41,7 @@ export const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
   fontFamily: "Lexend Deca",
   fontSize: "14px",
   height: "40px",
-  backgroundColor: "rgb(242, 242, 242)",
+  // backgroundColor: "rgb(242, 242, 242)",
   // Add other styles as needed
 }));
 

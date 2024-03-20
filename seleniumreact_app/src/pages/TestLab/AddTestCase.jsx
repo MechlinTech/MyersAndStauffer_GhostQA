@@ -75,7 +75,7 @@ export default function AddTestCase({addTestCase,nameSuite}) {
             <Card style={{ textAlign: "center", margin: "20px" }}>
              
               <Grid item>
-              {testCase.length!==0 && <TableTestCase testCase={testCase}/>}
+              {testCase.length!==0 && <TableTestCase testCase={testCase} rootId={addTestCase}/>}
               </Grid>
             </Card>
           </Grid>
