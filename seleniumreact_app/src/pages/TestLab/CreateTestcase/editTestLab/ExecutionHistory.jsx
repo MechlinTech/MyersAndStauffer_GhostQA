@@ -26,62 +26,6 @@ export default function ExecutionHistory() {
   const [openModal, setOpenModal] = useState(false);
   const [rootId, setrootId] = useState(localStorage.getItem("rootId"));
   const [runDetail, setrunDetail] = useState(null);
-  // useEffect(() => {
-  //   let isMounted = true;
-
-  //   const getExecutionHistory = async () => {
-  //     try {
-  //       const jsonData = await axios.get(
-  //         `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}`
-  //       );
-  //       const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
-  //         type: "application/json",
-  //       });
-  //       const formData = new FormData();
-  //       formData.append("scenarios_file", blob, "data.json");
-  //       formData.append("name", "testing");
-  //       const executedDetail = await axios.post(
-  //         "http://65.1.188.67:8010/api/test-suitesV2/execute2/",
-  //         formData,
-  //         headerForm()
-  //       );
-
-  //       const runId = executedDetail.data.container_runs[0].id;
-  //       getRunDetail(runId, 1000, 20);
-  //     } catch (error) {
-  //       console.log("error fetching execution data", error);
-  //     }
-  //   };
-
-  //   const getRunDetail = async (runId, delay, timeout) => {
-  //     try {
-  //       const res = await axios.get(
-  //         `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
-  //       );
-
-  //       if (res.data.json) {
-  //         console.log("rundetails : ", res.data);
-  //         setrunDetail(res.data.json);
-  //       } else if (timeout > 0 && isMounted) {
-  //         console.log(timeout);
-  //         setTimeout(() => {
-  //           getRunDetail(runId, delay, timeout - 1);
-  //         }, delay);
-  //       } else {
-  //         console.log("timeout");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error getting run details:", error);
-  //       toast.error("Network error");
-  //     }
-  //   };
-
-  //   getExecutionHistory();
-
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, []);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -188,97 +132,88 @@ export default function ExecutionHistory() {
           Execution history
         </StyledTypography>
       </Grid>
-
-      {runDetail ? (<Grid item xs={12} md={7}> 
-          <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
-            <TableContainer sx={{ marginBottom: "8vh" }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>Run Id </StyledTableCell>
-                    <StyledTableCell>Start Time</StyledTableCell>
-                    <StyledTableCell>End Time</StyledTableCell>
-                    <StyledTableCell>Status</StyledTableCell>
-                    <StyledTableCell>Video</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {runsArray?.map((row) => (
-                    <TableRow
-                      key={row.Email}
-                      className={`${classes.tableRow} ${
-                        selectedRunId === row.runid ? classes.activeRow : ""
-                      }`}
-                      style={{ height: "10px" }}
-                      spacing="3"
-                      onClick={() => setSelectedRunId(row.runid)}
+      <Grid item xs={12} md={7}>
+        <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
+          <TableContainer sx={{ marginBottom: "8vh" }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Run Id </StyledTableCell>
+                  <StyledTableCell>Start Time</StyledTableCell>
+                  <StyledTableCell>End Time</StyledTableCell>
+                  <StyledTableCell>Status</StyledTableCell>
+                  <StyledTableCell>Video</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {runsArray?.map((row) => (
+                  <TableRow
+                    key={row.Email}
+                    className={`${classes.tableRow} ${
+                      selectedRunId === row.runid ? classes.activeRow : ""
+                    }`}
+                    style={{ height: "10px" }}
+                    spacing="3"
+                    onClick={() => setSelectedRunId(row.runid)}
+                  >
+                    <StyledTableCell
+                      sx={{
+                        color: selectedRunId === row.runid ? "white" : "black",
+                      }}
                     >
-                      <StyledTableCell
+                      {row.runid}
+                    </StyledTableCell>
+                    <StyledTableCell
+                      sx={{
+                        color: selectedRunId === row.runid ? "white" : "black",
+                      }}
+                    >
+                      {row.startTime}
+                    </StyledTableCell>
+                    <StyledTableCell
+                      sx={{
+                        color: selectedRunId === row.runid ? "white" : "black",
+                      }}
+                    >
+                      {row.endTime}
+                    </StyledTableCell>
+                    <StyledTableCell
+                      sx={{
+                        color: selectedRunId === row.runid ? "white" : "black",
+                      }}
+                    >
+                      <Box
+                        className={classes.statusBox}
                         sx={{
-                          color:
-                            selectedRunId === row.runid ? "white" : "black",
+                          display: "inline-block",
+                          backgroundColor:
+                            selectedRunId === row.runid
+                              ? ""
+                              : row.status === "Completed"
+                              ? "#48fab9"
+                              : "#fa3737",
                         }}
                       >
-                        {row.runid}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        sx={{
-                          color:
-                            selectedRunId === row.runid ? "white" : "black",
-                        }}
-                      >
-                        {row.startTime}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        sx={{
-                          color:
-                            selectedRunId === row.runid ? "white" : "black",
-                        }}
-                      >
-                        {row.endTime}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        sx={{
-                          color:
-                            selectedRunId === row.runid ? "white" : "black",
-                        }}
-                      >
-                        <Box
-                          className={classes.statusBox}
-                          sx={{
-                            display: "inline-block",
-                            backgroundColor:
-                              selectedRunId === row.runid
-                                ? ""
-                                : row.status === "Completed"
-                                ? "#48fab9"
-                                : "#fa3737",
-                          }}
-                        >
-                          {row.status}
-                        </Box>
-                      </StyledTableCell>
-                      <StyledTableCell
-                        sx={{
-                          color:
-                            selectedRunId === row.runid ? "white" : "#654DF7",
-                        }}
-                        onClick={() => {}}
-                      >
-                        <VideocamIcon onClick={()=>setOpenModal(true)} />
-                      </StyledTableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-          </Grid>) : (
-          <Grid item xs={12} display='flex' justifyContent='center' alignItems='center'>
-          <CircularProgress style={{ color: "#654DF7" }} />
-          </Grid>
-        )}
-      
+                        {row.status}
+                      </Box>
+                    </StyledTableCell>
+                    <StyledTableCell
+                      sx={{
+                        color:
+                          selectedRunId === row.runid ? "white" : "#654DF7",
+                      }}
+                      onClick={() => {}}
+                    >
+                      <VideocamIcon onClick={() => setOpenModal(true)} />
+                    </StyledTableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </Grid>
+
       <Grid item xs={12} md={5} justifySelf="start">
         {selectedRunId && (
           <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>

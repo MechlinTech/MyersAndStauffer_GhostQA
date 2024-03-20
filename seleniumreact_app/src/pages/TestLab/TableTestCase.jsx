@@ -6,7 +6,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import PlayArrowSharpIcon from "@mui/icons-material/PlayArrowSharp";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import { useNavigate } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -56,22 +55,28 @@ export default function TableTestCase({ testCase, rootId }) {
     }
   };
 
-  const getRunDetail = async (runId, delay,testCaseName) => {
+  const getRunDetail = async (runId, delay,name) => {
     try {
       const res = await axios.get(
         `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
       );
 
       if (res.data.container_status === "exited") {
-        console.log('test cs n ', testCaseName)
+        console.log('test cs n ', name)
         setexecutingTest(prev=>({
           ...prev,
-          [testCaseName]:false
+          [name]:false
         }))
+        const rundetails = res.data
+        try {
+          const res = await axios.post('https://192.168.1.55:3006/api/AddTestLab/AddExecuteResult',rundetails)
+        } catch (error) {
+          toast.error("NETWORK ERROR adding execute result")
+        }
         console.log("rundetails : ", res.data);
       } else {
         setTimeout(() => {
-          getRunDetail(runId, delay);
+          getRunDetail(runId, delay,name);
         }, delay);
       }
     } catch (error) {
@@ -79,7 +84,7 @@ export default function TableTestCase({ testCase, rootId }) {
       toast.error("Network error");
       setexecutingTest(prev=>({
         ...prev,
-        [testCaseName]:false
+        [name]:false
       }))
     }
   };
