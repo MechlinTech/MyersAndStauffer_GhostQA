@@ -77,7 +77,6 @@ export default function LoadPanel({ PerformanceFileId }) {
         header()
       );
       const loadData = res.data;
-      console.log("load", loadData);
       if (Array.isArray(loadData)) {
         settotalusers(loadData[0].TotalUsers);
         setDuration(loadData[0].DurationInMinutes);

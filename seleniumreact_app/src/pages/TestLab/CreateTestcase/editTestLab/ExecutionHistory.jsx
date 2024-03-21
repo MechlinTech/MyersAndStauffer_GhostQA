@@ -13,23 +13,61 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import VideocamIcon from "@mui/icons-material/Videocam";
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import { headerForm } from "../../../../utils/authheader";
 import { toast } from "react-toastify";
-import { TimerOff } from "@material-ui/icons";
-import { CircularProgress } from "@mui/material";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function ExecutionHistory() {
   const classes = useStyles();
+  const { testCaseName } = useParams();
   const [selectedRunId, setSelectedRunId] = useState(null);
+  const [videoLink, setvideoLink] = useState("")
+  const [stepDetail, setstepDetail] = useState(null);
+  const [executionDetail, setexecutionDetail] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [rootId, setrootId] = useState(localStorage.getItem("rootId"));
   const [runDetail, setrunDetail] = useState(null);
+  console.log("name", testCaseName);
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/AddTestLab/GetTestDetailByTestName?TestName=${testCaseName}`
+      );
+      console.log("res", res);
+      if (Array.isArray(res.data)) setexecutionDetail(res.data);
+      else setexecutionDetail(null);
+    } catch (error) {
+      toast.error("NETWORK ERROR");
+    }
+  };
+
+  const getStpeDetail = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/AddTestLab/GetTestStepsDetailByTestCaseId?TestCaseId=${selectedRunId}`
+      );
+      console.log("resid", res);
+      if (Array.isArray(res.data)) setstepDetail(res.data);
+      else setstepDetail(null);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+  useEffect(() => {
+    getStpeDetail();
+    console.log("TestCase ", stepDetail);
+  }, [selectedRunId]);
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+  const handleVideoPlay = (vdUrl)=>{
+    setvideoLink(vdUrl)
+    setOpenModal(true)
+  }
   function formatTime(dateTimeString) {
     const options = {
       hour: "numeric",
@@ -45,38 +83,21 @@ export default function ExecutionHistory() {
   }
   const runsArray = [
     {
-      runid: 123456789,
-      startTime: "08:00 AM",
-      endTime: "10:30 AM",
-      status: "Completed",
+      TestSuite: "Project",
+      TestCase:
+        "2aeb0987826ffc3bb5b8bdb833e0c8fcb2e692740527877e0c81326819b41ae7",
+      Status: "failed",
+      StartDateTime: "3/21/2024 8:45:52 AM",
+      EndDateTime: "3/21/2024 8:45:54 AM",
+      TestDuration: "1284",
+      TestVideoUrl: "http://65.1.188.67:8010/api/test-suitesV2/103/get_file/",
     },
-    {
-      runid: 987654321,
-      startTime: "11:45 AM",
-      endTime: "01:15 PM",
-      status: "Running",
-    },
-    {
-      runid: 555555555,
-      startTime: "02:20 PM",
-      endTime: "03:45 PM",
-      status: "Failed",
-    },
-    // Add more objects as needed
   ];
-  const data = [
-    {
-      status: "Success",
-      timestamp: "2022-03-01T10:30:00Z",
-      detail: "Operation completed successfully.",
-    },
-    {
-      status: "Error",
-      timestamp: "2022-03-01T12:45:00Z",
-      detail: "An error occurred during the operation.",
-    },
-    // Add more objects as needed
-  ];
+  const test = {
+    TestStepJson:
+      '[{"Status":"failed","Duration":1284,"stepName":"Test Step: click: val"}]',
+    TestScreenShotUrl: "",
+  };
   return (
     <>
       <Modal
@@ -109,7 +130,7 @@ export default function ExecutionHistory() {
               controls
               style={{ width: "100%", height: "100%", objectFit: "contain" }}
             >
-              <source src="funtion to get video url" type="video/webm" />
+              <source src={videoLink} type="video/webm" />
             </video>
             <Box
               onClick={handleCloseModal}
@@ -146,40 +167,39 @@ export default function ExecutionHistory() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {runsArray?.map((row) => (
+                {executionDetail?executionDetail.map((row) => (
                   <TableRow
-                    key={row.Email}
+                    key={row.TestCase}
                     className={`${classes.tableRow} ${
-                      selectedRunId === row.runid ? classes.activeRow : ""
+                      selectedRunId === row.TestCase ? classes.activeRow : ""
                     }`}
-                    style={{ height: "10px" }}
                     spacing="3"
-                    onClick={() => setSelectedRunId(row.runid)}
+                    onClick={() => setSelectedRunId(row.TestCase)}
                   >
                     <StyledTableCell
                       sx={{
-                        color: selectedRunId === row.runid ? "white" : "black",
+                        color: selectedRunId === row.TestCase ? "white" : "black",
                       }}
                     >
-                      {row.runid}
+                      {row.TestCase}
                     </StyledTableCell>
                     <StyledTableCell
                       sx={{
-                        color: selectedRunId === row.runid ? "white" : "black",
+                        color: selectedRunId === row.TestCase ? "white" : "black",
                       }}
                     >
-                      {row.startTime}
+                      {formatTime(row.StartDateTime)}
                     </StyledTableCell>
                     <StyledTableCell
                       sx={{
-                        color: selectedRunId === row.runid ? "white" : "black",
+                        color: selectedRunId === row.TestCase ? "white" : "black",
                       }}
                     >
-                      {row.endTime}
+                      {formatTime(row.EndDateTime)}
                     </StyledTableCell>
                     <StyledTableCell
                       sx={{
-                        color: selectedRunId === row.runid ? "white" : "black",
+                        color: selectedRunId === row.TestCase ? "white" : "black",
                       }}
                     >
                       <Box
@@ -187,27 +207,29 @@ export default function ExecutionHistory() {
                         sx={{
                           display: "inline-block",
                           backgroundColor:
-                            selectedRunId === row.runid
+                            selectedRunId === row.TestCase
                               ? ""
-                              : row.status === "Completed"
+                              : row.status === "failed"
                               ? "#48fab9"
                               : "#fa3737",
                         }}
                       >
-                        {row.status}
+                        {row.Status}
                       </Box>
                     </StyledTableCell>
                     <StyledTableCell
                       sx={{
                         color:
-                          selectedRunId === row.runid ? "white" : "#654DF7",
+                          selectedRunId === row.TestCase ? "white" : "#654DF7",
                       }}
                       onClick={() => {}}
                     >
-                      <VideocamIcon onClick={() => setOpenModal(true)} />
+                      <VideocamIcon onClick={() =>handleVideoPlay(row.TestVideoUrl)} />
                     </StyledTableCell>
                   </TableRow>
-                ))}
+                )):<TableRow>
+                  <StyledTableCell colSpan={5} align="center">No execution history</StyledTableCell>
+                </TableRow>}
               </TableBody>
             </Table>
           </TableContainer>
@@ -229,33 +251,37 @@ export default function ExecutionHistory() {
                   </TableRow>
                   <TableRow>
                     <StyledTableCell>Status </StyledTableCell>
-                    <StyledTableCell>Timestramp</StyledTableCell>
+                    <StyledTableCell>Duration</StyledTableCell>
                     <StyledTableCell>Detail</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data?.map((row) => (
-                    <TableRow
-                      key={row.Email}
-                      className={`${classes.tableRow}`}
-                      style={{ height: "10px" }}
-                      spacing="3"
-                    >
-                      <StyledTableCell component="th" scope="row">
-                        {row.status === "Success" ? (
-                          <CheckCircleIcon color="success" />
-                        ) : (
-                          <CancelIcon color="error" />
-                        )}
-                      </StyledTableCell>
-                      <StyledTableCell component="th" scope="row">
-                        {row.timestamp}
-                      </StyledTableCell>
-                      <StyledTableCell component="th" scope="row">
-                        {row.detail}
-                      </StyledTableCell>
-                    </TableRow>
-                  ))}
+                  {stepDetail &&
+                    stepDetail.map((item) => {
+                      const testSteps = JSON.parse(item.TestStepJson);
+                       return testSteps.map((row, index) => (
+                        <TableRow
+                          key={index}
+                          className={`${classes.tableRow}`}
+                          style={{ height: "10px" }}
+                          spacing="3"
+                        >
+                          <StyledTableCell>
+                            {row.Status === "failed" ? (
+                              <CancelIcon color="error" />
+                              ) : (
+                              <CheckCircleIcon color="success" />
+                            )}
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            {row.Duration}
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            {row.stepName}
+                          </StyledTableCell>
+                        </TableRow>
+                      ));
+                    })}
                 </TableBody>
               </Table>
             </TableContainer>

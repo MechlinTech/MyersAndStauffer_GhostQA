@@ -25,12 +25,11 @@ export const useStyles = makeStyles((theme)=>({
     cursor: "pointer",
     "&:hover": {
         border: "2px solid #654DF7",
-        cursor: "pointer",
     },
     "&.Mui-selected, &.Mui-selected:hover": {
         backgroundColor: theme.palette.action.selected,
     },
-    height: "40px",
+    // height: "40px",
 },
 activeRow: {
     border: "2px solid #654DF7",

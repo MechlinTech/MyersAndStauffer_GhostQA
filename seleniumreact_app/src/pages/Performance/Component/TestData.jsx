@@ -132,7 +132,6 @@ export default function DataEntryPanel({ PerformanceFileId }) {
         const remainingCount = rows.length - maxLength;
         const remainingText = remainingCount > 0 ? `...+${remainingCount}` : '';
         
-      console.log('row',rows)
       return <TableBody>
         <TableRow>
           <TableCell>{`\${${key}}`}</TableCell>
@@ -240,7 +239,6 @@ export default function DataEntryPanel({ PerformanceFileId }) {
                       </AccordionSummary>
                       <AccordionDetails sx={{ p: "0" }}>
                         <Divider />
-                        {console.log("json", test.JsonData)}
                         <TableContainer
                           style={{
                             border: "solid 2px #DADADA",

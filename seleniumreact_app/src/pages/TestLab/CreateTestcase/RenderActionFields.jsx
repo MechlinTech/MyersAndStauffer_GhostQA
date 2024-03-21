@@ -150,7 +150,7 @@ export default function RenderActionFields({
           </StyledFormControl>
         </Grid>
       );
-    case "keyPress":
+    case "SendKeys":
       return (
         <>
           <Grid item xs={6}>

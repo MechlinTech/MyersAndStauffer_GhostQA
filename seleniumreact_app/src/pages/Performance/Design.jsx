@@ -13,12 +13,60 @@ import ListItemText from "@mui/material/ListItemText";
 import FeaturedPlayListOutlinedIcon from "@mui/icons-material/FeaturedPlayListOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { Typography } from "@mui/material";
+import axios from "axios";
+import { header } from "../../utils/authheader";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Design({ addTestCase }) {
   const classes = useStyles();
-  useEffect(()=>{
-    console.log('in side design ',addTestCase)
-  },[addTestCase])
+  const [locationCount, setlocationCount] = useState(0);
+  const [scenarioCount, setscenarioCount] = useState(0);
+  const [uvCount, setuvCount] = useState(0);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${addTestCase}`,
+        header()
+      );
+      // Assuming response.data is the array of data you want to set as listData
+      const testList = response.data;
+      if (Array.isArray(testList)) {
+        setscenarioCount(testList.length);
+        testList.map((test) => {
+          getCounts(test.id);
+        });
+      } else {
+        setlocationCount(0);
+        setscenarioCount(0);
+        setuvCount(0);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const getCounts = async (testId) => {
+    try {
+      const loadRes = await axios.get(
+        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${testId}`,
+        header()
+      );
+      const locationRes = await axios.get(
+        `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${testId}`,
+        header()
+      );
+      const locCount = Array.isArray(locationRes.data) ? locationRes.data.length : 0;
+      const userCount = Array.isArray(loadRes.data)
+        ? loadRes.data[0].TotalUsers
+        : 0;
+      setuvCount((pre) => pre + userCount);
+      setlocationCount((pre) => pre + locCount);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    fetchData();
+    console.log("in side design ", addTestCase);
+  }, [addTestCase]);
   const [showAddNewElement, setShowAddNewElement] = useState(true);
   return (
     <Grid
@@ -39,11 +87,15 @@ export default function Design({ addTestCase }) {
         }}
       >
         <Grid item xs={8} style={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{
-            fontFamily: 'Lexend Deca',
-            fontSize:'18px',
-            fontWeight:'500'
-          }}>Summary</Typography>
+          <Typography
+            sx={{
+              fontFamily: "Lexend Deca",
+              fontSize: "18px",
+              fontWeight: "500",
+            }}
+          >
+            Summary
+          </Typography>
 
           <List
             sx={{ width: "100%" }}
@@ -62,10 +114,18 @@ export default function Design({ addTestCase }) {
                 sx={{ color: "#654df7" }}
                 style={{ marginRight: "8px" }}
               />
-              <ListItemText primary={<span style={{
-                fontFamily: 'Lexend Deca',
-                fontSize:'14px',
-              }}>10 locations</span>} />
+              <ListItemText
+                primary={
+                  <span
+                    style={{
+                      fontFamily: "Lexend Deca",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {locationCount} locations
+                  </span>
+                }
+              />
             </ListItem>
             <ListItem
               key={"FeaturedPlayListOutlinedIcon"}
@@ -80,10 +140,18 @@ export default function Design({ addTestCase }) {
                 sx={{ color: "#654df7" }}
                 style={{ marginRight: "8px" }}
               />
-              <ListItemText primary={<span style={{
-                fontFamily: 'Lexend Deca',
-                fontSize:'14px',
-              }}>20 scenarios</span>} />
+              <ListItemText
+                primary={
+                  <span
+                    style={{
+                      fontFamily: "Lexend Deca",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {scenarioCount} scenarios
+                  </span>
+                }
+              />
             </ListItem>
             <ListItem
               key={"PersonOutlineOutlinedIcon"}
@@ -98,10 +166,18 @@ export default function Design({ addTestCase }) {
                 sx={{ color: "#654df7" }}
                 style={{ marginRight: "8px" }}
               />
-              <ListItemText primary={<span style={{
-                fontFamily: 'Lexend Deca',
-                fontSize:'14px',
-              }}>100 VU</span>} />
+              <ListItemText
+                primary={
+                  <span
+                    style={{
+                      fontFamily: "Lexend Deca",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {uvCount} VU
+                  </span>
+                }
+              />
             </ListItem>
           </List>
         </Grid>
