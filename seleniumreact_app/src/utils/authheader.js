@@ -16,3 +16,10 @@ export const headerForm = () => {
         }
     }
 }
+
+export const headerCypres = ()=>({
+    "accept": "application/json",
+    "Content-Type": "application/json",
+    "X-CSRFTOKEN": "Duh1UZz5wjcXxcM36kckH2pZySKniYnMGBzxd4C6FGp5AhkSJGZgrr6IRcvAH5n1"
+  }
+  )

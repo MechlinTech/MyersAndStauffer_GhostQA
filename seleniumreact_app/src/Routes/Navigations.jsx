@@ -52,7 +52,7 @@ export default function Navigations() {
           </Route>
           <Route path="testLab" element={<TestLab/>} />  
           <Route path="testLab/createTestcase/:rootId" element={<CreateTestCase/>} />  
-          <Route path="testLab/editTestcase/:testId" element={<EditTestCase/>} />  
+          <Route path="testLab/editTestcase/:testCaseName/:testId" element={<EditTestCase/>} />  
          
         </Route>
         <Route path="performance" element={<Performance />} >
