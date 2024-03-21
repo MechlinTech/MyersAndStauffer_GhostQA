@@ -5,7 +5,8 @@ import Button from "@mui/material/Button";
 import TabsPanel from "./TabsPanel";
 import AddNewProject from "./AddNewProject";
 import { Remove, Add } from "@mui/icons-material/";
-
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import DynamicTreeView from "./DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
@@ -21,6 +22,7 @@ export default function Performance() {
   const [formData, setFormData] = useState({ name: "" });
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isCollapsed, setisCollapsed] = useState(false);
   const [listData, setListData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -76,62 +78,73 @@ export default function Performance() {
     console.log(id, "testswt");
   };
 
-  const treeStyle = drawerOpen?{}:{display:'none'}
   return (
     <>
       <div className={classes.main}>
         <Grid container spacing={2}>
-          <Box onClick={() => setDrawerOpen(!drawerOpen)} style={{position:'absolute',left:'3px',cursor:'pointer'}}>
-            {drawerOpen?<Remove />:<Add/>}
+          <Box
+            onClick={() => setDrawerOpen(!drawerOpen)}
+            style={{ position: "absolute", left: "3px", cursor: "pointer" }}
+          >
+            {!drawerOpen && <KeyboardDoubleArrowRightIcon />}
           </Box>
 
-          <Grid item xs={12} sm={4} style={treeStyle}>
-            <Card
-              className={classes.card}
-              style={{ paddingBottom: "30px", maxHeight: "78vh" }}
-            >
-              <Grid
-                container
-                alignItems="center"
-                className={classes.bodyHeader}
+          <Grid item xs={12} sm={drawerOpen ? 3 : 0}>
+              <Card
+                className={classes.card}
+                style={{ paddingBottom: "30px", maxHeight: "78vh" }}
               >
-                <Grid item xs={6}>
-                  Workspaces
+                <Grid
+                  container
+                  alignItems="center"
+                  className={classes.bodyHeader}
+                  style={{position:'relative'}}
+                >
+                  <Grid item xs={6}>
+                    Workspaces
+                  </Grid>
+                  <Grid item xs={5} style={{ textAlign: "right" }}>
+                    <Button
+                      variant="contained"
+                      onClick={() => setAddNewProject((current) => !current)}
+                      style={{
+                        fontSize: 14,
+                        backgroundColor: "rgb(101, 77, 247)",
+                        color: "#ffffff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Add />
+                    </Button>
+                  </Grid>
+                  <Grid item xs={1} style={{position:'absolute',right:'-14px',top:'-12px'}}>
+                    <Box
+                      onClick={() => setDrawerOpen(!drawerOpen)}
+                      sx={{cursor:'pointer'}}
+                    >
+                      <KeyboardDoubleArrowLeftIcon />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {addNewProject && (
+                      <AddNewProject
+                        handleChange={handleChange}
+                        handleSubmit={handleSubmit}
+                        formData={formData}
+                      />
+                    )}
+                  </Grid>
                 </Grid>
-                <Grid item xs={6} style={{ textAlign: "right" }}>
-                  <Button
-                    variant="contained"
-                    onClick={() => setAddNewProject((current) => !current)}
-                    style={{
-                      fontSize: 14,
-                      backgroundColor: "rgb(101, 77, 247)",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Add /> Add New Workspace
-                  </Button>
+                <Grid>
+                  <DynamicTreeView
+                    TestCaseHandle={handleTestCaseList}
+                    listData={listData}
+                    setListData={setListData}
+                  />
                 </Grid>
-                <Grid item xs={12}>
-                  {addNewProject && (
-                    <AddNewProject
-                      handleChange={handleChange}
-                      handleSubmit={handleSubmit}
-                      formData={formData}
-                    />
-                  )}
-                </Grid>
-              </Grid>
-              <Grid>
-                <DynamicTreeView
-                  TestCaseHandle={handleTestCaseList}
-                  listData={listData}
-                  setListData={setListData}
-                />
-              </Grid>
-            </Card>
+              </Card>
           </Grid>
-          <Grid item xs={12} sm={drawerOpen?8:12}>
+          <Grid item xs={12} sm={drawerOpen ? 9 : 11}>
             {addTestCase !== 0 && <TabsPanel addTestCase={addTestCase} />}
           </Grid>
         </Grid>
