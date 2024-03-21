@@ -8,8 +8,8 @@ AS
 PROCEDURE NAME	:	stp_AddTestCaseDetails
 CREATED BY		:	Mohammed Yaseer
 CREATED DATE	:	1st March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
+MODIFIED BY		:	Mohammed Yaseer
+MODIFIED DATE	:	21st March 2024
 PROC EXEC		:  EXEC stp_AddTestCaseDetails 
 				
 **************************************************************************************/
