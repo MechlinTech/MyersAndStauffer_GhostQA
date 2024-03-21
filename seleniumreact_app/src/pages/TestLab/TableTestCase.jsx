@@ -48,7 +48,7 @@ export default function TableTestCase({ testCase, rootId }) {
 
       const runId = executedDetail.data.container_runs[0].id;
       console.log("execution detail", executedDetail);
-      getRunDetail(runId, 5000, testCaseName);
+      getRunDetail(runId, 1000, testCaseName);
     } catch (error) {
       console.log("error fetching execution data", error);
       toast.error("network error");
@@ -74,7 +74,7 @@ export default function TableTestCase({ testCase, rootId }) {
         try {
           const res = await axios.post('https://192.168.1.55:3006/api/AddTestLab/AddExecuteResult',rundetails)
         } catch (error) {
-          toast.error("NETWORK ERROR adding execute result")
+          toast.error(error)
         }
         console.log("rundetails : ", rundetails);
       } else {
