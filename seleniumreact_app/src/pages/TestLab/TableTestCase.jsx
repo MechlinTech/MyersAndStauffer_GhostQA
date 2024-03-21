@@ -66,7 +66,7 @@ export default function TableTestCase({ testCase, rootId }) {
         }));
         const rundetails = res.data;
         try {
-          const res = await axios.post('https://192.168.1.55:3006/api/AddTestLab/AddExecuteResult',rundetails,header())
+          const res = await axios.post(`${BASE_URL}/AddTestLab/AddExecuteResult`,rundetails,header())
         } catch (error) {
           console.log('error',error)
           toast.error('Error AddExecuteResult')
