@@ -148,5 +148,38 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetExcutedByRootId(RootId,TestName));
         }
+
+        /// <summary>
+        /// Add Execute Result
+        /// </summary>
+        /// <param name="Dto_RootObject"></param>
+        /// <returns></returns>
+        [HttpPost("AddExecuteResult")]
+        public async Task<ActionResult> AddExecuteResult(Dto_RootObject json)
+        {
+            return Ok(await _helper.AddExecuteResult(json));
+        }
+
+        /// <summary>
+        ///  Get TestDetail By TestName 
+        /// </summary>
+        /// <param TestName="TestName"></param>
+        /// <returns></returns>
+        [HttpGet("GetTestDetailByTestName")]
+        public async Task<ActionResult> GetTestDetailByTestName(string TestName)
+        {
+            return Ok(await _helper.GetTestDetailByTestName(TestName));
+        }
+
+        /// <summary>
+        ///  Get Test Steps Detail By TestCaseId
+        /// </summary>
+        /// <param TestCaseId="TestCaseId"></param>
+        /// <returns></returns>
+        [HttpGet("GetTestStepsDetailByTestCaseId")]
+        public async Task<ActionResult> GetTestStepsDetailByTestCaseId(string TestCaseId)
+        {
+            return Ok(await _helper.GetTestStepsDetailByTestCaseId(TestCaseId));
+        }
     }
 }

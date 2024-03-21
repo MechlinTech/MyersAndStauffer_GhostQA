@@ -17,6 +17,7 @@ using Environments = SeleniumReportAPI.Models.Environments;
 using SmtpClient = System.Net.Mail.SmtpClient;
 using ExcelDataReader;
 using Newtonsoft.Json.Linq;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -2212,8 +2213,6 @@ namespace SeleniumReportAPI.Helper
                         await command.ExecuteNonQueryAsync();
                     }
                 }
-
-                result = "Success";
             }
             catch (Exception ex)
             {
@@ -2293,11 +2292,12 @@ namespace SeleniumReportAPI.Helper
                 int index = str.IndexOf("-");
                 str = str.Substring(0, index).Trim();
             }
-
+            
             var jsonData = JsonConvert.DeserializeObject<JsonOption>(jObj.First.First.ToString());
             Dto_AddExecuteData data = new Dto_AddExecuteData();
+            data.Status = jsonData.stats.failures > 0 ? "failed" : "passed";
             data.TestSuite = str;
-            data.TestCase = model.id.ToString();
+            data.TestCase = model.container_id;
             data.TestCaseName = jsonData.results[0].suites[0].title;
             data.StartDateTime = jsonData.stats.start.ToString();
             data.EndDateTime = jsonData.stats.end.ToString();
@@ -2327,7 +2327,7 @@ namespace SeleniumReportAPI.Helper
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@TestSuite", data.TestSuite);
                     command.Parameters.AddWithValue("@TestCase", data.TestCase);
-                    command.Parameters.AddWithValue("@TestCaseName", data.TesterName);
+                    command.Parameters.AddWithValue("@TestCaseName", data.TestCaseName);
                     command.Parameters.AddWithValue("@Status", data.Status);
                     command.Parameters.AddWithValue("@StartDateTime", data.StartDateTime);
                     command.Parameters.AddWithValue("@EndDateTime", data.EndDateTime);
@@ -2335,7 +2335,7 @@ namespace SeleniumReportAPI.Helper
                     command.Parameters.AddWithValue("@SuiteDuration", data.SuiteDuration);
                     command.Parameters.AddWithValue("@TestDuration", data.TestDuration);
                     command.Parameters.AddWithValue("@TestScreenShot", data.TestScreenShot);
-                    command.Parameters.AddWithValue("@TesterName", data.TesterName);
+                    command.Parameters.AddWithValue("@TesterName", data.TesterName ?? string.Empty);
                     command.Parameters.AddWithValue("@TestVideoUrl", data.TestVideoUrl);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -2355,6 +2355,66 @@ namespace SeleniumReportAPI.Helper
         private string GetArtifactUrl(Dto_RootObject model, string str)
         {
             return model.runs_artifacts.Where(x => x.type == str).Count() > 0 ? model.runs_artifacts.Where(x => x.type == str).Select(y => y.files).FirstOrDefault() : string.Empty;
+        }
+        internal async Task<string> GetTestDetailByTestName(string TestName)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestDetailByTestCaseName", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestName", TestName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> GetTestStepsDetailByTestCaseId(string TestCaseId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestStepsDetailByTestCaseId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestCaseId", TestCaseId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
         }
     }
 }
