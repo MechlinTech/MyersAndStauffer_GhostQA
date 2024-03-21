@@ -14,6 +14,14 @@ PROC EXEC		:  EXEC stp_AddTestCaseDetails
 				
 **************************************************************************************/
 BEGIN TRY
+  IF EXISTS( SELECT 1 FROM tbl_TestCaseDetails WHERE [RootId] = @RootId AND [TestCaseName] = @TestCaseName)
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'Duplicate Test Case Name' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	ELSE
 	BEGIN
 		INSERT INTO [dbo].[tbl_TestCaseDetails] ( RootId, TestCaseName, StartUrl) 
 		VALUES (@RootId, @TestCaseName,@StartUrl)

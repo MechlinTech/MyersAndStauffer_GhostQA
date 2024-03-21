@@ -2286,25 +2286,8 @@ namespace SeleniumReportAPI.Helper
         {
             string result = string.Empty;
             var jObj = (JObject)model.json;
-            string str = jObj.First.First.Path.ToString().Replace("['", "").Replace("']", "");
-            if (str.Contains("-"))
-            {
-                int index = str.IndexOf("-");
-                str = str.Substring(0, index).Trim();
-            }
-            
             var jsonData = JsonConvert.DeserializeObject<JsonOption>(jObj.First.First.ToString());
-            Dto_AddExecuteData data = new Dto_AddExecuteData();
-            data.Status = jsonData.stats.failures > 0 ? "failed" : "passed";
-            data.TestSuite = str;
-            data.TestCase = model.container_id;
-            data.TestCaseName = jsonData.results[0].suites[0].title;
-            data.StartDateTime = jsonData.stats.start.ToString();
-            data.EndDateTime = jsonData.stats.end.ToString();
-            data.SuiteDuration = jsonData.stats.duration.ToString();
-            data.TestDuration = jsonData.results[0].suites[0].duration.ToString();
-            data.TestScreenShot = GetArtifactUrl(model, "screenshot");
-            data.TestVideoUrl = GetArtifactUrl(model, "video");
+            string fileName = jsonData.results[0].file.Replace("cypress/", "").Replace(".cy.js", "");
 
             List<dynamic> results = new List<dynamic>();
             foreach (var t in jsonData.results[0].suites[0].tests)
@@ -2317,7 +2300,6 @@ namespace SeleniumReportAPI.Helper
                 };
                 results.Add(addJsonData);
             }
-            data.TestStepJson = JsonConvert.SerializeObject(results);
 
             using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
@@ -2325,18 +2307,18 @@ namespace SeleniumReportAPI.Helper
                 using (SqlCommand command = new SqlCommand("stp_AddExecuteData", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@TestSuite", data.TestSuite);
-                    command.Parameters.AddWithValue("@TestCase", data.TestCase);
-                    command.Parameters.AddWithValue("@TestCaseName", data.TestCaseName);
-                    command.Parameters.AddWithValue("@Status", data.Status);
-                    command.Parameters.AddWithValue("@StartDateTime", data.StartDateTime);
-                    command.Parameters.AddWithValue("@EndDateTime", data.EndDateTime);
-                    command.Parameters.AddWithValue("@TestStepJson", data.TestStepJson);
-                    command.Parameters.AddWithValue("@SuiteDuration", data.SuiteDuration);
-                    command.Parameters.AddWithValue("@TestDuration", data.TestDuration);
-                    command.Parameters.AddWithValue("@TestScreenShot", data.TestScreenShot);
-                    command.Parameters.AddWithValue("@TesterName", data.TesterName ?? string.Empty);
-                    command.Parameters.AddWithValue("@TestVideoUrl", data.TestVideoUrl);
+                    command.Parameters.AddWithValue("@TestSuite", fileName);
+                    command.Parameters.AddWithValue("@TestCase", model.container_id);
+                    command.Parameters.AddWithValue("@TestCaseName", jsonData.results[0].suites[0].title);
+                    command.Parameters.AddWithValue("@Status", jsonData.stats.failures > 0 ? "failed" : "passed");
+                    command.Parameters.AddWithValue("@StartDateTime", jsonData.stats.start.ToString());
+                    command.Parameters.AddWithValue("@EndDateTime", jsonData.stats.end.ToString());
+                    command.Parameters.AddWithValue("@TestStepJson", JsonConvert.SerializeObject(results));
+                    command.Parameters.AddWithValue("@SuiteDuration", jsonData.stats.duration.ToString());
+                    command.Parameters.AddWithValue("@TestDuration", jsonData.results[0].suites[0].duration.ToString());
+                    command.Parameters.AddWithValue("@TestScreenShot", GetArtifactUrl(model, "screenshot"));
+                    command.Parameters.AddWithValue("@TesterName", string.Empty);
+                    command.Parameters.AddWithValue("@TestVideoUrl", GetArtifactUrl(model, "video"));
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows)
