@@ -78,18 +78,19 @@ export default function Performance() {
     console.log(id, "testswt");
   };
 
+  const treeStyle = drawerOpen ? {} : { display: "none" };
   return (
     <>
       <div className={classes.main}>
         <Grid container spacing={2}>
           <Box
             onClick={() => setDrawerOpen(!drawerOpen)}
-            style={{ position: "absolute", left: "3px", cursor: "pointer" }}
+            style={{ position: "absolute", left: "3px", cursor: "pointer"}}
           >
             {!drawerOpen && <KeyboardDoubleArrowRightIcon />}
           </Box>
 
-          <Grid item xs={12} sm={drawerOpen ? 3 : 0}>
+          <Grid item xs={12} sm={3} style={treeStyle}>
               <Card
                 className={classes.card}
                 style={{ paddingBottom: "30px", maxHeight: "78vh" }}
@@ -117,12 +118,12 @@ export default function Performance() {
                       <Add />
                     </Button>
                   </Grid>
-                  <Grid item xs={1} style={{position:'absolute',right:'-14px',top:'-12px'}}>
+                  <Grid item xs={1} style={{position:'absolute',right:'-14px',top:'-6px'}}>
                     <Box
                       onClick={() => setDrawerOpen(!drawerOpen)}
                       sx={{cursor:'pointer'}}
                     >
-                      <KeyboardDoubleArrowLeftIcon />
+                      {drawerOpen && <KeyboardDoubleArrowLeftIcon />}
                     </Box>
                   </Grid>
                   <Grid item xs={12}>
@@ -144,7 +145,7 @@ export default function Performance() {
                 </Grid>
               </Card>
           </Grid>
-          <Grid item xs={12} sm={drawerOpen ? 9 : 11}>
+          <Grid item xs={12} sm={drawerOpen ? 9 : 12}>
             {addTestCase !== 0 && <TabsPanel addTestCase={addTestCase} />}
           </Grid>
         </Grid>
