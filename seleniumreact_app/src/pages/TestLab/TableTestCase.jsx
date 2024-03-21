@@ -10,7 +10,7 @@ import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import { useNavigate } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import axios from "axios";
-import { headerCypres, headerForm } from "../../utils/authheader";
+import { header, headerCypres, headerForm } from "../../utils/authheader";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { StyledTypography } from "./styles";
@@ -30,12 +30,6 @@ export default function TableTestCase({ testCase, rootId }) {
       const jsonData = await axios.get(
         `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${testCaseName}`
       );
-      // const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
-      //   type: "application/json",
-      // });
-      // const formData = new FormData();
-      // formData.append("scenarios_file", blob, "data.json");
-      // formData.append("name", "testing");
       let payload = {
         name: "name",
         request_json: jsonData.data,
@@ -72,9 +66,10 @@ export default function TableTestCase({ testCase, rootId }) {
         }));
         const rundetails = res.data;
         try {
-          const res = await axios.post('https://192.168.1.55:3006/api/AddTestLab/AddExecuteResult',rundetails)
+          const res = await axios.post('https://192.168.1.55:3006/api/AddTestLab/AddExecuteResult',rundetails,header())
         } catch (error) {
-          toast.error(error)
+          console.log('error',error)
+          toast.error('Error AddExecuteResult')
         }
         console.log("rundetails : ", rundetails);
       } else {
