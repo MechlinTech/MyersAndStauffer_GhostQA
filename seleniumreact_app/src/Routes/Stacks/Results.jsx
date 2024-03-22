@@ -39,7 +39,7 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to="/request-stats"
+            to="/result/request-stats"
             className={`${classes.linkStyle} ${
               location.pathname.startsWith("/request-stats") &&
               classes.activeLink
@@ -61,10 +61,11 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to="/errors"
+            to="/result/error"
             style={{ marginLeft: "20px" }}
             className={`${classes.linkStyle} ${
-              location.pathname.startsWith("/errors") && classes.activeLink
+              location.pathname.startsWith("/result/error") &&
+              classes.activeLink
             }`}
           >
             Errors
@@ -72,10 +73,10 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to="/initial-setup"
+            to="/result/initial-setup"
             style={{ marginLeft: "20px" }}
             className={`${classes.linkStyle} ${
-              location.pathname.startsWith("/initial-setup") &&
+              location.pathname.startsWith("/result/initial-setup") &&
               classes.activeLink
             }`}
           >

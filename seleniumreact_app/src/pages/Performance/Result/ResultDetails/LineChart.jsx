@@ -4,7 +4,10 @@ import Chart from 'react-apexcharts';
 const LineChart = ({ height }) => {
   const options = {
     chart: {
-      id: 'smooth-line'
+      id: 'smooth-line',
+      toolbar: {
+        show: false
+      }
     },
     colors: ["#0000ff", "#ff0000"],
     xaxis: {
@@ -25,13 +28,14 @@ const LineChart = ({ height }) => {
     // Set curve option to smooth
     stroke: {
       curve: 'smooth'
-    }
+    },
+    
   };
 
   const series = [{
     name: 'Blue Line',
     type: 'line',
-    data: [0, 120, 100, 50, 60, 140, 200, 211, 325]
+    data: [0, 120, 100, 50, 300, 130, 200, 311, 400]
   },
   {
     name: 'Red Line',
