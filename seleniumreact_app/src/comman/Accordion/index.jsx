@@ -11,7 +11,6 @@ import { useSelector } from "react-redux";
 export default function BasicAccordion() {
   const { testSuiteLists } = useSelector((state) => state.selenium);
   const [expandedAccord, setExpandedAccord] = React.useState("");
-
   const handleExpandAccord = (panel) => (e, isExpanded) => {
     setExpandedAccord(isExpanded ? panel : "");
   };

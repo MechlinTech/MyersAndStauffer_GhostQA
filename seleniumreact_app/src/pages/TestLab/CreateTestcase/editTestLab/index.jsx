@@ -7,7 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { UpdateTestStepsDetails } from "../Api";
+import { UpdateTestCaseDetail, UpdateTestStepsDetails } from "../Api";
 import { toast } from "react-toastify";
 import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
 import { StyledFormControl } from "../styleTestCase";
@@ -18,11 +18,27 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 export default function EditTestCase() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { testId } = useParams();
+  const { testCaseName,testId } = useParams();
   const [steps, setSteps] = useState([]);
+  const [executionDetail, setexecutionDetail] = useState(null);
+  const [testCaseTitle, settestCaseTitle] = useState("");
+  const [startUrl, setstartUrl] = useState("");
+  const [testCaseTitleError, settestCaseTitleError] = useState("");
+  const [startUrlError, setstartUrlError] = useState("")
   const [isEditable, setIsEditable] = useState(false);
   const [Errors, setErrors] = useState([]);
+
+  const getExecutionHistory = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/AddTestLab/GetTestDetailByTestName?TestName=${testCaseName}`
+      );
+      if (Array.isArray(res.data)) setexecutionDetail(res.data);
+      else setexecutionDetail(null);
+    } catch (error) {
+      toast.error("NETWORK ERROR");
+    }
+  };
   useEffect(() => {
     const getSteps = async () => {
       const res = await axios.get(
@@ -31,10 +47,18 @@ export default function EditTestCase() {
       setSteps(res.data);
       console.log("steps list : ", res.data);
     };
+    const getTestCaseDetail = async () => {
+      const res = await axios.get(
+        `${BASE_URL}/AddTestLab/GetTestCaseDetailsByTestDetailId?TestCaseId=${testId}` // change this uri
+      );
+    const testCase = res.data[0]
+    settestCaseTitle(testCase.TestCaseName)
+    setstartUrl(testCase.StartUrl)
+    };
     //for execution history    
-
+    getTestCaseDetail()
     getSteps();
-    // getExecutionHistory();
+    getExecutionHistory();
   }, []);
 
   const savetoEdit = () => {
@@ -127,9 +151,26 @@ export default function EditTestCase() {
       };
     });
     setErrors(errors);
+    let titleError = "";
+    let urlError = ""
+    if (!testCaseTitle.trim()) {
+      settestCaseTitleError("test case title required");
+      titleError = "test case title required";
+    }else{settestCaseTitleError("")}
+    if (!startUrl.trim()) {
+      setstartUrlError("url is  required");
+      urlError = "url is  required";
+    }else{setstartUrlError("")}
     const hasError = errors.some((error) => Object.values(error).some((value) => value));
 
-    if (!hasError) {
+    if (!hasError && !titleError && !urlError) {
+      let data = {
+        testCaseDetailsId: testId,
+        rootId: 0,
+        testCaseName: testCaseTitle,
+        startUrl: startUrl
+      }
+    UpdateTestCaseDetail(data)
     UpdateTestStepsDetails(payload, savetoEdit);
     } else {
       console.log("There is an error in at least one element.",errors);
@@ -521,6 +562,7 @@ export default function EditTestCase() {
           alignItems="start"
           sx={{ padding: "10px 0" }}
         >
+          <Grid item xs={12}>
           <Grid
             container
             justifyContent="space-between"
@@ -589,6 +631,51 @@ export default function EditTestCase() {
               )}
             </Grid>
           </Grid>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            display="flex"
+          >
+            <Grid container spacing={1} mb={1} mt={1}>
+              <Grid item xs={12} md={4} display="flex" alignItems="center">
+                <StyledTypography mr={1} minWidth={"105px"}>
+                  Testcase Title :
+                </StyledTypography>
+                <StyledFormControl>
+                  <StyledOutlinedInput
+                    id="outlined-adornment-name"
+                    type="text"
+                    placeholder="Enter title name"
+                    value={testCaseTitle}
+                    disabled={!(!executionDetail && isEditable)}
+                    error={testCaseTitleError ? true : false}
+                    onChange={(e) => settestCaseTitle(e.target.value)}
+                  />
+                </StyledFormControl>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={4}
+                display="flex"
+                alignItems="center"
+              >
+                <StyledTypography minWidth="80px">Start Url :</StyledTypography>
+                <StyledFormControl>
+                  <StyledOutlinedInput
+                    id="outlined-adornment-name"
+                    type="text"
+                    placeholder="Enter URL"
+                    value={startUrl}
+                    disabled={!isEditable}
+                    error={startUrlError ? true : false}
+                    onChange={(e) => setstartUrl(e.target.value)}
+                  />
+                </StyledFormControl>
+              </Grid>
+            </Grid>
+          </Grid>
           <Grid xs={12}>
             <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
               <ul>
@@ -616,7 +703,7 @@ export default function EditTestCase() {
               </ul>
             </Box>
           </Grid>
-          <ExecutionHistory/>
+          <ExecutionHistory executionDetail={executionDetail}/>
         </Grid>
       </Paper>
     </div>

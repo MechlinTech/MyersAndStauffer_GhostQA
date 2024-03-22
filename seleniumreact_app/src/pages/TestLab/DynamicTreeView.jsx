@@ -52,7 +52,7 @@ const Card = ({newElementName, setNewElementName,
           if (item.parentId === nodeData) {
             return (
               <li key={item.id} className={styleClass.cardListHolder}>
-                <div className={styleClass.cardListHolderList}>
+                <div className={styleClass.cardListHolderList} >
                   {data.some(child => child.parentId === item.id) && (
                     <>
                       {!expanded.includes(item.id) ? <ExpandMoreIcon onClick={()=>toggleExpand(item.id)} /> : <ExpandLessIcon onClick={()=>toggleExpand(item.id)} />}
@@ -74,7 +74,7 @@ const Card = ({newElementName, setNewElementName,
                       handleTask(item.id,item.name)
                     }} style={{
                       cursor: 'pointer',
-                      fontSize: '18px'
+                      fontSize: '18px',
                     }}>
                       {item.name}
                     </span>

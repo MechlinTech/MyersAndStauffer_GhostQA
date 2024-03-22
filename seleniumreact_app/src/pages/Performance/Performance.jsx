@@ -90,7 +90,7 @@ export default function Performance() {
             {!drawerOpen && <KeyboardDoubleArrowRightIcon />}
           </Box>
 
-          <Grid item xs={12} sm={3} style={treeStyle}>
+          <Grid item xs={12} md={3} style={treeStyle}>
               <Card
                 className={classes.card}
                 style={{ paddingBottom: "30px", maxHeight: "78vh" }}
@@ -145,7 +145,7 @@ export default function Performance() {
                 </Grid>
               </Card>
           </Grid>
-          <Grid item xs={12} sm={drawerOpen ? 9 : 12}>
+          <Grid item xs={12} md={drawerOpen ? 9 : 12}>
             {addTestCase !== 0 && <TabsPanel addTestCase={addTestCase} />}
           </Grid>
         </Grid>
