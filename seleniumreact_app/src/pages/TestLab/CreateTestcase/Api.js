@@ -60,3 +60,26 @@ export const UpdateTestStepsDetails = async(payload, savetoEdit) => {
     }
   
 };
+
+export const UpdateTestCaseDetail = async(payload) => {
+  
+  try {
+    const res = await axios.post(
+      `${BASE_URL}/AddTestLab/UpdateTestCaseDetails`,
+      payload
+    );
+    console.log(res)
+    if (res.data.status === "success") {
+      toast.info("Successfully saved", {
+        style: {
+          background: "rgb(101, 77, 247)",
+          color: "rgb(255, 255, 255)",
+        },
+      });
+    }
+  } catch (error) {
+    console.log("error saving ", error);
+    toast.error("Network error");
+  }
+
+};

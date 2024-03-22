@@ -18,7 +18,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { StyledTypography } from "./style";
 import { Button, Divider } from "@mui/material";
-import { header, headerForm } from "../../../utils/authheader";
+import { header, headerForm } from "../../../../utils/authheader";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Delete, Edit } from "@material-ui/icons";
@@ -58,7 +58,9 @@ export default function DataEntryPanel({ PerformanceFileId }) {
   };
 
   const handleUpload = () => {
-    if (!selectedFile) return;
+    if (!selectedFile){
+      toast.error("Please select a file")
+    };
 
     const formData = new FormData();
     formData.append("Id", 0);
@@ -75,7 +77,8 @@ export default function DataEntryPanel({ PerformanceFileId }) {
         formData,
         headerForm()
       );
-      if (res.data === "Success") {
+      console.log('res',res)
+      if (res.data === "Successfully Save") {
         toast.info("Successfully saved", {
           style: {
             background: "rgb(101, 77, 247)",
