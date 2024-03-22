@@ -8,3 +8,9 @@ export { StyledDashBoardIcon } from './StyledDashBoardIcon'
 export { Environment } from './Environment'
 export { UserManagementIcon } from './UserManagementIcon'
 export { RoleIcon } from './RoleIcon'
+export { UserGroupIcon } from './UserGroupIcon'
+export { AvarageIcon } from './AvarageIcon'
+export { ResponseTimeIcon } from "./ResponseTimeIcon"
+export { ErrorIcon } from "./ErrorIcon"
+export { BandwidthIcon } from "./BandwidthIcon"
+export { TimeIcon } from "./TimeIcon"
