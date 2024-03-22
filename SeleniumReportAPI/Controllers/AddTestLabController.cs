@@ -181,5 +181,27 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetTestStepsDetailByTestCaseId(TestCaseId));
         }
+
+        /// <summary>
+        ///  Get Test Case Detail By TestCaseId
+        /// </summary>
+        /// <param TestCaseId="TestCaseId"></param>
+        /// <returns></returns>
+        [HttpGet("GetTestCaseDetailsByTestDetailId")]
+        public async Task<ActionResult> GetTestCaseDetailsByTestDetailId(int TestCaseId)
+        {
+            return Ok(await _helper.GetTestCaseDetailsByTestDetailId(TestCaseId));
+        }
+
+        /// <summary>
+        /// Update Test Case Details
+        /// </summary>
+        /// <param name="TestCaseDetails"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateTestCaseDetails")]
+        public async Task<ActionResult> UpdateTestCaseDetails(TestCaseDetails model)
+        {
+            return Ok(await _helper.UpdateTestCaseDetails(model));
+        }
     }
 }

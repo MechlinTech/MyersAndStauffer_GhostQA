@@ -18,47 +18,25 @@ import axios from "axios";
 import { toast } from "react-toastify";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-export default function ExecutionHistory() {
+export default function ExecutionHistory({executionDetail}) {
   const classes = useStyles();
   const { testCaseName } = useParams();
   const [selectedRunId, setSelectedRunId] = useState(null);
   const [videoLink, setvideoLink] = useState("")
   const [stepDetail, setstepDetail] = useState(null);
-  const [executionDetail, setexecutionDetail] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [rootId, setrootId] = useState(localStorage.getItem("rootId"));
-  const [runDetail, setrunDetail] = useState(null);
-  console.log("name", testCaseName);
-
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}/AddTestLab/GetTestDetailByTestName?TestName=${testCaseName}`
-      );
-      console.log("res", res);
-      if (Array.isArray(res.data)) setexecutionDetail(res.data);
-      else setexecutionDetail(null);
-    } catch (error) {
-      toast.error("NETWORK ERROR");
-    }
-  };
 
   const getStpeDetail = async () => {
     try {
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestStepsDetailByTestCaseId?TestCaseId=${selectedRunId}`
       );
-      console.log("resid", res);
       if (Array.isArray(res.data)) setstepDetail(res.data);
       else setstepDetail(null);
     } catch (error) {}
   };
   useEffect(() => {
-    fetchData();
-  }, []);
-  useEffect(() => {
     getStpeDetail();
-    console.log("TestCase ", stepDetail);
   }, [selectedRunId]);
 
   const handleCloseModal = () => {
@@ -81,23 +59,6 @@ export default function ExecutionHistory() {
     );
     return formattedTime;
   }
-  const runsArray = [
-    {
-      TestSuite: "Project",
-      TestCase:
-        "2aeb0987826ffc3bb5b8bdb833e0c8fcb2e692740527877e0c81326819b41ae7",
-      Status: "failed",
-      StartDateTime: "3/21/2024 8:45:52 AM",
-      EndDateTime: "3/21/2024 8:45:54 AM",
-      TestDuration: "1284",
-      TestVideoUrl: "http://65.1.188.67:8010/api/test-suitesV2/103/get_file/",
-    },
-  ];
-  const test = {
-    TestStepJson:
-      '[{"Status":"failed","Duration":1284,"stepName":"Test Step: click: val"}]',
-    TestScreenShotUrl: "",
-  };
   return (
     <>
       <Modal
@@ -178,7 +139,7 @@ export default function ExecutionHistory() {
                   >
                     <StyledTableCell
                       sx={{
-                        color: selectedRunId === row.TestCase ? "white" : "black",
+                        color: selectedRunId === row.TestCase ? "white" : "#654DF7",
                       }}
                     >
                       {row.TestCase}

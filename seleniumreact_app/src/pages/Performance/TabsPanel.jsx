@@ -8,7 +8,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Design from './Design';
-import { StyledTypography } from './Component/style';
+import { StyledTypography } from './styles';
+import CompareResults from './Component/Compare';
 import Results from './Result';
 
 function TabPanel(props) {
@@ -76,6 +77,7 @@ export default function TabsPanel({addTestCase}) {
           <Tab value="Design" label={<StyledTypography>Design</StyledTypography>}/>
           <Tab value="Results" label={<StyledTypography>Results</StyledTypography>} />
           <Tab value="Trends" label={<StyledTypography>Trends</StyledTypography>} />
+          <Tab value="CompareResults" label={<StyledTypography>Compare Results</StyledTypography>} />
         </Tabs>
      
       {/* <SwipeableViews
@@ -87,10 +89,13 @@ export default function TabsPanel({addTestCase}) {
         <Design addTestCase={addTestCase}/>
         </TabPanel>
         <TabPanel value={value} index={"Results"} dir={theme.direction}>
-         <Results />
+        <Results />
         </TabPanel>
         <TabPanel value={value} index={"Trends"} dir={theme.direction}>
         {"Trends"}
+        </TabPanel> 
+        <TabPanel value={value} index={"CompareResults"} dir={theme.direction}>
+        <CompareResults/>
         </TabPanel>
       {/* </SwipeableViews> */}
     </Box>

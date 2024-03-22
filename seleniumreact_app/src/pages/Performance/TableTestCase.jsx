@@ -16,7 +16,7 @@ import { Button, Stack } from '@mui/material';
 import { useStyles } from "./styles";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DesignTabs from "./Component/DesignTabs";
+import DesignTabs from "./Component/Design/DesignTabs";
 import { header,headerForm } from "../../utils/authheader";
 import { StyledTypography } from "./styles";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
