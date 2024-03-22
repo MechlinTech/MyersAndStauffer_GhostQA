@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import Design from './Design';
 import { StyledTypography } from './styles';
 import CompareResults from './Component/Compare';
+import Results from './Result';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -88,7 +89,7 @@ export default function TabsPanel({addTestCase}) {
         <Design addTestCase={addTestCase}/>
         </TabPanel>
         <TabPanel value={value} index={"Results"} dir={theme.direction}>
-        {'result'}
+        <Results />
         </TabPanel>
         <TabPanel value={value} index={"Trends"} dir={theme.direction}>
         {"Trends"}
