@@ -85,7 +85,7 @@ export default function TestLab() {
     <>
       <div className={classes.main}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={3}>
             <Card className={classes.card} style={{ paddingBottom: "30px", maxHeight: "78vh" }}>
               <Grid container alignItems="center" className={classes.bodyHeader}>
                 <Grid item xs={6}>
@@ -102,7 +102,7 @@ export default function TestLab() {
                       cursor: "pointer",
                     }}
                   >
-                    <Add /> Add New Project
+                    <Add />
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
@@ -119,7 +119,7 @@ export default function TestLab() {
               </Grid>
             </Card>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={9}>
            
             {addTestCase!==0 && <AddTestCase  addTestCase={addTestCase} nameSuite={nameSuite}/>}
 

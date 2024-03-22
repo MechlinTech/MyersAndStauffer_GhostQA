@@ -23,7 +23,7 @@ export const useStylesTree = makeStyles({
         justifyContent: 'flex-start',
         alignItems: 'center',
         padding: '8px 10px',
-        boxShadow:'-4px 0px 7px 0px rgba(101, 77, 247,0.2), -6px -1px 6px 0px rgba(101, 77, 247,0.14), 7px 0px 6px 0px rgba(101, 77, 247,0.12)',
+        boxShadow:'-2px 0px 7px 0px rgba(101, 77, 247,0.2), -4px -1px 6px 0px rgba(101, 77, 247,0.14), 7px 0px 6px 0px rgba(101, 77, 247,0.12)',
         borderRadius: '10px',
         border: "solid 2px #fff",
         margin: '5px 0px',
