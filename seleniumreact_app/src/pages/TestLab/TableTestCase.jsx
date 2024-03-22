@@ -10,7 +10,7 @@ import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import { useNavigate } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import axios from "axios";
-import { headerForm } from "../../utils/authheader";
+import { header, headerCypres, headerForm } from "../../utils/authheader";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { StyledTypography } from "./styles";
@@ -22,83 +22,91 @@ export default function TableTestCase({ testCase, rootId }) {
 
   const handleExecution = async (testCaseName) => {
     console.log("test case name ", testCaseName);
-    setexecutingTest(prev=>({
+    setexecutingTest((prev) => ({
       ...prev,
-      [testCaseName]:true
-    }))
+      [testCaseName]: true,
+    }));
     try {
       const jsonData = await axios.get(
         `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${testCaseName}`
       );
-      const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
-        type: "application/json",
-      });
-      const formData = new FormData();
-      formData.append("scenarios_file", blob, "data.json");
-      formData.append("name", "testing");
+      let payload = {
+        name: "name",
+        request_json: jsonData.data,
+      };
       const executedDetail = await axios.post(
-        "http://65.1.188.67:8010/api/test-suitesV2/execute2/",
-        formData,
-        headerForm()
+        "http://65.1.188.67:8010/api/test-suitesV2/execute3/",
+        payload,
+        headerCypres()
       );
 
       const runId = executedDetail.data.container_runs[0].id;
-      console.log('execution detail', executedDetail)
-      getRunDetail(runId, 5000,testCaseName);
+      console.log("execution detail", executedDetail);
+      getRunDetail(runId, 1000, testCaseName);
     } catch (error) {
       console.log("error fetching execution data", error);
-      toast.error('network error')
-      setexecutingTest(prev=>({
+      toast.error("network error");
+      setexecutingTest((prev) => ({
         ...prev,
-        [testCaseName]:false
-      }))
+        [testCaseName]: false,
+      }));
     }
   };
 
-  const getRunDetail = async (runId, delay,name) => {
+  const getRunDetail = async (runId, delay, name) => {
     try {
       const res = await axios.get(
         `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
       );
 
       if (res.data.container_status === "exited") {
-        console.log('test cs n ', name)
-        setexecutingTest(prev=>({
+        setexecutingTest((prev) => ({
           ...prev,
-          [name]:false
-        }))
-        const rundetails = res.data
+          [name]: false,
+        }));
+        const rundetails = res.data;
         try {
-          const res = await axios.post('https://192.168.1.55:3006/api/AddTestLab/AddExecuteResult',rundetails)
+          const res = await axios.post(`${BASE_URL}/AddTestLab/AddExecuteResult`,rundetails,header())
         } catch (error) {
-          toast.error("NETWORK ERROR adding execute result")
+          console.log('error',error)
+          toast.error('Error AddExecuteResult')
         }
-        console.log("rundetails : ", res.data);
+        console.log("rundetails : ", rundetails);
       } else {
         setTimeout(() => {
-          getRunDetail(runId, delay,name);
+          getRunDetail(runId, delay, name);
         }, delay);
       }
     } catch (error) {
       console.error("Error getting run details:", error);
       toast.error("Network error");
-      setexecutingTest(prev=>({
+      setexecutingTest((prev) => ({
         ...prev,
-        [name]:false
-      }))
+        [name]: false,
+      }));
     }
   };
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead sx={{backgroundColor:'#dedede'}}>
+        <TableHead sx={{ backgroundColor: "#dedede" }}>
           <TableRow>
-            <TableCell><StyledTypography> Testcase Title</StyledTypography></TableCell>
-            <TableCell align="center"><StyledTypography>Status</StyledTypography></TableCell>
-            <TableCell align="center"><StyledTypography>Video</StyledTypography></TableCell>
-            <TableCell align="center"><StyledTypography>Last run on</StyledTypography></TableCell>
-            <TableCell align="center"><StyledTypography>Run Now</StyledTypography></TableCell>
+            <TableCell>
+              <StyledTypography> Testcase Title</StyledTypography>
+            </TableCell>
+            <TableCell align="center">
+              <StyledTypography>Status</StyledTypography>
+            </TableCell>
+            <TableCell align="center">
+              <StyledTypography>Video</StyledTypography>
+            </TableCell>
+            <TableCell align="center">
+              <StyledTypography>Last run on</StyledTypography>
+            </TableCell>
+            <TableCell align="center">
+              <StyledTypography>Run Now</StyledTypography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -111,13 +119,15 @@ export default function TableTestCase({ testCase, rootId }) {
                 component="th"
                 scope="row"
                 onClick={() => {
-                  navigate(`/testLab/editTestcase/${row.TestCaseDetailsId}`);
+                  navigate(`/testLab/editTestcase/${row.TestCaseName}/${row.TestCaseDetailsId}`);
                 }}
                 sx={{ cursor: "pointer" }}
               >
-               <StyledTypography> {row.TestCaseName}</StyledTypography>
+                <StyledTypography> {row.TestCaseName}</StyledTypography>
               </TableCell>
-              <TableCell align="center"><StyledTypography>{"running"}</StyledTypography></TableCell>
+              <TableCell align="center">
+                <StyledTypography>{"running"}</StyledTypography>
+              </TableCell>
               <TableCell align="center">
                 <span
                   style={{
@@ -135,19 +145,21 @@ export default function TableTestCase({ testCase, rootId }) {
                   <PlayArrowOutlinedIcon />
                 </span>
               </TableCell>
-              <TableCell align="center"><StyledTypography> {"yymmddhhmmss"}</StyledTypography></TableCell>
+              <TableCell align="center">
+                <StyledTypography> {"yymmddhhmmss"}</StyledTypography>
+              </TableCell>
               <TableCell align="center">
                 {!executingTest[row.TestCaseName] ? (
                   <PlayCircleIcon
-                  style={{color:"rgb(101, 77, 247)",cursor:'pointer'}}
+                    style={{ color: "rgb(101, 77, 247)", cursor: "pointer" }}
                     onClick={(e) => {
                       handleExecution(row.TestCaseName);
                     }}
                   />
                 ) : (
                   <CircularProgress
-                  style={{color:"rgb(101, 77, 247)"}}
-                  size={25}
+                    style={{ color: "rgb(101, 77, 247)" }}
+                    size={25}
                   />
                 )}
               </TableCell>

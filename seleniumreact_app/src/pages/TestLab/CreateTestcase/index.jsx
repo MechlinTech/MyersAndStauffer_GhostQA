@@ -77,7 +77,7 @@ export default function CreateTestCase() {
           additionalErrors.elementSelectorError = !step.elementSelector
           additionalErrors.selectedDragDropTypeError = !step.selectedDragDropType
           break
-        case "keyPress":
+        case "SendKeys":
           additionalErrors.keyPressValueError = !step.keyPressValue
           additionalErrors.selectedModifierKeyError = !step.selectedModifierKey
           break

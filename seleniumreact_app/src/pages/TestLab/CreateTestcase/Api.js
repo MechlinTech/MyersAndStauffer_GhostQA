@@ -8,7 +8,7 @@ export const AddTestCaseDetails = async (payload, actions, goBack) => {
       `${BASE_URL}/AddTestLab/AddTestCaseDetails`,
       payload
     ); // to add testcase name and return testcase id
-    console.log("response ", res.data.Data);
+    console.log("response ", res.data);
     const Data = res.data.Data;
     if (res.data.status === "success") {
       const stepDetails = {
@@ -28,6 +28,8 @@ export const AddTestCaseDetails = async (payload, actions, goBack) => {
           },
         });
       }
+    }else{
+      toast.error(res.data.message)
     }
   } catch (error) {
     console.log("error saving ", error);

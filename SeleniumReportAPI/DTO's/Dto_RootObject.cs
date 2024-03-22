@@ -64,7 +64,7 @@ namespace SeleniumReportAPI.DTO_s
 
     public class Dto_RootObject
     {
-        public int id { get; set; }
+        public string container_id { get; set; }
         public List<RunArtifactOption> runs_artifacts { get; set; }
         public object json { get; set; }
     }

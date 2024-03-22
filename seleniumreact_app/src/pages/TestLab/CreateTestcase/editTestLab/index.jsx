@@ -9,7 +9,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { UpdateTestStepsDetails } from "../Api";
 import { toast } from "react-toastify";
-import { headerForm } from "../../../../utils/authheader";
 import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
 import { StyledFormControl } from "../styleTestCase";
 import RenderActionFields from "../RenderActionFields";
@@ -64,7 +63,7 @@ export default function EditTestCase() {
           additionalErrors.elementSelectorError = !step.elementSelector;
           additionalErrors.selectedDragDroptypeError = !step.selectedDragDropType;
           break;
-        case "keyPress":
+        case "SendKeys":
           additionalErrors.keyPressValueError = !step.keyPressValue;
           additionalErrors.selectedModifierKeyError = !step.selectedModifierKey;
           break;
