@@ -302,4 +302,14 @@ export const useStyles = makeStyles((theme) => ({
             width: "calc(100% - 92px)",
         },
     },
+    backBtn: {
+        background: 'rgb(101, 77, 247)',
+        padding: '5px 15px',
+        color: 'white',
+        textTransform: 'none',
+        fontSize: '14px !important',
+        '&:hover': {
+            background: 'rgb(101, 77, 247)',
+        }
+    }
 }));

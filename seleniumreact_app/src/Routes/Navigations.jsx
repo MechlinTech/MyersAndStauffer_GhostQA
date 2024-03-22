@@ -11,6 +11,8 @@ import Invitation from "../pages/Invitaion";
 import Account from "../pages/Account";
 import CreateTestCase from "../pages/TestLab/CreateTestcase";
 import EditTestCase from "../pages/TestLab/CreateTestcase/editTestLab";
+import Results from "./Stacks/Results";
+import Summary from "../pages/Performance/Result/ResultDetails";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() => import("../pages/Settings/Component/ExecutionEnvironment/index"));
 const Application = lazy(() => import("../pages/Settings/Component/Application/index"));
@@ -24,6 +26,7 @@ const AddTestSuite = lazy(() => import("../pages/TestSuite/AddTestSuite"));
 const NotFound = lazy(() =>   import("../pages/NotFound"));
 const TestLab =lazy(()=>  import("../pages/TestLab/TestLab"));
 const Performance =lazy(()=>  import("../pages/Performance/Performance"));
+
 export default function Navigations() {
   return (
     <Suspense
@@ -56,8 +59,12 @@ export default function Navigations() {
          
         </Route>
         <Route path="performance" element={<Performance />} >
-          
+       
         </Route>
+        <Route path="/result/summary" element={<Results />} >
+          <Route path="/result/summary" element={<Summary/>} />
+          </Route>
+        
         <Route path="api" element={<Api />} >
           <Route path="" element={<Box m={10} component={'h1'}>api1</Box>} />
           <Route path="api2" element={<Box m={10} component={'h1'}>api2</Box>} />
