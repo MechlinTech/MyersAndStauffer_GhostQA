@@ -76,12 +76,13 @@ export default function Navigations() {
           />
         </Route>
         <Route path="performance" element={<Performance />}></Route>
-        <Route path="/result/summary" element={<Results />}>
+        <Route path="/result" element={<Results />}>
           <Route path="/result/summary" element={<Summary />} />
           <Route path="error" element={<Error />} />
           <Route path="initial-setup" element={<InitialSetup />} />
+          <Route path="request-state" element={<RequestState />} />
         </Route>
-
+       
         <Route path="api" element={<Api />}>
           <Route
             path=""

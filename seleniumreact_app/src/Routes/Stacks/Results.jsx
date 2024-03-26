@@ -39,22 +39,12 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to="/result/request-stats"
+            to="/result/request-state"
             className={`${classes.linkStyle} ${
-              location.pathname.startsWith("/request-stats") &&
+              location.pathname.startsWith("/result/request-state") &&
               classes.activeLink
             }`}
             style={{ marginLeft: "20px" }}
-            onClick={() => {
-              sessionStorage.setItem(
-                "selectedCategory",
-                Flatted.stringify({
-                  title: "Environment",
-                  icon: <StyledDashBoardIcon />,
-                  path: "/",
-                })
-              );
-            }}
           >
             Request Stats
           </Link>

@@ -24,7 +24,8 @@ import {
   BandwidthIcon,
   TimeIcon,
 } from "../../../../comman/icons";
-import LineChart from "./LineChart";
+import LineChart from "./LoadLineChart";
+import ResponseLineChart from "./ResponseLineChart";
 
 const data = [
   { label: "Duration", value: "10 Minutes" },
@@ -340,8 +341,8 @@ export default function Summary() {
             <Card
               style={{
                 width: "100%",
-                height: "40vh",
-                padding: "10px"
+                height: "50vh",
+                padding: "10px",
               }}
             >
               <Grid container spacing={2}>
@@ -349,21 +350,20 @@ export default function Summary() {
                   <Card
                     style={{
                       width: "100%",
-                      height: "38vh",
+                      height: "45vh",
                     }}
                   >
-                   <LineChart  height={calculateDonutHeight()}/>
+                    <LineChart height={calculateDonutHeight()} />
                   </Card>
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <Card
                     style={{
                       width: "100%",
-                     height: "38vh",
+                      height: "45vh",
                     }}
                   >
-                    {/* Content for the second half of the card */}
-                    Half 2
+                    <ResponseLineChart height={calculateDonutHeight()} />
                   </Card>
                 </Grid>
               </Grid>
