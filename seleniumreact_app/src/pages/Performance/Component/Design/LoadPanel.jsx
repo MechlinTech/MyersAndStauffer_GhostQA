@@ -24,6 +24,12 @@ export default function LoadPanel({ PerformanceFileId }) {
     options: {
       chart: {
         type: "line",
+        toolbar: {
+          show: false // Set to false to hide the toolbar
+        },
+        zoom: {
+          enabled: false // Disable zooming
+        }
       },
       stroke: {
         curve: "stepline",

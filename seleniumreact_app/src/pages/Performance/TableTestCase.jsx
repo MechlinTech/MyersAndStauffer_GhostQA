@@ -102,6 +102,16 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
   const handleExpandAccord = (panel) => (e, isExpanded) => {
     setExpandedAccord(isExpanded ? panel : "");
   };
+  function truncateFileName(fileName, maxLength) {
+    if (fileName.length <= maxLength) {
+      return fileName;
+    } else {
+      const truncatedName = fileName.substring(0, maxLength);
+      const extensionIndex = fileName.lastIndexOf(".");
+      const extension = fileName.substring(extensionIndex);
+      return truncatedName + "..." + extension;
+    }
+  }
   return (
     <TableContainer component={Paper} style={{
       border: 'solid 2px #DADADA',
@@ -130,7 +140,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Stack width='100%' display='felx' flexDirection="row" justifyContent="space-between">
                     <StyledTypography align="left">{item.testCaseName}</StyledTypography>
-                    <StyledTypography align="left">{item.fileName}</StyledTypography>
+                    <StyledTypography align="left">{truncateFileName(item.fileName, 40)}</StyledTypography>
                     <DeleteIcon style={{color:'red'}} onClick={(e)=>handleDeleteElement(item.id,e)}/>
                   </Stack>
                 </AccordionSummary>

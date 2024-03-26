@@ -30,7 +30,7 @@ const AddNewProject = ({ handleChange, handleSubmit, formData }) => {
         <Grid item xs={9}>
           <TextField
             className={classes.textField}
-            label="Project Name"
+            label="Workspace Name"
             variant="outlined"
             name="name"
             value={formData.name}

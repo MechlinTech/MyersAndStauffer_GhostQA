@@ -25,10 +25,12 @@ import {
 import SearchField from "../../../../comman/SearchField";
 import { Delete, Edit } from "@mui/icons-material";
 import { StyledFormControl } from "../Design/style";
+import { ClickAwayListener } from "@material-ui/core";
 
 export default function CompareResults() {
   const classes = useStyles();
   const [searchTerm, setSearchTerm] = useState("");
+  const [showTestRuns, setshowTestRuns] = useState(false)
   const [comparisionName, setcomparisionName] = useState("");
   const [checkedItems, setCheckedItems] = useState(
     Array(tests.length).fill(false)
@@ -39,7 +41,10 @@ export default function CompareResults() {
     newCheckedItems[index] = !newCheckedItems[index];
     setCheckedItems(newCheckedItems);
   };
-
+  const handleCompare = ()=>{
+    const runsToCompare = checkedItems.filter((item,index)=>item&&tests[index]) 
+    console.log('testRuns ',runsToCompare)
+  }
   const filteredData = tests.filter((data) =>
     data.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -126,11 +131,15 @@ export default function CompareResults() {
             />
             </StyledFormControl>
           </Grid>
+          <ClickAwayListener onClickAway={()=>setshowTestRuns(false)}>
+
           <Grid item xs={12} className={classes.testListContainer} style={{padding:'0'}}>
             <SearchField
               placeholder="Testruns"
+              onFocus={()=>setshowTestRuns(true)}
               onChange={(value) => setSearchTerm(value)}
             />
+            {showTestRuns&&(
             <Box>
               <List>
                 {filteredData.map((test, index) => (
@@ -150,7 +159,9 @@ export default function CompareResults() {
                 ))}
               </List>
             </Box>
+           )}
           </Grid>
+          </ClickAwayListener>
         </Grid>
         <Grid item alignSelf='end'>
         <Button
@@ -163,6 +174,7 @@ export default function CompareResults() {
               borderColor: "#654DF7",
             },
           }}
+          onClick={handleCompare}
         >
           Compare
         </Button>

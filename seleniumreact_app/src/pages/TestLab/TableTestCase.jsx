@@ -98,9 +98,10 @@ export default function TableTestCase({ testCase, rootId }) {
   };
 
   const handleDelete = async(testId)=>{
+    console.log('testid',testId)
     try {
       const res = await axios.get(
-        `${BASE_URL}/AddTestLab/DeleteTestCaseDetailsByTestCaseDetailsId?TestCaseDetailsId=${testId}`
+        `${BASE_URL}/AddTestLab/DeleteTestCaseDetailsByTestCaseDetailsId?TestCaseDetailsId=${testId}`,testId,header()
       );
       console.log('res',res)
       // if (resSteps.data.status === "success") {

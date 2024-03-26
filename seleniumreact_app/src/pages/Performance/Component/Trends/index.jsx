@@ -16,6 +16,12 @@ export default function Trends() {
         chart: {
           type: "line",
           height: 350,
+          toolbar: {
+            show: false // Set to false to hide the toolbar
+          },
+          zoom: {
+            enabled: false // Disable zooming
+          }
         },
         title: {
             text: "Average Response Time", // Add your title text here
