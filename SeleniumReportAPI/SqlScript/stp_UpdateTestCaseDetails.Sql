@@ -13,7 +13,7 @@ PROC EXEC		:  EXEC stp_UpdateTestCaseDetails
 				
 **************************************************************************************/
 BEGIN TRY
-IF EXISTS(SELECT 1 FROM tbl_TestCaseDetails WHERE [TestCaseDetailsId] != @TestCaseDetailsId AND [TestCaseName] = @TestCaseName)
+	IF EXISTS(SELECT 1 FROM tbl_TestCaseDetails WHERE [TestCaseDetailsId] != @TestCaseDetailsId AND [TestCaseName] = @TestCaseName)
 	BEGIN
 		SELECT [result] = JSON_QUERY((
 			SELECT 'fail' [status], 'Duplicate Test Case Name' [message]

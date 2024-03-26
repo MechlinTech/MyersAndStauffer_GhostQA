@@ -24,6 +24,7 @@ import {
 } from "./style";
 import SearchField from "../../../../comman/SearchField";
 import { Delete, Edit } from "@mui/icons-material";
+import { StyledFormControl } from "../Design/style";
 
 export default function CompareResults() {
   const classes = useStyles();
@@ -116,12 +117,14 @@ export default function CompareResults() {
             >
               Name of the comparison
             </Typography>
+            <StyledFormControl>
             <StyledOutlinedInput
             fullWidth
               placeholder="Enter Comparison name"
               value={comparisionName}
               onChange={(e)=>setcomparisionName(e.target.value)}
             />
+            </StyledFormControl>
           </Grid>
           <Grid item xs={12} className={classes.testListContainer}>
             <SearchField

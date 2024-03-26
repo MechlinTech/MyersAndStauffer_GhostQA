@@ -39,6 +39,7 @@ export const useStylesTree = makeStyles({
     flexDirection: 'column',
 
 },
+
     editTheFolder: {
     border: 'solid 1px #3a3a3a',
     padding: '4px 10px',

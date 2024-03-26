@@ -122,7 +122,7 @@ export default function MiniDrawer() {
                   <Box
                     style={{
                       paddingTop: "5px",
-                      alignItems: "flex-start",
+                      alignItems: "flex-start",    
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "flex-end",
