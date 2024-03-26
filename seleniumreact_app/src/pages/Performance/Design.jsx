@@ -220,7 +220,7 @@ export default function Design({ addTestCase }) {
             marginLeft: "auto",
           }}
         >
-          Add more test
+          {scenarioCount?'Add More Test':'Add Test'}
         </Button>
       )}
     </Grid>

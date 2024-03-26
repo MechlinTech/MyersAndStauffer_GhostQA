@@ -14,21 +14,23 @@ import { header, headerCypres, headerForm } from "../../utils/authheader";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { StyledTypography } from "./styles";
+import { Delete } from "@material-ui/icons";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TableTestCase({ testCase, rootId }) {
+  console.log('test case id ',testCase)
   const navigate = useNavigate();
   const [executingTest, setexecutingTest] = React.useState({});
 
-  const handleExecution = async (testCaseName) => {
-    console.log("test case name ", testCaseName);
+  const handleExecution = async (row) => {
+    console.log("test case name ", row);
     setexecutingTest((prev) => ({
       ...prev,
-      [testCaseName]: true,
+      [row.TestCaseName]: true,
     }));
     try {
       const jsonData = await axios.get(
-        `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${testCaseName}`
+        `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${row.TestCaseName}`
       );
       let payload = {
         name: "name",
@@ -42,18 +44,18 @@ export default function TableTestCase({ testCase, rootId }) {
 
       const runId = executedDetail.data.container_runs[0].id;
       console.log("execution detail", executedDetail);
-      getRunDetail(runId, 1000, testCaseName);
+      getRunDetail(runId, 1000, row);
     } catch (error) {
       console.log("error fetching execution data", error);
       toast.error("network error");
       setexecutingTest((prev) => ({
         ...prev,
-        [testCaseName]: false,
+        [row.TestCaseName]: false,
       }));
     }
   };
 
-  const getRunDetail = async (runId, delay, name) => {
+  const getRunDetail = async (runId, delay, row) => {
     try {
       const res = await axios.get(
         `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
@@ -62,11 +64,19 @@ export default function TableTestCase({ testCase, rootId }) {
       if (res.data.container_status === "exited") {
         setexecutingTest((prev) => ({
           ...prev,
-          [name]: false,
+          [row.TestCaseName]: false,
         }));
         const rundetails = res.data;
         try {
-          const res = await axios.post(`${BASE_URL}/AddTestLab/AddExecuteResult`,rundetails,header())
+          const res = await axios.post(`${BASE_URL}/AddTestLab/AddExecuteResult?testCaseDetailId=${row.TestCaseDetailsId}`,rundetails,header())
+          if (res.data.status === "success") {
+              toast.info("Successfully delete", {
+                style: {
+                  background: "rgb(101, 77, 247)",
+                  color: "rgb(255, 255, 255)",
+                },
+              });
+            }
         } catch (error) {
           console.log('error',error)
           toast.error('Error AddExecuteResult')
@@ -74,7 +84,7 @@ export default function TableTestCase({ testCase, rootId }) {
         console.log("rundetails : ", rundetails);
       } else {
         setTimeout(() => {
-          getRunDetail(runId, delay, name);
+          getRunDetail(runId, delay, row);
         }, delay);
       }
     } catch (error) {
@@ -82,11 +92,29 @@ export default function TableTestCase({ testCase, rootId }) {
       toast.error("Network error");
       setexecutingTest((prev) => ({
         ...prev,
-        [name]: false,
+        [row.TestCaseName]: false,
       }));
     }
   };
 
+  const handleDelete = async(testId)=>{
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/AddTestLab/DeleteTestCaseDetailsByTestCaseDetailsId?TestCaseDetailsId=${testId}`
+      );
+      console.log('res',res)
+      // if (resSteps.data.status === "success") {
+      //   toast.info("Successfully delete", {
+      //     style: {
+      //       background: "rgb(101, 77, 247)",
+      //       color: "rgb(255, 255, 255)",
+      //     },
+      //   });
+      // }
+    } catch (error) {
+      toast.error("NETWORK ERROR")
+    }
+  }
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -107,6 +135,10 @@ export default function TableTestCase({ testCase, rootId }) {
             <TableCell align="center">
               <StyledTypography>Run Now</StyledTypography>
             </TableCell>
+            <TableCell align="center">
+              <StyledTypography>Action</StyledTypography>
+            </TableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>
@@ -126,7 +158,7 @@ export default function TableTestCase({ testCase, rootId }) {
                 <StyledTypography> {row.TestCaseName}</StyledTypography>
               </TableCell>
               <TableCell align="center">
-                <StyledTypography>{"running"}</StyledTypography>
+                <StyledTypography></StyledTypography>
               </TableCell>
               <TableCell align="center">
                 <span
@@ -146,14 +178,14 @@ export default function TableTestCase({ testCase, rootId }) {
                 </span>
               </TableCell>
               <TableCell align="center">
-                <StyledTypography> {"yymmddhhmmss"}</StyledTypography>
+                <StyledTypography></StyledTypography>
               </TableCell>
               <TableCell align="center">
                 {!executingTest[row.TestCaseName] ? (
                   <PlayCircleIcon
                     style={{ color: "rgb(101, 77, 247)", cursor: "pointer" }}
                     onClick={(e) => {
-                      handleExecution(row.TestCaseName);
+                      handleExecution(row);
                     }}
                   />
                 ) : (
@@ -162,6 +194,9 @@ export default function TableTestCase({ testCase, rootId }) {
                     size={25}
                   />
                 )}
+              </TableCell>
+              <TableCell align="center">
+                  <Delete style={{color:'red',cursor:'pointer'}} onClick={()=>handleDelete(row.TestCaseDetailsId)}/>
               </TableCell>
             </TableRow>
           ))}

@@ -33,7 +33,9 @@ export default function ExecutionHistory({executionDetail}) {
       );
       if (Array.isArray(res.data)) setstepDetail(res.data);
       else setstepDetail(null);
-    } catch (error) {}
+    } catch (error) {
+      toast.error("NETWORK ERROR")
+    }
   };
   useEffect(() => {
     getStpeDetail();

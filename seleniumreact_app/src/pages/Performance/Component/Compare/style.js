@@ -36,6 +36,12 @@ export const useStyles = makeStyles({
     padding: "0px",
     borderRadius: "3px",
   },
+  runs:{
+    backgroundColor:"#d8d2fc",
+    color:'#654DF7',
+    padding:'1px',
+    margin:'2px'
+  }
 });
 
 export const StyledFormControl = styled(FormControl)(({theme})=>({

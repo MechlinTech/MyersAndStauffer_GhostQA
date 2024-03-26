@@ -28,7 +28,7 @@ const data = [
   },
 ];
 export default function LocationPanel({
-  PerformanceFileId = { PerformanceFileId },
+  PerformanceFileId
 }) {
   const classes = useStyles();
   const [locationData, setLocationData] = useState([]);
@@ -51,7 +51,8 @@ export default function LocationPanel({
       const resData = response.data
       if(Array.isArray(resData)){
         setLocationData(resData)
-      }
+      }else
+      setLocationData([])
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -77,7 +78,7 @@ export default function LocationPanel({
         // Submit form or take action
         let payload = {
                 id: 0,
-                performanceFileId: 1,
+                performanceFileId: PerformanceFileId,
                 name: selectedLocation.value,
                 numberUser: noOfUser,
                 percentageTraffic: trafficPercentage
@@ -159,7 +160,7 @@ export default function LocationPanel({
           display: "block",
         }}
       >
-        <AddIcon /> Add more test
+        <AddIcon /> Add
       </Button>
       <TableContainer
         component={Paper}

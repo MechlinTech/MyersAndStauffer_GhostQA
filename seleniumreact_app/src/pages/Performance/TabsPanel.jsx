@@ -11,6 +11,7 @@ import Design from './Design';
 import { StyledTypography } from './styles';
 import CompareResults from './Component/Compare';
 import Results from './Result';
+import Trends from './Component/Trends';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -92,7 +93,7 @@ export default function TabsPanel({addTestCase}) {
         <Results />
         </TabPanel>
         <TabPanel value={value} index={"Trends"} dir={theme.direction}>
-        {"Trends"}
+        <Trends/>
         </TabPanel> 
         <TabPanel value={value} index={"CompareResults"} dir={theme.direction}>
         <CompareResults/>

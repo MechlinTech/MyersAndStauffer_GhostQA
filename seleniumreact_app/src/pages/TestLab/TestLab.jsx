@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Card } from "@material-ui/core";
+import { Grid, Card, Box } from "@material-ui/core";
 import { useStyles } from "./styles";
 import Button from '@mui/material/Button';
 
@@ -8,7 +8,8 @@ import { Add } from "@mui/icons-material";
 import AddTestCase from "./AddTestCase";
 import AddNewProject from "./AddNewProject";
 
-
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
 import DynamicTreeView from "./DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
@@ -22,6 +23,7 @@ export default function TestLab() {
   const [addNewProject, setAddNewProject] = useState(false);
 
   const [formData, setFormData] = useState({name:""});
+  const [drawerOpen, setDrawerOpen] = useState(true);
   const [nameSuite, setNameSuite] = useState('');
   
   const [selectedItem, setSelectedItem] = useState(null);
@@ -81,11 +83,18 @@ export default function TestLab() {
     setAddNewProject(false);
     console.log(id,'testswt');
   }
+  const treeStyle = drawerOpen ? {} : { display: "none" };
   return (
     <>
       <div className={classes.main}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={3}>
+        <Box
+            onClick={() => setDrawerOpen(!drawerOpen)}
+            style={{ position: "absolute", left: "3px", cursor: "pointer"}}
+          >
+            {!drawerOpen && <KeyboardDoubleArrowRightIcon />}
+          </Box>
+          <Grid item xs={12} md={3} style={treeStyle}>
             <Card className={classes.card} style={{ paddingBottom: "30px", maxHeight: "78vh" }}>
               <Grid container alignItems="center" className={classes.bodyHeader}>
                 <Grid item xs={6}>
@@ -105,6 +114,14 @@ export default function TestLab() {
                     <Add />
                   </Button>
                 </Grid>
+                <Grid item xs={1} style={{position:'absolute',right:'-14px',top:'-6px'}}>
+                    <Box
+                      onClick={() => setDrawerOpen(!drawerOpen)}
+                      sx={{cursor:'pointer'}}
+                    >
+                      {drawerOpen && <KeyboardDoubleArrowLeftIcon />}
+                    </Box>
+                  </Grid>
                 <Grid item xs={12}>
                 {addNewProject && <AddNewProject
               handleChange={handleChange}
@@ -119,7 +136,7 @@ export default function TestLab() {
               </Grid>
             </Card>
           </Grid>
-          <Grid item xs={12} sm={9}>
+          <Grid item xs={12} md={drawerOpen ? 9 : 12}>
            
             {addTestCase!==0 && <AddTestCase  addTestCase={addTestCase} nameSuite={nameSuite}/>}
 

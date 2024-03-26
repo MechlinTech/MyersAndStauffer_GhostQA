@@ -116,10 +116,9 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
           </TableRow>
         </TableHead>
         <TableBody>
-          
-        </TableBody>
-      </Table>
-        {testCaseData?.map((item, index) => (
+          <TableRow>
+            <TableCell colSpan={3}>
+            {testCaseData?.map((item, index) => (
             <React.Fragment key={index}>
               <Accordion
                 expanded={expandedAccord === item.testCaseName}
@@ -141,13 +140,13 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
               </Accordion>
             </React.Fragment>
           ))}
-
-
+            </TableCell>
+          </TableRow>
           {!showAddNewElement && <TableRow
             key={0}
             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
           >
-            <TableCell component="th" scope="row" sx={{ cursor: 'pointer' }}>
+            <TableCell sx={{ cursor: 'pointer' }}>
               <input type="file" ref={fileInputRef} style={{ display: 'none' }}  accept=".jmx" onChange={handleFileChange} />
 
               <input type='text' placeholder='Enter Test Name' ref={testNamefield} style={{
@@ -163,7 +162,6 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
                 backgroundColor: "rgb(101, 77, 247)",
                 color: "#ffffff",
                 cursor: "pointer",
-                padding: "6px 14px"
               }}
                 onClick={handleButtonClick}>
                 <AddIcon />
@@ -179,6 +177,12 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
             </TableCell>
           </TableRow>
           }
+        </TableBody>
+      </Table>
+        
+
+
+          
     </TableContainer>
   );
 }

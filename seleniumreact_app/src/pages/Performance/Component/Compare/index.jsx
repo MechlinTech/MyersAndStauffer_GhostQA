@@ -48,27 +48,27 @@ export default function CompareResults() {
     {
       name: "compare1",
       Date: "02/02/23",
-      Runs: "run+23",
+      Runs: ["TestRun1","TestRun2","TestRun3","TestRun5"],
     },
     {
       name: "compare2",
       Date: "03/05/23",
-      Runs: "run+17",
+      Runs: ["TestRun1","TestRun2","TestRun3","TestRun5"]
     },
     {
       name: "compare3",
       Date: "06/12/23",
-      Runs: "run+31",
+      Runs: ["TestRun1","TestRun2","TestRun3","TestRun5"],
     },
     {
       name: "compare4",
       Date: "09/21/23",
-      Runs: "run+12",
+      Runs: ["TestRun1","TestRun2","TestRun3","TestRun5"],
     },
     {
       name: "compare5",
       Date: "11/08/23",
-      Runs: "run+28",
+      Runs: ["TestRun1","TestRun2","TestRun3","TestRun5"],
     },
   ];
 
@@ -90,8 +90,8 @@ export default function CompareResults() {
                 <TableRow className={classes.tableRow}>
                   <StyledTableCell>{data.name}</StyledTableCell>
                   <StyledTableCell>{data.Date}</StyledTableCell>
-                  <StyledTableCell>{data.Runs}</StyledTableCell>
-                  <StyledTableCell>
+                  <StyledTableCell>{data.Runs[0]}<span className={classes.runs}>+{data.Runs.length-1}</span></StyledTableCell>
+                  <StyledTableCell align="left">
                     <Edit sx={{color:'#654DF7',cursor:'pointer',mr:'5px'}}/>
                     <Delete sx={{color:'red',cursor:'pointer'}}/>
                   </StyledTableCell>
@@ -126,7 +126,7 @@ export default function CompareResults() {
             />
             </StyledFormControl>
           </Grid>
-          <Grid item xs={12} className={classes.testListContainer}>
+          <Grid item xs={12} className={classes.testListContainer} style={{padding:'0'}}>
             <SearchField
               placeholder="Testruns"
               onChange={(value) => setSearchTerm(value)}

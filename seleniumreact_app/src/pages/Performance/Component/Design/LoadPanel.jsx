@@ -89,33 +89,39 @@ export default function LoadPanel({ PerformanceFileId }) {
     fetchData();
   }, []);
   useEffect(() => {
-    const userPerStep = totalusers / rampUpSteps;
-    const stepsUntilRampUp = Math.floor(totalusers / userPerStep);
-    let data = [];
-
-    // Generate data for the slope until rampUpTime
-    for (let i = 0; i <= stepsUntilRampUp; i++) {
-      data.push(i * userPerStep);
+    if(duration === 0){
+      setxaxisCategories([0])
+      setGraphData([0])
+    }else{
+      const userPerStep = rampUpSteps?(totalusers / rampUpSteps):totalusers;
+      const stepsUntilRampUp = Math.floor(totalusers / userPerStep);
+      let data = [];
+  
+      // Generate data for the slope until rampUpTime
+      for (let i = 1; i <= stepsUntilRampUp; i++) {
+        data.push(i * userPerStep);
+      }
+  
+      // Add a straight line after rampUpTime
+      for (let i = 0; i < stepsUntilRampUp; i++) {
+        data.push(totalusers);
+      }
+  
+      let xCatagory = [];
+      const timePerStep = rampUpTime?(rampUpTime/rampUpSteps):0
+      for (let i = 0; i < rampUpSteps; i++) {
+        const value = (timePerStep*i).toFixed(1); // Round to 1 decimal place
+        xCatagory.push(value.toString()); // Convert to string
+      }
+  
+      // Convert rampUpTime and duration to strings with at most one decimal place
+      const rampUpTimeString = rampUpTime.toString();
+      const durationString = duration.toString();
+  
+      setxaxisCategories([...xCatagory, rampUpTimeString, durationString]);
+      setGraphData(data);
     }
-
-    // Add a straight line after rampUpTime
-    for (let i = 0; i < stepsUntilRampUp; i++) {
-      data.push(totalusers);
-    }
-
-    let xCatagory = [];
-    const timePerStep = rampUpTime/rampUpSteps
-    for (let i = 0; i < rampUpSteps; i++) {
-      const value = (timePerStep*i).toFixed(1); // Round to 1 decimal place
-      xCatagory.push(value.toString()); // Convert to string
-    }
-
-    // Convert rampUpTime and duration to strings with at most one decimal place
-    const rampUpTimeString = rampUpTime.toString();
-    const durationString = duration.toString();
-
-    setxaxisCategories([...xCatagory, rampUpTimeString, durationString]);
-    setGraphData(data);
+    
   }, [totalusers, rampUpSteps, duration, rampUpTime]);
 
   useEffect(() => {
@@ -292,6 +298,7 @@ export default function LoadPanel({ PerformanceFileId }) {
         options={graphState.options}
         series={graphState.series}
         type="area"
+        height={300}
       />
     </>
   );

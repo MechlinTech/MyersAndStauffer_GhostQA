@@ -27,6 +27,8 @@ export default function Properties({ PerformanceFileId }) {
       const resData = response.data
       if(Array.isArray(resData))
       setPropertyList(resData);
+        else
+        setPropertyList([])
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -157,7 +159,7 @@ export default function Properties({ PerformanceFileId }) {
           </React.Fragment>
         ))}
         <Divider />
-        <Grid item xs={6}>
+        <Grid item xs={5}>
           <StyledFormControl>
             <StyledOutlinedInput
               value={pName}
@@ -167,7 +169,7 @@ export default function Properties({ PerformanceFileId }) {
             />
           </StyledFormControl>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={5}>
           <StyledFormControl>
             <StyledOutlinedInput
               value={pValue}

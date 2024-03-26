@@ -58,9 +58,9 @@ export default function DataEntryPanel({ PerformanceFileId }) {
   };
 
   const handleUpload = () => {
-    if (!selectedFile){
-      toast.error("Please select a file")
-    };
+    if (!selectedFile) {
+      toast.error("Please select a file");
+    }
 
     const formData = new FormData();
     formData.append("Id", 0);
@@ -77,7 +77,7 @@ export default function DataEntryPanel({ PerformanceFileId }) {
         formData,
         headerForm()
       );
-      console.log('res',res)
+      console.log("res", res);
       if (res.data === "Successfully Save") {
         toast.info("Successfully saved", {
           style: {
@@ -124,33 +124,38 @@ export default function DataEntryPanel({ PerformanceFileId }) {
   };
 
   const renderJsonData = (jsonData) => {
-    const tableData = transformArrayToObject(jsonData)
+    const tableData = transformArrayToObject(jsonData);
     let columns = Object.keys(tableData);
     return columns.map((key, index) => {
       const rows = tableData[key];
-        const maxLength = 3; // Set the maximum number of items to display
-        
-        // Create a string with the displayed items and the remaining count
-        const displayString = rows.slice(0, maxLength).join(', ');
-        const remainingCount = rows.length - maxLength;
-        const remainingText = remainingCount > 0 ? `...+${remainingCount}` : '';
-        
-      return <TableBody>
-        <TableRow>
-          <TableCell>{`\${${key}}`}</TableCell>
-          <TableCell>-</TableCell>
-          <Tooltip title={rows.join(',')} placement="top-end" arrow >
-          <TableCell>{displayString}{remainingText} </TableCell>
-          </Tooltip>
+      const maxLength = 3; // Set the maximum number of items to display
+
+      // Create a string with the displayed items and the remaining count
+      const displayString = rows.slice(0, maxLength).join(", ");
+      const remainingCount = rows.length - maxLength;
+      const remainingText = remainingCount > 0 ? `...+${remainingCount}` : "";
+
+      return (
+        <TableBody>
+          <TableRow>
+            <TableCell>{`\${${key}}`}</TableCell>
+            <TableCell>-</TableCell>
+            <Tooltip title={rows.join(",")} placement="top-end" arrow>
+              <TableCell>
+                {displayString}
+                {remainingText}{" "}
+              </TableCell>
+            </Tooltip>
           </TableRow>
-      </TableBody>
+        </TableBody>
+      );
     });
   };
 
   const transformArrayToObject = (dataArray) => {
     // Initialize an object to store the transformed data
     const transformedObject = {};
-  
+
     // Iterate over the array of objects
     dataArray.forEach((item) => {
       // Iterate over each key-value pair in the current object
@@ -164,8 +169,8 @@ export default function DataEntryPanel({ PerformanceFileId }) {
         transformedObject[key].push(value);
       });
     });
-  
-    return transformedObject
+
+    return transformedObject;
     // console.log('new obj',transformedObject)
   };
   return (
@@ -266,13 +271,6 @@ export default function DataEntryPanel({ PerformanceFileId }) {
           >
             upload a file
           </Typography>
-          <input
-            accept=".csv"
-            style={{ display: "none" }}
-            id="file-input"
-            type="file"
-            onChange={handleFileChange}
-          />
           <Box
             style={{
               width: "100%",
@@ -283,14 +281,23 @@ export default function DataEntryPanel({ PerformanceFileId }) {
               alignItems: "center",
             }}
           >
-            <label htmlFor="file-input">
-              <StyledTypography sx={{ cursor: "pointer", paddingLeft: "15px" }}>
+            <Box>
+            <input
+                accept=".csv"
+                style={{ display: "none" }}
+                id="file-input"
+                type="file"
+                onChange={handleFileChange}
+              />
+              <StyledTypography sx={{ paddingLeft: "15px" }}>
                 {selectedFile ? `${selectedFile.name}` : "Add a File"}
               </StyledTypography>
-            </label>
+            </Box>
 
             <Tooltip title="Submit" placement="top">
-              <Box
+              
+              <label
+                htmlFor="file-input"
                 variant="contained"
                 color="primary"
                 component="span"
@@ -303,10 +310,10 @@ export default function DataEntryPanel({ PerformanceFileId }) {
                   cursor: "pointer",
                 }}
                 // disabled={!selectedFile}
-                onClick={handleUpload}
+                onClick={selectedFile && handleUpload}
               >
-                +
-              </Box>
+               {selectedFile?"Submit":"+"}
+              </label>
             </Tooltip>
           </Box>
         </Grid>
