@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Grid } from '@mui/material';
 import { makeStyles } from "@material-ui/core";
+import { StyledFormControl, StyledOutlinedInput } from './styleTree';
 
 // Define styles for the form
 const useStyles = makeStyles((theme) => ({
@@ -24,20 +25,21 @@ const AddNewProject = ({ handleChange, handleSubmit, formData }) => {
   return (
 
     <form className={classes.form} onSubmit={(event) => handleSubmit(event)}>
-      <Grid container alignItems="center" className={classes.bodyHeader} direction="row"
-        justifyContent="space-between"       
+      <Grid container
+        alignItems="center"
+        direction="row"
+        justifyContent="space-between"
+        spacing={1}      
       >
         <Grid item xs={9}>
-          <TextField
-            className={classes.textField}
-            label="WorkSpace Name"
-            variant="outlined"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-
-            required
-          />
+          <StyledFormControl>
+            <StyledOutlinedInput
+              placeholder="Workspace Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </StyledFormControl>
         </Grid>
         <Grid item xs={3} style={{
           textAlign:"right"

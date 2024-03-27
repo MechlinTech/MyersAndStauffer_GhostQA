@@ -1,4 +1,6 @@
 import { makeStyles } from "@material-ui/core";
+import { styled } from "@mui/material/styles";
+import {FormControl, OutlinedInput} from "@mui/material";
 
 export const useStylesTree = makeStyles({
     rootNodeFolder: {
@@ -60,3 +62,24 @@ orgTree:{
     
 });
 
+
+export const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
+    fontFamily: "Lexend Deca",
+    fontSize: "14px",
+    height: "40px",
+  }));
+
+  export const StyledFormControl = styled(FormControl)(({theme})=>({
+    width:'100%',
+    "& .MuiOutlinedInput-root": {
+      "&:hover fieldset": {
+        borderColor: "#654DF7",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#654DF7",
+      },
+      "& fieldset": {
+        borderColor: "transparent",
+      },
+    },
+  }))

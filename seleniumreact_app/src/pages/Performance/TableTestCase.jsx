@@ -19,9 +19,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DesignTabs from "./Component/Design/DesignTabs";
 import { header,headerForm } from "../../utils/authheader";
 import { StyledTypography } from "./styles";
+import { toast } from "react-toastify";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-export default function TableTestCase({ testCase, showAddNewElement, setShowAddNewElement,addTestCase }) {
+export default function TableTestCase({ testCase, showAddNewElement, setShowAddNewElement,rootId }) {
   const navigate = useNavigate()
   const classes = useStyles();
   const testNamefield = useRef();
@@ -30,7 +31,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${addTestCase}`,
+        `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
         header()
       );
       // Assuming response.data is the array of data you want to set as listData
@@ -43,7 +44,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
   };
   useEffect(() => {
     fetchData(); // Call the fetchData function when the component mounts
-  }, [addTestCase]);
+  }, [rootId]);
   
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -56,9 +57,13 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
     setSelectedFile(event.target.files[0]);
   };
   const handleFileSaving = async() => {
+    if(!selectedFile){
+      toast.error("please select file")
+      return
+    }
       const formData = new FormData();
       formData.append("id", 0);
-      formData.append( "rootId",addTestCase);
+      formData.append( "rootId",rootId);
       formData.append("testCaseName",  testNamefield.current.value);
       formData.append("binaryData",selectedFile);
       formData.append("fileName", selectedFile.name);

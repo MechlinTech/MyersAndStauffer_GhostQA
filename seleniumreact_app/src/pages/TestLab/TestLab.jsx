@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Children } from "react";
 import { Grid, Card, Box } from "@material-ui/core";
 import { useStyles } from "./styles";
 import Button from "@mui/material/Button";
@@ -27,6 +27,8 @@ export default function TestLab() {
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [listData, setListData] = useState([]);
+  const [depth, setdepth] = useState(null);
+  const [childOfFirstTwoParent, setchildOfFirstTwoParent] = useState([])
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,11 +77,19 @@ export default function TestLab() {
     setFormData({ name: value, id: Math.random(), parentId: 0 });
   };
 
-  const handleTestCaseList = (id, name) => {
-    setAddTestCase(id);
-    setNameSuite(name);
-    setAddNewProject(false);
-    console.log(id, "testswt");
+  const handleTestCaseList = (item, node = 0) => {
+    setdepth(node);
+    if (node > 1) {
+      setAddTestCase(item.id);
+      setNameSuite(item.name);
+      setAddNewProject(false);
+    } else {
+      let childs = listData.filter((data)=> data.parentId === item.id )
+      setchildOfFirstTwoParent(childs)
+      setAddTestCase(0);
+      setNameSuite("");
+      setAddNewProject(false);
+    }
   };
   const treeStyle = drawerOpen ? {} : { display: "none" };
   return (
@@ -100,8 +110,8 @@ export default function TestLab() {
               <Grid
                 container
                 alignItems="center"
-                  style={{position:'relative'}}
-                  className={classes.bodyHeader}
+                style={{ position: "relative" }}
+                className={classes.bodyHeader}
               >
                 <Grid item xs={6}>
                   Workspace
@@ -117,7 +127,7 @@ export default function TestLab() {
                       cursor: "pointer",
                     }}
                   >
-                    <Add />
+                    {!addNewProject ? <Add /> : "Cancel"}
                   </Button>
                 </Grid>
                 <Grid
@@ -152,9 +162,9 @@ export default function TestLab() {
             </Card>
           </Grid>
           <Grid item xs={12} md={drawerOpen ? 9 : 12}>
-            {addTestCase !== 0 && (
+            {depth>1 ? (
               <AddTestCase addTestCase={addTestCase} nameSuite={nameSuite} />
-            )}
+            ):childOfFirstTwoParent.map((item)=><li>{item.name}</li>)}
           </Grid>
         </Grid>
       </div>

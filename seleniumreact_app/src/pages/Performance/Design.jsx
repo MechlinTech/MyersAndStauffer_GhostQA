@@ -15,17 +15,19 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import { Typography } from "@mui/material";
 import axios from "axios";
 import { header } from "../../utils/authheader";
+import { toast } from "react-toastify";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-export default function Design({ addTestCase }) {
+export default function Design({ rootId }) {
   const classes = useStyles();
   const [locationCount, setlocationCount] = useState(0);
   const [scenarioCount, setscenarioCount] = useState(0);
+  const [showAddNewElement, setShowAddNewElement] = useState(true);
   const [uvCount, setuvCount] = useState(0);
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${addTestCase}`,
+        `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
         header()
       );
       // Assuming response.data is the array of data you want to set as listData
@@ -65,9 +67,20 @@ export default function Design({ addTestCase }) {
   };
   useEffect(() => {
     fetchData();
-    console.log("in side design ", addTestCase);
-  }, [addTestCase]);
-  const [showAddNewElement, setShowAddNewElement] = useState(true);
+    console.log("in side design ", rootId);
+  }, [rootId]);
+
+  const handleRunNow = async()=>{
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/Performance/ExecutePerformanceJMX?RootId=${rootId}&name=Project-1`,
+        header()
+      );
+      console.log('response',response)
+    } catch (error) {
+      toast.error('NETWORK ERROR')
+    }
+  }
   return (
     <Grid
       container
@@ -191,6 +204,7 @@ export default function Design({ addTestCase }) {
               cursor: "pointer",
               padding: "12px 18px",
             }}
+            onClick={handleRunNow}
           >
             <PlayCircleOutlineIcon /> Run Now
           </Button>
@@ -199,7 +213,7 @@ export default function Design({ addTestCase }) {
       <Grid container alignItems="center">
         <Grid item xs={12}>
           <TableTestCase
-            addTestCase={addTestCase}
+            rootId={rootId}
             setShowAddNewElement={setShowAddNewElement}
             showAddNewElement={showAddNewElement}
           />

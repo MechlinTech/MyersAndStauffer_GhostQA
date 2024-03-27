@@ -104,7 +104,8 @@ const Card = ({
                   {editMode !== item.id && (
                     <span
                       onClick={() => {
-                        handleTask(item.id, item.name);
+                        console.log('item',item)
+                        handleTask(item,nodeCount);
                         setSelectedNodeId(item.id); // Update the clicked node ID
                       }}
                       style={{
