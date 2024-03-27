@@ -42,7 +42,7 @@ const Card = ({
   setSelectedNodeId, // New prop to update the ID of the clicked node
 }) => {
   const styleClass = useStylesTree();
- 
+
   return (
     <>
       <ul
@@ -64,11 +64,13 @@ const Card = ({
                 <div
                   className={styleClass.cardListHolderList}
                   style={
-                      selectedNodeId === item.id ?{
-                        backgroundColor:'#654df7',
-                        border:'2px solid #654df7',
-                        color:'white'
-                    } : {} // Apply border only if the current node is the selected node
+                    selectedNodeId === item.id
+                      ? {
+                          backgroundColor: "#654df7",
+                          border: "2px solid #654df7",
+                          color: "white",
+                        }
+                      : {} // Apply border only if the current node is the selected node
                   }
                 >
                   {data.some((child) => child.parentId === item.id) && (
@@ -110,7 +112,7 @@ const Card = ({
                         fontSize: "18px",
                       }}
                     >
-                        <Typography
+                      <Typography
                         style={{ fontFamily: "Lexend Deca", fontSize: "14px" }}
                       >
                         {" "}
@@ -121,19 +123,27 @@ const Card = ({
                   <div className={styleClass.crud} style={{}}>
                     {editMode == 0 && (
                       <EditIcon
-                        sx={{ color: selectedNodeId === item.id?'white':"#654df7" }}
+                        sx={{
+                          color:
+                            selectedNodeId === item.id ? "white" : "#654df7",
+                        }}
                         onClick={() => handleEdit(item.id, item.name)}
                         style={{ cursor: "pointer", marginLeft: "10px" }}
                       />
                     )}
                     <DeleteIcon
-                      sx={{ color: selectedNodeId === item.id?'white': "#f74d4d" }}
+                      sx={{
+                        color: selectedNodeId === item.id ? "white" : "#f74d4d",
+                      }}
                       onClick={() => handleDelete(item.id)}
                       style={{ cursor: "pointer" }}
                     />
                     {nodeCount < 4 && (
                       <AddIcon
-                        sx={{ color: selectedNodeId === item.id?'white':"#654df7" }}
+                        sx={{
+                          color:
+                            selectedNodeId === item.id ? "white" : "#654df7",
+                        }}
                         onClick={(event) => handleCRUD(event, item.id)}
                         style={{
                           marginLeft: "auto",

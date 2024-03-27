@@ -71,7 +71,7 @@ export default function RenderActionFields({
           </FormControl>
         </Grid>
       );
-    case "dragDrop":
+    case "drag and drop":
       return (
         <>
           <Grid item xs={6}>

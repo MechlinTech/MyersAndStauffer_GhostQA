@@ -155,39 +155,29 @@ export default function LoadPanel({ PerformanceFileId }) {
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
-  const [testCaseData, setTestCaseData] = useState([
-    {
-      id: 1,
-      name: "Test name ",
-      file: "",
-      fileName: "Myscript1.jmx",
-    },
-    {
-      id: 2,
-      name: "Test name ",
-      file: "",
-      fileName: "Myscript1.jmx",
-    },
-  ]);
   const [expanded, setExpanded] = useState([]);
   const handleInputData = (event, type) => {
-    switch (type) {
-      case "totalUsers":
-        settotalusers(event.target.value);
-        break;
-      case "duration":
-        setDuration(event.target.value);
-        break;
-      case "rampUpTime":
-        setRampUpTime(event.target.value);
-        break;
-      case "rampUpSteps":
-        setRampUpSteps(event.target.value);
-        break;
-      default:
-        break;
+    const value = event.target.value;
+    if (value >= 0) {
+      switch (type) {
+        case "totalUsers":
+          settotalusers(value);
+          break;
+        case "duration":
+          setDuration(value);
+          break;
+        case "rampUpTime":
+          setRampUpTime(value);
+          break;
+        case "rampUpSteps":
+          setRampUpSteps(value);
+          break;
+        default:
+          break;
+      }
     }
   };
+  
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       submitGraphData();
@@ -262,6 +252,7 @@ export default function LoadPanel({ PerformanceFileId }) {
               <TableCell>
                 <input
                   type="number"
+                  min={0}
                   value={totalusers}
                   className={classes.inputField}
                   onChange={(event) => handleInputData(event, "totalUsers")}
@@ -271,6 +262,7 @@ export default function LoadPanel({ PerformanceFileId }) {
               <TableCell align="left">
                 <input
                   type="number"
+                  min={0}
                   value={duration}
                   className={classes.inputField}
                   onChange={(event) => handleInputData(event, "duration")}
@@ -281,6 +273,7 @@ export default function LoadPanel({ PerformanceFileId }) {
               <TableCell align="left">
                 <input
                   type="number"
+                  min={0}
                   value={rampUpTime}
                   className={classes.inputField}
                   onChange={(event) => handleInputData(event, "rampUpTime")}
@@ -290,6 +283,7 @@ export default function LoadPanel({ PerformanceFileId }) {
               <TableCell align="left">
                 <input
                   type="number"
+                  min={0}
                   value={rampUpSteps}
                   className={classes.inputField}
                   onChange={(event) => handleInputData(event, "rampUpSteps")}

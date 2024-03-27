@@ -126,7 +126,14 @@ export const useStyles = makeStyles({
         width:'100%',
         textAlign:'center',
         borderRadius:"4px",
-        border:'solid 2px #DADADA'
+        border:'solid 2px #DADADA',
+        outline:'none',
+        '&:hover':{
+            border:'1px solid #654DF7'
+        },
+        "&:focus": {
+            borderColor: "#654DF7",
+        },
     },
 });
 

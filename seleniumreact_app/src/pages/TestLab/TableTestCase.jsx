@@ -18,10 +18,9 @@ import { Delete } from "@material-ui/icons";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TableTestCase({ testCase, rootId }) {
-  console.log('test case id ',testCase)
   const navigate = useNavigate();
   const [executingTest, setexecutingTest] = React.useState({});
-
+  const [testCaseList, setTestCaseList] = React.useState(testCase)
   const handleExecution = async (row) => {
     console.log("test case name ", row);
     setexecutingTest((prev) => ({
@@ -70,7 +69,7 @@ export default function TableTestCase({ testCase, rootId }) {
         try {
           const res = await axios.post(`${BASE_URL}/AddTestLab/AddExecuteResult?testCaseDetailId=${row.TestCaseDetailsId}`,rundetails,header())
           if (res.data.status === "success") {
-              toast.info("Successfully delete", {
+              toast.info("Successfully executed", {
                 style: {
                   background: "rgb(101, 77, 247)",
                   color: "rgb(255, 255, 255)",
@@ -97,21 +96,36 @@ export default function TableTestCase({ testCase, rootId }) {
     }
   };
 
-  const handleDelete = async(testId)=>{
-    console.log('testid',testId)
+  const fetchData = async () => {
     try {
-      const res = await axios.get(
-        `${BASE_URL}/AddTestLab/DeleteTestCaseDetailsByTestCaseDetailsId?TestCaseDetailsId=${testId}`,testId,header()
+      const response = await axios.post(
+        `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${rootId}`,
+        header()
+      );
+      
+      // Assuming response.data is the array of data you want to set as listData
+      setTestCaseList((response.data.status ==='fail' || response.data == '' ? [] : response.data));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setTestCaseList([]);
+    }
+  };
+  const handleDelete = async(testId)=>{
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/AddTestLab/DeleteTestCaseDetailsByTestCaseDetailsId?TestCaseDetailsId=${testId}`
       );
       console.log('res',res)
-      // if (resSteps.data.status === "success") {
-      //   toast.info("Successfully delete", {
-      //     style: {
-      //       background: "rgb(101, 77, 247)",
-      //       color: "rgb(255, 255, 255)",
-      //     },
-      //   });
-      // }
+      if (res.data.status === "success") {
+        toast.info("Successfully delete", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+        fetchData()
+      }
+      
     } catch (error) {
       toast.error("NETWORK ERROR")
     }
@@ -143,7 +157,7 @@ export default function TableTestCase({ testCase, rootId }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {testCase?.map((row) => (
+          {testCaseList?.map((row) => (
             <TableRow
               key={row.TestCaseDetailsId}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
