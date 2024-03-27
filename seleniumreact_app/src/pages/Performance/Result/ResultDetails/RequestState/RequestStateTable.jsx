@@ -14,8 +14,8 @@ export function RequestStateTable({ data }) {
       <Table>
         <TableHead style={{ height: "34px" }}>
           <TableRow>
-            <StyledTableCell first>Transactions</StyledTableCell>
-            <StyledTableCell>Sample</StyledTableCell>
+            <StyledTableCell first colSpan={2}>Transactions</StyledTableCell>
+            <StyledTableCell colSpan={2}>Sample</StyledTableCell>
             <StyledTableCell>Avg. Response Time (ms)</StyledTableCell>
             <StyledTableCell>Avg. Hit’s</StyledTableCell>
             <StyledTableCell>904 line (ms)</StyledTableCell>
@@ -30,16 +30,16 @@ export function RequestStateTable({ data }) {
         <TableBody>
           {data?.map((row, index) => (
             <TableRow key={index}>
-              <StyledTableCell first>{row.transactions}</StyledTableCell>
-              <TableCell>{row.sample}</TableCell>
-              <TableCell>{row.avgResponseTime}</TableCell>
-              <TableCell>{row.avgHits}</TableCell>
-              <TableCell>{row.line904}</TableCell>
-              <TableCell>{row.line954}</TableCell>
-              <TableCell>{row.line994}</TableCell>
-              <TableCell>{row.minResponseTime}</TableCell>
-              <TableCell>{row.maxResponseTime}</TableCell>
-              <TableCell>{row.avgBandwidth}</TableCell>
+              <StyledTableCell first colSpan={2}>{row.transactions}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{row.sample}</StyledTableCell>
+              <StyledTableCell>{row.avgResponseTime}</StyledTableCell>
+              <StyledTableCell>{row.avgHits}</StyledTableCell>
+              <StyledTableCell>{row.line904}</StyledTableCell>
+              <StyledTableCell>{row.line954}</StyledTableCell>
+              <StyledTableCell>{row.line994}</StyledTableCell>
+              <StyledTableCell>{row.minResponseTime}</StyledTableCell>
+              <StyledTableCell>{row.maxResponseTime}</StyledTableCell>
+              <StyledTableCell>{row.avgBandwidth}</StyledTableCell>
               <StyledTableCell last>{row.errorPercentage}</StyledTableCell>
             </TableRow>
           ))}

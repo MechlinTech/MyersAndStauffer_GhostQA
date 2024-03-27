@@ -6,10 +6,15 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useStyles, StyledTableCell } from "./styles";
 import EditIcon from "@mui/icons-material/Edit";
+import { useNavigate } from 'react-router-dom';
 
 export function InitialSetupTable({ data }) {
   const classes = useStyles();
+  const navigate = useNavigate()
 
+  const handleButtonClick = () => {
+    navigate("/performance"); 
+  };
   return (
     <TableContainer>
       <Table>
@@ -38,9 +43,11 @@ export function InitialSetupTable({ data }) {
                     height: "28px",
                     fontSize: "12px !important",
                     "&:hover": {
+
                       background: "rgb(101, 77, 247)",
                     },
                   }}
+                  onClick={handleButtonClick}
                 >
                   <EditIcon fontSize="small" style={{ color: "white" }}/>
                   Edit
