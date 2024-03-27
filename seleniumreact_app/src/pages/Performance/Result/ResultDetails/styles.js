@@ -122,42 +122,48 @@ export const useStyles = makeStyles({
   activeRow: {
     border: "2px solid #654DF7",
   },
-  initialSetupCardStyle : {
-    fontFamily:'Lexend Deca',
-    fontSize:'16px',
-    fontWeight:'400',
-    color:'#646464',
-    lineHeight:"20px"
+  initialSetupCardStyle: {
+    fontFamily: "Lexend Deca",
+    fontSize: "16px",
+    fontWeight: "400",
+    color: "#646464",
+    lineHeight: "20px",
   },
   backBtn: {
-    background: 'rgb(101, 77, 247)',
-    padding: '5px 15px',
-    color: 'white',
-    textTransform: 'none',
-    fontSize: '14px !important',
-    '&:hover': {
-        background: 'rgb(101, 77, 247)',
-    }
-}
+    background: "rgb(101, 77, 247)",
+    padding: "5px 15px",
+    color: "white",
+    textTransform: "none",
+    fontSize: "14px !important",
+    "&:hover": {
+      background: "rgb(101, 77, 247)",
+    },
+  },
+  durationStyle: {
+    fontFamily: "Lexend Deca",
+    fontSize: "16px",
+    fontWeight: "500",
+    lineHeight: "17.5px",
+    color: "#646464",
+  },
 });
 
 export const StyledTableCell = styled(TableCell)(({ theme, first, last }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      color: "#5c5c5c",
-      padding: "0px 10px",
-      fontFamily: "Lexend Deca",
-      fontSize: "14px",
-      borderTop: "1px solid rgb(217, 217, 217)",
-      borderLeft: first ? "1px solid rgb(217, 217, 217)" : "none", 
-      borderRight: last ? "1px solid rgb(217, 217, 217)" : "none", 
-    },
-    [`&.${tableCellClasses.body}`]: {
-      padding: "0px 10px",
-      fontSize: "16px",
-      color:"#646464",
-      fontFamily: `"Lexend Deca", sans-serif, -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
-      borderLeft: first ? "1px solid rgb(217, 217, 217)" : "none", 
-      borderRight: last ? "1px solid rgb(217, 217, 217)" : "none", 
-    },
-  }));
-
+  [`&.${tableCellClasses.head}`]: {
+    color: "#5c5c5c",
+    padding: "0px 10px",
+    fontFamily: "Lexend Deca",
+    fontSize: "14px",
+    borderTop: "1px solid rgb(217, 217, 217)",
+    borderLeft: first ? "1px solid rgb(217, 217, 217)" : "none",
+    borderRight: last ? "1px solid rgb(217, 217, 217)" : "none",
+  },
+  [`&.${tableCellClasses.body}`]: {
+    padding: "0px 10px",
+    fontSize: "16px",
+    color: "#646464",
+    fontFamily: `"Lexend Deca", sans-serif, -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
+    borderLeft: first ? "1px solid rgb(217, 217, 217)" : "none",
+    borderRight: last ? "1px solid rgb(217, 217, 217)" : "none",
+  },
+}));

@@ -320,13 +320,13 @@ export default function Summary() {
                   {data.map((item, index) => (
                     <React.Fragment key={index}>
                       <Grid item xs={12} sm={4}>
-                        <Typography>{item.label}</Typography>
+                        <Typography className={classes.durationStyle}>{item.label}</Typography>
                       </Grid>
                       <Grid item xs={12} sm={1}>
                         <Typography>:</Typography>
                       </Grid>
                       <Grid item xs={12} sm={7}>
-                        <Typography>{item.value}</Typography>
+                        <Typography className={classes.durationStyle}>{item.value}</Typography>
                       </Grid>
                     </React.Fragment>
                   ))}
