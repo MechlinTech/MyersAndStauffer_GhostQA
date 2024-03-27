@@ -239,7 +239,7 @@ export default function InitialSetup() {
                             <span
                               style={{ color: "#00A879", fontSize: "40px" }}
                             >
-                              5uv
+                              19
                             </span>
                           </Typography>
                         </CardContent>

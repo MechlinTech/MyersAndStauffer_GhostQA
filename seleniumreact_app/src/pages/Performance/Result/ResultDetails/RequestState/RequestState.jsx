@@ -47,20 +47,20 @@ export default function RequestState() {
     <Grid className={classes.mainContainer}>
       <Grid item xs={12} sm={12}>
         <Card className={classes.requestCard}>
-          <Grid item xs={12} sm={12} className={classes.RequestStateHeader}>
-            <Grid>
-            <Typography
-            sx={{
-              fontFamily: "Lexend Deca",
-              fontSize: "30px",
-              fontWeight: "500",
-              color:"#646464"
-            }}
-          >
-            Request State
-          </Typography>
+          <Grid container className={classes.RequestStateHeader}>
+            <Grid item>
+              <Typography
+                sx={{
+                  fontFamily: "Lexend Deca",
+                  fontSize: "30px",
+                  fontWeight: "500",
+                  color: "#646464",
+                }}
+              >
+                 Request State
+              </Typography>
             </Grid>
-            <Grid>
+            <Grid item>
               <Button
                 variant="contained"
                 style={{
