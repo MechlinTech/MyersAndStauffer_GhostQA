@@ -44,7 +44,10 @@ export default function EditTestCase() {
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestStepsDetailsByTestStepsId?TestStepsId=${testId}` // change this uri
       );
-      setSteps(res.data);
+      if(Array.isArray(res.data))
+        setSteps(res.data)
+      else
+        setSteps([])
       console.log("steps list : ", res.data);
     };
     const getTestCaseDetail = async () => {
@@ -83,7 +86,7 @@ export default function EditTestCase() {
           break;
         case "Mouse over":
           break;
-        case "dragDrop":
+        case "drag and drop":
           additionalErrors.elementSelectorError = !step.elementSelector;
           additionalErrors.selectedDragDroptypeError = !step.selectedDragDropType;
           break;
@@ -340,7 +343,7 @@ export default function EditTestCase() {
     "goBack",
     "refresh",
   ];
-  const listOfSteps = steps?.map((step, index) => (
+  const listOfSteps = steps && steps?.map((step, index) => (
     <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>
       <Box
         sx={{

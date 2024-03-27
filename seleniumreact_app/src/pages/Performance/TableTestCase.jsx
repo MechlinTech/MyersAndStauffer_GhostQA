@@ -55,8 +55,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
-  const handleNewElementAppend = async(event) => {
-    if (event.keyCode == 13) {
+  const handleFileSaving = async() => {
       const formData = new FormData();
       formData.append("id", 0);
       formData.append( "rootId",addTestCase);
@@ -79,7 +78,6 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
         console.error("Error fetching data:", error);     
       } 
       
-    }
   }
   const handleDeleteElement = async(id,event) => {
       event.stopPropagation()
@@ -153,37 +151,41 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
             </TableCell>
           </TableRow>
           {!showAddNewElement && <TableRow
-            key={0}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
           >
-            <TableCell sx={{ cursor: 'pointer' }}>
+            <TableCell >
               <input type="file" ref={fileInputRef} style={{ display: 'none' }}  accept=".jmx" onChange={handleFileChange} />
 
               <input type='text' placeholder='Enter Test Name' ref={testNamefield} style={{
                 fontSize: 14,
                 borderRadius: '4px',
-                border: "solid 2px #DADADA",
+                border: '1px solid #654df7',
+                outline:'none',
                 padding: "6px 14px"
-              }} onKeyDown={(event) => { handleNewElementAppend(event) }} />
+              }}  />
             </TableCell>
-            <TableCell align="left">
-              <Button style={{
+            <TableCell onClick={handleButtonClick} align="left">
+            <Button style={{
+                backgroundColor: "rgb(101, 77, 247)",
+                color: "#ffffff",
+                cursor: "pointer",
+                textTransform:'toLowerCase'
+              }}><StyledTypography>
+              {selectedFile ? `${selectedFile.name}` :'Choose file'}
+              </StyledTypography>
+              </Button>
+            </TableCell>
+            <TableCell align="right">
+            <Button style={{
                 fontSize: 14,
                 backgroundColor: "rgb(101, 77, 247)",
                 color: "#ffffff",
                 cursor: "pointer",
               }}
-                onClick={handleButtonClick}>
-                <AddIcon />
-                {selectedFile ? `${selectedFile.name}` : 'Add '}
-
+              onClick={handleFileSaving}
+                >
+                Save
               </Button>
-
-            </TableCell>
-
-
-            <TableCell align="left">
-
             </TableCell>
           </TableRow>
           }

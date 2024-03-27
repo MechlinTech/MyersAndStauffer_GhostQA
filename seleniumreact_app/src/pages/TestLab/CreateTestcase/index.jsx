@@ -73,7 +73,7 @@ export default function CreateTestCase() {
           break
         case "Mouse over":
           break;
-        case "dragDrop":
+        case "drag and drop":
           additionalErrors.elementSelectorError = !step.elementSelector
           additionalErrors.selectedDragDropTypeError = !step.selectedDragDropType
           break
