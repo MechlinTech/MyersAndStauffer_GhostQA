@@ -293,9 +293,18 @@ export default function DataEntryPanel({ PerformanceFileId }) {
                 {selectedFile ? `${selectedFile.name}` : "Add a File"}
               </StyledTypography>
             </Box>
-
-            <Tooltip title="Submit" placement="top">
-              
+            {selectedFile?(
+              <Button style={{
+                fontSize: 14,
+                backgroundColor: "rgb(101, 77, 247)",
+                color: "#ffffff",
+                cursor: "pointer",
+              }}
+              onClick={handleUpload}
+                >
+                Save
+              </Button>
+            ):(
               <label
                 htmlFor="file-input"
                 variant="contained"
@@ -309,12 +318,12 @@ export default function DataEntryPanel({ PerformanceFileId }) {
                   color: "#ffffff",
                   cursor: "pointer",
                 }}
-                // disabled={!selectedFile}
-                onClick={selectedFile && handleUpload}
               >
-               {selectedFile?"Submit":"+"}
+               +
               </label>
-            </Tooltip>
+            )}
+              
+              
           </Box>
         </Grid>
       </Grid>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Card } from "@material-ui/core";
+import { Grid, Card, CircularProgress } from "@material-ui/core";
 import Button from "@mui/material/Button";
 import { useStyles } from "./styles";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
@@ -23,13 +23,23 @@ export default function Design({ rootId }) {
   const [locationCount, setlocationCount] = useState(0);
   const [scenarioCount, setscenarioCount] = useState(0);
   const [showAddNewElement, setShowAddNewElement] = useState(true);
+  const [folderName, setfolderName] = useState('')
   const [uvCount, setuvCount] = useState(0);
+  const [isRuning, setisRuning] = useState(false)
   const fetchData = async () => {
     try {
       const response = await axios.get(
         `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
         header()
       );
+      const res = await axios.get(
+        `${BASE_URL}/Performance/GetProjectData`,
+        header()
+      );
+      res.data?.map((project)=>{
+        if(project.id === rootId)
+         setfolderName(project.name)
+      })
       // Assuming response.data is the array of data you want to set as listData
       const testList = response.data;
       if (Array.isArray(testList)) {
@@ -70,15 +80,54 @@ export default function Design({ rootId }) {
     console.log("in side design ", rootId);
   }, [rootId]);
 
+  const getName = () => {
+    const email = sessionStorage.getItem("email");
+    const i = email.indexOf("@");
+    const name = email.substring(0, i);
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  };
   const handleRunNow = async()=>{
+    setisRuning(true)
+    const testername = getName()
     try {
-      const response = await axios.get(
-        `${BASE_URL}/Performance/ExecutePerformanceJMX?RootId=${rootId}&name=Project-1`,
+      const response = await axios.post(
+        `${BASE_URL}/Performance/ExecutePerformanceJMX`,{rootId: rootId,
+        testerName: testername,
+        name: folderName,},
         header()
       );
       console.log('response',response)
+      const clientId = response.data.client_Id
+      getRunDetail(response.data,clientId,2000)
     } catch (error) {
       toast.error('NETWORK ERROR')
+    }
+  }
+
+  const getRunDetail = async(data,clientId,delay)=>{
+    try {
+      const res = await axios.get(
+        `http://65.1.188.67:8010/api/performance-container-runs/?client_reference_id=${clientId}`,
+        header()
+      );
+        const result = res.data.results
+        const isJsonHasNull = result.some(item => item.json === null)
+        if(isJsonHasNull){
+          setTimeout(() => {
+            getRunDetail(data,clientId,delay)
+          }, delay);
+        }else{
+          data = {...data,responseData:res.data}
+          console.log('data',data)
+          setisRuning(false)
+          const response = await axios.post(
+            `${BASE_URL}/Performance/AddExecuterData`,data,
+            header()
+          );
+          console.log('res',response)
+        }
+    } catch (error) {
+      toast.error("network error in container runs")
     }
   }
   return (
@@ -206,7 +255,8 @@ export default function Design({ rootId }) {
             }}
             onClick={handleRunNow}
           >
-            <PlayCircleOutlineIcon /> Run Now
+            {isRuning?<CircularProgress style={{color:'white'}}/>:(<><PlayCircleOutlineIcon/> Run Now</>)}
+            
           </Button>
         </Grid>
       </Grid>

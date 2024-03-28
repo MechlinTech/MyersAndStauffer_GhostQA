@@ -4,7 +4,7 @@ import {FormControl, OutlinedInput} from "@mui/material";
 export const useStylesTree = makeStyles({
     rootNodeFolder: {
         listStyle: 'none',
-        padding:'0 20px'
+        padding:'0 2px'
 
     },
     child: {
@@ -18,6 +18,7 @@ export const useStylesTree = makeStyles({
         display: 'none', // Hide crud by default
     },
     cardListHolderList: {
+        overflow:'auto',
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'nowrap',
@@ -58,7 +59,7 @@ updateEdit:{
 },
 orgTree:{
     overflow:"auto",
-    height: '64vh'
+    height: '64vh',
 }
     
 });

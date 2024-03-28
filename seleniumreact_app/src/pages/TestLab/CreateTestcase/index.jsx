@@ -306,6 +306,14 @@ export default function CreateTestCase() {
     setSteps(updatedSteps);
   };
 
+  const findLabelByValue = (value) => {
+    for (const pair of userActionsOptions) {
+      if (pair.value === value) {
+        return pair.label;
+      }
+    }
+    return 'not found'; // Return null if the value is not found
+  };
   const selectorNoOptionList = [
     "Execute Javascript",
     "Pause (Time in ms)",
@@ -364,7 +372,7 @@ export default function CreateTestCase() {
               value={
                 step
                   ? step.type
-                    ? { label: step.type, value: step.type }
+                    ? { label: findLabelByValue(step.type), value: step.type }
                     : null
                   : null
               }
