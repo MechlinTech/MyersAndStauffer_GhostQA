@@ -1,6 +1,7 @@
-CREATE OR ALTER PROCEDURE [dbo].[stp_AddExecuteData]
+CREATE OR ALTER   PROCEDURE [dbo].[stp_AddExecuteData]
 @TestSuite                VARCHAR(100),
 @TestCase	              VARCHAR(100),
+@TestCaseDetailsId        INT,
 @TestCaseName	          VARCHAR(100),
 @Status  			      VARCHAR(10),
 @StartDateTime            VARCHAR(50),
@@ -17,15 +18,15 @@ PROCEDURE NAME	:	stp_AddExecuteData
 CREATED BY		:	Mohammed Yaseer
 CREATED DATE	:	20th March 2024
 MODIFIED BY		:	Mohammed Yaseer
-MODIFIED DATE	:	21th March 2024
+MODIFIED DATE	:	26th March 2024
 PROC EXEC		:  EXEC stp_AddExecuteData
 				
 **************************************************************************************/
 BEGIN TRY
 	BEGIN
-		INSERT INTO [dbo].[tbl_InternalTestExecutions] ([TestSuite], [TestCase], [TestCaseName], [Status], [StartDateTime],
+		INSERT INTO [dbo].[tbl_CypressTestExecution] ([TestSuite], [TestCaseId], [TestCaseDetailsId], [TestCaseName], [Status], [StartDateTime],
 		[EndDateTime], [TestStepJson], [SuiteDuration], [TestDuration], [TestScreenShotUrl], [TesterName], [TestVideoUrl]) 
-		VALUES (@TestSuite, @TestCase, @TestCaseName, @Status, @StartDateTime, @EndDateTime, @TestStepJson, @SuiteDuration, @TestDuration,
+		VALUES (@TestSuite, @TestCase, @TestCaseDetailsId, @TestCaseName, @Status, @StartDateTime, @EndDateTime, @TestStepJson, @SuiteDuration, @TestDuration,
 		@TestScreenShot, @TesterName, @TestVideoUrl)
 		IF @@ERROR = 0
 		BEGIN

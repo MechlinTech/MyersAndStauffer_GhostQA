@@ -27,6 +27,8 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<PerformanceProperties> tbl_PerformanceProperties { get; set; }
         public DbSet<TestData> tbl_TestData { get; set; }
         public DbSet<Load> tbl_Load { get; set; }
+        public DbSet<CypressDetails> tbl_CypressTestExecution { get; set; }
+        public DbSet<CypressPerfomanceDetaills> tbl_CypressPerfomanceDetaills {  get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TestSuites>()

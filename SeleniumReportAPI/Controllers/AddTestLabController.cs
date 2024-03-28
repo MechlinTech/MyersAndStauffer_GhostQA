@@ -146,7 +146,7 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetExcutedByRootId")]
         public async Task<ActionResult> GetExcutedByRootId(int RootId, string TestName)
         {
-            return Ok(await _helper.GetExcutedByRootId(RootId,TestName));
+            return Ok(await _helper.GetExcutedByRootId(RootId, TestName));
         }
 
         /// <summary>
@@ -155,9 +155,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="Dto_RootObject"></param>
         /// <returns></returns>
         [HttpPost("AddExecuteResult")]
-        public async Task<ActionResult> AddExecuteResult(Dto_RootObject json)
+        public async Task<ActionResult> AddExecuteResult(int testCaseDetailId, Dto_RootObject json)
         {
-            return Ok(await _helper.AddExecuteResult(json));
+            return Ok(await _helper.AddExecuteResult(testCaseDetailId, json));
         }
 
         /// <summary>
@@ -202,6 +202,17 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> UpdateTestCaseDetails(TestCaseDetails model)
         {
             return Ok(await _helper.UpdateTestCaseDetails(model));
+        }
+
+        /// <summary>
+        ///  Delete TestCaseDetails By TestCaseDetailsId
+        /// </summary>
+        /// <param TestCaseDetailsId="TestCaseDetailsId"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteTestCaseDetailsByTestCaseDetailsId")]
+        public async Task<ActionResult> DeleteTestCaseDetailsByTestCaseDetailsId(int TestCaseDetailsId)
+        {
+            return Ok(await _helper.DeleteTestCaseDetailsByTestCaseDetailsId(TestCaseDetailsId));
         }
     }
 }

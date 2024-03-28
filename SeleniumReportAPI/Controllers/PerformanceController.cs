@@ -222,5 +222,38 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.DeleteLoadTestData(Id));
         }
+
+        /// <summary>
+        /// Execute Performance JMX
+        /// </summary>
+        /// <param name="Dto_LoadExecuteResponse"></param>
+        /// <returns></returns>
+        [HttpPost("ExecutePerformanceJMX")]
+        public async Task<ActionResult> ExecutePerformanceJMX(Dto_LoadExecuteResponse model)
+        {
+            return Ok(await _helper.ExecutePerformanceJMX(model));
+        }
+
+        /// <summary>
+        /// Update Location  Data
+        /// </summary>
+        /// <param name="PerformanceLocation"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateLoaction")]
+        public async Task<ActionResult> UpdateLoaction(PerformanceLocation model)
+        {
+            return Ok(await _helper.UpdateLoaction(model));
+        }
+
+        /// <summary>
+        /// Update Location  Data
+        /// </summary>
+        /// <param name="PerformanceLocation"></param>
+        /// <returns></returns>
+        [HttpPost("AddExecuterData")]
+        public async Task<ActionResult> AddExecuterData(Dto_LoadExecuteResponse model)
+        {
+            return Ok(await _helper.AddExecuterData(model));
+        }
     }
 }
