@@ -27,9 +27,7 @@ const data = [
     label: "Mumbai India",
   },
 ];
-export default function LocationPanel({
-  PerformanceFileId
-}) {
+export default function LocationPanel({ PerformanceFileId }) {
   const classes = useStyles();
   const [locationData, setLocationData] = useState([]);
   const [formData, setFormData] = useState({
@@ -38,9 +36,10 @@ export default function LocationPanel({
   const [valueLocation, setValueLocation] = useState(data);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [trafficPercentage, settrafficPercentage] = useState(0);
+  const [totalTraficPercent, settotalTraficPercent] = useState(0);
   const [noOfUser, setnoOfUser] = useState(0);
   const [addLocation, setAddLocation] = useState(false);
-
+  const [totalUsers, settotalUsers] = useState(0);
   const [designTabsActive, setDesignTabsActive] = useState(false);
   const fetchData = async () => {
     try {
@@ -48,11 +47,18 @@ export default function LocationPanel({
         `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
         header()
       );
-      const resData = response.data
-      if(Array.isArray(resData)){
-        setLocationData(resData)
-      }else
-      setLocationData([])
+      const loadRes = await axios.get(
+        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
+        header()
+      );
+      const loadData = loadRes.data;
+      const resData = response.data;
+      if (Array.isArray(loadData)) {
+        settotalUsers(loadData[0].TotalUsers);
+        if (Array.isArray(resData)) {
+          setLocationData(resData);
+        } else setLocationData([]);
+      } else settotalUsers(0);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -67,26 +73,97 @@ export default function LocationPanel({
   const handleFieldChange = (fieldName, fieldInput) => {
     if (fieldName === "selectedLocation") setSelectedLocation(fieldInput);
     else if (fieldName === "noOfUser") {
-        setnoOfUser(fieldInput.target.value)
+      setnoOfUser(fieldInput.target.value);
     } else {
-        settrafficPercentage(fieldInput.target.value)
+      settrafficPercentage(fieldInput.target.value);
     }
   };
-  
-  const handleKeyPress = (event)=>{
-    if (event.key === "Enter") {
-        // Submit form or take action
-        let payload = {
-                id: 0,
-                performanceFileId: PerformanceFileId,
-                name: selectedLocation.value,
-                numberUser: noOfUser,
-                percentageTraffic: trafficPercentage
 
-        }
-        submitLocation(payload)
+  const handleLocationFieldChange = (event, id, type) => {
+    if (type === "percentage") {
+      const updateLocationData = locationData.map((data) =>
+        data.Id !== id
+          ? data
+          : { ...data, PercentageTraffic: event.target.value }
+      );
+      setLocationData(updateLocationData);
+    } else {
+      const updateLocationData = locationData.map((data) =>
+        data.Id !== id ? data : { ...data, Name: event?.value }
+      );
+      setLocationData(updateLocationData);
+    }
+  };
+
+  const handleLocationUpdate = async(event,id) => {
+    if (event.key === "Enter") {
+      let totalPercent = locationData.reduce((sum, data) => {
+        return sum + parseInt(data.PercentageTraffic, 10);
+      }, 0);
+      settotalTraficPercent(totalPercent);
+      if (totalPercent > 100) {
+        toast.error("Total percentage is greater than 100");
+        return;
       }
-  }
+
+      const locationToUpdate = locationData.find(data=>data.Id === id)
+      if(!locationToUpdate.Name)
+      {
+        toast.error('Please select location')
+        return
+      }else{
+        
+        try {
+          const res =await axios.post(
+            `${BASE_URL}/Performance/UpdateLoaction`,
+            locationToUpdate,
+            header()
+          );
+          if (res.data.status === "success") {
+            toast.info("Successfully saved", {
+              style: {
+                background: "rgb(101, 77, 247)",
+                color: "rgb(255, 255, 255)",
+              },
+            });
+    
+            // Update propertyList after successful submission
+            fetchData();
+          }
+        } catch (error) {
+          console.log("error saving ", error);
+          toast.error("Network error");
+        }
+      }
+    }
+  };
+  const handleKeyPress = (event) => {
+    let totalPercent = locationData.reduce((sum, data) => {
+      return sum + parseInt(data.PercentageTraffic, 10);
+    }, 0);
+    totalPercent += parseInt(trafficPercentage ? trafficPercentage : 0);
+    settotalTraficPercent(totalPercent);
+    console.log("total percent", totalPercent);
+    if (event.key === "Enter") {
+      // Submit form or take action
+      if (!selectedLocation) {
+        toast.error("select location");
+        return;
+      }
+      if (totalPercent > 100) {
+        toast.error("Total percentage is greater than 100");
+        return;
+      }
+      let payload = {
+        id: 0,
+        performanceFileId: PerformanceFileId,
+        name: selectedLocation?.value,
+        numberUser: noOfUser,
+        percentageTraffic: trafficPercentage,
+      };
+      submitLocation(payload);
+    }
+  };
 
   const submitLocation = async (payload) => {
     try {
@@ -95,7 +172,7 @@ export default function LocationPanel({
         payload,
         header()
       );
-        console.log('res',res)
+      console.log("res", res);
       if (res.data === "Success") {
         toast.info("Successfully saved", {
           style: {
@@ -103,14 +180,14 @@ export default function LocationPanel({
             color: "rgb(255, 255, 255)",
           },
         });
-        
+
         // Update propertyList after successful submission
         fetchData();
-        setSelectedLocation(null)
-        setnoOfUser(0)
-        settrafficPercentage(0)
-      }else{
-      toast.error("Submitting error");
+        setSelectedLocation(null);
+        setnoOfUser(0);
+        settrafficPercentage(0);
+      } else {
+        toast.error("Submitting error");
       }
     } catch (error) {
       console.log("error saving ", error);
@@ -135,7 +212,6 @@ export default function LocationPanel({
 
         // Update propertyList after successful deletion
         fetchData();
-
       }
     } catch (error) {
       console.log("error deleting ", error);
@@ -173,7 +249,7 @@ export default function LocationPanel({
           <TableHead>
             <TableRow>
               <TableCell align="center" style={{ width: "50%" }}>
-               <StyledTypography> Locations</StyledTypography>
+                <StyledTypography> Locations</StyledTypography>
               </TableCell>
               <TableCell align="center" style={{ width: "20%" }}>
                 <StyledTypography>% of Traffic</StyledTypography>
@@ -197,26 +273,34 @@ export default function LocationPanel({
                       value={{ label: item.Name, value: item.Name }}
                       isClearable={true}
                       menuPosition={"fixed"}
+                      onChange={(loc) =>
+                        handleLocationFieldChange(loc, item.Id, "location")
+                      }
                     />
                   </TableCell>
                   <TableCell align="left" style={{ width: "20%" }}>
                     <input
                       type="number"
+                      min={0}
                       value={item.PercentageTraffic}
                       className={classes.inputField}
+                      onChange={(e) =>
+                        handleLocationFieldChange(e, item.Id, "percentage")
+                      }
+                      onKeyDown={(e)=>handleLocationUpdate(e,item.Id)}
                     />
                   </TableCell>
 
-                  <TableCell align="left" style={{ width: "20%" }}>
-                    <input
-                      type="number"
-                      value={item.NumberUser}
-                      className={classes.inputField}
-                    />
+                  <TableCell align="center" style={{ width: "20%" }}>
+                    <StyledTypography>
+                      {(totalUsers / 100) * item.PercentageTraffic}
+                    </StyledTypography>
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
                     <DeleteIcon
-                    onClick={()=>{handleDelete(item.Id)}}
+                      onClick={() => {
+                        handleDelete(item.Id);
+                      }}
                       style={{ cursor: "pointer", color: "#f74d4d" }}
                     />
                   </TableCell>
@@ -245,28 +329,26 @@ export default function LocationPanel({
                     value={trafficPercentage}
                     className={classes.inputField}
                     onChange={(e) => {
-                      handleFieldChange("trafficPercentage",e);
+                      handleFieldChange("trafficPercentage", e);
                     }}
                     onKeyDown={handleKeyPress}
                   />
                 </TableCell>
 
-                <TableCell align="left" style={{ width: "20%" }}>
-                  <input
-                    type="number"
-                    value={noOfUser}
-                    className={classes.inputField}
-                    onChange={(e) => {
-                        handleFieldChange("noOfUser",e);
-                      }}
-                    onKeyDown={handleKeyPress}
-
-                  />
+                <TableCell align="center" style={{ width: "20%" }}>
+                  <StyledTypography>
+                    {(totalUsers / 100) * trafficPercentage}
+                  </StyledTypography>
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
+        {totalTraficPercent > 100 && (
+          <StyledTypography color="error" textAlign="right" m={3}>
+            Total traffic percentage cannot be more than 100 *
+          </StyledTypography>
+        )}
       </TableContainer>
     </>
   );
