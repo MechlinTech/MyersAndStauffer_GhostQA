@@ -232,7 +232,7 @@ const cypressActions = [
 
 const userActionsOptions = [
   { label: "visit", value: "visit" },
-  { label: "left click", value: "click" },
+  { label: "left click", value: "leftclick" },
   { label: "double click", value: "dblclick" },
   { label: "Right click", value: "rightclick" },
   { label: "Mouse over", value: "hover" },
