@@ -3,6 +3,10 @@ import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
 import { GetEnvironment,GetApplication,GetBrowser } from "./seleniumAction";
 export const GET_TEST_SUITS = "GET_TEST_SUITS";
+export const GET_LOC_COUNT = "GET_LOC_COUNT";
+export const GET_USER_COUNT = "GET_USER_COUNT";
+export const RESET_USER_COUNT = "RESET_USER_COUNT";
+export const RESET_LOC_COUNT = "RESET_LOC_COUNT";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const getTestSuitesList = () => {
@@ -192,3 +196,50 @@ export const DeleteBrowser = (brwId) => {
     }
   };
 };
+
+export const GetLocationScenarioVUCount = (testId)=>{
+
+  return async (dispatch)=>{
+    try {
+      const loadRes = await axios.get(
+        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${testId}`,
+        header()
+      );
+      const locationRes = await axios.get(
+        `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${testId}`,
+        header()
+      );
+      const locCount = Array.isArray(locationRes.data)
+        ? locationRes.data.length
+        : 0;
+      const userCount = Array.isArray(loadRes.data)
+        ? loadRes.data[0].TotalUsers
+        : 0;
+        dispatch({
+          type: GET_USER_COUNT,
+          payload: userCount,
+        });
+        dispatch({
+          type: GET_LOC_COUNT,
+          payload: locCount,
+        });
+        
+    }catch (error) {
+      toast.error('Network error')
+    }
+  }
+}
+
+export const ResetLocationScenarioVUCount = ()=>{
+
+  return async (dispatch)=>{
+    dispatch({
+      type: RESET_USER_COUNT,
+      payload: 0,
+    });
+    dispatch({
+      type: RESET_LOC_COUNT,
+      payload: 0,
+    });
+  }
+}

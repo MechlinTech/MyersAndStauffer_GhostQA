@@ -67,9 +67,9 @@ let data = [
   },
 ];
 
-export default function Results() {
+export default function Results({rootId}) {
   const [expandedAccord, setExpandedAccord] = React.useState("");
-
+  console.log('root id ',rootId)
   const handleExpandAccord = (panel) => (e, isExpanded) => {
     setExpandedAccord(isExpanded ? panel : "");
   };

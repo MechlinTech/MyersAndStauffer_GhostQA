@@ -15,6 +15,8 @@ import axios from "axios";
 import { header } from "../../../../utils/authheader";
 import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
+import { useDispatch } from "react-redux";
+import { GetLocationScenarioVUCount } from "../../../../redux/actions/settingAction";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const data = [
@@ -29,6 +31,7 @@ const data = [
 ];
 export default function LocationPanel({ PerformanceFileId }) {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const [locationData, setLocationData] = useState([]);
   const [formData, setFormData] = useState({
     selectedLocation: null,
@@ -56,6 +59,7 @@ export default function LocationPanel({ PerformanceFileId }) {
       if (Array.isArray(loadData)) {
         settotalUsers(loadData[0].TotalUsers);
         if (Array.isArray(resData)) {
+          settotalTraficPercent(resData.reduce((sum,data)=>{return sum+data.PercentageTraffic},0))
           setLocationData(resData);
         } else setLocationData([]);
       } else settotalUsers(0);
@@ -101,8 +105,8 @@ export default function LocationPanel({ PerformanceFileId }) {
         return sum + parseInt(data.PercentageTraffic, 10);
       }, 0);
       settotalTraficPercent(totalPercent);
-      if (totalPercent > 100) {
-        toast.error("Total percentage is greater than 100");
+      if (totalPercent !== 100) {
+        toast.error("Total percentage should be 100");
         return;
       }
 
@@ -150,8 +154,8 @@ export default function LocationPanel({ PerformanceFileId }) {
         toast.error("select location");
         return;
       }
-      if (totalPercent > 100) {
-        toast.error("Total percentage is greater than 100");
+      if (totalPercent !== 100) {
+        toast.error("Total percentage should be 100");
         return;
       }
       let payload = {
@@ -183,6 +187,7 @@ export default function LocationPanel({ PerformanceFileId }) {
 
         // Update propertyList after successful submission
         fetchData();
+        dispatch(GetLocationScenarioVUCount(PerformanceFileId))
         setSelectedLocation(null);
         setnoOfUser(0);
         settrafficPercentage(0);
@@ -344,9 +349,9 @@ export default function LocationPanel({ PerformanceFileId }) {
             )}
           </TableBody>
         </Table>
-        {totalTraficPercent > 100 && (
+        {totalTraficPercent !== 100 && (
           <StyledTypography color="error" textAlign="right" m={3}>
-            Total traffic percentage cannot be more than 100 *
+            Total traffic percentage should be 100 *
           </StyledTypography>
         )}
       </TableContainer>
