@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -6,97 +6,68 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { TableData } from "./TableData";
 import { Box } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { GetResultsList } from "../../../redux/actions/ResultAction";
+import CircularProgress from "@mui/material/CircularProgress";
 
-let data = [
-  {
-    TestRunDateYear: "February 13",
-    RunDetails: [
-      {
-        TestSuiteName: "eds",
-        TestRunName: "TestRun-1",
-        TestRunStartDateTime: "2024-02-13T19:33:54.0865355+05:30",
-        TestRunEndDateTime: "2024-02-13T19:33:55.9766040+05:30",
-        TestRunLoactaion: "US East (South Carolina, Google)",
-        RunBy: "Nimit Jain",
-        TestRunStatus: "Complete",
-      },
-      {
-        TestSuiteName: "another_suite",
-        TestRunName: "TestRun-2",
-        TestRunStartDateTime: "2024-02-14T10:00:00.0000000+05:30",
-        TestRunEndDateTime: "2024-02-14T10:30:00.0000000+05:30",
-        TestRunLoactaion: "US East (South Carolina, Google)",
-        RunBy: "Nimit Jain",
-        TestRunStatus: "Running",
-      },
-      {
-        TestSuiteName: "yet_another_suite",
-        TestRunName: "TestRun-3",
-        TestRunStartDateTime: "2024-02-15T08:00:00.0000000+05:30",
-        TestRunEndDateTime: "2024-02-15T08:45:00.0000000+05:30",
-        TestRunLoactaion: "US East (South Carolina, Google)",
-        RunBy: "Nimit Jain",
-        TestRunStatus: "Aborted",
-      },
-    ],
-  },
-  {
-    TestRunDateYear: "March 11",
-    RunDetails: [
-      {
-        TestSuiteName: "eds",
-        TestRunName: "TestRun-1",
-        TestRunStartDateTime: "2024-02-13T19:33:54.0865355+05:30",
-        TestRunEndDateTime: "2024-02-13T19:33:55.9766040+05:30",
-        TestRunLoactaion: "US East (South Carolina, Google)",
-        RunBy: "Nimit Jain",
-        TestRunStatus: "Complete",
-      },
-      {
-        TestSuiteName: "another_suite",
-        TestRunName: "TestRun-2",
-        TestRunStartDateTime: "2024-02-14T10:00:00.0000000+05:30",
-        TestRunEndDateTime: "2024-02-14T10:30:00.0000000+05:30",
-        TestRunLoactaion: "US East (South Carolina, Google)",
-        RunBy: "Nimit Jain",
-        TestRunStatus: "Running",
-      },
-     
-    ],
-  },
-];
+export default function Results({ rootId }) {
+  const [expandedAccord, setExpandedAccord] = useState("");
+  const dispatch = useDispatch();
+  const { resultsList } = useSelector((state) => state.result);
+  const [loading, setLoading] = useState(false);
 
-export default function Results({rootId}) {
-  const [expandedAccord, setExpandedAccord] = React.useState("");
-  console.log('root id ',rootId)
   const handleExpandAccord = (panel) => (e, isExpanded) => {
     setExpandedAccord(isExpanded ? panel : "");
   };
+  useEffect(() => {
+    dispatch(GetResultsList(rootId, setLoading));
+  }, [rootId]);
 
+  console.log("rootId", rootId, loading, resultsList);
   return (
-    <Box sx={{}}>
-      {data?.map((item, index) => (
-        <Accordion
-          expanded={expandedAccord === item}
-          onChange={handleExpandAccord(item)}
-          key={index}
-          sx={{
-            boxShadow: "none",
-            border: "1px solid rgb(217, 217, 217)",
-            marginBottom: "3px",
+    <Box>
+      {loading && (
+        <CircularProgress
+          style={{
+            color: "#654DF7",
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
           }}
-        >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography fontFamily={"Lexend Deca"} fontSize="14px">
-              {`${item.TestRunDateYear} (${item?.RunDetails?.length})`}
+          size={25}
+        />
+      )}
+      {!loading && resultsList && resultsList.length > 0
+        ? resultsList.map((item, index) => (
+            <Accordion
+              expanded={expandedAccord === item}
+              onChange={handleExpandAccord(item)}
+              key={index}
+              sx={{
+                boxShadow: "none",
+                border: "1px solid rgb(217, 217, 217)",
+                marginBottom: "3px",
+              }}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography fontFamily={"Lexend Deca"} fontSize="14px">
+                  {`${item?.TestRunDate} (${item?.RunDetails?.length})`}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ p: "0" }}>
+                <TableData rows={item.RunDetails} />
+              </AccordionDetails>
+            </Accordion>
+          ))
+        : !loading && (
+            <Typography
+              fontFamily={"Lexend Deca"}
+              fontSize="14px"
+              variant="body1"
+            >
+              No data available
             </Typography>
-          </AccordionSummary>
-          <AccordionDetails sx={{ p: "0" }}>
-            <TableData rows={item.RunDetails} />
-          </AccordionDetails>
-        </Accordion>
-      ))}
+          )}
     </Box>
   );
 }

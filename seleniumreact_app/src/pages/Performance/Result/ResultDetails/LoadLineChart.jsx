@@ -8,6 +8,9 @@ const LineChart = ({ height }) => {
       toolbar: {
         show: false,
       },
+      zoom: {
+        enabled: false,
+      },
     },
     colors: ["#0000ff", "#ff0000"],
     xaxis: {
@@ -38,6 +41,11 @@ const LineChart = ({ height }) => {
     legend: {
       position: "top",
       horizontalAlign: "center",
+      markers: {
+        width: 30,
+        height: 5,
+        radius: 0,
+      },
     },
     height: 280,
   };

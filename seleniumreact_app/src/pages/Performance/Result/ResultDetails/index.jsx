@@ -6,14 +6,6 @@ import {
   Box,
   Card,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Icon,
-  Button,
-  Breadcrumbs,
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -55,17 +47,16 @@ export default function Summary() {
   return (
     <>
       <Grid className={classes.mainContainer}>
-        {/* main compoent */}
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={8}>
-            <Grid container spacing={2}>
+        {/* Top Component */}
+        <Grid container style={{ height: "48vh", marginBottom:'10px' }} spacing={2}>
+          <Grid item xs={12} sm={8} style={{ height: "100%" }}>
               {/*Top Left part of the card */}
-              <Grid item xs={12} sm={12}>
                 <Card
                   style={{
                     width: "100%",
                     marginTop: "20px",
                     padding: "10px",
+                    height: "100%",
                   }}
                 >
                   <Grid container spacing={2}>
@@ -74,7 +65,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -102,7 +93,7 @@ export default function Summary() {
                               className={`${classes.fontSize50}`}
                               style={{ color: "#654DF7" }}
                             >
-                              1uv
+                              1vu
                             </span>
                           </Typography>
                         </CardContent>
@@ -114,7 +105,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -154,7 +145,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -194,7 +185,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -232,7 +223,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -272,7 +263,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -308,15 +299,14 @@ export default function Summary() {
                     </Grid>
                   </Grid>
                 </Card>
-              </Grid>
-            </Grid>
           </Grid>
-
+          {/* Spacing */}
+        
           {/*Top Right side */}
-          <Grid item xs={12} sm={4}>
-            <Card style={{ marginTop: "20px", width: "100%", padding: "10px" }}>
+          <Grid item xs={12} sm={4} style={{ height:'100%' }}>
+            <Card style={{ marginTop: "20px", width: "100%", height:'100%' }}>
               <CardContent>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} style={{ height: "100%" }}>
                   {data.map((item, index) => (
                     <React.Fragment key={index}>
                       <Grid item xs={12} sm={4}>
@@ -333,10 +323,12 @@ export default function Summary() {
                 </Grid>
               </CardContent>
             </Card>
-            <Grid container spacing={2}></Grid>
           </Grid>
         </Grid>
-        <Grid container spacing={2}>
+
+        {/* Buttom Component */}
+
+        <Grid container spacing={1} sx={{marginTop:'20px !important'}} style={{marginTop:'20px'}}>
           <Grid item xs={12} sm={12}>
             <Card
               style={{

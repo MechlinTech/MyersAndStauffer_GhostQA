@@ -83,7 +83,7 @@ export default function InitialSetup() {
                             <span
                               style={{ color: "#654DF7", fontSize: "40px" }}
                             >
-                              10uv
+                              10vu
                             </span>
                           </Typography>
                         </CardContent>
@@ -115,7 +115,7 @@ export default function InitialSetup() {
                             <span
                               style={{ color: "#654DF7", fontSize: "40px" }}
                             >
-                              10uv
+                              10vu
                             </span>
                           </Typography>
                         </CardContent>
@@ -147,7 +147,7 @@ export default function InitialSetup() {
                             <span
                               style={{ color: "#FACE09", fontSize: "40px" }}
                             >
-                              10uv
+                              10s
                             </span>
                           </Typography>
                         </CardContent>
@@ -177,7 +177,7 @@ export default function InitialSetup() {
                             <span
                               style={{ color: "#FACE09", fontSize: "40px" }}
                             >
-                              5uv
+                              5s
                             </span>
                           </Typography>
                         </CardContent>
@@ -209,7 +209,7 @@ export default function InitialSetup() {
                             <span
                               style={{ color: "#00A879", fontSize: "40px" }}
                             >
-                              10uv
+                              10s
                             </span>
                           </Typography>
                         </CardContent>

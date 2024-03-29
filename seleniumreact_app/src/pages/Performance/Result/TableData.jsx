@@ -52,8 +52,8 @@ export function TableData({ rows }) {
         <TableBody>
           {rows?.map((row) => (
             <TableRow
-            style={{ height: "34px !important" }}
-              key={row.TestRunName}
+              style={{ height: "34px !important" }}
+              key={row.RunId}
               className={`${classes.tableRow} ${
                 row === activeRow ? classes.activeRow : ""
               }`}
@@ -61,25 +61,22 @@ export function TableData({ rows }) {
               <StyledTableCell component="th" scope="row">
                 <Link
                   to={`/result/summary`}
-                  style={{ textDecoration: "none", }}
+                  style={{ textDecoration: "none" }}
                   onClick={() => handleRowClick(row)}
                 >
-                  {row.TestRunName}
+                  {row.RunId}
                 </Link>
               </StyledTableCell>
-              <StyledTableCell>
-                {formatTime(row.TestRunStartDateTime)}
-              </StyledTableCell>
-              <StyledTableCell>
-                {formatTime(row.TestRunEndDateTime)}
-              </StyledTableCell>
+              <StyledTableCell>{formatTime(row.StartDateTime)}</StyledTableCell>
+              <StyledTableCell>{formatTime(row.EndDateTime)}</StyledTableCell>
               <StyledTableCell className="p-4" sx={{}}>
-                {row.TestRunLoactaion}
+                {/* {row.TestRunLoactaion} */}
+                --
               </StyledTableCell>
               <StyledTableCell className="p-4">
-                {row.RunBy}
+                {row.TesterName}
               </StyledTableCell>
-              <CustomStatusCell status={row.TestRunStatus} /> 
+              <CustomStatusCell status={row.Status} />
             </TableRow>
           ))}
         </TableBody>
