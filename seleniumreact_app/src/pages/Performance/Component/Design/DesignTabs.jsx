@@ -88,8 +88,8 @@ export default function DesignTabs({PerformanceFileId}) {
         >
           <Tab value="Load" label={<StyledTypography>Load</StyledTypography>} />
           <Tab value="Location" label={<StyledTypography>Location</StyledTypography>} />
-          <Tab value="Data Entity" label={<StyledTypography>Test Data</StyledTypography>} />
-          <Tab value="Properties" label={<StyledTypography>Properties</StyledTypography>} />
+          <Tab value="Data Entity" label={<StyledTypography>Test Data</StyledTypography>} disabled={true} />
+          <Tab value="Properties" label={<StyledTypography>Properties</StyledTypography>} disabled={true}/>
           
         </Tabs>
 

@@ -91,7 +91,7 @@ export default function MiniDrawer() {
                 Functional
               </Link>
             </Grid>
-            <Grid item>
+            {/* <Grid item>
               <Link
                 className={`${classes.linkStyle} ${
                   location.pathname.slice(0, 5) === "/api" && classes.activeLink
@@ -99,7 +99,7 @@ export default function MiniDrawer() {
               >
                 API
               </Link>
-            </Grid>
+            </Grid> */}
             <Grid item>
               <Link
                 to="/performance"
