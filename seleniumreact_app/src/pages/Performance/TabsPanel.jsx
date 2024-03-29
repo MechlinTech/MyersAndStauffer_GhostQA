@@ -90,7 +90,7 @@ export default function TabsPanel({rootId}) {
         <Design rootId={rootId}/>
         </TabPanel>
         <TabPanel value={value} index={"Results"} dir={theme.direction}>
-        <Results />
+        <Results rootId={rootId}/>
         </TabPanel>
         <TabPanel value={value} index={"Trends"} dir={theme.direction}>
         <Trends/>
