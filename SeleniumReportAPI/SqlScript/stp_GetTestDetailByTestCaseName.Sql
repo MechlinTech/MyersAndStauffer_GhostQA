@@ -1,27 +1,15 @@
-CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestDetailByTestCaseName]
-@TestName           NVARCHAR(MAX)
-AS
-/**************************************************************************************
-PROCEDURE NAME	:	stp_GetTestDetailByTestCaseName
-CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	21st March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
-PROC EXEC		:
-				EXEC stp_GetTestDetailByTestCaseName
-**************************************************************************************/
 BEGIN TRY
-    IF EXISTS (SELECT 1 FROM tbl_InternalTestExecutions WHERE [TestCaseName] = @TestName)
+    IF EXISTS (SELECT 1 FROM tbl_CypressTestExecution WHERE [TestCaseName] = @TestName)
     BEGIN
         SELECT [result] = JSON_QUERY((
             SELECT [TestSuite], 
-                   ISNULL([TestCase], '') AS [TestCase],
+                   ISNULL([TestCaseId], '') AS [TestCase],
                    ISNULL([Status], '') AS [Status],
 				   ISNULL([StartDateTime], '') AS [StartDateTime],
 				   ISNULL([EndDateTime], '') AS [EndDateTime],
 				   ISNULL([TestDuration], '') AS [TestDuration],
 				   ISNULL([TestVideoUrl], '') AS [TestVideoUrl]
-            FROM tbl_InternalTestExecutions
+            FROM tbl_CypressTestExecution
             WHERE [TestCaseName] = @TestName
             FOR JSON PATH
         ))

@@ -212,3 +212,5 @@ export const StyledTypography = styled(Typography)(({ theme }) => ({
     fontSize:'14px'
     // Add other styles as needed
   }));
+
+  

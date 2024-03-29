@@ -1,9 +1,10 @@
 import { makeStyles } from "@material-ui/core";
-
+import { styled } from "@mui/material/styles";
+import {FormControl, OutlinedInput} from "@mui/material";
 export const useStylesTree = makeStyles({
     rootNodeFolder: {
         listStyle: 'none',
-        padding:'0 20px'
+        padding:'0 2px'
 
     },
     child: {
@@ -17,6 +18,7 @@ export const useStylesTree = makeStyles({
         display: 'none', // Hide crud by default
     },
     cardListHolderList: {
+        overflow:'auto',
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'nowrap',
@@ -57,8 +59,28 @@ updateEdit:{
 },
 orgTree:{
     overflow:"auto",
-    height: '64vh'
+    height: '64vh',
 }
     
 });
 
+export const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
+    fontFamily: "Lexend Deca",
+    fontSize: "14px",
+    height: "40px",
+  }));
+
+  export const StyledFormControl = styled(FormControl)(({theme})=>({
+    width:'100%',
+    "& .MuiOutlinedInput-root": {
+      "&:hover fieldset": {
+        borderColor: "#654DF7",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#654DF7",
+      },
+      "& fieldset": {
+        borderColor: "transparent",
+      },
+    },
+  }))

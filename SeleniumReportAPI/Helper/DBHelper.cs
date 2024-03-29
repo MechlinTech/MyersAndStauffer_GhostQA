@@ -18,6 +18,9 @@ using SmtpClient = System.Net.Mail.SmtpClient;
 using ExcelDataReader;
 using Newtonsoft.Json.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using System.Net.Http.Headers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using GitHub;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -2282,7 +2285,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<object> AddExecuteResult(Dto_RootObject model)
+        internal async Task<object> AddExecuteResult(int testCaseDetailId, Dto_RootObject model)
         {
             string result = string.Empty;
             var jObj = (JObject)model.json;
@@ -2319,6 +2322,7 @@ namespace SeleniumReportAPI.Helper
                     command.Parameters.AddWithValue("@TestScreenShot", GetArtifactUrl(model, "screenshot"));
                     command.Parameters.AddWithValue("@TesterName", string.Empty);
                     command.Parameters.AddWithValue("@TestVideoUrl", GetArtifactUrl(model, "video"));
+                    command.Parameters.AddWithValue("@TestCaseDetailsId", testCaseDetailId);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -2463,5 +2467,171 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
+        internal async Task<string> DeleteTestCaseDetailsByTestCaseDetailsId(int TestCaseDetailsId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteTestCaseDetailsByTestCaseDetailsId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestCaseDetailsId", TestCaseDetailsId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<Dto_LoadExecuteResponse> ExecutePerformanceJMX(Dto_LoadExecuteResponse model)
+        {
+            string result = string.Empty;
+            var guid = Guid.NewGuid().ToString();
+            string startDate;
+            string endDate;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetExecutePerformanceData", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                var executedData = JsonConvert.DeserializeObject<List<Dto_ExecutionPerformance>>(result);
+                var httpClient = new HttpClient();
+                HttpResponseMessage response = null;
+                startDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                foreach (var data in executedData)
+                {
+                    var formData = new MultipartFormDataContent();
+                    formData.Headers.TryAddWithoutValidation("X-CSRFTOKEN", "xJkh4UeQtq6uvMdPjtW2TX5gLZM9VdBsNZ206NwsRTc3XoWNVy8Gk7lGIU9TzV9O");
+                    var fileStream = new FileStream(data.FilePath, FileMode.Open);
+                    var fileContent = new StreamContent(fileStream);
+                    formData.Add(fileContent, "test_file", data.FileName);
+                    formData.Add(new StringContent("GhostQA"), "name");
+                    formData.Add(new StringContent(data.RampUpTimeInSeconds.ToString()), "jrampup_time");
+                    formData.Add(new StringContent(data.TotalUsers.ToString()), "jthreads_total_user");
+                    formData.Add(new StringContent(data.RampUpSteps.ToString()), "jrampup_steps");
+                    formData.Add(new StringContent(data.DurationInMinutes.ToString()), "durations");
+                    formData.Add(new StringContent(guid), "client_reference_id");
+
+                    response = await httpClient.PostAsync(_configuration["CypressAPI:PerformanceExecutor"], formData);
+                    var res1 = await response.Content.ReadAsStringAsync();
+                    fileContent.Dispose();
+                    fileStream.Dispose();
+                }
+                endDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return new Dto_LoadExecuteResponse()
+            {
+                Name = model.Name,
+                Client_Id = guid,
+                TesterName = model.TesterName,
+                RootId = model.RootId,
+                StartDate = startDate,
+                EndDate = endDate
+            };
+        }
+        
+       internal async Task<string> AddExecuterData(Dto_LoadExecuteResponse model)
+        {
+            string result = string.Empty;
+            string endDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            foreach (var data in model.responseData.results)
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddExecutePerformanceData", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@Name", model.Name);
+                        command.Parameters.AddWithValue("@RunId", model.Client_Id);
+                        command.Parameters.AddWithValue("@Status", "Complete");
+                        command.Parameters.AddWithValue("@StartDateTime", model.StartDate);
+                        command.Parameters.AddWithValue("@EndDateTime", endDate);
+                        command.Parameters.AddWithValue("@LoadDataJson", JsonConvert.SerializeObject(data.json));
+                        command.Parameters.AddWithValue("@TesterName", model.TesterName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+           
+            return result;
+        }
+        internal async Task<object> UpdateLoaction(PerformanceLocation model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateLocation", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", model.Id);
+                        command.Parameters.AddWithValue("@Name", model.Name);
+                        command.Parameters.AddWithValue("@NumberUser", model.NumberUser);
+                        command.Parameters.AddWithValue("@PercentageTraffic", model.PercentageTraffic);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
     }
 }

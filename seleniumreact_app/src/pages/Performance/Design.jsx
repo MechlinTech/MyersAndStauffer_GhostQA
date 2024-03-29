@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Card } from "@material-ui/core";
+import { Grid, Card, CircularProgress } from "@material-ui/core";
 import Button from "@mui/material/Button";
 import { useStyles } from "./styles";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
@@ -15,19 +15,31 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import { Typography } from "@mui/material";
 import axios from "axios";
 import { header } from "../../utils/authheader";
+import { toast } from "react-toastify";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-export default function Design({ addTestCase }) {
+export default function Design({ rootId }) {
   const classes = useStyles();
   const [locationCount, setlocationCount] = useState(0);
   const [scenarioCount, setscenarioCount] = useState(0);
+  const [showAddNewElement, setShowAddNewElement] = useState(true);
+  const [folderName, setfolderName] = useState('')
   const [uvCount, setuvCount] = useState(0);
+  const [isRuning, setisRuning] = useState(false)
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${addTestCase}`,
+        `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
         header()
       );
+      const res = await axios.get(
+        `${BASE_URL}/Performance/GetProjectData`,
+        header()
+      );
+      res.data?.map((project)=>{
+        if(project.id === rootId)
+         setfolderName(project.name)
+      })
       // Assuming response.data is the array of data you want to set as listData
       const testList = response.data;
       if (Array.isArray(testList)) {
@@ -65,9 +77,59 @@ export default function Design({ addTestCase }) {
   };
   useEffect(() => {
     fetchData();
-    console.log("in side design ", addTestCase);
-  }, [addTestCase]);
-  const [showAddNewElement, setShowAddNewElement] = useState(true);
+    console.log("in side design ", rootId);
+  }, [rootId]);
+
+  const getName = () => {
+    const email = sessionStorage.getItem("email");
+    const i = email.indexOf("@");
+    const name = email.substring(0, i);
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  };
+  const handleRunNow = async()=>{
+    setisRuning(true)
+    const testername = getName()
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/Performance/ExecutePerformanceJMX`,{rootId: rootId,
+        testerName: testername,
+        name: folderName,},
+        header()
+      );
+      console.log('response',response)
+      const clientId = response.data.client_Id
+      getRunDetail(response.data,clientId,2000)
+    } catch (error) {
+      toast.error('NETWORK ERROR')
+    }
+  }
+
+  const getRunDetail = async(data,clientId,delay)=>{
+    try {
+      const res = await axios.get(
+        `http://65.1.188.67:8010/api/performance-container-runs/?client_reference_id=${clientId}`,
+        header()
+      );
+        const result = res.data.results
+        const isJsonHasNull = result.some(item => item.json === null)
+        if(isJsonHasNull){
+          setTimeout(() => {
+            getRunDetail(data,clientId,delay)
+          }, delay);
+        }else{
+          data = {...data,responseData:res.data}
+          console.log('data',data)
+          setisRuning(false)
+          const response = await axios.post(
+            `${BASE_URL}/Performance/AddExecuterData`,data,
+            header()
+          );
+          console.log('res',response)
+        }
+    } catch (error) {
+      toast.error("network error in container runs")
+    }
+  }
   return (
     <Grid
       container
@@ -191,15 +253,17 @@ export default function Design({ addTestCase }) {
               cursor: "pointer",
               padding: "12px 18px",
             }}
+            onClick={handleRunNow}
           >
-            <PlayCircleOutlineIcon /> Run Now
+            {isRuning?<CircularProgress style={{color:'white'}}/>:(<><PlayCircleOutlineIcon/> Run Now</>)}
+            
           </Button>
         </Grid>
       </Grid>
       <Grid container alignItems="center">
         <Grid item xs={12}>
           <TableTestCase
-            addTestCase={addTestCase}
+            rootId={rootId}
             setShowAddNewElement={setShowAddNewElement}
             showAddNewElement={showAddNewElement}
           />

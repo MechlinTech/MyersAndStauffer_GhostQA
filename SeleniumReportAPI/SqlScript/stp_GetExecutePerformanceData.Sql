@@ -1,23 +1,30 @@
-CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestStepsDetailByTestCaseId]
-@TestCaseId           NVARCHAR(MAX)
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetExecutePerformanceData]
+@RootId             INT
 AS
 /**************************************************************************************
-PROCEDURE NAME	:	stp_GetTestStepsDetailByTestCaseId
+PROCEDURE NAME	:	stp_GetExecutePerformanceData
 CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	21st March 2024
+CREATED DATE	:	27th March 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
 PROC EXEC		:
-				EXEC stp_GetTestStepsDetailByTestCaseId
+				EXEC stp_GetExecutePerformanceData
 **************************************************************************************/
 BEGIN TRY
-    IF EXISTS (SELECT 1 FROM tbl_CypressTestExecution WHERE [TestCaseId] = @TestCaseId)
+    IF EXISTS (SELECT 1 FROM tbl_PerformanceFile WHERE [RootId] = @RootId)
     BEGIN
         SELECT [result] = JSON_QUERY((
-            SELECT ISNULL([TestStepJson], '') AS [TestStepJson],
-					ISNULL([TestScreenShotUrl], '') AS [TestScreenShotUrl]
-            FROM tbl_CypressTestExecution
-            WHERE [TestCaseId] = @TestCaseId
+            SELECT pf.[TestCaseName],
+				   pf.[FilePath],
+				   pf.[FileName],
+				   l.PerformanceFileId,
+				   l.TotalUsers,
+				   l.DurationInMinutes,
+				   l.RampUpSteps,
+				   l.RampUpTimeInSeconds
+            FROM tbl_PerformanceFile pf
+			LEFT JOIN tbl_Load l ON pf.Id = l.PerformanceFileId
+            WHERE [RootId] = @RootId
             FOR JSON PATH
         ))
     END
@@ -25,7 +32,7 @@ BEGIN TRY
     BEGIN
         SELECT [result] = JSON_QUERY((
             SELECT 'fail' AS [status], 
-                   'Test Case Id not found' AS [message]
+                   'Test Case Name not found' AS [message]
             FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
         ))
     END

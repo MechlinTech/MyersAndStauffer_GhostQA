@@ -115,7 +115,7 @@ export default function Performance() {
                         cursor: "pointer",
                       }}
                     >
-                      <Add />
+                      {!addNewProject?<Add />:'Cancel'}
                     </Button>
                   </Grid>
                   <Grid item xs={1} style={{position:'absolute',right:'-14px',top:'-6px'}}>
@@ -146,7 +146,7 @@ export default function Performance() {
               </Card>
           </Grid>
           <Grid item xs={12} md={drawerOpen ? 9 : 12}>
-            {addTestCase !== 0 && <TabsPanel addTestCase={addTestCase} />}
+            {addTestCase !== 0 && <TabsPanel rootId={addTestCase} />}
           </Grid>
         </Grid>
       </div>
