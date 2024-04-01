@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -59,6 +60,7 @@ let data = [
 
 export default function Error() {
   const classes = useStyles();
+  const { executerData } = useSelector((state) => state.result);
   const [expandedAccord, setExpandedAccord] = React.useState("");
 
   const handleExpandAccord = (panel) => (e, isExpanded) => {
@@ -118,34 +120,38 @@ export default function Error() {
               </Typography>
             </Grid>
             {/* Accordion items */}
-            <Grid container className={classes.accordionContainer}>
-              {data?.map((item, index) => (
-                <Accordion
-                  expanded={expandedAccord === item}
-                  onChange={handleExpandAccord(item)}
-                  key={index}
-                  className={classes.accordion}
-                >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.accordianSummary}>
-                      {`${item.HeaderLabel}`}
-                    </Typography>
-                    <Typography className={classes.accordianSummary}>
-                      {`${item.HeaderResponseCode}`}
-                    </Typography>
-                    <Typography className={classes.accordianSummary}>
-                      {`${item.HeaderAssertions}`}
-                    </Typography>
-                    <Typography className={classes.accordianSummary}>
-                      {`${item.HeaderEmbeddedResources}`}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ p: "0" }}>
-                    <TableData rows={item.ErrorDetails} />
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </Grid>
+            {executerData?.error && executerData.error.length > 0 ? (
+              <Grid container className={classes.accordionContainer}>
+                {data?.map((item, index) => (
+                  <Accordion
+                    expanded={expandedAccord === item}
+                    onChange={handleExpandAccord(item)}
+                    key={index}
+                    className={classes.accordion}
+                  >
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography className={classes.accordianSummary}>
+                        {`${item.HeaderLabel}`}
+                      </Typography>
+                      <Typography className={classes.accordianSummary}>
+                        {`${item.HeaderResponseCode}`}
+                      </Typography>
+                      <Typography className={classes.accordianSummary}>
+                        {`${item.HeaderAssertions}`}
+                      </Typography>
+                      <Typography className={classes.accordianSummary}>
+                        {`${item.HeaderEmbeddedResources}`}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: "0" }}>
+                      <TableData rows={item.ErrorDetails} />
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </Grid>
+            ) : (
+              <Typography fontFamily={"Lexend Deca"} fontSize="14px">No data found</Typography>
+            )}
           </Grid>
         </CardContent>
       </Card>
