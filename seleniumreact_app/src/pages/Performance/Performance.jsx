@@ -11,12 +11,16 @@ import DynamicTreeView from "./DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 import { Box } from "@mui/material";
+import { useLocation } from 'react-router-dom';
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Performance() {
   const classes = useStyles();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const rootId = queryParams.get('rootId');
 
-  const [addTestCase, setAddTestCase] = useState(0);
+  const [addTestCase, setAddTestCase] = useState(rootId);
   const [addNewProject, setAddNewProject] = useState(false);
 
   const [formData, setFormData] = useState({ name: "" });
@@ -24,6 +28,7 @@ export default function Performance() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isCollapsed, setisCollapsed] = useState(false);
   const [listData, setListData] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -141,6 +146,7 @@ export default function Performance() {
                     TestCaseHandle={handleTestCaseList}
                     listData={listData}
                     setListData={setListData}
+                    params={rootId}
                   />
                 </Grid>
               </Card>

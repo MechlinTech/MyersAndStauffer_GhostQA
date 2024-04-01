@@ -16,14 +16,25 @@ import { Typography } from "@mui/material";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 import { toast } from "react-toastify";
-import { useSelector ,useDispatch} from "react-redux";
-import { GetLocationScenarioVUCount, ResetLocationScenarioVUCount } from "../../redux/actions/settingAction";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  GetLocationScenarioVUCount,
+  ResetLocationScenarioVUCount,
+} from "../../redux/actions/settingAction";
+import {
+  setIsRunning,
+  addExecuterData,
+  setExecuteJMXData,
+} from "../../redux/actions/ResultAction";
+import { useNavigate } from "react-router-dom";
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Design({ rootId }) {
   const classes = useStyles();
-  const dispatch = useDispatch()
-  const {  virtualUser, totalLocation } = useSelector((state) => state.settings);
+  const dispatch = useDispatch();
+  const { virtualUser, totalLocation } = useSelector((state) => state.settings);
+  const navigate = useNavigate();
 
   const [locationCount, setlocationCount] = useState(totalLocation);
   const [scenarioCount, setscenarioCount] = useState(0);
@@ -31,6 +42,7 @@ export default function Design({ rootId }) {
   const [folderName, setfolderName] = useState("");
   const [uvCount, setuvCount] = useState(virtualUser);
   const [isRuning, setisRuning] = useState(false);
+  const [callingApi, setCallingApi] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -54,7 +66,7 @@ export default function Design({ rootId }) {
       if (Array.isArray(testList)) {
         setscenarioCount(testList.length);
         testList.map((test) => {
-          dispatch(GetLocationScenarioVUCount(test.id))
+          dispatch(GetLocationScenarioVUCount(test.id));
           // getCounts(test.id);
         });
       } else {
@@ -87,7 +99,6 @@ export default function Design({ rootId }) {
       setlocationCount((pre) => pre + locCount);
     } catch (error) {}
   };
-  
 
   const getName = () => {
     const email = sessionStorage.getItem("email");
@@ -95,7 +106,9 @@ export default function Design({ rootId }) {
     const name = email.substring(0, i);
     return name.charAt(0).toUpperCase() + name.slice(1);
   };
+
   const handleRunNow = async () => {
+    dispatch(setIsRunning(true));
     setisRuning(true);
     const testername = getName();
     try {
@@ -104,12 +117,16 @@ export default function Design({ rootId }) {
         { rootId: rootId, testerName: testername, name: folderName },
         header()
       );
-      console.log("response", response);
+      console.log("response", response.data);
       const clientId = response.data.client_Id;
+      dispatch(setExecuteJMXData(response.data));
+      // Navigate to the desired page after API response
+      navigate("/result/summary");
       getRunDetail(response.data, clientId, 2000);
     } catch (error) {
       toast.error("NETWORK ERROR");
       setisRuning(false);
+      dispatch(setIsRunning(false));
     }
   };
 
@@ -120,7 +137,10 @@ export default function Design({ rootId }) {
         header()
       );
       const result = res.data.results;
-      const isJsonHasNull = result.some((item) => item.json === null);
+      const isJsonHasNull = result.some(
+        (item) => item.container_status !== "exited"
+      );
+      dispatch(addExecuterData(res.data));
       if (isJsonHasNull) {
         setTimeout(() => {
           getRunDetail(data, clientId, delay);
@@ -129,18 +149,70 @@ export default function Design({ rootId }) {
         data = { ...data, responseData: res.data };
         console.log("data", data);
         setisRuning(false);
+        dispatch(setIsRunning(false));
         const response = await axios.post(
           `${BASE_URL}/Performance/AddExecuterData`,
           data,
           header()
         );
         console.log("res", response);
+        dispatch(addExecuterData(response.data));
+        // toast.Tost("network error in container runs");
       }
     } catch (error) {
-      toast.error("network error in container runs");
       setisRuning(false);
+      dispatch(setIsRunning(false));
     }
   };
+
+  // const handleRunNow = async () => {
+  //   setisRuning(true);
+  //   const testername = getName();
+  //   try {
+  //     const response = await axios.post(
+  //       `${BASE_URL}/Performance/ExecutePerformanceJMX`,
+  //       { rootId: rootId, testerName: testername, name: folderName },
+  //       header()
+  //     );
+  //     console.log("response", response);
+  //     const clientId = response.data.client_Id;
+  //     getRunDetail(response.data, clientId, 2000);
+  //   } catch (error) {
+  //     toast.error("NETWORK ERROR");
+  //     setisRuning(false);
+  //   }
+  // };
+
+  // const getRunDetail = async (data, clientId, delay) => {
+  //   try {
+  //     const res = await axios.get(
+  //       `http://65.1.188.67:8010/api/performance-container-runs/?client_reference_id=${clientId}`,
+  //       header()
+  //     );
+  //     const result = res.data.results;
+  //     const isJsonHasNull = result.some(
+  //       (item) => item.container_status != "exited"
+  //     );
+  //     if (isJsonHasNull) {
+  //       setTimeout(() => {
+  //         getRunDetail(data, clientId, delay);
+  //       }, delay);
+  //     } else {
+  //       data = { ...data, responseData: res.data };
+  //       console.log("data", data);
+  //       setisRuning(false);
+  //       const response = await axios.post(
+  //         `${BASE_URL}/Performance/AddExecuterData`,
+  //         data,
+  //         header()
+  //       );
+  //       console.log("res", response);
+  //     }
+  //   } catch (error) {
+  //     toast.error("network error in container runs");
+  //     setisRuning(false);
+  //   }
+  // };
   return (
     <Grid
       container

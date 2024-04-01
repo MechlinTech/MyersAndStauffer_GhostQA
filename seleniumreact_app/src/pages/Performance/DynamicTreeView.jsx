@@ -239,15 +239,23 @@ const Card = ({
   );
 };
 
-const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
+const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => {
   const styleClass = useStylesTree();
-  const [selectedNodeId, setSelectedNodeId] = useState(null);
+  const [selectedNodeId, setSelectedNodeId] = useState(8);
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
   const [editData, setEditData] = useState(""); // State to store the value of the input field
   const [editMode, setEditMode] = useState(0); // State to store the value of the input field
   const [expanded, setExpanded] = useState([]);
   const [newElementName, setNewElementName] = useState(""); // State to store the value of the input field
+
+  useEffect(() => {
+    if (params !== null && params !== undefined) {
+      setSelectedNodeId(parseInt(params)); 
+    } 
+  }, [params]);
+
+  console.log("selectedNodeId", params)
   useEffect(() => {
     const fetchData = async () => {
       try {

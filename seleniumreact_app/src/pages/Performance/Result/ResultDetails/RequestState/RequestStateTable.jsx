@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import { TableBody, TableCell } from "@mui/material";
 import TableContainer from "@mui/material/TableContainer";
@@ -14,13 +14,15 @@ export function RequestStateTable({ data }) {
       <Table>
         <TableHead style={{ height: "34px" }}>
           <TableRow>
-            <StyledTableCell first colSpan={2}>Transactions</StyledTableCell>
-            <StyledTableCell colSpan={2}>Sample</StyledTableCell>
+            <StyledTableCell first colSpan={2}>
+              Transactions
+            </StyledTableCell>
+            <StyledTableCell>Sample</StyledTableCell>
             <StyledTableCell>Avg. Response Time (ms)</StyledTableCell>
             <StyledTableCell>Avg. Hit’s</StyledTableCell>
-            <StyledTableCell>904 line (ms)</StyledTableCell>
-            <StyledTableCell>954 line (ms)</StyledTableCell>
-            <StyledTableCell>994 line (ms)</StyledTableCell>
+            <StyledTableCell>90 % (ms)</StyledTableCell>
+            <StyledTableCell>95 % (ms)</StyledTableCell>
+            <StyledTableCell>99 % (ms)</StyledTableCell>
             <StyledTableCell>Min. Response Time (ms)</StyledTableCell>
             <StyledTableCell>Max. Response Time (ms)</StyledTableCell>
             <StyledTableCell>Average Bandwidth Key/s</StyledTableCell>
@@ -28,7 +30,7 @@ export function RequestStateTable({ data }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.map((row, index) => (
+          {/* {data?.map((row, index) => (
             <TableRow key={index}>
               <StyledTableCell first colSpan={2}>{row.transactions}</StyledTableCell>
               <StyledTableCell colSpan={2}>{row.sample}</StyledTableCell>
@@ -42,7 +44,169 @@ export function RequestStateTable({ data }) {
               <StyledTableCell>{row.avgBandwidth}</StyledTableCell>
               <StyledTableCell last>{row.errorPercentage}</StyledTableCell>
             </TableRow>
-          ))}
+          ))} */}
+          {data && data.summary && (
+            <TableRow>
+              <StyledTableCell first colSpan={2}>
+                All
+              </StyledTableCell>
+              <StyledTableCell>{data.summary.sampleCount}</StyledTableCell>
+              <StyledTableCell>{data.summary.medianResTime}</StyledTableCell>
+              <StyledTableCell>
+                {typeof data.summary.sentKBytesPerSec === "number"
+                  ? data.summary.sentKBytesPerSec.toFixed(2)
+                  : null}
+              </StyledTableCell>
+              <StyledTableCell>
+                {typeof data.summary.pct3ResTime === "number"
+                  ? data.summary.pct3ResTime.toFixed(2)
+                  : null}
+              </StyledTableCell>
+              <StyledTableCell>
+                {typeof data.summary.pct2ResTime === "number"
+                  ? data.summary.pct2ResTime.toFixed(2)
+                  : null}
+              </StyledTableCell>
+              <StyledTableCell>
+                {typeof data.summary.pct1ResTime === "number"
+                  ? data.summary.pct1ResTime.toFixed(2)
+                  : null}
+              </StyledTableCell>
+              <StyledTableCell>
+                {typeof data.summary.minResTime === "number"
+                  ? data.summary.minResTime.toFixed(2)
+                  : null}
+              </StyledTableCell>
+              <StyledTableCell>
+                {typeof data.summary.maxResTime === "number"
+                  ? data.summary.maxResTime.toFixed(2)
+                  : null}
+              </StyledTableCell>
+              <StyledTableCell>
+                {typeof data.summary.receivedKBytesPerSec === "number"
+                  ? data.summary.receivedKBytesPerSec.toFixed(2)
+                  : null}
+              </StyledTableCell>
+              <StyledTableCell last>{data.summary.errorPct}</StyledTableCell>
+            </TableRow>
+          )}
+          {data?.results
+            ? data?.results?.map((item, index) => (
+                <React.Fragment key={index}>
+                  {/* Total row */}
+                  {/* {item.Total && item.Total && (
+                    <TableRow>
+                      <StyledTableCell first colSpan={2}>{item.Total.transaction}</StyledTableCell>
+                      <StyledTableCell>{item.Total.sample}</StyledTableCell>
+                      <StyledTableCell>{item.Total.medianResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.sentKBytesPerSec}</StyledTableCell>
+                      <StyledTableCell>{item.Total.pct3ResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.pct2ResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.pct1ResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.minResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.maxResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.receivedKBytesPerSec}</StyledTableCell>
+                      <StyledTableCell last>{item.Total.errorPct}</StyledTableCell>
+                    </TableRow>
+                  )} */}
+
+                  {/* Home Page row */}
+                  {item.home_page && item.home_page && (
+                    <TableRow>
+                      <StyledTableCell first colSpan={2}>
+                        {item.home_page.transaction}
+                      </StyledTableCell>
+                      <StyledTableCell>{item.home_page.sample}</StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.medianResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.sentKBytesPerSec}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.pct3ResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.pct2ResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.pct1ResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.minResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.maxResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.receivedKBytesPerSec}
+                      </StyledTableCell>
+                      {/* <StyledTableCell>{item.home_page.receivedKBytesPerSec}</StyledTableCell> */}
+                      <StyledTableCell last>
+                        {item.home_page.errorPct}
+                      </StyledTableCell>
+                      {/* Add other Home Page fields here */}
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              ))
+            : data?.map((item, index) => (
+                <React.Fragment key={index}>
+                  {/* Total row */}
+                  {/* {item.Total && item.Total && (
+                    <TableRow>
+                      <StyledTableCell first colSpan={2}>{item.Total.transaction}</StyledTableCell>
+                      <StyledTableCell>{item.Total.sample}</StyledTableCell>
+                      <StyledTableCell>{item.Total.medianResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.sentKBytesPerSec}</StyledTableCell>
+                      <StyledTableCell>{item.Total.pct3ResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.pct2ResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.pct1ResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.minResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.maxResTime}</StyledTableCell>
+                      <StyledTableCell>{item.Total.receivedKBytesPerSec}</StyledTableCell>
+                      <StyledTableCell last>{item.Total.errorPct}</StyledTableCell>
+                    </TableRow>
+                  )} */}
+
+                  {/* Home Page row */}
+                  {item.home_page && item.home_page && (
+                    <TableRow>
+                      <StyledTableCell first colSpan={2}>
+                        {item.home_page.transaction}
+                      </StyledTableCell>
+                      <StyledTableCell>{item.home_page.sample}</StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.medianResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.sentKBytesPerSec}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.pct3ResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.pct2ResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.pct1ResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.minResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.maxResTime}
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {item.home_page.receivedKBytesPerSec}
+                      </StyledTableCell>
+                      <StyledTableCell last>
+                        {item.home_page.errorPct}
+                      </StyledTableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              ))}
         </TableBody>
       </Table>
     </TableContainer>
