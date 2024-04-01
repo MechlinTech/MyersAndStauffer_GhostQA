@@ -298,3 +298,11 @@ const userActionsOptions = [
   { label: "have.length", value: "have.length" }
 ];
 
+export const users = [
+  'user-1',
+  'user-2',
+  'user-3',
+  'user-4',
+  'user-5',
+  'user-6',
+].map((item) => ({ label: item, value: item }));

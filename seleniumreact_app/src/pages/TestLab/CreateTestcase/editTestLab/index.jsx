@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, Grid, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { StyledOutlinedInput, StyledTypography } from "./styleTestCase";
 import { useStyles } from "./styleTestCase";
@@ -7,7 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { UpdateTestCaseDetail, UpdateTestStepsDetails } from "../Api";
+import { SaveAndExecute, UpdateTestCaseDetail, UpdateTestStepsDetails } from "../Api";
 import { toast } from "react-toastify";
 import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
 import { StyledFormControl } from "../styleTestCase";
@@ -27,6 +27,7 @@ export default function EditTestCase() {
   const [startUrlError, setstartUrlError] = useState("")
   const [isEditable, setIsEditable] = useState(false);
   const [Errors, setErrors] = useState([]);
+  const [isExecuting, setisExecuting] = useState(false)
 
   const getExecutionHistory = async () => {
     try {
@@ -68,7 +69,10 @@ export default function EditTestCase() {
     setIsEditable(false);
     navigate(-1);
   };
-
+  const handleExecuteLoading = ()=>{
+    setIsEditable(false);
+    navigate(-1);
+  }
   const handleSave = () => {
     let payload = {
       testCaseID: testId,
@@ -77,68 +81,59 @@ export default function EditTestCase() {
     console.log("payload ", payload);
     let errors = steps?.map((step) => {
       let additionalErrors = {};
-      let stepType = step?.type;
+      let stepType = step?.action;
       additionalErrors.selectorTypeError = !step.selectorType;
       additionalErrors.selectorValueError = !step.selectorValue;
       switch (stepType) {
-        case "click":
-          additionalErrors.clickTypeError = !step.clickType;
+        case "type":
+          additionalErrors.sendKeyInputError = !step.sendKeyInput;
           break;
-        case "Mouse over":
+        case "scroll_to_window":
+          additionalErrors.scrollPixelError = !step.scrollPixel;
           break;
-        case "drag and drop":
-          additionalErrors.elementSelectorError = !step.elementSelector;
-          additionalErrors.selectedDragDroptypeError = !step.selectedDragDropType;
+        case "go_to_url":
+          additionalErrors.urlError = !step.url;
           break;
-        case "SendKeys":
-          additionalErrors.keyPressValueError = !step.keyPressValue;
-          additionalErrors.selectedModifierKeyError = !step.selectedModifierKey;
+        case "select_option":
+          additionalErrors.selectedUserError = !step.selectedUser;
           break;
-        case "Assign":
-          additionalErrors.assignInputValueError = !step.assignInputValue;
+        case "upload_file":
+          additionalErrors.fileNameError = !step.fileName;
           break;
-        case "Execute Javascript":
-          additionalErrors.executeJavaScriptError = !step.executeJavaScript;
+        case "element_has_value":
+          additionalErrors.elementValueError = !step.elementValue;
           break;
-
-        case "Pause (Time in ms)":
-          additionalErrors.pauseTimeError = !step.pauseTime;
+        case "element_has_css_property_with_value":
+          additionalErrors.cssPropertyError = !step.cssProperty;
+          additionalErrors.cssValueError = !step.cssValue;
           break;
-        case "ExitTest":
-          additionalErrors.exitTestStatusError = !step.exitTestStatus;
+        case "validate_page_title":
+          additionalErrors.pageTitleError = !step.pageTitle;
           break;
-        case "Go To URL":
-          additionalErrors.navigatToError = !step.navigateTo;
+        case "validate_current_url":
+          additionalErrors.currentUrlError = !step.currentUrl;
           break;
-        case "Element is present":
-          additionalErrors.assignInputValueError = !step.assignInputValue;
+        case "should_not_equal":
+          additionalErrors.shouldNotEqualError = !step.shouldNotEqualValue;
           break;
-        // case "Element is not Present":
-        // case "Element is visible":
-        // case "Element is not visible":
-        // case "Element text equal":
-        // case "Element text does not equal":
-        // case "Element text contains":
-        // case "Element text does not contains":
-        case "JavaScript returns true":
-          additionalErrors.javaScriptCodeError = !step.javaScriptCode;
+        case "should_include":
+          additionalErrors.shouldIncludeError = !step.shouldIncludeValue;
           break;
-        case "Check accessibility":
-          additionalErrors.accessibilityError = !step.accessibility;
+        case "should_equal":
+          additionalErrors.shouldEqualError = !step.shouldEqualValue;
           break;
-        case "Set variable":
-          additionalErrors.variableNameError = !step.variableName;
-          additionalErrors.variableInputError = !step.variableInput;
+        case "should_be_greater_than":
+          additionalErrors.shouldGreaterThanError =
+            !step.shouldGreaterThanValue;
           break;
-        case "Extract from element":
-          additionalErrors.extractVariableError = !step.extractVariable;
+        case "should_be_less_than":
+          additionalErrors.shouldLessError = !step.shouldLessValue;
           break;
-        case "Extract from javaScript":
-          additionalErrors.extractJavaScriptError = !step.extractJavaScript;
-          additionalErrors.javascriptVariableError = !step.javaScriptVariable;
+        case "contain_text":
+          additionalErrors.containTextError = !step.containTextValue;
           break;
-        case "Import steps from test":
-          additionalErrors.importingStepFromError = !step.importingStepFrom;
+        case "have_attribute":
+          additionalErrors.haveAttributeError = !step.haveAttributeValue;
           break;
         default:
           break;
@@ -148,7 +143,7 @@ export default function EditTestCase() {
         additionalErrors.selectorValueError = false;
       }
       return {
-        typeError: !step?.type,
+        typeError: !step?.action,
         descriptionError: !step?.stepDescription,
         ...additionalErrors,
       };
@@ -180,6 +175,110 @@ export default function EditTestCase() {
       toast.error('Some fields are empty')
      }
   };
+
+  const handleSaveAndExecute = ()=>{
+    setisExecuting(true)
+    let payload = {
+      testCaseID: testId,
+      actions: steps,
+    };
+    console.log("payload ", payload);
+    let errors = steps?.map((step) => {
+      let additionalErrors = {};
+      let stepType = step?.action;
+      additionalErrors.selectorTypeError = !step.selectorType;
+      additionalErrors.selectorValueError = !step.selectorValue;
+      switch (stepType) {
+        case "type":
+          additionalErrors.sendKeyInputError = !step.sendKeyInput;
+          break;
+        case "scroll_to_window":
+          additionalErrors.scrollPixelError = !step.scrollPixel;
+          break;
+        case "go_to_url":
+          additionalErrors.urlError = !step.url;
+          break;
+        case "select_option":
+          additionalErrors.selectedUserError = !step.selectedUser;
+          break;
+        case "upload_file":
+          additionalErrors.fileNameError = !step.fileName;
+          break;
+        case "element_has_value":
+          additionalErrors.elementValueError = !step.elementValue;
+          break;
+        case "element_has_css_property_with_value":
+          additionalErrors.cssPropertyError = !step.cssProperty;
+          additionalErrors.cssValueError = !step.cssValue;
+          break;
+        case "validate_page_title":
+          additionalErrors.pageTitleError = !step.pageTitle;
+          break;
+        case "validate_current_url":
+          additionalErrors.currentUrlError = !step.currentUrl;
+          break;
+        case "should_not_equal":
+          additionalErrors.shouldNotEqualError = !step.shouldNotEqualValue;
+          break;
+        case "should_include":
+          additionalErrors.shouldIncludeError = !step.shouldIncludeValue;
+          break;
+        case "should_equal":
+          additionalErrors.shouldEqualError = !step.shouldEqualValue;
+          break;
+        case "should_be_greater_than":
+          additionalErrors.shouldGreaterThanError =
+            !step.shouldGreaterThanValue;
+          break;
+        case "should_be_less_than":
+          additionalErrors.shouldLessError = !step.shouldLessValue;
+          break;
+        case "contain_text":
+          additionalErrors.containTextError = !step.containTextValue;
+          break;
+        case "have_attribute":
+          additionalErrors.haveAttributeError = !step.haveAttributeValue;
+          break;
+        default:
+          break;
+      }
+      if (selectorNoOptionList.includes(stepType)) {
+        additionalErrors.selectorTypeError = false;
+        additionalErrors.selectorValueError = false;
+      }
+      return {
+        typeError: !step?.action,
+        descriptionError: !step?.stepDescription,
+        ...additionalErrors,
+      };
+    });
+    setErrors(errors);
+    let titleError = "";
+    let urlError = ""
+    if (!testCaseTitle.trim()) {
+      settestCaseTitleError("test case title required");
+      titleError = "test case title required";
+    }else{settestCaseTitleError("")}
+    if (!startUrl.trim()) {
+      setstartUrlError("url is  required");
+      urlError = "url is  required";
+    }else{setstartUrlError("")}
+    const hasError = errors.some((error) => Object.values(error).some((value) => value));
+
+    if (!hasError && !titleError && !urlError) {
+      let data = {
+        testCaseDetailsId: testId,
+        rootId: 0,
+        testCaseName: testCaseTitle,
+        startUrl: startUrl
+      }
+    SaveAndExecute(data,payload,testId,handleExecuteLoading)
+    
+    } else {
+      console.log("There is an error in at least one element.",errors);
+      toast.error('Some fields are empty')
+     }
+  }
   const handleCancle = () => {
     navigate(-1);
   };
@@ -187,30 +286,29 @@ export default function EditTestCase() {
     setSteps([
       ...steps,
       {
-        type: null,
+        action: null,
         stepDescription: "",
         isOptional: false,
         selectorType: "",
         selectorValue: "",
-        clickType: "",
-        elementSelector: "",
-        selectedDragDropType: "",
-        assignInputValue: "",
-        keyPressValue: "",
-        selectedModifierKey: "",
-        executeJavaScript: "",
-        pauseTime: "",
-        exitTestStatus: "",
-        navigateTo: "",
-        javaScriptCode: "",
-        accessibility: "",
-        accessibilityModifier: "",
-        variableInput: "",
-        variableName: "",
-        extractVariable: "",
-        extractJavaScript:"",
-        javaScriptVariable: "",
-        importingStepFrom: "",
+        sendKeyInput: "",
+        scrollPixel: "",
+        url: "",
+        selectedUser: "",
+        fileName: null,
+        elementValue: "",
+        cssValue: "",
+        cssProperty: "",
+        pageTitle: "",
+        currentUrl: "",
+        shouldNotEqualValue: "",
+        shouldIncludeValue: "",
+        shouldEqualValue: "",
+        shouldGreaterThanValue: "",
+        shouldLessValue: "",
+        containTextValue: "",
+        haveAttributeValue: "",
+        shouldEqualValue: "",
       },
     ]);
   };
@@ -222,8 +320,8 @@ export default function EditTestCase() {
   const handleInputChange = (inputValue, index, inputType) => {
     let updatedSteps = steps.map((step, i) => {
       switch (inputType) {
-        case "type":
-          return i === index ? { ...step, type: inputValue?.value } : step;
+        case "action":
+          return i === index ? { ...step, action: inputValue?.value } : step;
         case "stepDescription":
           return i === index
             ? { ...step, stepDescription: inputValue?.target.value }
@@ -240,94 +338,79 @@ export default function EditTestCase() {
           return i === index
             ? { ...step, isOptional: inputValue.target.checked }
             : step;
-        // case "radioType":
-        //   return i === index
-        //     ? { ...step, radioType: inputValue.target.value }
-        //     : step;
-        // case "inputField":
-        //   return i === index
-        //     ? {
-        //         ...step,
-        //         inputField: inputValue?.target?.value || inputValue?.value,
-        //       }
-        //     : step;
-        case "clickType":
+        case "sendKeyInput":
           return i === index
-            ? { ...step, clickType: inputValue.target.value }
+            ? { ...step, sendKeyInput: inputValue.target.value }
             : step;
-        case "elementSelector":
+        case "scrollPixel":
           return i === index
-            ? { ...step, elementSelector: inputValue.target.value }
+            ? { ...step, scrollPixel: inputValue.target.value }
             : step;
-        case "selectedDragDropType":
+        case "url":
+          return i === index ? { ...step, url: inputValue.target.value } : step;
+        case "elementValue":
           return i === index
-            ? { ...step, selectedDragDropType: inputValue.target.value }
+            ? { ...step, elementValue: inputValue.target.value }
             : step;
-        case "assignInputValue":
+        case "selectedUser":
           return i === index
-            ? { ...step, assignInputValue: inputValue.target.value }
+            ? { ...step, selectedUser: inputValue?.value }
             : step;
-        case "keyPressValue":
+        case "fileName":
           return i === index
-            ? { ...step, keyPressValue: inputValue.value }
-            : step;
-        case "selectedModifierKey":
-          return i === index
-            ? { ...step, selectedModifierKey: inputValue.target.value }
-            : step;
-        case "executeJavaScript":
-          return i === index
-            ? { ...step, executeJavaScript: inputValue.target.value }
-            : step;
-        case "pauseTime":
-          return i === index
-            ? { ...step, pauseTime: inputValue.target.value }
-            : step;
-        case "exitTestStatus":
-          return i === index
-            ? { ...step, exitTestStatus: inputValue.target.value }
-            : step;
-        case "navigateTo":
-          return i === index
-            ? { ...step, navigateTo: inputValue.target.value }
-            : step;
-        case "javaScriptCode":
-          return i === index
-            ? { ...step, javaScriptCode: inputValue.target.value }
-            : step;
-        case "accessibility":
-          return i === index
-            ? { ...step, accessibility: inputValue?.value }
-            : step;
-        case "accessibilityModifier":
-          return i === index
-            ? { ...step, accessibilityModifier: inputValue.target.value }
-            : step;
-        case "variableInput":
-          return i === index
-            ? { ...step, variableInput: inputValue.target.value }
-            : step;
-        case "variableName":
-          return i === index
-            ? { ...step, variableName: inputValue.target.value }
-            : step;
-        case "extractVariable":
-          return i === index
-            ? { ...step, extractVariable: inputValue.target.value }
-            : step;
-        case "extractJavaScript":
-          return i === index
-            ? { ...step, extractJavaScript: inputValue.target.value }
-            : step;
-        case "javaScriptVariable":
-          return i === index
-            ? { ...step, javaScriptVariable: inputValue.target.value }
-            : step;
-        case "importingStepFrom":
-          return i === index
-            ? { ...step, importingStepFrom: inputValue?.value }
+            ? { ...step, fileName: inputValue.target.files[0] }
             : step;
 
+        case "cssProperty":
+          return i === index
+            ? { ...step, cssProperty: inputValue.target.value }
+            : step;
+        case "cssValue":
+          return i === index
+            ? { ...step, cssValue: inputValue.target.value }
+            : step;
+
+        case "pageTitle":
+          return i === index
+            ? { ...step, pageTitle: inputValue.target.value }
+            : step;
+        case "currentUrl":
+          return i === index
+            ? { ...step, currentUrl: inputValue.target.value }
+            : step;
+        case "shouldNotEqualValue":
+          return i === index
+            ? { ...step, shouldNotEqualValue: inputValue.target.value }
+            : step;
+        case "shouldIncludeValue":
+          return i === index
+            ? { ...step, shouldIncludeValue: inputValue.target.value }
+            : step;
+        case "shouldEqualValue":
+          return i === index
+            ? { ...step, shouldEqualValue: inputValue.target.value }
+            : step;
+
+        case "shouldGreaterThanValue":
+          return i === index
+            ? { ...step, shouldGreaterThanValue: inputValue.target.value }
+            : step;
+        case "shouldLessValue":
+          return i === index
+            ? { ...step, shouldLessValue: inputValue.target.value }
+            : step;
+        case "containTextValue":
+          return i === index
+            ? { ...step, containTextValue: inputValue.target.value }
+            : step;
+        case "haveAttributeValue":
+          return i === index
+            ? { ...step, haveAttributeValue: inputValue.target.value }
+            : step;
+        case "shouldEqualValue":
+          return i === index
+            ? { ...step, shouldEqualValue: inputValue.target.value }
+            : step;
         default:
           return step;
       }
@@ -344,12 +427,12 @@ export default function EditTestCase() {
     return 'not found'; // Return null if the value is not found
   };
   const selectorNoOptionList = [
-    "Execute Javascript",
-    "Pause (Time in ms)",
-    "ExitTest",
-    "Go To URL",
-    "goBack",
-    "refresh",
+    "scroll_to_window",
+    "go_to_url",
+    "go_back",
+    "go_forward",
+    "refresh_page",
+    "validate_current_url",
   ];
   const listOfSteps = steps && steps?.map((step, index) => (
     <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>
@@ -364,10 +447,11 @@ export default function EditTestCase() {
         }}
       >
         <StyledTypography>Step {index + 1}</StyledTypography>
-        <DeleteIcon
+        {isEditable && <DeleteIcon
           onClick={() => handleRemoveStep(step)}
           sx={{ cursor: "pointer", color: "red" }}
-        />
+        />}
+        
       </Box>
       <Paper
         elevation={1}
@@ -402,12 +486,15 @@ export default function EditTestCase() {
               isDisabled={!isEditable}
               value={
                 step
-                  ? step.type
-                    ? { label: findLabelByValue(step.type), value: step.type }
+                  ? step.action
+                    ? {
+                        label: findLabelByValue(step.action),
+                        value: step.action,
+                      }
                     : null
                   : null
               }
-              onChange={(act) => handleInputChange(act, index, "type")}
+              onChange={(act) => handleInputChange(act, index, "action")}
               styles={{
                 container: (provided) => ({
                   ...provided,
@@ -450,7 +537,7 @@ export default function EditTestCase() {
           </Grid>
           {/* bellow compenent will render field according to type */}
           <RenderActionFields
-            action={step?.type}
+            action={step?.action}
             step={step}
             index={index}
             Errors={Errors}
@@ -458,7 +545,7 @@ export default function EditTestCase() {
             handleInputChange={handleInputChange}
             isEditable={isEditable}
           />
-          {step.type && !selectorNoOptionList.includes(step.type) && (
+          {step.action && !selectorNoOptionList.includes(step.action) && (
             <Grid item xs={12}>
               <Grid container spacing={1}>
                 <Grid item xs={6}>
@@ -541,8 +628,6 @@ export default function EditTestCase() {
           )}
 
           <Grid item xs={12}>
-            {step?.type !== "ExitTest" &&
-              step?.type !== "Import steps from test" && (
                 <Box display="flex" alignItems="center">
                   <Checkbox
                     size="small"
@@ -557,7 +642,6 @@ export default function EditTestCase() {
                     Make this step optional (Continue on failure)
                   </Typography>
                 </Box>
-              )}
           </Grid>
         </Grid>
       </Paper>
@@ -585,7 +669,7 @@ export default function EditTestCase() {
                 Sample Testcase
               </StyledTypography>
             </Grid>
-            <Grid item xs={12} md={2} display="flex" justifyContent="end">
+            <Grid item xs={12} md={4} display="flex" justifyContent="end">
               <Button
                 variant="contained"
                 color="primary"
@@ -602,8 +686,28 @@ export default function EditTestCase() {
                 Cancel
               </Button>
               {isEditable ? (
+                <>
                 <Button
                   onClick={handleSave}
+                  sx={{
+                    backgroundColor: "rgb(101, 77, 247)",
+                    "&:hover": {
+                      backgroundColor: "rgb(101, 77, 247) !important",
+                      borderColor: "#654DF7",
+                      color: "#fff",
+                      "&:before": {
+                        backgroundColor: "rgb(101, 77, 247) !important",
+                        color: "#fff",
+                      },
+                    },
+                  marginRight: "10px",
+                  color: "#fff",
+                  }}
+                >
+                  Save
+                </Button>
+                <Button
+                  onClick={handleSaveAndExecute}
                   sx={{
                     backgroundColor: "rgb(101, 77, 247)",
                     "&:hover": {
@@ -618,8 +722,9 @@ export default function EditTestCase() {
                     color: "#fff",
                   }}
                 >
-                  Save
+                  {isExecuting?<CircularProgress style={{color:'white'}} size={25}/>: "Save & Execute"}
                 </Button>
+                </>
               ) : (
                 <Button
                   onClick={() => setIsEditable(true)}
@@ -641,6 +746,7 @@ export default function EditTestCase() {
                 </Button>
               )}
             </Grid>
+            
           </Grid>
           </Grid>
           <Grid

@@ -30,10 +30,20 @@ export default function CreateTestCase() {
       sendKeyInput: "",
       scrollPixel: "",
       url: "",
+      selectedUser: "",
       fileName: null,
       elementValue: "",
-      cssValue:"",
-      cssProperty:""
+      cssValue: "",
+      cssProperty: "",
+      pageTitle: "",
+      currentUrl: "",
+      shouldNotEqualValue: "",
+      shouldIncludeValue: "",
+      shouldEqualValue: "",
+      shouldGreaterThanValue: "",
+      shouldLessValue: "",
+      containTextValue: "",
+      haveAttributeValue: "",
     },
   ]);
   const [Errors, setErrors] = useState([]);
@@ -65,15 +75,46 @@ export default function CreateTestCase() {
         case "go_to_url":
           additionalErrors.urlError = !step.url;
           break;
+        case "select_option":
+          additionalErrors.selectedUserError = !step.selectedUser;
+          break;
         case "upload_file":
           additionalErrors.fileNameError = !step.fileName;
           break;
         case "element_has_value":
           additionalErrors.elementValueError = !step.elementValue;
           break;
-          case "element_has_css_property_with_value":
+        case "element_has_css_property_with_value":
           additionalErrors.cssPropertyError = !step.cssProperty;
           additionalErrors.cssValueError = !step.cssValue;
+          break;
+        case "validate_page_title":
+          additionalErrors.pageTitleError = !step.pageTitle;
+          break;
+        case "validate_current_url":
+          additionalErrors.currentUrlError = !step.currentUrl;
+          break;
+        case "should_not_equal":
+          additionalErrors.shouldNotEqualError = !step.shouldNotEqualValue;
+          break;
+        case "should_include":
+          additionalErrors.shouldIncludeError = !step.shouldIncludeValue;
+          break;
+        case "should_equal":
+          additionalErrors.shouldEqualError = !step.shouldEqualValue;
+          break;
+        case "should_be_greater_than":
+          additionalErrors.shouldGreaterThanError =
+            !step.shouldGreaterThanValue;
+          break;
+        case "should_be_less_than":
+          additionalErrors.shouldLessError = !step.shouldLessValue;
+          break;
+        case "contain_text":
+          additionalErrors.containTextError = !step.containTextValue;
+          break;
+        case "have_attribute":
+          additionalErrors.haveAttributeError = !step.haveAttributeValue;
           break;
         default:
           break;
@@ -120,7 +161,7 @@ export default function CreateTestCase() {
     setSteps([
       ...steps,
       {
-        type: null,
+        action: null,
         stepDescription: "",
         isOptional: false,
         selectorType: "",
@@ -128,6 +169,20 @@ export default function CreateTestCase() {
         sendKeyInput: "",
         scrollPixel: "",
         url: "",
+        selectedUser: "",
+        fileName: null,
+        elementValue: "",
+        cssValue: "",
+        cssProperty: "",
+        pageTitle: "",
+        currentUrl: "",
+        shouldNotEqualValue: "",
+        shouldIncludeValue: "",
+        shouldEqualValue: "",
+        shouldGreaterThanValue: "",
+        shouldLessValue: "",
+        containTextValue: "",
+        haveAttributeValue: "",
       },
     ]);
   };
@@ -172,6 +227,10 @@ export default function CreateTestCase() {
           return i === index
             ? { ...step, elementValue: inputValue.target.value }
             : step;
+        case "selectedUser":
+          return i === index
+            ? { ...step, selectedUser: inputValue?.value }
+            : step;
         case "fileName":
           return i === index
             ? { ...step, fileName: inputValue.target.files[0] }
@@ -184,6 +243,48 @@ export default function CreateTestCase() {
         case "cssValue":
           return i === index
             ? { ...step, cssValue: inputValue.target.value }
+            : step;
+
+        case "pageTitle":
+          return i === index
+            ? { ...step, pageTitle: inputValue.target.value }
+            : step;
+        case "currentUrl":
+          return i === index
+            ? { ...step, currentUrl: inputValue.target.value }
+            : step;
+        case "shouldNotEqualValue":
+          return i === index
+            ? { ...step, shouldNotEqualValue: inputValue.target.value }
+            : step;
+        case "shouldIncludeValue":
+          return i === index
+            ? { ...step, shouldIncludeValue: inputValue.target.value }
+            : step;
+        case "shouldEqualValue":
+          return i === index
+            ? { ...step, shouldEqualValue: inputValue.target.value }
+            : step;
+
+        case "shouldGreaterThanValue":
+          return i === index
+            ? { ...step, shouldGreaterThanValue: inputValue.target.value }
+            : step;
+        case "shouldLessValue":
+          return i === index
+            ? { ...step, shouldLessValue: inputValue.target.value }
+            : step;
+        case "containTextValue":
+          return i === index
+            ? { ...step, containTextValue: inputValue.target.value }
+            : step;
+        case "haveAttributeValue":
+          return i === index
+            ? { ...step, haveAttributeValue: inputValue.target.value }
+            : step;
+        case "shouldEqualValue":
+          return i === index
+            ? { ...step, shouldEqualValue: inputValue.target.value }
             : step;
         default:
           return step;
@@ -206,6 +307,7 @@ export default function CreateTestCase() {
     "go_back",
     "go_forward",
     "refresh_page",
+    "validate_current_url",
   ];
   const listOfSteps = steps.map((step, index) => (
     <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>
