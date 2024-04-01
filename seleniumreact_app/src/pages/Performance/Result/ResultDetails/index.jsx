@@ -60,7 +60,7 @@ useEffect(() => {
 
 
 const data = [
-  { label: "Duration", value: `${totalDurationInMinutes} minutes` },
+  { label: "Duration", value: `${totalDurationInMinutes.toFixed(2)} minutes` },
   { label: "Started", value: formattedStartDate },
   { label: "Ended", value: endedTime || "" },
   { label: "Test Type", value: "JMeter" },
