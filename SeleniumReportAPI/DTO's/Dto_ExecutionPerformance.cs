@@ -2,6 +2,7 @@
 {
     public class Dto_ExecutionPerformance
     {
+        public int Id { get; set; }
         public string TestCaseName { get; set; }
         public string FilePath { get; set; }
         public int PerformanceFileId { get; set; }

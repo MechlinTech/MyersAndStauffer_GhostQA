@@ -14,7 +14,8 @@ BEGIN TRY
     IF EXISTS (SELECT 1 FROM tbl_PerformanceFile WHERE [RootId] = @RootId)
     BEGIN
         SELECT [result] = JSON_QUERY((
-            SELECT pf.[TestCaseName],
+            SELECT pf.[Id],
+				   pf.[TestCaseName],
 				   pf.[FilePath],
 				   pf.[FileName],
 				   l.PerformanceFileId,
