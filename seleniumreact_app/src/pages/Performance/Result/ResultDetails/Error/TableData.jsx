@@ -10,6 +10,7 @@ import { useStyles, StyledTableCell } from "./styles";
 export function TableData({ rows }) {
   const classes = useStyles();
 
+  console.log("rowserror",rows)
   return (
     <TableContainer>
       <Typography
@@ -44,12 +45,12 @@ export function TableData({ rows }) {
               </StyledTableCell>
 
               <StyledTableCell component="th" scope="row">
-                <span>{row.description1}</span>
-                <br />
-                <span>{row.description2}</span>
+                <span>{row.description}</span>
+                {/* <br />
+                <span>{row.description2}</span> */}
               </StyledTableCell>
               <StyledTableCell>
-                <span style={{ paddingLeft: "10px" }}>{row.Count}</span>
+                <span style={{ paddingLeft: "10px" }}>{row.count}</span>
               </StyledTableCell>
             </TableRow>
           ))}
