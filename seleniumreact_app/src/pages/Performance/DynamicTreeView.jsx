@@ -9,6 +9,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { header } from "../../utils/authheader";
+import { useDispatch } from "react-redux";
+import { ResetLocationScenarioVUCount } from "../../redux/actions/settingAction";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Card = ({
@@ -42,6 +44,7 @@ const Card = ({
   setSelectedNodeId,
 }) => {
   const styleClass = useStylesTree();
+  const dispatch = useDispatch()
   useEffect(() => {
     function updateNodeDepth(data, parentId, depth) {
       const children = data.filter((node) => node.parentId === parentId);
@@ -121,8 +124,9 @@ const Card = ({
                   {editMode !== item.id && (
                     <span
                       onClick={() => {
-                        handleTask(item.id);
+                        handleTask(item.id,nodeCount);
                         setSelectedNodeId(item.id);
+                        dispatch(ResetLocationScenarioVUCount())
                       }}
                       style={{
                         cursor: "pointer",
@@ -235,15 +239,23 @@ const Card = ({
   );
 };
 
-const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
+const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => {
   const styleClass = useStylesTree();
-  const [selectedNodeId, setSelectedNodeId] = useState(null);
+  const [selectedNodeId, setSelectedNodeId] = useState(8);
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
   const [editData, setEditData] = useState(""); // State to store the value of the input field
   const [editMode, setEditMode] = useState(0); // State to store the value of the input field
   const [expanded, setExpanded] = useState([]);
   const [newElementName, setNewElementName] = useState(""); // State to store the value of the input field
+
+  useEffect(() => {
+    if (params !== null && params !== undefined) {
+      setSelectedNodeId(parseInt(params)); 
+    } 
+  }, [params]);
+
+  console.log("selectedNodeId", params)
   useEffect(() => {
     const fetchData = async () => {
       try {

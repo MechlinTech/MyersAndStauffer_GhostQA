@@ -1,21 +1,13 @@
+import React, { useState, useEffect } from 'react';
 import { useStyles } from "./styles";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   Grid,
   Typography,
   Box,
   Card,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Icon,
-  Button,
-  Breadcrumbs,
 } from "@material-ui/core";
-import React from "react";
 import {
   UserGroupIcon,
   AvarageIcon,
@@ -27,18 +19,54 @@ import {
 import LineChart from "./LoadLineChart";
 import ResponseLineChart from "./ResponseLineChart";
 
-const data = [
-  { label: "Duration", value: "10 Minutes" },
-  { label: "Started", value: "Mar 07, 2024 7:56:18 AM" },
-  { label: "Ended", value: "Mar 07, 2024 8:07:19 AM" },
-  { label: "Test Type", value: "JMeter" },
-  { label: "Response Codes", value: "2xx" },
-  { label: "Locations", value: "US East (Virginia, Google)" },
-];
+
+
 
 export default function Summary() {
   const classes = useStyles();
+  const { executerData, executeJMXData, isRunning } = useSelector((state) => state.result);
+  const [endedTime, setEndedTime] = useState(null);
 
+console.log("executeJMXData", executeJMXData, executerData)
+
+// Function to format date in "MMM DD, YYYY hh:mm:ss AM/PM" format
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true };
+  return date.toLocaleString('en-US', options);
+}
+
+// Convert totalDuration from seconds to minutes
+const totalDurationInMinutes = executeJMXData.totalDuration / 60;
+console.log("totalDurationInMinutes",executeJMXData.totalDuration / 60)
+// Format start date
+const formattedStartDate = formatDate(executeJMXData.startDate);
+
+// For Location
+const location = executeJMXData?.scenarios?.[0]?.location;
+
+const getCurrentTime = () => {
+  const currentDate = new Date();
+  const options = { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true };
+  return currentDate.toLocaleString('en-US', options);
+};
+
+useEffect(() => {
+  if (!isRunning && !endedTime) {
+    const currentTime = getCurrentTime();
+    setEndedTime(currentTime);
+  }
+}, [isRunning, endedTime]);
+
+
+const data = [
+  { label: "Duration", value: `${totalDurationInMinutes.toFixed(2)} minutes` },
+  { label: "Started", value: formattedStartDate },
+  { label: "Ended", value: endedTime || "" },
+  { label: "Test Type", value: "JMeter" },
+  { label: "Response Codes", value: "2xx" },
+  { label: "Locations", value: location ? location : "Unknown" },
+];
   const calculateDonutHeight = () => {
     const parentContainer = document.getElementById("line-container");
     const parentContainerHeight = parentContainer
@@ -55,17 +83,16 @@ export default function Summary() {
   return (
     <>
       <Grid className={classes.mainContainer}>
-        {/* main compoent */}
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={8}>
-            <Grid container spacing={2}>
+        {/* Top Component */}
+        <Grid container style={{ height: "48vh", marginBottom:'10px' }} spacing={2}>
+          <Grid item xs={12} sm={8} style={{ height: "100%" }}>
               {/*Top Left part of the card */}
-              <Grid item xs={12} sm={12}>
                 <Card
                   style={{
                     width: "100%",
                     marginTop: "20px",
                     padding: "10px",
+                    height: "100%",
                   }}
                 >
                   <Grid container spacing={2}>
@@ -74,7 +101,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -102,7 +129,7 @@ export default function Summary() {
                               className={`${classes.fontSize50}`}
                               style={{ color: "#654DF7" }}
                             >
-                              1uv
+                              {executeJMXData?.totalUser}vu
                             </span>
                           </Typography>
                         </CardContent>
@@ -114,7 +141,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -140,7 +167,7 @@ export default function Summary() {
                             <ResponseTimeIcon />
                             <span style={{ color: "#00A879" }}>
                               <span className={`${classes.fontSize50}`}>
-                                0.53
+                               {typeof executerData?.summary?.throughput === 'number' ? (executerData?.summary?.throughput / 1000).toFixed(2) : null}
                               </span>
                               Hits/s
                             </span>
@@ -154,7 +181,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -180,7 +207,8 @@ export default function Summary() {
                             <AvarageIcon />
                             <span style={{ color: "#FACE09" }}>
                               <span className={`${classes.fontSize50}`}>
-                                1.95
+                              {typeof executerData?.summary?.medianResTime === 'number' ? (executerData?.summary?.medianResTime / 1000).toFixed(2) : null}
+                             
                               </span>
                               S
                             </span>
@@ -194,7 +222,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -219,7 +247,7 @@ export default function Summary() {
                           >
                             <ErrorIcon />
                             <span style={{ color: "#F64E4E" }}>
-                              <span className={`${classes.fontSize50}`}>0</span>
+                              <span className={`${classes.fontSize50}`}>{executerData?.summary?.errorPct}</span>
                               %
                             </span>
                           </Typography>
@@ -232,7 +260,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -258,7 +286,7 @@ export default function Summary() {
                             <BandwidthIcon />
                             <span style={{ color: "#00A879" }}>
                               <span className={`${classes.fontSize50}`}>
-                                52.91
+                              {typeof executerData?.summary?.receivedKBytesPerSec === 'number' ? (executerData?.summary?.receivedKBytesPerSec / 1000).toFixed(2) : null}
                               </span>
                               KiB/S
                             </span>
@@ -272,7 +300,7 @@ export default function Summary() {
                       <Card
                         style={{
                           width: "100%",
-                          height: "18vh",
+                          height: "20vh",
                         }}
                       >
                         <CardContent>
@@ -298,7 +326,8 @@ export default function Summary() {
                             <TimeIcon />
                             <span style={{ color: "#FACE09" }}>
                               <span className={`${classes.fontSize50}`}>
-                                2.65
+                              {/* {executerData?.summary?.pct1ResTime} */}
+                              {typeof executerData?.summary?.pct1ResTime === 'number' ? (executerData?.summary?.pct1ResTime / 1000).toFixed(2) : null}
                               </span>
                               S
                             </span>
@@ -308,15 +337,14 @@ export default function Summary() {
                     </Grid>
                   </Grid>
                 </Card>
-              </Grid>
-            </Grid>
           </Grid>
-
+          {/* Spacing */}
+        
           {/*Top Right side */}
-          <Grid item xs={12} sm={4}>
-            <Card style={{ marginTop: "20px", width: "100%", padding: "10px" }}>
+          <Grid item xs={12} sm={4} style={{ height:'100%' }}>
+            <Card style={{ marginTop: "20px", width: "100%", height:'100%' }}>
               <CardContent>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} style={{ height: "100%" }}>
                   {data.map((item, index) => (
                     <React.Fragment key={index}>
                       <Grid item xs={12} sm={4}>
@@ -333,11 +361,14 @@ export default function Summary() {
                 </Grid>
               </CardContent>
             </Card>
-            <Grid container spacing={2}></Grid>
           </Grid>
         </Grid>
-        <Grid container spacing={2}>
+
+        {/* Buttom Component */}
+
+        <Grid container spacing={1} sx={{marginTop:'20px !important'}} style={{marginTop:'20px'}}>
           <Grid item xs={12} sm={12}>
+
             <Card
               style={{
                 width: "100%",

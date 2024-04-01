@@ -11,19 +11,24 @@ import DynamicTreeView from "./DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 import { Box } from "@mui/material";
+import { useLocation } from 'react-router-dom';
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Performance() {
   const classes = useStyles();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const rootId = queryParams.get('rootId');
 
-  const [addTestCase, setAddTestCase] = useState(0);
+  const [addTestCase, setAddTestCase] = useState(rootId);
   const [addNewProject, setAddNewProject] = useState(false);
-
+  const [depth, setdepth] = useState(0)
   const [formData, setFormData] = useState({ name: "" });
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isCollapsed, setisCollapsed] = useState(false);
   const [listData, setListData] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -72,10 +77,13 @@ export default function Performance() {
     setFormData({ name: value, id: Math.random(), parentId: 0 });
   };
 
-  const handleTestCaseList = (id) => {
-    setAddTestCase(id);
+  const handleTestCaseList = (id,node) => {
+    setdepth(node)
     setAddNewProject(false);
-    console.log(id, "testswt");
+    if(node>1){
+      setAddTestCase(id);
+    }else
+      setAddTestCase(0)
   };
 
   const treeStyle = drawerOpen ? {} : { display: "none" };
@@ -141,12 +149,13 @@ export default function Performance() {
                     TestCaseHandle={handleTestCaseList}
                     listData={listData}
                     setListData={setListData}
+                    params={rootId}
                   />
                 </Grid>
               </Card>
           </Grid>
           <Grid item xs={12} md={drawerOpen ? 9 : 12}>
-            {addTestCase !== 0 && <TabsPanel rootId={addTestCase} />}
+            {depth>1?(addTestCase !== 0 && <TabsPanel rootId={addTestCase} />):(<Box/>)}
           </Grid>
         </Grid>
       </div>

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -8,62 +9,117 @@ import { Grid, Card, CardContent } from "@mui/material";
 import { useStyles } from "./styles";
 import { TableData } from "./TableData";
 
-let data = [
-  {
-    HeaderLabel: "February 13",
-    HeaderResponseCode: "12407",
-    HeaderAssertions: "0",
-    HeaderEmbeddedResources: "10162",
-    ErrorDetails: [
-      {
-        Code: "Non HTTP response code:javax.net.sslException",
-        description1: "Number of samples in transactions : 15",
-        description2: "Number of falling samples : 1",
-        Count: "2",
-      },
-      {
-        Code: "Non HTTP response code:javax.net.sslException",
-        description1: "Number of samples in transactions : 15",
-        description2: "Number of falling samples : 1",
-        Count: "2",
-      },
-      {
-        Code: "Non HTTP response code:javax.net.sslException",
-        description1: "Number of samples in transactions : 15",
-        description2: "Number of falling samples : 1",
-        Count: "2",
-      },
-    ],
-  },
-  {
-    HeaderLabel: "February 13",
-    HeaderResponseCode: "12407",
-    HeaderAssertions: "0",
-    HeaderEmbeddedResources: "10162",
-    ErrorDetails: [
-      {
-        Code: "Non HTTP response code:javax.net.sslException",
-        description1: "Number of samples in transactions : 15",
-        description2: "Number of falling samples : 1",
-        Count: "2",
-      },
-      {
-        Code: "Non HTTP response code:javax.net.sslException",
-        description1: "Number of samples in transactions : 15",
-        description2: "Number of falling samples : 1",
-        Count: "2",
-      },
-    ],
-  },
-];
+// let data = [
+//   {
+//     HeaderLabel: "February 13",
+//     HeaderResponseCode: "12407",
+//     HeaderAssertions: "0",
+//     HeaderEmbeddedResources: "10162",
+//     ErrorDetails: [
+//       {
+//         Code: "Non HTTP response code:javax.net.sslException",
+//         description1: "Number of samples in transactions : 15",
+//         description2: "Number of falling samples : 1",
+//         Count: "2",
+//       },
+//       {
+//         Code: "Non HTTP response code:javax.net.sslException",
+//         description1: "Number of samples in transactions : 15",
+//         description2: "Number of falling samples : 1",
+//         Count: "2",
+//       },
+//       {
+//         Code: "Non HTTP response code:javax.net.sslException",
+//         description1: "Number of samples in transactions : 15",
+//         description2: "Number of falling samples : 1",
+//         Count: "2",
+//       },
+//     ],
+//   },
+//   {
+//     HeaderLabel: "February 13",
+//     HeaderResponseCode: "12407",
+//     HeaderAssertions: "0",
+//     HeaderEmbeddedResources: "10162",
+//     ErrorDetails: [
+//       {
+//         Code: "Non HTTP response code:javax.net.sslException",
+//         description1: "Number of samples in transactions : 15",
+//         description2: "Number of falling samples : 1",
+//         Count: "2",
+//       },
+//       {
+//         Code: "Non HTTP response code:javax.net.sslException",
+//         description1: "Number of samples in transactions : 15",
+//         description2: "Number of falling samples : 1",
+//         Count: "2",
+//       },
+//     ],
+//   },
+// ];
 
 export default function Error() {
   const classes = useStyles();
+  const { executerData } = useSelector((state) => state.result);
   const [expandedAccord, setExpandedAccord] = React.useState("");
 
   const handleExpandAccord = (panel) => (e, isExpanded) => {
     setExpandedAccord(isExpanded ? panel : "");
   };
+
+  let totalErrorCount = 0;
+  const headerResponseCodes = {};
+
+   // Initialize data array with common headers
+   const data = [
+    {
+      HeaderLabel: "All",
+      HeaderResponseCode: "",
+      HeaderAssertions: "0",
+      HeaderEmbeddedResources: "10162",
+      ErrorDetails: []
+    }
+  ];
+
+  // if (executerData?.error && executerData.error.length > 0) {
+  //   // If executerData.error exists and has length > 0
+  //   executerData.error.forEach((errorItem) => {
+  //     // Push ErrorDetails inside the data array
+  //     data[0].ErrorDetails.push({
+  //       Code: errorItem.code,
+  //       description: errorItem.description,
+  //       count: errorItem.count
+  //     });
+  //   });
+  // }
+
+  if (executerData?.error && executerData.error.length > 0) {
+    executerData.error.forEach((errorItem) => {
+      // Update total error count
+      totalErrorCount += errorItem.count;
+
+      // Update HeaderResponseCode count
+      const responseCode = errorItem.responseCode;
+      if (headerResponseCodes[responseCode]) {
+        headerResponseCodes[responseCode] += errorItem.count;
+      } else {
+        headerResponseCodes[responseCode] = errorItem.count;
+      }
+
+      // Push ErrorDetails inside the data array
+      data[0].ErrorDetails.push({
+        Code: errorItem.code,
+        description: errorItem.description,
+        count: errorItem.count
+      });
+    });
+
+    // Populate HeaderResponseCode with counts
+    data[0].HeaderResponseCode = Object.entries(headerResponseCodes)
+      .map(([code, count]) => ` ${count}`)
+      .join(", ");
+  }
+
 
   return (
     <Grid container className={classes.mainContainer}>
@@ -118,34 +174,38 @@ export default function Error() {
               </Typography>
             </Grid>
             {/* Accordion items */}
-            <Grid container className={classes.accordionContainer}>
-              {data?.map((item, index) => (
-                <Accordion
-                  expanded={expandedAccord === item}
-                  onChange={handleExpandAccord(item)}
+            {executerData?.error && executerData.error.length > 0 ? (
+              <Grid container className={classes.accordionContainer}>
+                {data?.map((item, index) => (
+                  <Accordion
+                  expanded={expandedAccord === index}
+                  onChange={handleExpandAccord(index)}
                   key={index}
                   className={classes.accordion}
                 >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.accordianSummary}>
-                      {`${item.HeaderLabel}`}
-                    </Typography>
-                    <Typography className={classes.accordianSummary}>
-                      {`${item.HeaderResponseCode}`}
-                    </Typography>
-                    <Typography className={classes.accordianSummary}>
-                      {`${item.HeaderAssertions}`}
-                    </Typography>
-                    <Typography className={classes.accordianSummary}>
-                      {`${item.HeaderEmbeddedResources}`}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ p: "0" }}>
-                    <TableData rows={item.ErrorDetails} />
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </Grid>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography className={classes.accordianSummary}>
+                        {`${item.HeaderLabel}`}
+                      </Typography>
+                      <Typography className={classes.accordianSummary}>
+                        {`${item.HeaderResponseCode}`}
+                      </Typography>
+                      <Typography className={classes.accordianSummary}>
+                        {`${item.HeaderAssertions}`}
+                      </Typography>
+                      <Typography className={classes.accordianSummary}>
+                        {`${item.HeaderEmbeddedResources}`}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: "0" }}>
+                      <TableData rows={item.ErrorDetails} />
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </Grid>
+            ) : (
+              <Typography fontFamily={"Lexend Deca"} fontSize="14px">No data found</Typography>
+            )}
           </Grid>
         </CardContent>
       </Card>

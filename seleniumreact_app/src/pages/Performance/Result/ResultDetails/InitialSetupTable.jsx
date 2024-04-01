@@ -12,9 +12,15 @@ export function InitialSetupTable({ data }) {
   const classes = useStyles();
   const navigate = useNavigate()
 
-  const handleButtonClick = () => {
-    navigate("/performance"); 
-  };
+  // const handleButtonClick = () => {
+  //   navigate("/performance"); 
+  // };
+
+  const handleButtonClick = (row) => {
+    const rootId = data.rootId; 
+    const testId = row.id;
+    navigate(`/performance?rootId=${rootId}/?testid=${testId}`); 
+};
   return (
     <TableContainer>
       <Table>
@@ -27,7 +33,7 @@ export function InitialSetupTable({ data }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.map((row, index) => (
+          {data?.scenarios?.map((row, index) => (
             <TableRow key={index} style={{ height: "34px" }}>
               <StyledTableCell first>{row.scenarioName}</StyledTableCell>
               <StyledTableCell>{row.duration}</StyledTableCell>
@@ -47,7 +53,7 @@ export function InitialSetupTable({ data }) {
                       background: "rgb(101, 77, 247)",
                     },
                   }}
-                  onClick={handleButtonClick}
+                  onClick={() => handleButtonClick(row)}
                 >
                   <EditIcon fontSize="small" style={{ color: "white" }}/>
                   Edit

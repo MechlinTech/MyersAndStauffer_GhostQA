@@ -1,48 +1,60 @@
-import React, { useState } from "react";
-import { Grid, Card, Button } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { Grid, Card, Button, Chip  } from "@material-ui/core";
 import { RequestStateTable } from "./RequestStateTable";
 import { useStyles } from "./styles";
 import CustomSearchField from "./CustomSerachField";
 import { Typography } from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-
-const data = [
-  {
-    transactions: "Transaction 1",
-    sample: "Sample 1",
-    avgResponseTime: "100",
-    avgHits: "50",
-    line904: "80",
-    line954: "90",
-    line994: "95",
-    minResponseTime: "70",
-    maxResponseTime: "120",
-    avgBandwidth: "10",
-    errorPercentage: "5%",
-  },
-  {
-    transactions: "Transaction 2",
-    sample: "Sample 2",
-    avgResponseTime: "120",
-    avgHits: "60",
-    line904: "85",
-    line954: "95",
-    line994: "100",
-    minResponseTime: "75",
-    maxResponseTime: "130",
-    avgBandwidth: "12",
-    errorPercentage: "4%",
-  },
-];
+import DeleteIcon from "@mui/icons-material/Delete";
+import ClearIcon from "@mui/icons-material/Clear";
+import { useSelector } from "react-redux";
 
 export default function RequestState() {
   const classes = useStyles();
   const [selectedTransactions, setSelectedTransactions] = useState([]);
+  const { executerData } = useSelector((state) => state.result);
+  // Define checkedItems state
+  const [checkedItems, setCheckedItems] = useState(Array(executerData?.results?.length).fill(false));
+
+  console.log("executerData", executerData);
+
 
   const handleSearchChange = (transactions) => {
+    console.log("handleSearchChange",transactions)
     setSelectedTransactions(transactions);
   };
 
+  // const handleDeleteChip = (transactionId) => {
+  //   setSelectedTransactions((prevSelectedTransactions) =>
+  //     prevSelectedTransactions.filter(
+  //       (transaction) => transaction.id !== transactionId
+  //     )
+  //   );
+  // };
+
+  const handleDeleteChip = (transactionId) => {
+    setSelectedTransactions((prevSelectedTransactions) =>
+      prevSelectedTransactions.filter(
+        (transaction) => transaction.id !== transactionId
+      )
+    );
+  
+    // Update the state of checkboxes
+    const updatedCheckedItems = checkedItems.map((checked, index) => {
+      const transaction = selectedTransactions[index];
+      return transaction && transaction.id === transactionId ? false : checked;
+    });
+    setCheckedItems(updatedCheckedItems);
+  };
+  
+  const updateCheckboxes = (deletedTransactionId) => {
+    const updatedCheckedItems = checkedItems.map((checked, index) => {
+      const transaction = selectedTransactions[index];
+      return transaction && transaction.id === deletedTransactionId ? false : checked;
+    });
+    setCheckedItems(updatedCheckedItems);
+  };
+  
   return (
     <Grid className={classes.mainContainer}>
       <Grid item xs={12} sm={12}>
@@ -57,7 +69,7 @@ export default function RequestState() {
                   color: "#646464",
                 }}
               >
-                 Request State
+                Request State
               </Typography>
             </Grid>
             <Grid item>
@@ -77,17 +89,31 @@ export default function RequestState() {
           </Grid>
           <Grid item xs={12} sm={12} style={{ marginTop: "20px" }}>
             <Grid item xs={12} sm={3} style={{ marginBottom: "10px" }}>
-              <CustomSearchField
-                placeholder="Search Transactions here..."
-                data={data}
-                onChange={handleSearchChange}
-                selectedTransactions={selectedTransactions}
+            <CustomSearchField
+               placeholder="Search Transactions here..."
+               data={executerData?.results?.map((item) => item)}
+               onChange={handleSearchChange}
+               selectedTransactions={selectedTransactions}
+               checkedItems={checkedItems}  // Pass checkedItems state
+               setCheckedItems={setCheckedItems}  // Pass setCheckedItems function
               />
+            </Grid>
+            <Grid container spacing={1} style={{margin:"10px"}}>
+            {selectedTransactions.map((transaction) => (
+                <Chip
+                  key={transaction.id}
+                  label={transaction.home_page.transaction}
+                  onDelete={() => handleDeleteChip(transaction.id)}
+                  style={{ backgroundColor: "#654df7", color: "#fff" }}
+                  deleteIcon={<ClearIcon style={{ color: "#fff" }} />}
+                />
+              ))}
             </Grid>
             <RequestStateTable
               data={
-                selectedTransactions.length > 0 ? selectedTransactions : data
+                selectedTransactions.length > 0 ? selectedTransactions : executerData
               }
+              // data={executerData}
             />
           </Grid>
         </Card>

@@ -13,10 +13,13 @@ import axios from "axios";
 import { header } from "../../../../utils/authheader";
 import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
+import { useDispatch } from "react-redux";
+import { GetLocationScenarioVUCount } from "../../../../redux/actions/settingAction";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function LoadPanel({ PerformanceFileId }) {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [graphData, setGraphData] = useState([]);
   const [xaxisCategories, setxaxisCategories] = useState([]);
@@ -46,6 +49,11 @@ export default function LoadPanel({ PerformanceFileId }) {
         title: {
           text: "Users",
         },
+          labels: {
+            formatter: function (value) {
+              return value.toFixed(2); // Limit to 2 decimal points
+            },
+          },
       },
       fill: {
         type: "solid",
@@ -55,7 +63,7 @@ export default function LoadPanel({ PerformanceFileId }) {
       tooltip: {
         y: {
           formatter: function (val) {
-            return "" + val + " ";
+            return "" + val.toFixed(2) + " ";
           },
         },
       },
@@ -197,14 +205,15 @@ export default function LoadPanel({ PerformanceFileId }) {
         header()
       );
       console.log("res", res);
-      if (res.data === "Success") {
+      dispatch(GetLocationScenarioVUCount(PerformanceFileId))
+      // if (res.data === "Success") {
         toast.info("Successfully saved", {
           style: {
             background: "rgb(101, 77, 247)",
             color: "rgb(255, 255, 255)",
           },
         });
-      }
+      // }
     } catch (error) {
       console.log("error saving ", error);
       toast.error("Network error");

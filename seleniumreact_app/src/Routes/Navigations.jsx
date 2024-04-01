@@ -16,6 +16,7 @@ import Summary from "../pages/Performance/Result/ResultDetails";
 import InitialSetup from "../pages/Performance/Result/ResultDetails/InitialSetup";
 import Error from "../pages/Performance/Result/ResultDetails/Error";
 import RequestState from "../pages/Performance/Result/ResultDetails/RequestState/RequestState";
+import CompareGraph from "../pages/Performance/Component/Compare/CompareGraph";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
@@ -82,7 +83,7 @@ export default function Navigations() {
           <Route path="initial-setup" element={<InitialSetup />} />
           <Route path="request-state" element={<RequestState />} />
         </Route>
-       
+        <Route path="performance/compare/:compareName" element={<CompareGraph/>}/>
         <Route path="api" element={<Api />}>
           <Route
             path=""

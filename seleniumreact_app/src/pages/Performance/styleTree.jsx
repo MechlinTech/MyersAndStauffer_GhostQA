@@ -5,7 +5,7 @@ import {FormControl, OutlinedInput} from "@mui/material";
 export const useStylesTree = makeStyles({
     rootNodeFolder: {
         listStyle: 'none',
-        padding:'0 20px'
+        padding:'0 2px'
 
     },
     child: {

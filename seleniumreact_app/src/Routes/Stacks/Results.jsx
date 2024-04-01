@@ -1,16 +1,17 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import Stack from "@mui/material/Stack";
 import { useStyles } from "../../Layout/styles";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Grid, Button } from "@material-ui/core";
-import { StyledDashBoardIcon } from "../../comman/icons";
-import * as Flatted from "flatted";
-import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function Results() {
   const classes = useStyles();
   const location = useLocation();
   const navigate = useNavigate();
+  const { isRunning } = useSelector((state) => state.result);
 
   return (
     <>
@@ -72,6 +73,20 @@ export default function Results() {
           >
             Initial Setup
           </Link>
+        </Grid>
+        <Grid item style={{marginLeft:"20px"}}>
+          {isRunning && (
+            
+            <CircularProgress
+              style={{
+                color: "#654DF7",
+                // position: "absolute",
+                left: "50%",
+                transform: "translateX(-50%)",
+              }}
+              size={25}
+            />
+          )}
         </Grid>
 
         <Grid item style={{ marginLeft: "auto" }}>

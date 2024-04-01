@@ -13,12 +13,15 @@ import {
   Typography,
 } from "@mui/material";
 
-export default function CustomSearchField({ data, onChange }) {
+export default function CustomSearchField({
+  data,
+  onChange,
+  checkedItems,
+  setCheckedItems,
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showTestRuns, setShowTestRuns] = useState(false);
-  const [checkedItems, setCheckedItems] = useState(
-    Array(data.length).fill(false)
-  );
+  
   const searchRef = useRef(null);
 
   const handleSearchChange = (e) => {
@@ -41,10 +44,13 @@ export default function CustomSearchField({ data, onChange }) {
   const clearSearch = () => {
     setSearchTerm("");
     setShowTestRuns(false);
+    setCheckedItems(Array(data?.length).fill(false));
   };
 
-  const filteredData = data.filter((item) =>
-    item.transactions.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = data?.filter((item) =>
+    Object.keys(item).some((key) =>
+      item[key]?.transaction?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
 
   return (
@@ -97,7 +103,7 @@ export default function CustomSearchField({ data, onChange }) {
               }}
             >
               <List sx={{ width: "100%" }}>
-                {filteredData.map((test, index) => (
+                {filteredData?.map((item, index) => (
                   <ListItem
                     key={index}
                     onClick={() => handleToggle(index)}
@@ -109,7 +115,11 @@ export default function CustomSearchField({ data, onChange }) {
                       size="small"
                     />
                     <ListItemText>
-                      <Typography>{test.transactions}</Typography>
+                      <Typography>
+                        {Object.keys(item).find(
+                          (key) => item[key]?.transaction
+                        )}
+                      </Typography>
                     </ListItemText>
                   </ListItem>
                 ))}
