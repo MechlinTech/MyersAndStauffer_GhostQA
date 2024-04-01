@@ -22,7 +22,7 @@ export default function Performance() {
 
   const [addTestCase, setAddTestCase] = useState(rootId);
   const [addNewProject, setAddNewProject] = useState(false);
-
+  const [depth, setdepth] = useState(0)
   const [formData, setFormData] = useState({ name: "" });
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -77,10 +77,13 @@ export default function Performance() {
     setFormData({ name: value, id: Math.random(), parentId: 0 });
   };
 
-  const handleTestCaseList = (id) => {
-    setAddTestCase(id);
+  const handleTestCaseList = (id,node) => {
+    setdepth(node)
     setAddNewProject(false);
-    console.log(id, "testswt");
+    if(node>1){
+      setAddTestCase(id);
+    }else
+      setAddTestCase(0)
   };
 
   const treeStyle = drawerOpen ? {} : { display: "none" };
@@ -152,7 +155,7 @@ export default function Performance() {
               </Card>
           </Grid>
           <Grid item xs={12} md={drawerOpen ? 9 : 12}>
-            {addTestCase !== 0 && <TabsPanel rootId={addTestCase} />}
+            {depth>1?(addTestCase !== 0 && <TabsPanel rootId={addTestCase} />):(<Box/>)}
           </Grid>
         </Grid>
       </div>

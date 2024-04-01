@@ -164,7 +164,7 @@ export default function TestLab() {
           <Grid item xs={12} md={drawerOpen ? 9 : 12}>
             {depth>1 ? (
               <AddTestCase addTestCase={addTestCase} nameSuite={nameSuite} />
-            ):childOfFirstTwoParent.map((item)=><li>{item.name}</li>)}
+            ):(<Box/>)}
           </Grid>
         </Grid>
       </div>

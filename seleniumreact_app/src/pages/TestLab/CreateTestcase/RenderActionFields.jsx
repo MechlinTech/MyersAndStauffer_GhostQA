@@ -19,121 +19,78 @@ export default function RenderActionFields({
   isEditable,
 }) {
   switch (action) {
-    case "click":
-      return (
-        <Grid item xs={6}>
-          <FormControl component="fieldset">
-            <RadioGroup
-              row
-              aria-label="radio-buttons"
-              name="radio-buttons-group"
-              value={step?.clickType}
-              onChange={(e) => {
-                handleInputChange(e, index, "clickType");
-              }}
-              sx={{
-                border: Errors[index]?.clickTypeError
-                  ? "1px solid red"
-                  : "1px solid transparent",
-              }}
-            >
-              <FormControlLabel
-                value="Left Click"
-                disabled={!isEditable}
-                control={<Radio style={{ color: "#654DF7" }} />}
-                label={
-                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
-                    Left Click
-                  </span>
-                }
-              />
-              <FormControlLabel
-                value="Right Click"
-                disabled={!isEditable}
-                control={<Radio style={{ color: "#654DF7" }} />}
-                label={
-                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
-                    Right Click
-                  </span>
-                }
-              />
-              <FormControlLabel
-                value="Double Click"
-                disabled={!isEditable}
-                control={<Radio style={{ color: "#654DF7" }} />}
-                label={
-                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
-                    Double Click
-                  </span>
-                }
-              />
-            </RadioGroup>
-          </FormControl>
-        </Grid>
-      );
-    case "drag_and_drop":
+    
+    case "type":
       return (
         <>
           <Grid item xs={6}>
-            <StyledFormControl>
-              <StyledOutlinedInput
-                type="text"
-                placeholder="Element Selector (Drop area)"
-                disabled={!isEditable}
-                value={step?.elementSelector}
-                error={Errors[index]?.elementSelectorError}
-                onChange={(e) => {
-                  handleInputChange(e, index, "elementSelector");
-                }}
-              />
-            </StyledFormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl component="fieldset">
-              <RadioGroup
-                row
-                aria-label="radio-buttons"
-                name="radio-buttons-group"
-                value={step?.selectedDragDropType}
-                onChange={(e) => {
-                  handleInputChange(e, index, "selectedDragDropType");
-                }}
-                sx={{
-                  border: Errors[index]?.selectedDragDropTypeError
-                    ? "1px solid red"
-                    : "1px solid transparent",
-                }}
-              >
-                <FormControlLabel
-                  value="Native"
-                  disabled={!isEditable}
-                  control={<Radio style={{ color: "#654DF7" }} />}
-                  label={
-                    <span
-                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
-                    >
-                      Native
-                    </span>
-                  }
-                />
-                <FormControlLabel
-                  value="Simulated"
-                  disabled={!isEditable}
-                  control={<Radio style={{ color: "#654DF7" }} />}
-                  label={
-                    <span
-                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
-                    >
-                      Simulated
-                    </span>
-                  }
-                />
-              </RadioGroup>
-            </FormControl>
+          <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="Input value"
+              disabled={!isEditable}
+              error={Errors[index]?.sendKeyInputError}
+              value={step?.sendKeyInput}
+              onChange={(e) => {
+                handleInputChange(e, index, "sendKeyInput");
+              }}
+            />
+          </StyledFormControl>
           </Grid>
         </>
       );
-    case "Assign":
+    case "scroll_to_window":
+      return (
+        <Grid item xs={6}>
+         <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="Window pixel"
+              disabled={!isEditable}
+              error={Errors[index]?.scrollPixelError}
+              value={step?.scrollPixel}
+              onChange={(e) => {
+                handleInputChange(e, index, "scrollPixel");
+              }}
+            />
+          </StyledFormControl>
+        </Grid>
+      );
+    case "go_to_url":
+      return (
+        <Grid item xs={6}>
+          <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="URL"
+              disabled={!isEditable}
+              error={Errors[index]?.urlError}
+              value={step?.url}
+              onChange={(e) => {
+                handleInputChange(e, index, "url");
+              }}
+            />
+          </StyledFormControl>
+        </Grid>
+      );
+    case "upload_file":
+      return (
+        <Grid item xs={6}>
+           <StyledFormControl>
+            <StyledOutlinedInput
+              type="file"
+              placeholder="File here"
+              disabled={!isEditable}
+              error={Errors[index]?.fileNameError}
+              // value={step?.fileName}  not aplicable for file
+              onChange={(e) => {
+                handleInputChange(e, index, "fileName");
+              }}
+            />
+          </StyledFormControl>
+        </Grid>
+      );
+    case "element_has_value":
       return (
         <Grid item xs={6}>
           <StyledFormControl>
@@ -141,237 +98,49 @@ export default function RenderActionFields({
               type="text"
               placeholder="Input value"
               disabled={!isEditable}
-              error={Errors[index]?.assignInputValueError}
-              value={step?.assignInputValue}
+              value={step?.elementValue}
+              error={Errors[index]?.elementValueError}
               onChange={(e) => {
-                handleInputChange(e, index, "assignInputValue");
+                handleInputChange(e, index, "elementValue");
               }}
             />
           </StyledFormControl>
         </Grid>
       );
-    case "SendKeys":
+    case "element_has_css_property_with_value":
       return (
         <>
-          <Grid item xs={6}>
-            <Select
-              isClearable={true}
-              placeholder="type"
-              isDisabled={!isEditable}
-              options={keyList}
-              value={{ label: step?.keyPressValue, value: step?.keyPressValue }}
-              onChange={(val) => {
-                handleInputChange(val, index, "keyPressValue");
+        <Grid item xs={6}>
+          <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="css property"
+              disabled={!isEditable}
+              value={step?.cssProperty}
+              error={Errors[index]?.cssPropertyError}
+              onChange={(e) => {
+                handleInputChange(e, index, "cssProperty");
               }}
-              styles={{
-                container: (provided) => ({
-                  ...provided,
-                  backgroundColor: "rgb(242, 242, 242)",
-                  width: "100%",
-                }),
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: "rgb(242, 242, 242)",
-                  "&:hover": {
-                    borderColor: "#654DF7",
-                  },
-                  borderColor: Errors[index]?.keyPressValueError
-                    ? "red"
-                    : state.isFocused
-                    ? "#654DF7"
-                    : "rgb(242, 242, 242)",
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? "#654DF7" : "transparent",
-                }),
-                clearIndicator: (provided) => ({
-                  ...provided,
-                  cursor: "pointer",
-                  ":hover": {
-                    color: "#654DF7",
-                  },
-                }),
-                dropdownIndicator: (provided) => ({
-                  ...provided,
-                  cursor: "pointer",
-                  ":hover": {
-                    color: "#654DF7",
-                  },
-                }),
-              }}
-              menuPosition={"fixed"}
             />
-          </Grid>
-          <Grid item xs={6}>
-            <FormControl component="fieldset">
-              <RadioGroup
-                row
-                name="radio-buttons-group"
-                value={step?.selectedModifierKey}
-                onChange={(e) => {
-                  handleInputChange(e, index, "selectedModifierKey");
-                }}
-                sx={{
-                  border: Errors[index]?.selectedModifierKeyError
-                    ? "1px solid red"
-                    : "1px solid transparent",
-                }}
-              >
-                <FormControlLabel
-                  value="Shift"
-                  disabled={!isEditable}
-                  control={<Radio style={{ color: "#654DF7" }} />}
-                  label={
-                    <span
-                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
-                    >
-                      Shift
-                    </span>
-                  }
-                />
-                <FormControlLabel
-                  value="Control"
-                  disabled={!isEditable}
-                  control={<Radio style={{ color: "#654DF7" }} />}
-                  label={
-                    <span
-                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
-                    >
-                      Control
-                    </span>
-                  }
-                />
-                <FormControlLabel
-                  value="Alt"
-                  disabled={!isEditable}
-                  control={<Radio style={{ color: "#654DF7" }} />}
-                  label={
-                    <span
-                      style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}
-                    >
-                      Alt
-                    </span>
-                  }
-                />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
+          </StyledFormControl>
+          
+        </Grid>
+        <Grid item xs={6}>
+        <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="css value"
+              disabled={!isEditable}
+              value={step?.cssValue}
+              error={Errors[index]?.cssValueError}
+              onChange={(e) => {
+                handleInputChange(e, index, "cssValue");
+              }}
+            />
+          </StyledFormControl>
+        </Grid>
         </>
-      );
-    case "Execute Javascript":
-      return (
-        <Grid item xs={6}>
-          <StyledTextField
-            label="JavaScript Code"
-            multiline
-            disabled={!isEditable}
-            rows={5}
-            fullWidth
-            value={step?.executeJavaScript}
-            onChange={(e) => {
-              handleInputChange(e, index, "executeJavaScript");
-            }}
-            InputLabelProps={{
-              style: {
-                color: "black",
-                fontFamily: "Lexend Deca",
-              },
-            }}
-          />
-        </Grid>
-      );
-    case "Pause (Time in ms)":
-      return (
-        <Grid item xs={6}>
-          <StyledFormControl>
-            <StyledOutlinedInput
-              type="text"
-              placeholder="Input value"
-              disabled={!isEditable}
-              error={Errors[index]?.pauseTimeError}
-              value={step?.pauseTime}
-              onChange={(e) => {
-                handleInputChange(e, index, "pauseTime");
-              }}
-            />
-          </StyledFormControl>
-        </Grid>
-      );
-    case "ExitTest":
-      return (
-        <Grid item xs={12}>
-          <FormControl component="fieldset">
-            <RadioGroup
-              row
-              aria-label="radio-buttons"
-              name="radio-buttons-group"
-              value={step?.exitTestStatus}
-              onChange={(e) => {
-                handleInputChange(e, index, "exitTestStatus");
-              }}
-              sx={{
-                border: Errors[index]?.exitTestStatusError
-                  ? "1px solid red"
-                  : "1px solid transparent",
-              }}
-            >
-              <FormControlLabel
-                value="Passing"
-                disabled={!isEditable}
-                control={<Radio style={{ color: "#654DF7" }} />}
-                label={
-                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
-                    Passing
-                  </span>
-                }
-              />
-              <FormControlLabel
-                value="Failing"
-                disabled={!isEditable}
-                control={<Radio style={{ color: "#654DF7" }} />}
-                label={
-                  <span style={{ fontSize: "14px", fontFamily: "Lexend Deca" }}>
-                    Failing
-                  </span>
-                }
-              />
-            </RadioGroup>
-          </FormControl>
-        </Grid>
-      );
-    case "Go To URL":
-      return (
-        <Grid item xs={6}>
-          <StyledFormControl>
-            <StyledOutlinedInput
-              type="text"
-              placeholder="Input value"
-              disabled={!isEditable}
-              value={step?.navigateTo}
-              error={Errors[index]?.navigateToError}
-              onChange={(e) => {
-                handleInputChange(e, index, "navigateTo");
-              }}
-            />
-          </StyledFormControl>
-        </Grid>
-      );
-    case "JavaScript returns true":
-      return (
-        <Grid item xs={6}>
-          <StyledTextField
-            label="JavaScript Code"
-            multiline
-            rows={1}
-            disabled={!isEditable}
-            fullWidth
-            value={step?.javaScriptCode}
-            onChange={(e) => {
-              handleInputChange(e, index, "javaScriptCode");
-            }}
-          />
-        </Grid>
+        
       );
     case "Check accessibility":
       return (

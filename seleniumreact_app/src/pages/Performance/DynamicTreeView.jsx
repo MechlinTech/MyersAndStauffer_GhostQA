@@ -124,7 +124,7 @@ const Card = ({
                   {editMode !== item.id && (
                     <span
                       onClick={() => {
-                        handleTask(item.id);
+                        handleTask(item.id,nodeCount);
                         setSelectedNodeId(item.id);
                         dispatch(ResetLocationScenarioVUCount())
                       }}
