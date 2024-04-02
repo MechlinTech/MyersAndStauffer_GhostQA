@@ -6,6 +6,7 @@ import {
   Modal,
   Table,
   TableBody,
+  TableCell,
   TableContainer,
   TableHead,
   TableRow,
@@ -16,6 +17,7 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import CustomeTableChell from "./CustomeTableChell";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function ExecutionHistory({executionDetail}) {
@@ -206,7 +208,7 @@ export default function ExecutionHistory({executionDetail}) {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <StyledTableCell colSpan={3}>
+                    <StyledTableCell colSpan={4}>
                       <StyledTypography variant="h6" color="primary">
                         {selectedRunId}
                       </StyledTypography>
@@ -216,12 +218,14 @@ export default function ExecutionHistory({executionDetail}) {
                     <StyledTableCell>Status </StyledTableCell>
                     <StyledTableCell>Duration</StyledTableCell>
                     <StyledTableCell>Detail</StyledTableCell>
+                    <StyledTableCell>Screenshot</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {stepDetail &&
                     stepDetail.map((item) => {
                       const testSteps = JSON.parse(item.TestStepJson);
+                      const ScreenshotUrl = item.TestScreenShotUrl
                        return testSteps.map((row, index) => (
                         <TableRow
                           key={index}
@@ -242,6 +246,9 @@ export default function ExecutionHistory({executionDetail}) {
                           <StyledTableCell>
                             {row.stepName}
                           </StyledTableCell>
+                          
+                            <CustomeTableChell ScreenshotUrl={ScreenshotUrl}/>
+                          
                         </TableRow>
                       ));
                     })}

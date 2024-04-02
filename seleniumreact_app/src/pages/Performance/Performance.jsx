@@ -101,7 +101,7 @@ export default function Performance() {
           <Grid item xs={12} md={3} style={treeStyle}>
               <Card
                 className={classes.card}
-                style={{ paddingBottom: "30px", maxHeight: "78vh" }}
+                style={{ paddingBottom: "30px"}}
               >
                 <Grid
                   container

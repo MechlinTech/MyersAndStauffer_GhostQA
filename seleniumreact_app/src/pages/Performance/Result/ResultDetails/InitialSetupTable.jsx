@@ -19,7 +19,7 @@ export function InitialSetupTable({ data }) {
   const handleButtonClick = (row) => {
     const rootId = data.rootId; 
     const testId = row.id;
-    navigate(`/performance?rootId=${rootId}/?testid=${testId}`); 
+    navigate(`/performance?rootId=${rootId}&testid=${testId}`); 
 };
   return (
     <TableContainer>
