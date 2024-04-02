@@ -1,39 +1,38 @@
 import React from "react";
 import Chart from "react-apexcharts";
 
-const LineChart = ({ height }) => {
+const LineChart = ({ height, Yaxis, Xaxis }) => {
+
+  const xCategories = Xaxis && Xaxis.filter(item => item !== null).map(item => (item ? item.toString() : ""));
+  const yData = Yaxis && Yaxis.filter(item => item !== null);
+
   const options = {
     chart: {
       id: "smooth-line",
       toolbar: {
         show: false,
       },
-      zoom: {
-        enabled: false,
-      },
     },
     colors: ["#0000ff", "#ff0000"],
     xaxis: {
-      categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      categories: xCategories || [],
       title: {
-        text: "Virtual Users",
+        text: "Time (ms)",
       },
     },
     yaxis: {
       min: 0,
-      max: 500,
+      max: yData ? Math.max(...yData) : 0,
       title: {
-        text: "Time (ms)",
+        text: "Virtual Users",
       },
       labels: {
         formatter: function (value) {
           return value;
         },
-        // Custom Y-axis values
-        yaxis: [0, 100, 200, 300, 400, 500],
+        yaxis: yData || [],
       },
     },
-
     stroke: {
       curve: "smooth",
       width: 2,
@@ -52,22 +51,29 @@ const LineChart = ({ height }) => {
 
   const series = [
     {
-      name: "Hit’s",
+      name: "Time (ms)",
       type: "line",
-      data: [0, 120, 100, 50, 300, 130, 200, 311, 400],
+      data: Xaxis ? Xaxis.filter(item => item !== null) : [],
     },
     {
-      name: "Error",
+      name: "Virtual Users",
       type: "line",
-      data: [30, 80, 200, 235, 250, 285, 300, 355, 360],
+      data: yData || [],
     },
   ];
 
+  const shouldRenderChart = (Yaxis && Yaxis.length > 0 && yData && yData.length > 0) || (xCategories && xCategories.length > 0);
+
   return (
     <div>
-       <div style={{ textAlign: "center"}}>Load</div>
-      <div style={{ height: "calc(45vh - 20px)", marginBottom:'10px' }} className="line-container">
-        <Chart options={options} series={series} type="line" height={height} />
+      <div style={{ textAlign: "center" }}>Load</div>
+      <div style={{ height: "calc(45vh - 20px)", marginBottom: "10px" }} className="line-container">
+        {shouldRenderChart && (
+          <Chart options={options} series={series} type="line" height={height} />
+        )}
+        {!shouldRenderChart ? (
+          <div>No data available</div>
+        ) : null}
       </div>
     </div>
   );
