@@ -42,7 +42,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
     const testId = parseInt(searchParams.get("testid"));
     if(testId && Array.isArray(response.data)){
       const testToEdit = response.data.find(item => item.id === testId)
-      setExpandedAccord(testToEdit.testCaseName)
+      setExpandedAccord(expandedAccord?expandedAccord:testToEdit.testCaseName)
     }
       console.log(response);
     } catch (error) {
@@ -53,7 +53,14 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
   useEffect(() => {
     fetchData(); // Call the fetchData function when the component mounts
   }, [rootId]);
-  
+  // useEffect(() => {
+  //   const searchParams = new URLSearchParams(location.search);
+  //   const testId = parseInt(searchParams.get("testid"));
+  //   if (testId && Array.isArray(testCaseData)) {
+  //     const testToEdit = testCaseData.find((item) => item.id === testId);
+  //     setExpandedAccord(testToEdit ? testToEdit.testCaseName : "");
+  //   }
+  // }, []);
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
   const fileDataRef = useRef(null);

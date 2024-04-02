@@ -12,6 +12,7 @@ import { header } from "../../utils/authheader";
 import { useDispatch } from "react-redux";
 import { ResetLocationScenarioVUCount } from "../../redux/actions/settingAction";
 import { Tooltip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Card = ({
@@ -46,6 +47,7 @@ const Card = ({
 }) => {
   const styleClass = useStylesTree();
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   useEffect(() => {
     function updateNodeDepth(data, parentId, depth) {
       const children = data.filter((node) => node.parentId === parentId);
@@ -127,8 +129,10 @@ const Card = ({
                   {editMode !== item.id && (
                     <span
                       onClick={() => {
+                        navigate('/performance') 
                         handleTask(item.id,nodeCount);
                         setSelectedNodeId(item.id);
+                        if(item.id !== selectedNodeId)
                         dispatch(ResetLocationScenarioVUCount())
                       }}
                       style={{
