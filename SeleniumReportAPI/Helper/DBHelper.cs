@@ -22,6 +22,8 @@ using System.Net.Http.Headers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using GitHub;
 using AventStack.ExtentReports.Gherkin.Model;
+using System.IO.Compression;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -2595,7 +2597,8 @@ namespace SeleniumReportAPI.Helper
 
             string endDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
             string result = string.Empty;
-
+            var data = JsonConvert.SerializeObject(model.responseData);
+            var dat2 = CompressString(data);
             using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
                 connection.Open();
@@ -2608,8 +2611,14 @@ namespace SeleniumReportAPI.Helper
                     command.Parameters.AddWithValue("@Status", "Complete");
                     command.Parameters.AddWithValue("@StartDateTime", model.StartDate);
                     command.Parameters.AddWithValue("@EndDateTime", endDate);
-                    command.Parameters.AddWithValue("@LoadDataJson", JsonConvert.SerializeObject(model.responseData));
+                    command.Parameters.AddWithValue("@LoadDataJson", dat2);
                     command.Parameters.AddWithValue("@TesterName", model.TesterName);
+                    command.Parameters.AddWithValue("@MaxDuration", model.maxDuration);
+                    command.Parameters.AddWithValue("@Scenarios", JsonConvert.SerializeObject(model.Scenarios));
+                    command.Parameters.AddWithValue("@TotalDuration", model.TotalDuration);
+                    command.Parameters.AddWithValue("@TotalRampUpSteps", model.TotalRampUpSteps);
+                    command.Parameters.AddWithValue("@TotalRampUpTime", model.TotalRampUpTime);
+                    command.Parameters.AddWithValue("@TotalUser", model.TotalUser);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -2624,6 +2633,20 @@ namespace SeleniumReportAPI.Helper
 
             return result;
         }
+
+        internal byte[] CompressString(string text)
+        {
+            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(text);
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (DeflateStream deflateStream = new DeflateStream(memoryStream, CompressionMode.Compress, true))
+                {
+                    deflateStream.Write(buffer, 0, buffer.Length);
+                }
+                return memoryStream.ToArray();
+            }
+        }
+
         internal async Task<object> UpdateLoaction(PerformanceLocation model)
         {
             string result = string.Empty;
@@ -2686,6 +2709,74 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
             return result;
+        }
+        internal async Task<string> stp_GetExecutedPerformanceByClientId(string ClientId)
+        {
+            List<Dto_LoadBinaryResponse> result;
+            List<Dto_LoadExecuteResponse> responses = new List<Dto_LoadExecuteResponse>();
+            string data = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetExecutedPerformanceByClientId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@ClientId", ClientId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                var res = reader["result"].ToString();
+                                if (res.Contains("fails"))
+                                {
+                                    data = res;
+                                }
+                                else
+                                {
+                                    result = JsonConvert.DeserializeObject<List<Dto_LoadBinaryResponse>>(reader["result"].ToString());
+                                    var scenarios = JsonConvert.DeserializeObject<List<Scenarios>>(Regex.Unescape(result[0].scenarios));
+                                    var mdl = new Dto_LoadExecuteResponse()
+                                    {
+                                        responseData = JsonConvert.DeserializeObject<Dto_AddExecutePerformanceData>(DecompressString(result[0].responseData)),
+                                        TesterName = result[0].TesterName,
+                                        TotalDuration = result[0].TotalDuration,
+                                        TotalRampUpSteps = result[0].TotalRampUpSteps,
+                                        TotalRampUpTime = result[0].TotalRampUpTime,
+                                        TotalUser = result[0].TotalUser,
+                                        Client_Id = result[0].Client_Id,
+                                        Scenarios = scenarios,
+                                        StartDate = result[0].StartDate,
+                                        EndDate = result[0].EndDate,
+                                        RootId = result[0].RootId,
+                                        maxDuration = result[0].maxDuration,
+                                        Name = result[0].Name
+                                    };
+                                    responses.Add(mdl);
+                                    data = JsonConvert.SerializeObject(responses);
+                                }
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return data;
+        }
+        internal string DecompressString(byte[] compressedData)
+        {
+            using (MemoryStream memoryStream = new MemoryStream(compressedData))
+            using (DeflateStream deflateStream = new DeflateStream(memoryStream, CompressionMode.Decompress))
+            using (StreamReader streamReader = new StreamReader(deflateStream))
+            {
+                return streamReader.ReadToEnd();
+            }
         }
     }
 }

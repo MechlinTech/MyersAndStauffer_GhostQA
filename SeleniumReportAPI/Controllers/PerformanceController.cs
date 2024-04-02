@@ -266,5 +266,16 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetExecutedPerformanceByRootId(RootId));
         }
+
+        /// <summary>
+        /// Get Executed Performance Data By ClientId
+        /// </summary>
+        ///  <param name="ClientId"></param>
+        /// <returns></returns>
+        [HttpGet("stp_GetExecutedPerformanceByClientId")]
+        public async Task<ActionResult> stp_GetExecutedPerformanceByClientId(string ClientId)
+        {
+            return Ok(await _helper.stp_GetExecutedPerformanceByClientId(ClientId));
+        }
     }
 }

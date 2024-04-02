@@ -25,6 +25,7 @@ namespace SeleniumReportAPI.DTO_s
         public List<RunArtifacts> runs_artifacts { get; set; }
         public Json json { get; set; }
         public int suite { get; set; }
+        public List<PerformanceData> raw_data { get; set; }
         public string client_reference_id { get; set;}
         public List<SuccessGroupData> success_group_data { get; set;}
         public List<ErrorGroupData> error_group_data { get; set; }

@@ -30,5 +30,6 @@ namespace SeleniumReportAPI.Models
         public string ShouldLessValue { get; set; }
         public string ContainTextValue { get; set; }
         public string HaveAttributeValue { get; set; }
+        public string TextValue { get; set;}
     }
 }
