@@ -234,7 +234,7 @@ export default function CreateTestCase() {
             : step;
         case "selectedUser":
           return i === index
-            ? { ...step, selectedUser: inputValue?.value }
+            ? { ...step, selectedUser: inputValue?.target.value }
             : step;
         case "fileName":
           return i === index

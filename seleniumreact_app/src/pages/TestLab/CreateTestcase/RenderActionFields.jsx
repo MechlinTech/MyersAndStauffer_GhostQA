@@ -79,60 +79,18 @@ export default function RenderActionFields({
     case "select_option":
       return (
         <Grid item xs={6}>
-           <Select
-              isClearable={true}
-              placeholder="select user"
-              options={users}
-              value={
-                step
-                  ? step.selectedUser
-                    ? {
-                        label: step.selectedUser,
-                        value: step.selectedUser,
-                      }
-                    : null
-                  : null
-              }
-              onChange={(act) => handleInputChange(act, index, "selectedUser")}
-              styles={{
-                container: (provided) => ({
-                  ...provided,
-                  backgroundColor: "rgb(242, 242, 242)",
-                  width: "100%",
-                }),
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: "rgb(242, 242, 242)",
-                  "&:hover": {
-                    borderColor: "#654DF7",
-                  },
-                  borderColor: Errors[index]?.selectedUserError
-                    ? "red"
-                    : state.isFocused
-                    ? "#654DF7"
-                    : "rgb(242, 242, 242)",
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? "#654DF7" : "transparent",
-                }),
-                clearIndicator: (provided) => ({
-                  ...provided,
-                  cursor: "pointer",
-                  ":hover": {
-                    color: "#654DF7",
-                  },
-                }),
-                dropdownIndicator: (provided) => ({
-                  ...provided,
-                  cursor: "pointer",
-                  ":hover": {
-                    color: "#654DF7",
-                  },
-                }),
+          <StyledFormControl>
+            <StyledOutlinedInput
+              type="text"
+              placeholder="Input field"
+              disabled={!isEditable}
+              error={Errors[index]?.selectedUserError}
+              value={step?.selectedUser}
+              onChange={(e) => {
+                handleInputChange(e, index, "selectedUser");
               }}
-              menuPosition={"fixed"}
             />
+          </StyledFormControl>
         </Grid>
       )
     case "upload_file":
