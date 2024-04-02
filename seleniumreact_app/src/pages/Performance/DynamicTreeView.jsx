@@ -241,7 +241,7 @@ const Card = ({
 
 const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => {
   const styleClass = useStylesTree();
-  const [selectedNodeId, setSelectedNodeId] = useState(8);
+  const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
   const [editData, setEditData] = useState(""); // State to store the value of the input field
@@ -274,6 +274,37 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
 
     fetchData();
   }, [setListData]);
+  useEffect(() => {
+    if (selectedNodeId) {
+      const expandedNode = listData.find(item => item.id === selectedNodeId);
+      if (expandedNode) {
+       let  parentid = expandedNode.parentId
+        const parentids = []
+        while(parentid !== 0){
+          parentids.unshift(parentid)
+          let parentNode = listData.find(item => item.id === parentid);
+          parentid = parentNode.parentId
+        }
+        parentids.unshift(parentid)
+        setExpanded([...parentids]);
+        const nodeCount = findDepth(expandedNode,listData)
+        TestCaseHandle(expandedNode.id,nodeCount-1)
+      }
+    }
+  }, [listData, selectedNodeId]);
+
+  const findDepth = (item, items) => {
+    if (item.parentId === 0) {
+        return 1; // Base case: root item
+    } else {
+        const parentItem = items.find(parent => parent.id === item.parentId);
+        if (parentItem) {
+            return 1 + findDepth(parentItem, items); // Recursive call to find parent's depth
+        } else {
+            return 1; // If parent item is not found, assume depth of 1
+        }
+    }
+};
   const handleCRUD = (event, parentId) => {
     event.preventDefault();
     console.log(parentId);

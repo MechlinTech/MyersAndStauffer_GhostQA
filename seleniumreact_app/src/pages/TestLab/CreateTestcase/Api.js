@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { headerCypres } from "../../../utils/authheader";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const AddTestCaseDetails = async (payload, actions, goBack) => {
@@ -82,4 +83,87 @@ export const UpdateTestCaseDetail = async(payload) => {
     toast.error("Network error");
   }
 
+};
+
+export const SaveAndExecute = async (data,steps,testCaseDetailId,handleExecuteLoading) => {
+  try {
+    // Combined HTTP Requests
+    const [updateRes, addStepsRes] = await Promise.all([
+      axios.post(`${BASE_URL}/AddTestLab/UpdateTestCaseDetails`, data),
+      axios.post(`${BASE_URL}/AddTestLab/AddTestStepsDetails`, steps)
+    ]);
+    const testCaseDetail = updateRes.data.Data[0]
+    if (updateRes.data.status === "success") {
+      // Toast message for saving the testcase
+      toast.info("Successfully saved testcase", {
+        style: {
+          background: "rgb(101, 77, 247)",
+          color: "rgb(255, 255, 255)",
+        },
+      });
+    } else {
+      toast.error("Failed to save testcase");
+    }
+
+    if (addStepsRes.data.status === "success") {
+      // Toast message for saving the steps
+      toast.info("Successfully saved steps", {
+        style: {
+          background: "rgb(101, 77, 247)",
+          color: "rgb(255, 255, 255)",
+        },
+      });
+    } else {
+      toast.error("Failed to save steps");
+    }
+
+    const jsonData = await axios.get(`${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${testCaseDetail.rootId}&TestName=${testCaseDetail.testCaseName}`);
+    const payload = { name: "name", request_json: jsonData.data };
+
+    const executedDetail = await axios.post("http://65.1.188.67:8010/api/test-suitesV2/execute3/", payload, headerCypres());
+    const runId = executedDetail.data.container_runs[0].id;
+
+    console.log("execution detail", executedDetail);
+    getRunDetail(runId, 1000, testCaseDetailId,handleExecuteLoading);
+  } catch (error) {
+    console.log("error:", error);
+    handleExecuteLoading()
+    toast.error("Network error");
+  }
+};
+
+
+const getRunDetail = async (runId, delay, testCaseDetailId,handleExecuteLoading) => {
+  try {
+    const res = await axios.get(
+      `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
+    );
+
+    if (res.data.container_status === "exited") {
+      handleExecuteLoading()
+      const rundetails = res.data;
+      try {
+        const res = await axios.post(`${BASE_URL}/AddTestLab/AddExecuteResult?testCaseDetailId=${testCaseDetailId}`,rundetails)
+        if (res.data.status === "success") {
+            toast.info("Successfully executed", {
+              style: {
+                background: "rgb(101, 77, 247)",
+                color: "rgb(255, 255, 255)",
+              },
+            });
+          }
+      } catch (error) {
+        console.log('error',error)
+        toast.error('Error AddExecuteResult')
+      }
+      console.log("rundetails : ", rundetails);
+    } else {
+      setTimeout(() => {
+        getRunDetail(runId, delay, testCaseDetailId,handleExecuteLoading);
+      }, delay);
+    }
+  } catch (error) {
+    console.error("Error getting run details:", error);
+    toast.error("Network error");
+  }
 };

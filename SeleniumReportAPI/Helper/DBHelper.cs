@@ -21,6 +21,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System.Net.Http.Headers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using GitHub;
+using AventStack.ExtentReports.Gherkin.Model;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -2504,6 +2505,12 @@ namespace SeleniumReportAPI.Helper
             var guid = Guid.NewGuid().ToString();
             string startDate;
             string endDate;
+            var totalUserCount = 0;
+            var totalDuration = 0;
+            var totalRampUpSteps = 0;
+            var totalRampUpTime = 0;
+            var scenarios = new List<Scenarios>();
+            var maxDuration = 0;
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -2547,6 +2554,19 @@ namespace SeleniumReportAPI.Helper
                     var res1 = await response.Content.ReadAsStringAsync();
                     fileContent.Dispose();
                     fileStream.Dispose();
+                    totalUserCount += data.TotalUsers;
+                    totalDuration += data.DurationInMinutes;
+                    totalRampUpSteps += data.RampUpSteps;
+                    totalRampUpTime += data.RampUpTimeInSeconds;
+                    var scenario = new Scenarios
+                    {
+                        Id = data.Id,
+                        ScenarioName = data.TestCaseName,
+                        Duration = data.DurationInMinutes,
+                        Location = "Asia Pacific (Mumbai) Ap-South-1"
+                    };
+                    scenarios.Add(scenario);
+                    maxDuration = executedData.Max(data => data.DurationInMinutes);
                 }
                 endDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
             }
@@ -2561,43 +2581,47 @@ namespace SeleniumReportAPI.Helper
                 TesterName = model.TesterName,
                 RootId = model.RootId,
                 StartDate = startDate,
-                EndDate = endDate
+                TotalUser = totalUserCount,
+                TotalDuration = totalDuration,
+                TotalRampUpSteps = totalRampUpSteps,
+                TotalRampUpTime = totalRampUpTime,
+                maxDuration = maxDuration,
+                Scenarios = scenarios
             };
         }
-        
-       internal async Task<string> AddExecuterData(Dto_LoadExecuteResponse model)
+
+        internal async Task<string> AddExecuterData(Dto_LoadExecuteResponse model)
         {
-            string result = string.Empty;
+
             string endDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-            foreach (var data in model.responseData.results)
+            string result = string.Empty;
+
+            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
-                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("stp_AddExecutePerformanceData", connection))
                 {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("stp_AddExecutePerformanceData", connection))
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@RootId", model.RootId);
+                    command.Parameters.AddWithValue("@Name", model.Name);
+                    command.Parameters.AddWithValue("@RunId", model.Client_Id);
+                    command.Parameters.AddWithValue("@Status", "Complete");
+                    command.Parameters.AddWithValue("@StartDateTime", model.StartDate);
+                    command.Parameters.AddWithValue("@EndDateTime", endDate);
+                    command.Parameters.AddWithValue("@LoadDataJson", JsonConvert.SerializeObject(model.responseData));
+                    command.Parameters.AddWithValue("@TesterName", model.TesterName);
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@RootId", model.RootId);
-                        command.Parameters.AddWithValue("@Name", model.Name);
-                        command.Parameters.AddWithValue("@RunId", model.Client_Id);
-                        command.Parameters.AddWithValue("@Status", "Complete");
-                        command.Parameters.AddWithValue("@StartDateTime", model.StartDate);
-                        command.Parameters.AddWithValue("@EndDateTime", endDate);
-                        command.Parameters.AddWithValue("@LoadDataJson", JsonConvert.SerializeObject(data.json));
-                        command.Parameters.AddWithValue("@TesterName", model.TesterName);
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        if (reader.HasRows)
                         {
-                            if (reader.HasRows)
-                            {
-                                reader.Read();
-                                result = reader["result"].ToString();
-                            }
+                            reader.Read();
+                            result = reader["result"].ToString();
                         }
                     }
-                    connection.Close();
                 }
+                connection.Close();
             }
-           
+
             return result;
         }
         internal async Task<object> UpdateLoaction(PerformanceLocation model)
@@ -2621,6 +2645,36 @@ namespace SeleniumReportAPI.Helper
                             {
                                 reader.Read();
                                 result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> GetExecutedPerformanceByRootId(int RootId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetExecutedPerformanceByRootId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", RootId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["RunDetailsJson"].ToString();
                             }
                         }
                     }

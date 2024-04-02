@@ -39,7 +39,6 @@ export const useStylesTree = makeStyles({
     cardListHolder: {
     display: 'flex',
     flexDirection: 'column',
-
 },
 
     editTheFolder: {
