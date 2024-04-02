@@ -44,6 +44,7 @@ export default function CreateTestCase() {
       shouldLessValue: "",
       containTextValue: "",
       haveAttributeValue: "",
+      textValue: "",
     },
   ]);
   const [Errors, setErrors] = useState([]);
@@ -116,6 +117,9 @@ export default function CreateTestCase() {
         case "have_attribute":
           additionalErrors.haveAttributeError = !step.haveAttributeValue;
           break;
+        case "click element using text":
+          additionalErrors.textValueError = !step.textValue;
+          break;
         default:
           break;
       }
@@ -183,6 +187,7 @@ export default function CreateTestCase() {
         shouldLessValue: "",
         containTextValue: "",
         haveAttributeValue: "",
+        textValue:""
       },
     ]);
   };
@@ -286,6 +291,10 @@ export default function CreateTestCase() {
           return i === index
             ? { ...step, shouldEqualValue: inputValue.target.value }
             : step;
+        case "textValue":
+          return i === index
+            ? { ...step, textValue: inputValue.target.value }
+            : step;
         default:
           return step;
       }
@@ -308,6 +317,7 @@ export default function CreateTestCase() {
     "go_forward",
     "refresh_page",
     "validate_current_url",
+    "click element using text",
   ];
   const listOfSteps = steps.map((step, index) => (
     <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>

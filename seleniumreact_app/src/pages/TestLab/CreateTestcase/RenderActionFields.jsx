@@ -355,6 +355,23 @@ export default function RenderActionFields({
           </StyledFormControl>
         </Grid>
       );
+      case "click element using text":
+        return (
+          <Grid item xs={6}>
+            <StyledFormControl>
+              <StyledOutlinedInput
+                type="text"
+                placeholder="Text value"
+                disabled={!isEditable}
+                error={Errors[index]?.haveAttributeError}
+                value={step?.textValue}
+                onChange={(e) => {
+                  handleInputChange(e, index, "textValue");
+                }}
+              />
+            </StyledFormControl>
+          </Grid>
+        );
     default:
       return null;
       

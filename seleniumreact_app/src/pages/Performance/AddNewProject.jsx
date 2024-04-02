@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Grid } from '@mui/material';
-import { makeStyles } from "@material-ui/core";
+import { Typography, makeStyles } from "@material-ui/core";
 import { StyledFormControl, StyledOutlinedInput } from './styleTree';
 
 // Define styles for the form
@@ -22,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
 // Form component
 const AddNewProject = ({ handleChange, handleSubmit, formData }) => {
   const classes = useStyles();
+  const [lengthOfWorkspace, setlengthOfWorkspace] = useState(0)
+
   return (
 
     <form className={classes.form} onSubmit={(event) => handleSubmit(event)}>
@@ -36,10 +38,16 @@ const AddNewProject = ({ handleChange, handleSubmit, formData }) => {
             <StyledOutlinedInput
               placeholder="Workspace Name"
               value={formData.name}
-              onChange={handleChange}
+              onChange={(e)=>{
+                setlengthOfWorkspace(e.target.value.length)
+                handleChange(e)}}
               required
+              inputProps={{ maxLength: 250 }}
             />
           </StyledFormControl>
+          <Typography  style={{ color: 'red', fontSize: '10px', fontFamily: 'Lexend Deca' }} mb={1}>
+            {lengthOfWorkspace===250 && "Input limit 250 letters"}
+          </Typography>
         </Grid>
         <Grid item xs={3} style={{
           textAlign:"right"

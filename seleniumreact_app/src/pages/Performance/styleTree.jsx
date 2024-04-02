@@ -19,10 +19,11 @@ export const useStylesTree = makeStyles({
         display: 'none', // Hide crud by default
     },
     cardListHolderList: {
+        overflow:'auto',
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'nowrap',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         alignItems: 'center',
         padding: '8px 10px',
         boxShadow:'-2px 0px 7px 0px rgba(101, 77, 247,0.2), -4px -1px 6px 0px rgba(101, 77, 247,0.14), 7px 0px 6px 0px rgba(101, 77, 247,0.12)',
@@ -56,7 +57,7 @@ updateEdit:{
 },
 orgTree:{
     overflow:"auto",
-    height: '64vh'
+    // height: '64vh'
 }
     
     
