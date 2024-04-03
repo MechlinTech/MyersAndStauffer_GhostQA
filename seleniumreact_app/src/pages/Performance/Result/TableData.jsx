@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useStyles, StyledTableCell } from "./style";
 import { GetTestCaseDetails } from "../../../redux/actions/seleniumAction";
 import { useDispatch } from "react-redux";
+import { GetResultsDetailsBysRunId } from "../../../redux/actions/ResultAction";
 
 function formatTime(dateTimeString) {
   const options = {
@@ -29,11 +30,8 @@ export function TableData({ rows }) {
   const [activeRow, setActiveRow] = React.useState(null);
 
   const handleRowClick = (payload) => {
-    let data = {
-      testSuitName: payload.TestSuiteName,
-      runId: payload.TestRunName,
-    };
-    dispatch(GetTestCaseDetails(data));
+    console.log("data+++",payload)
+    dispatch(GetResultsDetailsBysRunId(payload.RunId))
     setActiveRow((prevSuite) => (prevSuite === payload ? null : payload));
   };
   return (

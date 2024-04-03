@@ -6,14 +6,9 @@ import { Typography } from "@mui/material";
 import {
   SanariesIcon,
   TotalDuration,
-  UpTimeIcon,
-  StepsIcon,
   UsersIcons,
-} from "../../../../comman/icons";
+} from "../../../../../comman/icons";
 import { InitialSetupTable } from "./InitialSetupTable";
-
-
-
 
 export default function InitialSetup() {
   const classes = useStyles();
@@ -23,7 +18,7 @@ export default function InitialSetup() {
     <Grid className={classes.mainContainer}>
       <Grid item xs={12} sm={12}>
         <Card style={{ padding: "20px" }}>
-          <Grid item xs={12} sm={12} className={classes.RequestStateHeader}>
+          <Grid item xs={12} sm={12} className={classes.InitialStateHeader}>
             <Grid>
               <Typography
                 sx={{
@@ -50,7 +45,7 @@ export default function InitialSetup() {
                             variant="body1"
                             className={`${classes.initialSetupCardStyle}`}
                           >
-                            Total no of Sanarios
+                            Total Scenarios
                           </Typography>
                           <Typography
                             variant="body1"
@@ -62,18 +57,14 @@ export default function InitialSetup() {
                               marginTop: "10px",
                             }}
                           >
-                            {/* <span style={{ height: "18px", width: "26px" }}>
-                              <SanariesIcon />
-                            </span>
-                            <span
-                              style={{ color: "#654DF7", fontSize: "40px" }}
-                            >
-                              10vu
-                            </span> */}
                             <SanariesIcon />
-                            <span style={{ color: "#654DF7", fontSize: "20px" }}>
+                            <span
+                              style={{ color: "#654DF7", fontSize: "20px" }}
+                            >
                               <span style={{ fontSize: "40px" }}>
-                               { executeJMXData?.scenarios?.length ? executeJMXData?.scenarios?.length : null}
+                                {executeJMXData?.scenarios?.length
+                                  ? executeJMXData?.scenarios?.length
+                                  : null}
                               </span>
                               vu
                             </span>
@@ -89,7 +80,7 @@ export default function InitialSetup() {
                             variant="body1"
                             className={`${classes.initialSetupCardStyle}`}
                           >
-                             Total no. of Users
+                            Total Users
                           </Typography>
                           <Typography
                             variant="body1"
@@ -101,20 +92,14 @@ export default function InitialSetup() {
                               marginTop: "10px",
                             }}
                           >
-                            {/* <span style={{ height: "18px", width: "26px" }}>
-                            <UsersIcons />
+                            <span style={{ height: "18px", width: "26px" }}>
+                              <UsersIcons />
                             </span>
                             <span
-                              style={{ color: "#654DF7", fontSize: "40px" }}
+                              style={{ color: "#654DF7", fontSize: "20px" }}
                             >
-                              10vu
-                            </span> */}
-                            <span style={{ height: "18px", width: "26px" }}>
-                            <UsersIcons />
-                            </span>
-                             <span style={{ color: "#654DF7", fontSize: "20px"}}>
                               <span style={{ fontSize: "40px" }}>
-                               { executeJMXData?.totalUser}
+                                {executeJMXData?.totalUser}
                               </span>
                               vu
                             </span>
@@ -144,16 +129,12 @@ export default function InitialSetup() {
                               marginTop: "10px",
                             }}
                           >
-                            {/* <TotalDuration />
-                            <span
-                              style={{ color: "#FACE09", fontSize: "40px" }}
-                            >
-                              10s
-                            </span> */}
                             <TotalDuration />
-                             <span style={{ color: "#FACE09", fontSize: "20px" }}>
+                            <span
+                              style={{ color: "#FACE09", fontSize: "20px" }}
+                            >
                               <span style={{ fontSize: "40px" }}>
-                               {executeJMXData?.totalDuration}
+                                {executeJMXData?.totalDuration}
                               </span>
                               s
                             </span>
@@ -169,7 +150,7 @@ export default function InitialSetup() {
                             variant="body1"
                             className={`${classes.initialSetupCardStyle}`}
                           >
-                            Duration
+                            Location
                           </Typography>
                           <Typography
                             variant="body1"
@@ -183,9 +164,9 @@ export default function InitialSetup() {
                           >
                             <TotalDuration />
                             <span
-                              style={{ color: "#FACE09", fontSize: "40px" }}
+                              style={{ color: "#FACE09", fontSize: "20px" }}
                             >
-                              0s
+                              Default
                             </span>
                           </Typography>
                         </CardContent>
@@ -193,7 +174,7 @@ export default function InitialSetup() {
                     </Grid>
                   </Grid>
 
-                  <Grid container spacing={2}>
+                  {/* <Grid container spacing={2}>
                     <Grid item xs={6}>
                       <Card style={{ width: "100%", height: "18vh" }}>
                         <CardContent>
@@ -213,16 +194,9 @@ export default function InitialSetup() {
                               marginTop: "10px",
                             }}
                           >
-                            {/* <UpTimeIcon />
-                            <span
-                              style={{ color: "#00A879", fontSize: "40px" }}
-                            >
-                              10s
-                            </span> */}
                              <UpTimeIcon />
                              <span style={{ color: "#00A879", fontSize: "20px" }}>
                               <span style={{ fontSize: "40px" }}>
-                               {/* {executerData?.summary?.throughput} */}
                                { executeJMXData?.totalRampUpTime}
                               </span>
                               s
@@ -261,7 +235,7 @@ export default function InitialSetup() {
                         </CardContent>
                       </Card>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
                 <Grid item xs={7} sm={7}>
                   <Card

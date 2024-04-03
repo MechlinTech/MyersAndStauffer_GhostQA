@@ -136,7 +136,7 @@ export default function Summary() {
     { label: "Ended", value: endedTime || "" },
     { label: "Test Type", value: "JMeter" },
     { label: "Response Codes", value: "2xx" },
-    { label: "Locations", value: location ? location : "Unknown" },
+    { label: "Locations", value: "Default" },
   ];
 
   const calculateHeight = () => {
@@ -148,6 +148,7 @@ export default function Summary() {
     return `${(parentContainerHeight * desiredPercentage) / 100}px`;
   };
 
+  console.log("executeJMXData",executeJMXData)
   return (
     <>
       <Grid className={classes.mainContainer}>

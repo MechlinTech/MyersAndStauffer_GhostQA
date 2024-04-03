@@ -6,21 +6,17 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useStyles, StyledTableCell } from "./styles";
 import EditIcon from "@mui/icons-material/Edit";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export function InitialSetupTable({ data }) {
   const classes = useStyles();
-  const navigate = useNavigate()
-
-  // const handleButtonClick = () => {
-  //   navigate("/performance"); 
-  // };
+  const navigate = useNavigate();
 
   const handleButtonClick = (row) => {
-    const rootId = data.rootId; 
+    const rootId = data.rootId;
     const testId = row.id;
-    navigate(`/performance?rootId=${rootId}&testid=${testId}`); 
-};
+    navigate(`/performance?rootId=${rootId}&testid=${testId}`);
+  };
   return (
     <TableContainer>
       <Table>
@@ -28,7 +24,7 @@ export function InitialSetupTable({ data }) {
           <TableRow>
             <StyledTableCell first>Scenario Name</StyledTableCell>
             <StyledTableCell>Duration</StyledTableCell>
-            <StyledTableCell>Location</StyledTableCell>
+            {/* <StyledTableCell>Location</StyledTableCell> */}
             <StyledTableCell last></StyledTableCell>
           </TableRow>
         </TableHead>
@@ -37,7 +33,7 @@ export function InitialSetupTable({ data }) {
             <TableRow key={index} style={{ height: "34px" }}>
               <StyledTableCell first>{row.scenarioName}</StyledTableCell>
               <StyledTableCell>{row.duration}</StyledTableCell>
-              <StyledTableCell>{row.location}</StyledTableCell>
+              {/* <StyledTableCell>{row.location}</StyledTableCell> */}
               <StyledTableCell last>
                 {" "}
                 <Button
@@ -47,15 +43,19 @@ export function InitialSetupTable({ data }) {
                     color: "white",
                     textTransform: "none",
                     height: "28px",
+                    width: "62px",
+                    borderRadius: "3px",
                     fontSize: "12px !important",
                     "&:hover": {
-
                       background: "rgb(101, 77, 247)",
                     },
                   }}
                   onClick={() => handleButtonClick(row)}
                 >
-                  <EditIcon fontSize="small" style={{ color: "white" }}/>
+                  <EditIcon
+                    fontSize="small"
+                    style={{ color: "white", marginRight: "4px" }}
+                  />
                   Edit
                 </Button>
               </StyledTableCell>

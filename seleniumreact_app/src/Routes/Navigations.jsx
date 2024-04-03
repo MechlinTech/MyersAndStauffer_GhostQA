@@ -13,10 +13,10 @@ import CreateTestCase from "../pages/TestLab/CreateTestcase";
 import EditTestCase from "../pages/TestLab/CreateTestcase/editTestLab";
 import Results from "./Stacks/Results";
 import Summary from "../pages/Performance/Result/ResultDetails";
-import InitialSetup from "../pages/Performance/Result/ResultDetails/InitialSetup";
 import Error from "../pages/Performance/Result/ResultDetails/Error";
 import RequestState from "../pages/Performance/Result/ResultDetails/RequestState/RequestState";
 import CompareGraph from "../pages/Performance/Component/Compare/CompareGraph";
+import InitialSetup from "../pages/Performance/Result/ResultDetails/InitialSetup/index";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
