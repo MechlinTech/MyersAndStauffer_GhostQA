@@ -1,10 +1,11 @@
-import { RESULT_LIST, SET_IS_RUNNING, ADD_EXECUTER_DATA, SET_EXECUTEJMX_DATA } from "../actions/ResultAction";
+import { RESULT_LIST, SET_IS_RUNNING, ADD_EXECUTER_DATA, SET_EXECUTEJMX_DATA, SET_RUNNING_ROOT_ID } from "../actions/ResultAction";
 
 const initialState = {
   resultsList: [],
   isRunning: false,
   executerData: null,
-  executeJMXData:{}
+  executeJMXData: {},
+  runningRootId: null, // Initialize runningRootId to null instead of an empty object
 };
 
 const resultReducer = (state = initialState, action) => {
@@ -31,6 +32,12 @@ const resultReducer = (state = initialState, action) => {
       return {
         ...state,
         executeJMXData: action.payload,
+      };
+    }
+    case SET_RUNNING_ROOT_ID: {
+      return {
+        ...state,
+        runningRootId: action.payload, 
       };
     }
     default:

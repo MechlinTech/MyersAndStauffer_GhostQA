@@ -25,6 +25,7 @@ import {
   setIsRunning,
   addExecuterData,
   setExecuteJMXData,
+  setRunningRootId,
 } from "../../redux/actions/ResultAction";
 import { useNavigate } from "react-router-dom";
 
@@ -33,7 +34,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 export default function Design({ rootId }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { isRunning } = useSelector((state) => state.result);
+  const { isRunning, runningRootId } = useSelector((state) => state.result);
   const { virtualUser, totalLocation } = useSelector((state) => state.settings);
   const navigate = useNavigate();
 
@@ -109,6 +110,7 @@ export default function Design({ rootId }) {
 
   const handleRunNow = async () => {
     dispatch(setIsRunning(true));
+    dispatch(setRunningRootId(rootId));
     const testername = getName();
     try {
       const response = await axios.post(
@@ -125,9 +127,11 @@ export default function Design({ rootId }) {
     } catch (error) {
       toast.error("NETWORK ERROR");
       dispatch(setIsRunning(false));
+      dispatch(setRunningRootId(null));
     }
   };
 
+  console.log("rootId", rootId, runningRootId);
   const getRunDetail = async (data, clientId, delay) => {
     try {
       const res = await axios.get(
@@ -158,6 +162,7 @@ export default function Design({ rootId }) {
       }
     } catch (error) {
       dispatch(setIsRunning(false));
+      dispatch(setRunningRootId(null));
     }
   };
 
@@ -220,7 +225,6 @@ export default function Design({ rootId }) {
         padding: "10px",
       }}
     >
-      
       <Grid
         container
         alignItems="center"
@@ -324,13 +328,13 @@ export default function Design({ rootId }) {
           </List>
         </Grid>
         <Grid item xs={4} style={{ textAlign: "right" }}>
-          <Button
+          {/* <Button
             variant="contained"
             style={{
               fontSize: 14,
-              backgroundColor: "rgb(101, 77, 247)",
+              backgroundColor: isRunning ? "rgba(101, 77, 247, 0.5)" : "rgb(101, 77, 247)",
               color: "#ffffff",
-              cursor: "pointer",
+              cursor: isRunning ? "not-allowed" : "pointer",
               padding: "12px 18px",
               textTransform: "none"
             }}
@@ -338,6 +342,30 @@ export default function Design({ rootId }) {
             onClick={handleRunNow}
           >
             {isRunning ? (
+              <CircularProgress style={{ color: "white" }} size={25} />
+            ) : (
+              <>
+                <PlayCircleOutlineIcon /> Run Now
+              </>
+            )}
+          </Button> */}
+
+          <Button
+            variant="contained"
+            style={{
+              fontSize: 14,
+              backgroundColor: isRunning
+                ? "rgba(101, 77, 247, 0.5)"
+                : "rgb(101, 77, 247)",
+              color: "#ffffff",
+              cursor: isRunning ? "not-allowed" : "pointer",
+              padding: "12px 18px",
+              textTransform: "none",
+            }}
+            // disabled={isRunning || rootId !== runningRootId}
+            onClick={handleRunNow}
+          >
+            {isRunning && rootId === runningRootId ? ( 
               <CircularProgress style={{ color: "white" }} size={25} />
             ) : (
               <>
@@ -369,7 +397,7 @@ export default function Design({ rootId }) {
             padding: "12px 18px",
             marginTop: "10px",
             marginLeft: "auto",
-            textTransform: "none"
+            textTransform: "none",
           }}
         >
           {scenarioCount ? "Add More Test" : "Add Test"}
