@@ -75,10 +75,10 @@ export default function TabsPanel({rootId}) {
            }
          }}
         >
-          <Tab value="Design" label={<StyledTypography>Design</StyledTypography>}/>
-          <Tab value="Results" label={<StyledTypography>Results</StyledTypography>} />
-          <Tab value="Trends" label={<StyledTypography>Trends</StyledTypography>} />
-          <Tab value="CompareResults" label={<StyledTypography>Compare Results</StyledTypography>} />
+          <Tab value="Design" label={<StyledTypography style={{ textTransform: 'capitalize' }}>Design</StyledTypography>}/>
+          <Tab value="Results" label={<StyledTypography style={{ textTransform: 'capitalize' }}>Results</StyledTypography>} />
+          <Tab value="Trends" label={<StyledTypography style={{ textTransform: 'capitalize' }}>Trends</StyledTypography>} />
+          <Tab value="CompareResults" label={<StyledTypography style={{ textTransform: 'capitalize' }}>Compare Results</StyledTypography>} />
         </Tabs>
      
       {/* <SwipeableViews

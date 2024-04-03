@@ -102,7 +102,7 @@ export default function TestLab() {
           >
             {!drawerOpen && <KeyboardDoubleArrowRightIcon />}
           </Box>
-          <Grid item xs={12} md={3} style={treeStyle}>
+          <Grid item xs={12} md={3} xl={2} style={treeStyle}>
             <Card
               className={classes.card}
               style={{ paddingBottom: "30px" }}
@@ -161,7 +161,7 @@ export default function TestLab() {
               </Grid>
             </Card>
           </Grid>
-          <Grid item xs={12} md={drawerOpen ? 9 : 12}>
+          <Grid item xs={12} md={drawerOpen ? 9 : 12} xl={10} >
             {depth>1 ? (
               <AddTestCase addTestCase={addTestCase} nameSuite={nameSuite} />
             ):(<Box/>)}

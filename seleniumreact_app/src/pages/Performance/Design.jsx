@@ -33,6 +33,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 export default function Design({ rootId }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { isRunning } = useSelector((state) => state.result);
   const { virtualUser, totalLocation } = useSelector((state) => state.settings);
   const navigate = useNavigate();
 
@@ -41,7 +42,6 @@ export default function Design({ rootId }) {
   const [showAddNewElement, setShowAddNewElement] = useState(true);
   const [folderName, setfolderName] = useState("");
   const [uvCount, setuvCount] = useState(virtualUser);
-  const [isRuning, setisRuning] = useState(false);
   const [callingApi, setCallingApi] = useState(0);
 
   useEffect(() => {
@@ -109,7 +109,6 @@ export default function Design({ rootId }) {
 
   const handleRunNow = async () => {
     dispatch(setIsRunning(true));
-    setisRuning(true);
     const testername = getName();
     try {
       const response = await axios.post(
@@ -125,7 +124,6 @@ export default function Design({ rootId }) {
       getRunDetail(response.data, clientId, 2000);
     } catch (error) {
       toast.error("NETWORK ERROR");
-      setisRuning(false);
       dispatch(setIsRunning(false));
     }
   };
@@ -148,7 +146,6 @@ export default function Design({ rootId }) {
       } else {
         data = { ...data, responseData: res.data };
         console.log("data", data);
-        setisRuning(false);
         dispatch(setIsRunning(false));
         const response = await axios.post(
           `${BASE_URL}/Performance/AddExecuterData`,
@@ -160,7 +157,6 @@ export default function Design({ rootId }) {
         // toast.Tost("network error in container runs");
       }
     } catch (error) {
-      setisRuning(false);
       dispatch(setIsRunning(false));
     }
   };
@@ -224,6 +220,7 @@ export default function Design({ rootId }) {
         padding: "10px",
       }}
     >
+      
       <Grid
         container
         alignItems="center"
@@ -239,14 +236,14 @@ export default function Design({ rootId }) {
               fontWeight: "500",
             }}
           >
-            Summary
+            Scenarios
           </Typography>
 
           <List
             sx={{ width: "100%" }}
             style={{ display: "flex", justifyContent: "flex-end" }}
           >
-            <ListItem
+            {/*<ListItem
               key={"LocationOnOutlinedIcon"}
               disableGutters
               style={{
@@ -259,7 +256,7 @@ export default function Design({ rootId }) {
                 sx={{ color: "#654df7" }}
                 style={{ marginRight: "8px" }}
               />
-              <ListItemText
+               <ListItemText
                 primary={
                   <span
                     style={{
@@ -271,7 +268,7 @@ export default function Design({ rootId }) {
                   </span>
                 }
               />
-            </ListItem>
+            </ListItem> */}
             <ListItem
               key={"FeaturedPlayListOutlinedIcon"}
               disableGutters
@@ -293,7 +290,7 @@ export default function Design({ rootId }) {
                       fontSize: "14px",
                     }}
                   >
-                    {scenarioCount} scenarios
+                    {scenarioCount} Scenarios
                   </span>
                 }
               />
@@ -335,11 +332,12 @@ export default function Design({ rootId }) {
               color: "#ffffff",
               cursor: "pointer",
               padding: "12px 18px",
+              textTransform: "none"
             }}
-            disabled={isRuning}
+            disabled={isRunning}
             onClick={handleRunNow}
           >
-            {isRuning ? (
+            {isRunning ? (
               <CircularProgress style={{ color: "white" }} size={25} />
             ) : (
               <>
@@ -371,6 +369,7 @@ export default function Design({ rootId }) {
             padding: "12px 18px",
             marginTop: "10px",
             marginLeft: "auto",
+            textTransform: "none"
           }}
         >
           {scenarioCount ? "Add More Test" : "Add Test"}

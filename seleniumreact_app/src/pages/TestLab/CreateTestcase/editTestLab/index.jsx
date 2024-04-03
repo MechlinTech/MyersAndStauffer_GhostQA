@@ -478,12 +478,12 @@ export default function EditTestCase() {
           }}
         >
           <StyledTypography>Step {index + 1}</StyledTypography>
-          {isEditable && (
+          {/* {isEditable && (
             <DeleteIcon
               onClick={() => handleRemoveStep(step)}
               sx={{ cursor: "pointer", color: "red" }}
             />
-          )}
+          )} */}
         </Box>
         <Paper
           elevation={1}
@@ -700,7 +700,7 @@ export default function EditTestCase() {
             >
               <Grid item xs={12} md={3}>
                 <StyledTypography sx={{ fontSize: "18px", fontWeight: "400" }}>
-                  Sample Testcase
+                  Sample Test Case
                 </StyledTypography>
               </Grid>
               <Grid item xs={12} md={4} display="flex" justifyContent="end">
@@ -793,7 +793,7 @@ export default function EditTestCase() {
             <Grid container spacing={1} mb={1} mt={1}>
               <Grid item xs={12} md={4} display="flex" alignItems="center">
                 <StyledTypography mr={1} minWidth={"105px"}>
-                  Testcase Title :
+                  Test Case Title :
                 </StyledTypography>
                 <StyledFormControl>
                   <StyledOutlinedInput
