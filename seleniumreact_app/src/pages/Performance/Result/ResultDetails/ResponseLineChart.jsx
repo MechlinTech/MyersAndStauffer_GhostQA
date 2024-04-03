@@ -23,7 +23,7 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
       min: 0,
       max: yData ? Math.max(...yData) : 0,
       title: {
-        text: "Time (ms)",
+        text: "Response Time (ms)",
       },
       labels: {
         formatter: function (value) {
@@ -55,7 +55,7 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
       data: Xaxis ? Xaxis.filter(item => item !== null) : [],
     },
     {
-      name: "Error",
+      name: "Response Time (ms)",
       type: "line",
       data: yData || [],
     },

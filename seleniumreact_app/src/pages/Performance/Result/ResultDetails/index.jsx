@@ -39,6 +39,22 @@ export default function Summary() {
     executerData?.results
       ?.flatMap((item) => item.raw_data?.map((itemData) => itemData.timeStamp))
       .filter((item) => item !== null && !isNaN(item)) || [];
+
+  // const Xaxis =
+  // executerData?.results
+  //   ?.flatMap((item) => item.raw_data?.map((itemData) => Math.round(itemData.timeStamp / 10000)))
+  //   .filter((item) => item !== null && !isNaN(item)) || [];
+
+  
+  // const convertTimestampToSeconds = (timestamp) => {
+  //   return Math.round(timestamp / 1000);
+  // };
+
+  // const Xaxis =
+  // executerData?.results
+  //   ?.flatMap((item) => item.raw_data?.map((itemData) => convertTimestampToSeconds(itemData.timeStamp)))
+  //   .filter((item) => item !== null && !isNaN(item)) || [];
+
   const Yaxis =
     executerData?.results
       ?.flatMap((item) => item.raw_data?.map((data) => data.allThreads))
