@@ -181,8 +181,8 @@ export default function CreateTestCase() {
           action: null,
           stepDescription: "",
           isOptional: false,
-          selectorType: "",
-          selectorValue: "",
+          // selectorType: "",
+          // selectorValue: "",
           // sendKeyInput: "",
           // scrollPixel: "",
           // url: "",
@@ -271,7 +271,8 @@ export default function CreateTestCase() {
         default:
           break;
       }
-      return { ...step, ...additionalField,action:action };
+      return { stepDescription: "",
+      isOptional: false, ...additionalField,action:action };
     };
   
     setSteps(prevSteps => {
