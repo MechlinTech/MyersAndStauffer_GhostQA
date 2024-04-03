@@ -19,12 +19,14 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DesignTabs from "./Component/Design/DesignTabs";
 import { header,headerForm } from "../../utils/authheader";
 import { StyledTypography } from "./styles";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TableTestCase({ testCase, showAddNewElement, setShowAddNewElement,rootId }) {
   const navigate = useNavigate()
   const classes = useStyles();
+  const location = useLocation()
   const testNamefield = useRef();
   const [testCaseData, setTestCaseData] = useState([]);
   const [expandedAccord, setExpandedAccord] = useState("");
@@ -36,6 +38,12 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
       );
       // Assuming response.data is the array of data you want to set as listData
       setTestCaseData((response.data == '' ? [] : response.data));
+      const searchParams = new URLSearchParams(location.search);
+    const testId = parseInt(searchParams.get("testid"));
+    if(testId && Array.isArray(response.data)){
+      const testToEdit = response.data.find(item => item.id === testId)
+      setExpandedAccord(expandedAccord?expandedAccord:testToEdit.testCaseName)
+    }
       console.log(response);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -45,7 +53,14 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
   useEffect(() => {
     fetchData(); // Call the fetchData function when the component mounts
   }, [rootId]);
-  
+  // useEffect(() => {
+  //   const searchParams = new URLSearchParams(location.search);
+  //   const testId = parseInt(searchParams.get("testid"));
+  //   if (testId && Array.isArray(testCaseData)) {
+  //     const testToEdit = testCaseData.find((item) => item.id === testId);
+  //     setExpandedAccord(testToEdit ? testToEdit.testCaseName : "");
+  //   }
+  // }, []);
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
   const fileDataRef = useRef(null);
@@ -74,6 +89,7 @@ export default function TableTestCase({ testCase, showAddNewElement, setShowAddN
           formData,
           headerForm()
         );
+        console.log('response',response)
         fetchData()
         setSelectedFile(null);
         setExpandedAccord(testNamefield.current.value)

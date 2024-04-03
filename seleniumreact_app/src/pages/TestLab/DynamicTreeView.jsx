@@ -9,7 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-import { ClickAwayListener, Divider } from "@mui/material";
+import { Tooltip } from "@mui/material";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Card = ({
@@ -39,8 +39,8 @@ const Card = ({
   setExpandedInputId,
   handleTask,
   keyData = 0,
-  selectedNodeId, // New prop to store the ID of the clicked node
-  setSelectedNodeId, // New prop to update the ID of the clicked node
+  selectedNodeId,
+  setSelectedNodeId, 
 }) => {
   const styleClass = useStylesTree();
 
@@ -74,6 +74,7 @@ const Card = ({
                       : {} // Apply border only if the current node is the selected node
                   }
                 >
+                  <div style={{display:'flex'}}>
                   {data.some((child) => child.parentId === item.id) && (
                     <>
                       {!expanded.includes(item.id) ? (
@@ -95,10 +96,8 @@ const Card = ({
                         onKeyPress={(event) =>
                           handleKeyPressEdit(event, item.id, nodeCount)
                         }
-                      />
-                      <CancelIcon
-                        sx={{ color: "#f74d4d" }}
-                        onClick={() => handleEdit(item.id, item.name, "cancel")}
+                        maxLength={250}
+                        required
                       />
                     </div>
                   )}
@@ -114,15 +113,19 @@ const Card = ({
                         fontSize: "18px",
                       }}
                     >
+                      <Tooltip title={item.name.length>30 && item.name}>
                       <Typography
                         style={{ fontFamily: "Lexend Deca", fontSize: "14px" }}
                       >
                         {" "}
-                        {item.name}
+                        {item.name.length>30?item.name.slice(0,30)+"...":item.name}
                       </Typography>
+                      </Tooltip>
                     </span>
                   )}
+                  </div>
                   <div className={styleClass.crud} style={{}}>
+                  
                     {editMode == 0 && (
                       <EditIcon
                         sx={{
@@ -133,6 +136,10 @@ const Card = ({
                         style={{ cursor: "pointer", marginLeft: "10px" }}
                       />
                     )}
+                    {editMode === item.id && <CancelIcon
+                        sx={{ color: "#f74d4d"}}
+                        onClick={() => handleEdit(item.id, item.name, "cancel")}
+                      />}
                     <DeleteIcon
                       sx={{
                         color: selectedNodeId === item.id ? "white" : "#f74d4d",
@@ -208,8 +215,8 @@ const Card = ({
                     handleCRUDCancel={handleCRUDCancel}
                     handleKeyPress={handleKeyPress}
                     handleDelete={handleDelete}
-                    selectedNodeId={selectedNodeId} // Pass selectedNodeId to nested Card components
-                    setSelectedNodeId={setSelectedNodeId} // Pass setSelectedNodeId to nested Card components
+                    selectedNodeId={selectedNodeId} 
+                    setSelectedNodeId={setSelectedNodeId} 
                   />
                 )}
               </li>

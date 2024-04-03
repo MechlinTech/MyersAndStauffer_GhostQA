@@ -11,6 +11,8 @@ import axios from "axios";
 import { header } from "../../utils/authheader";
 import { useDispatch } from "react-redux";
 import { ResetLocationScenarioVUCount } from "../../redux/actions/settingAction";
+import { Tooltip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Card = ({
@@ -45,6 +47,7 @@ const Card = ({
 }) => {
   const styleClass = useStylesTree();
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   useEffect(() => {
     function updateNodeDepth(data, parentId, depth) {
       const children = data.filter((node) => node.parentId === parentId);
@@ -93,6 +96,7 @@ const Card = ({
                       : {}
                   }
                 >
+                  <div style={{display:'flex'}}>
                   {data.some((child) => child.parentId === item.id) && (
                     <>
                       {!expanded.includes(item.id) ? (
@@ -114,18 +118,21 @@ const Card = ({
                         onKeyPress={(event) =>
                           handleKeyPressEdit(event, item.id, nodeCount)
                         }
+                        maxLength={250}
                       />
-                      <CancelIcon
+                      {/* <CancelIcon
                         sx={{ color: "#f74d4d" }}
                         onClick={() => handleEdit(item.id, item.name, "cancel")}
-                      />
+                      /> */}
                     </div>
                   )}
                   {editMode !== item.id && (
                     <span
                       onClick={() => {
+                        navigate('/performance') 
                         handleTask(item.id,nodeCount);
                         setSelectedNodeId(item.id);
+                        if(item.id !== selectedNodeId)
                         dispatch(ResetLocationScenarioVUCount())
                       }}
                       style={{
@@ -133,14 +140,17 @@ const Card = ({
                         fontSize: "18px",
                       }}
                     >
+                     <Tooltip title={item.name.length>30 && item.name}>
                       <Typography
                         style={{ fontFamily: "Lexend Deca", fontSize: "14px" }}
                       >
                         {" "}
-                        {item.name}
+                        {item.name.length>30?item.name.slice(0,30)+"...":item.name}
                       </Typography>
+                      </Tooltip>
                     </span>
                   )}
+                  </div>
                   <div className={styleClass.crud} style={{}}>
                     {editMode == 0 && (
                       <EditIcon
@@ -152,6 +162,10 @@ const Card = ({
                         style={{ cursor: "pointer", marginLeft: "10px" }}
                       />
                     )}
+                    {editMode === item.id && <CancelIcon
+                        sx={{ color: "#f74d4d" }}
+                        onClick={() => handleEdit(item.id, item.name, "cancel")}
+                      />}
                     <DeleteIcon
                       sx={{ color: selectedNodeId === item.id?'white': "#f74d4d" }}
                       onClick={() => handleDelete(item.id)}

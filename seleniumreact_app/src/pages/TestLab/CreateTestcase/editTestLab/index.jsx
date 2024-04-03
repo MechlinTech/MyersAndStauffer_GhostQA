@@ -1,4 +1,12 @@
-import { Box, Button, Checkbox, CircularProgress, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { StyledOutlinedInput, StyledTypography } from "./styleTestCase";
 import { useStyles } from "./styleTestCase";
@@ -7,7 +15,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { SaveAndExecute, UpdateTestCaseDetail, UpdateTestStepsDetails } from "../Api";
+import {
+  SaveAndExecute,
+  UpdateTestCaseDetail,
+  UpdateTestStepsDetails,
+} from "../Api";
 import { toast } from "react-toastify";
 import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
 import { StyledFormControl } from "../styleTestCase";
@@ -18,16 +30,16 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 export default function EditTestCase() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { testCaseName,testId } = useParams();
+  const { testCaseName, testId } = useParams();
   const [steps, setSteps] = useState([]);
   const [executionDetail, setexecutionDetail] = useState(null);
   const [testCaseTitle, settestCaseTitle] = useState("");
   const [startUrl, setstartUrl] = useState("");
   const [testCaseTitleError, settestCaseTitleError] = useState("");
-  const [startUrlError, setstartUrlError] = useState("")
+  const [startUrlError, setstartUrlError] = useState("");
   const [isEditable, setIsEditable] = useState(false);
   const [Errors, setErrors] = useState([]);
-  const [isExecuting, setisExecuting] = useState(false)
+  const [isExecuting, setisExecuting] = useState(false);
 
   const getExecutionHistory = async () => {
     try {
@@ -45,22 +57,20 @@ export default function EditTestCase() {
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestStepsDetailsByTestStepsId?TestStepsId=${testId}` // change this uri
       );
-      if(Array.isArray(res.data))
-        setSteps(res.data)
-      else
-        setSteps([])
+      if (Array.isArray(res.data)) setSteps(res.data);
+      else setSteps([]);
       console.log("steps list : ", res.data);
     };
     const getTestCaseDetail = async () => {
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestCaseDetailsByTestDetailId?TestCaseId=${testId}` // change this uri
       );
-    const testCase = res.data[0]
-    settestCaseTitle(testCase.TestCaseName)
-    setstartUrl(testCase.StartUrl)
+      const testCase = res.data[0];
+      settestCaseTitle(testCase.TestCaseName);
+      setstartUrl(testCase.StartUrl);
     };
-    //for execution history    
-    getTestCaseDetail()
+    //for execution history
+    getTestCaseDetail();
     getSteps();
     getExecutionHistory();
   }, []);
@@ -69,10 +79,10 @@ export default function EditTestCase() {
     setIsEditable(false);
     navigate(-1);
   };
-  const handleExecuteLoading = ()=>{
+  const handleExecuteLoading = () => {
     setIsEditable(false);
     navigate(-1);
-  }
+  };
   const handleSave = () => {
     let payload = {
       testCaseID: testId,
@@ -150,34 +160,40 @@ export default function EditTestCase() {
     });
     setErrors(errors);
     let titleError = "";
-    let urlError = ""
+    let urlError = "";
     if (!testCaseTitle.trim()) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
-    }else{settestCaseTitleError("")}
+    } else {
+      settestCaseTitleError("");
+    }
     if (!startUrl.trim()) {
       setstartUrlError("url is  required");
       urlError = "url is  required";
-    }else{setstartUrlError("")}
-    const hasError = errors.some((error) => Object.values(error).some((value) => value));
+    } else {
+      setstartUrlError("");
+    }
+    const hasError = errors.some((error) =>
+      Object.values(error).some((value) => value)
+    );
 
     if (!hasError && !titleError && !urlError) {
       let data = {
         testCaseDetailsId: testId,
         rootId: 0,
         testCaseName: testCaseTitle,
-        startUrl: startUrl
-      }
-    UpdateTestCaseDetail(data)
-    UpdateTestStepsDetails(payload, savetoEdit);
+        startUrl: startUrl,
+      };
+      UpdateTestCaseDetail(data);
+      UpdateTestStepsDetails(payload, savetoEdit);
     } else {
-      console.log("There is an error in at least one element.",errors);
-      toast.error('Some fields are empty')
-     }
+      console.log("There is an error in at least one element.", errors);
+      toast.error("Some fields are empty");
+    }
   };
 
-  const handleSaveAndExecute = ()=>{
-    setisExecuting(true)
+  const handleSaveAndExecute = () => {
+    setisExecuting(true);
     let payload = {
       testCaseID: testId,
       actions: steps,
@@ -239,6 +255,9 @@ export default function EditTestCase() {
         case "have_attribute":
           additionalErrors.haveAttributeError = !step.haveAttributeValue;
           break;
+        case "click element using text":
+          additionalErrors.textValueError = !step.textValue;
+          break;
         default:
           break;
       }
@@ -254,31 +273,36 @@ export default function EditTestCase() {
     });
     setErrors(errors);
     let titleError = "";
-    let urlError = ""
+    let urlError = "";
     if (!testCaseTitle.trim()) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
-    }else{settestCaseTitleError("")}
+    } else {
+      settestCaseTitleError("");
+    }
     if (!startUrl.trim()) {
       setstartUrlError("url is  required");
       urlError = "url is  required";
-    }else{setstartUrlError("")}
-    const hasError = errors.some((error) => Object.values(error).some((value) => value));
+    } else {
+      setstartUrlError("");
+    }
+    const hasError = errors.some((error) =>
+      Object.values(error).some((value) => value)
+    );
 
     if (!hasError && !titleError && !urlError) {
       let data = {
         testCaseDetailsId: testId,
         rootId: 0,
         testCaseName: testCaseTitle,
-        startUrl: startUrl
-      }
-    SaveAndExecute(data,payload,testId,handleExecuteLoading)
-    
+        startUrl: startUrl,
+      };
+      SaveAndExecute(data, payload, testId, handleExecuteLoading);
     } else {
-      console.log("There is an error in at least one element.",errors);
-      toast.error('Some fields are empty')
-     }
-  }
+      console.log("There is an error in at least one element.", errors);
+      toast.error("Some fields are empty");
+    }
+  };
   const handleCancle = () => {
     navigate(-1);
   };
@@ -309,6 +333,7 @@ export default function EditTestCase() {
         containTextValue: "",
         haveAttributeValue: "",
         shouldEqualValue: "",
+        textValue:""
       },
     ]);
   };
@@ -354,7 +379,7 @@ export default function EditTestCase() {
             : step;
         case "selectedUser":
           return i === index
-            ? { ...step, selectedUser: inputValue?.value }
+            ? { ...step, selectedUser: inputValue?.target.value }
             : step;
         case "fileName":
           return i === index
@@ -411,20 +436,24 @@ export default function EditTestCase() {
           return i === index
             ? { ...step, shouldEqualValue: inputValue.target.value }
             : step;
+        case "textValue":
+          return i === index
+            ? { ...step, textValue: inputValue.target.value }
+            : step;
         default:
           return step;
       }
     });
     setSteps(updatedSteps);
   };
- 
+
   const findLabelByValue = (value) => {
     for (const pair of userActionsOptions) {
       if (pair.value === value) {
         return pair.label;
       }
     }
-    return 'not found'; // Return null if the value is not found
+    return "not found"; // Return null if the value is not found
   };
   const selectorNoOptionList = [
     "scroll_to_window",
@@ -434,219 +463,224 @@ export default function EditTestCase() {
     "refresh_page",
     "validate_current_url",
   ];
-  const listOfSteps = steps && steps?.map((step, index) => (
-    <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "70%",
-          "@media (max-width: 960px)": {
-            width: "100%",
-          },
-        }}
-      >
-        <StyledTypography>Step {index + 1}</StyledTypography>
-        {isEditable && <DeleteIcon
-          onClick={() => handleRemoveStep(step)}
-          sx={{ cursor: "pointer", color: "red" }}
-        />}
-        
-      </Box>
-      <Paper
-        elevation={1}
-        sx={{
-          width: "70%",
-          padding: "10px",
-          "@media (max-width: 960px)": {
-            width: "100%",
-          },
-        }}
-      >
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <StyledFormControl>
-              <StyledOutlinedInput
-                type="text"
-                placeholder="Step Description"
-                value={step?.stepDescription}
-                disabled={!isEditable}
-                error={Errors[index]?.descriptionError}
-                onChange={(event) => {
-                  handleInputChange(event, index, "stepDescription");
-                }}
-              />
-            </StyledFormControl>
-          </Grid>
-          <Grid item xs={6}>
-            <Select
-              isClearable={true}
-              placeholder="Actions"
-              options={userActionsOptions}
-              isDisabled={!isEditable}
-              value={
-                step
-                  ? step.action
-                    ? {
-                        label: findLabelByValue(step.action),
-                        value: step.action,
-                      }
-                    : null
-                  : null
-              }
-              onChange={(act) => handleInputChange(act, index, "action")}
-              styles={{
-                container: (provided) => ({
-                  ...provided,
-                  backgroundColor: "rgb(242, 242, 242)",
-                  width: "100%",
-                }),
-                control: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: "rgb(242, 242, 242)",
-                  "&:hover": {
-                    borderColor: "#654DF7",
-                  },
-                  borderColor: Errors[index]?.typeError
-                    ? "red"
-                    : state.isFocused
-                    ? "#654DF7"
-                    : "rgb(242, 242, 242)",
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected ? "#654DF7" : "transparent",
-                }),
-                clearIndicator: (provided) => ({
-                  ...provided,
-                  cursor: "pointer",
-                  ":hover": {
-                    color: "#654DF7",
-                  },
-                }),
-                dropdownIndicator: (provided) => ({
-                  ...provided,
-                  cursor: "pointer",
-                  ":hover": {
-                    color: "#654DF7",
-                  },
-                }),
-              }}
-              menuPosition={"fixed"}
+  const listOfSteps =
+    steps &&
+    steps?.map((step, index) => (
+      <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "70%",
+            "@media (max-width: 960px)": {
+              width: "100%",
+            },
+          }}
+        >
+          <StyledTypography>Step {index + 1}</StyledTypography>
+          {isEditable && (
+            <DeleteIcon
+              onClick={() => handleRemoveStep(step)}
+              sx={{ cursor: "pointer", color: "red" }}
             />
-          </Grid>
-          {/* bellow compenent will render field according to type */}
-          <RenderActionFields
-            action={step?.action}
-            step={step}
-            index={index}
-            Errors={Errors}
-            setSteps={setSteps}
-            handleInputChange={handleInputChange}
-            isEditable={isEditable}
-          />
-          {step.action && !selectorNoOptionList.includes(step.action) && (
+          )}
+        </Box>
+        <Paper
+          elevation={1}
+          sx={{
+            width: "70%",
+            padding: "10px",
+            "@media (max-width: 960px)": {
+              width: "100%",
+            },
+          }}
+        >
+          <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Grid container spacing={1}>
-                <Grid item xs={6}>
-                  <Select
-                    isClearable={true}
-                    placeholder="Selector type"
-                    isDisabled={!isEditable}
-                    options={selectorTypeList}
-                    value={
-                      step
-                        ? step.selectorType
-                          ? {
-                              label: step.selectorType,
-                              value: step.selectorType,
-                            }
+              <StyledFormControl>
+                <StyledOutlinedInput
+                  type="text"
+                  placeholder="Step Description"
+                  value={step?.stepDescription}
+                  disabled={!isEditable}
+                  error={Errors[index]?.descriptionError}
+                  onChange={(event) => {
+                    handleInputChange(event, index, "stepDescription");
+                  }}
+                />
+              </StyledFormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <Select
+                isClearable={true}
+                placeholder="Actions"
+                options={userActionsOptions}
+                isDisabled={!isEditable}
+                value={
+                  step
+                    ? step.action
+                      ? {
+                          label: findLabelByValue(step.action),
+                          value: step.action,
+                        }
+                      : null
+                    : null
+                }
+                onChange={(act) => handleInputChange(act, index, "action")}
+                styles={{
+                  container: (provided) => ({
+                    ...provided,
+                    backgroundColor: "rgb(242, 242, 242)",
+                    width: "100%",
+                  }),
+                  control: (provided, state) => ({
+                    ...provided,
+                    backgroundColor: "rgb(242, 242, 242)",
+                    "&:hover": {
+                      borderColor: "#654DF7",
+                    },
+                    borderColor: Errors[index]?.typeError
+                      ? "red"
+                      : state.isFocused
+                      ? "#654DF7"
+                      : "rgb(242, 242, 242)",
+                  }),
+                  option: (provided, state) => ({
+                    ...provided,
+                    backgroundColor: state.isSelected
+                      ? "#654DF7"
+                      : "transparent",
+                  }),
+                  clearIndicator: (provided) => ({
+                    ...provided,
+                    cursor: "pointer",
+                    ":hover": {
+                      color: "#654DF7",
+                    },
+                  }),
+                  dropdownIndicator: (provided) => ({
+                    ...provided,
+                    cursor: "pointer",
+                    ":hover": {
+                      color: "#654DF7",
+                    },
+                  }),
+                }}
+                menuPosition={"fixed"}
+              />
+            </Grid>
+            {/* bellow compenent will render field according to type */}
+            <RenderActionFields
+              action={step?.action}
+              step={step}
+              index={index}
+              Errors={Errors}
+              setSteps={setSteps}
+              handleInputChange={handleInputChange}
+              isEditable={isEditable}
+            />
+            {step.action && !selectorNoOptionList.includes(step.action) && (
+              <Grid item xs={12}>
+                <Grid container spacing={1}>
+                  <Grid item xs={6}>
+                    <Select
+                      isClearable={true}
+                      placeholder="Selector type"
+                      isDisabled={!isEditable}
+                      options={selectorTypeList}
+                      value={
+                        step
+                          ? step.selectorType
+                            ? {
+                                label: step.selectorType,
+                                value: step.selectorType,
+                              }
+                            : null
                           : null
-                        : null
-                    }
-                    onChange={(act) =>
-                      handleInputChange(act, index, "selectorType")
-                    }
-                    styles={{
-                      container: (provided) => ({
-                        ...provided,
-                        backgroundColor: "rgb(242, 242, 242)",
-                        width: "100%",
-                      }),
-                      control: (provided, state) => ({
-                        ...provided,
-                        backgroundColor: "rgb(242, 242, 242)",
-                        "&:hover": {
-                          borderColor: "#654DF7",
-                        },
-                        borderColor: Errors[index]?.selectorTypeError
-                          ? "red"
-                          : state.isFocused
-                          ? "#654DF7"
-                          : "rgb(242, 242, 242)",
-                      }),
-                      option: (provided, state) => ({
-                        ...provided,
-                        backgroundColor: state.isSelected
-                          ? "#654DF7"
-                          : "transparent",
-                      }),
-                      clearIndicator: (provided) => ({
-                        ...provided,
-                        cursor: "pointer",
-                        ":hover": {
-                          color: "#654DF7",
-                        },
-                      }),
-                      dropdownIndicator: (provided) => ({
-                        ...provided,
-                        cursor: "pointer",
-                        ":hover": {
-                          color: "#654DF7",
-                        },
-                      }),
-                    }}
-                    menuPosition={"fixed"}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <StyledFormControl>
-                    <StyledOutlinedInput
-                      type="text"
-                      placeholder="Selector value"
-                      error={Errors[index]?.selectorValueError}
-                      disabled={!isEditable}
-                      value={step?.selectorValue}
-                      onChange={(event) => {
-                        handleInputChange(event, index, "selectorValue");
+                      }
+                      onChange={(act) =>
+                        handleInputChange(act, index, "selectorType")
+                      }
+                      styles={{
+                        container: (provided) => ({
+                          ...provided,
+                          backgroundColor: "rgb(242, 242, 242)",
+                          width: "100%",
+                        }),
+                        control: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: "rgb(242, 242, 242)",
+                          "&:hover": {
+                            borderColor: "#654DF7",
+                          },
+                          borderColor: Errors[index]?.selectorTypeError
+                            ? "red"
+                            : state.isFocused
+                            ? "#654DF7"
+                            : "rgb(242, 242, 242)",
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isSelected
+                            ? "#654DF7"
+                            : "transparent",
+                        }),
+                        clearIndicator: (provided) => ({
+                          ...provided,
+                          cursor: "pointer",
+                          ":hover": {
+                            color: "#654DF7",
+                          },
+                        }),
+                        dropdownIndicator: (provided) => ({
+                          ...provided,
+                          cursor: "pointer",
+                          ":hover": {
+                            color: "#654DF7",
+                          },
+                        }),
                       }}
+                      menuPosition={"fixed"}
                     />
-                  </StyledFormControl>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <StyledFormControl>
+                      <StyledOutlinedInput
+                        type="text"
+                        placeholder="Selector value"
+                        error={Errors[index]?.selectorValueError}
+                        disabled={!isEditable}
+                        value={step?.selectorValue}
+                        onChange={(event) => {
+                          handleInputChange(event, index, "selectorValue");
+                        }}
+                      />
+                    </StyledFormControl>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          )}
+            )}
 
-          <Grid item xs={12}>
-                <Box display="flex" alignItems="center">
-                  <Checkbox
-                    size="small"
-                    sx={{ "&.Mui-checked": { color: "#654DF7" } }}
-                    disabled={!isEditable}
-                    checked={step?.isOptional}
-                    onChange={(e) => {
-                      handleInputChange(e, index, "isOptional");
-                    }}
-                  />
-                  <Typography fontSize="10px" fontFamily="Lexend Deca">
-                    Make this step optional (Continue on failure)
-                  </Typography>
-                </Box>
+            <Grid item xs={12}>
+              <Box display="flex" alignItems="center">
+                <Checkbox
+                  size="small"
+                  sx={{ "&.Mui-checked": { color: "#654DF7" } }}
+                  disabled={!isEditable}
+                  checked={step?.isOptional}
+                  onChange={(e) => {
+                    handleInputChange(e, index, "isOptional");
+                  }}
+                />
+                <Typography fontSize="10px" fontFamily="Lexend Deca">
+                  Make this step optional (Continue on failure)
+                </Typography>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Paper>
-    </li>
-  ));
+        </Paper>
+      </li>
+    ));
   return (
     <div className={classes.main}>
       <Paper sx={{ width: "100%", p: 2 }}>
@@ -658,102 +692,104 @@ export default function EditTestCase() {
           sx={{ padding: "10px 0" }}
         >
           <Grid item xs={12}>
-          <Grid
-            container
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
-            <Grid item xs={12} md={3}>
-              <StyledTypography sx={{ fontSize: "18px", fontWeight: "400" }}>
-                Sample Testcase
-              </StyledTypography>
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              mb={2}
+            >
+              <Grid item xs={12} md={3}>
+                <StyledTypography sx={{ fontSize: "18px", fontWeight: "400" }}>
+                  Sample Testcase
+                </StyledTypography>
+              </Grid>
+              <Grid item xs={12} md={4} display="flex" justifyContent="end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleCancle}
+                  sx={{
+                    backgroundColor: "rgb(108, 117, 125)",
+                    color: "#f1f1f1",
+                    "&:hover": {
+                      backgroundColor: "rgb(101, 77, 247)",
+                    },
+                    marginRight: "10px",
+                  }}
+                >
+                  Cancel
+                </Button>
+                {isEditable ? (
+                  <>
+                    <Button
+                      onClick={handleSave}
+                      sx={{
+                        backgroundColor: "rgb(101, 77, 247)",
+                        "&:hover": {
+                          backgroundColor: "rgb(101, 77, 247) !important",
+                          borderColor: "#654DF7",
+                          color: "#fff",
+                          "&:before": {
+                            backgroundColor: "rgb(101, 77, 247) !important",
+                            color: "#fff",
+                          },
+                        },
+                        marginRight: "10px",
+                        color: "#fff",
+                      }}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      onClick={handleSaveAndExecute}
+                      sx={{
+                        backgroundColor: "rgb(101, 77, 247)",
+                        "&:hover": {
+                          backgroundColor: "rgb(101, 77, 247) !important",
+                          borderColor: "#654DF7",
+                          color: "#fff",
+                          "&:before": {
+                            backgroundColor: "rgb(101, 77, 247) !important",
+                            color: "#fff",
+                          },
+                        },
+                        color: "#fff",
+                      }}
+                    >
+                      {isExecuting ? (
+                        <CircularProgress
+                          style={{ color: "white" }}
+                          size={25}
+                        />
+                      ) : (
+                        "Save & Execute"
+                      )}
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    onClick={() => setIsEditable(true)}
+                    sx={{
+                      backgroundColor: "rgb(101, 77, 247)",
+                      "&:hover": {
+                        backgroundColor: "rgb(101, 77, 247) !important",
+                        borderColor: "#654DF7",
+                        color: "#fff",
+                        "&:before": {
+                          backgroundColor: "rgb(101, 77, 247) !important",
+                          color: "#fff",
+                        },
+                      },
+                      color: "#fff",
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )}
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={4} display="flex" justifyContent="end">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleCancle}
-                sx={{
-                  backgroundColor: "rgb(108, 117, 125)",
-                  color: "#f1f1f1",
-                  "&:hover": {
-                    backgroundColor: "rgb(101, 77, 247)",
-                  },
-                  marginRight: "10px",
-                }}
-              >
-                Cancel
-              </Button>
-              {isEditable ? (
-                <>
-                <Button
-                  onClick={handleSave}
-                  sx={{
-                    backgroundColor: "rgb(101, 77, 247)",
-                    "&:hover": {
-                      backgroundColor: "rgb(101, 77, 247) !important",
-                      borderColor: "#654DF7",
-                      color: "#fff",
-                      "&:before": {
-                        backgroundColor: "rgb(101, 77, 247) !important",
-                        color: "#fff",
-                      },
-                    },
-                  marginRight: "10px",
-                  color: "#fff",
-                  }}
-                >
-                  Save
-                </Button>
-                <Button
-                  onClick={handleSaveAndExecute}
-                  sx={{
-                    backgroundColor: "rgb(101, 77, 247)",
-                    "&:hover": {
-                      backgroundColor: "rgb(101, 77, 247) !important",
-                      borderColor: "#654DF7",
-                      color: "#fff",
-                      "&:before": {
-                        backgroundColor: "rgb(101, 77, 247) !important",
-                        color: "#fff",
-                      },
-                    },
-                    color: "#fff",
-                  }}
-                >
-                  {isExecuting?<CircularProgress style={{color:'white'}} size={25}/>: "Save & Execute"}
-                </Button>
-                </>
-              ) : (
-                <Button
-                  onClick={() => setIsEditable(true)}
-                  sx={{
-                    backgroundColor: "rgb(101, 77, 247)",
-                    "&:hover": {
-                      backgroundColor: "rgb(101, 77, 247) !important",
-                      borderColor: "#654DF7",
-                      color: "#fff",
-                      "&:before": {
-                        backgroundColor: "rgb(101, 77, 247) !important",
-                        color: "#fff",
-                      },
-                    },
-                    color: "#fff",
-                  }}
-                >
-                  Edit
-                </Button>
-              )}
-            </Grid>
-            
           </Grid>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            display="flex"
-          >
+          <Grid item xs={12} display="flex">
             <Grid container spacing={1} mb={1} mt={1}>
               <Grid item xs={12} md={4} display="flex" alignItems="center">
                 <StyledTypography mr={1} minWidth={"105px"}>
@@ -771,13 +807,7 @@ export default function EditTestCase() {
                   />
                 </StyledFormControl>
               </Grid>
-              <Grid
-                item
-                xs={12}
-                md={4}
-                display="flex"
-                alignItems="center"
-              >
+              <Grid item xs={12} md={4} display="flex" alignItems="center">
                 <StyledTypography minWidth="80px">Start Url :</StyledTypography>
                 <StyledFormControl>
                   <StyledOutlinedInput
@@ -820,7 +850,7 @@ export default function EditTestCase() {
               </ul>
             </Box>
           </Grid>
-          <ExecutionHistory executionDetail={executionDetail}/>
+          <ExecutionHistory executionDetail={executionDetail} />
         </Grid>
       </Paper>
     </div>

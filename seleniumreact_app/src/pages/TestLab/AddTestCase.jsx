@@ -45,7 +45,7 @@ export default function AddTestCase({addTestCase,nameSuite}) {
           spacing={2}
         >
           <Grid item xs={6}  className={`${classes.header}`}>
-          <div className={classes.highlight}>{nameSuite}</div>
+          <div className={classes.highlight}>{nameSuite.length>40?nameSuite.slice(0,40)+'...':nameSuite}</div>
           </Grid>
           <Grid item>
             <Button
