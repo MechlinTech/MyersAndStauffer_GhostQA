@@ -2,15 +2,20 @@ import React from "react";
 import Chart from "react-apexcharts";
 
 const LineChart = ({ height, Yaxis, Xaxis }) => {
-  // Remove duplicates from Xaxis data
-  const uniqueXaxis = [...new Set(Xaxis)].filter(item => item !== null);
+  const xCategories = Xaxis && Xaxis.filter(item => item !== null).map(item => (item ? formatTimestamp(item) : ""));
+   const yData = Yaxis && Yaxis.filter(item => item !== null);
 
-  // Format timestamps for X-axis labels
-  const xCategories = uniqueXaxis.map(item => (item ? formatTimestamp(item) : ""));
+   console.log("xCategories",xCategories)
 
-  // Filter out null values from Yaxis data
-  const yData = Yaxis && Yaxis.filter(item => item !== null);
+  //    // Remove duplicates from Xaxis data
+  // const uniqueXaxis = [...new Set(Xaxis)].filter(item => item !== null);
 
+  // // Format timestamps for X-axis labels
+  // const xCategories = uniqueXaxis.map(item => (item ? formatTimestamp(item) : ""));
+
+  // // Filter out null values from Yaxis data
+  // const yData = Yaxis && Yaxis.filter(item => item !== null);
+  
   const options = {
     chart: {
       id: "smooth-line",
@@ -56,7 +61,14 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     height: 280,
   };
 
+  
+
   const series = [
+    // {
+    //   name: "Time (ms)",
+    //   type: "line",
+    //   data: Xaxis ? Xaxis.filter(item => item !== null) : [],
+    // },
     {
       name: "Response Time (ms)",
       type: "line",
@@ -64,7 +76,6 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     },
   ];
 
-  // Determine whether to render the chart based on data availability
   const shouldRenderChart =
     (Yaxis && Yaxis.length > 0 && yData && yData.length > 0) || (xCategories && xCategories.length > 0);
 
@@ -72,17 +83,13 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     <div>
       <div style={{ textAlign: "center" }}>Response time</div>
       <div style={{ height: "calc(45vh - 20px)", marginBottom: "10px" }} className="line-container">
-        {shouldRenderChart ? (
-          <Chart options={options} series={series} type="line" height={height} />
-        ) : (
-          <div>No data available</div>
-        )}
+        {shouldRenderChart && <Chart options={options} series={series} type="line" height={height} />}
+        {!shouldRenderChart ? <div>No data available</div> : null}
       </div>
     </div>
   );
 };
 
-// Function to format timestamps
 const formatTimestamp = timestamp => {
   const date = new Date(timestamp * 1000);
   const hours = String(date.getUTCHours()).padStart(2, "0");
@@ -92,4 +99,3 @@ const formatTimestamp = timestamp => {
 };
 
 export default LineChart;
-
