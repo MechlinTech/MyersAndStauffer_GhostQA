@@ -1,4 +1,4 @@
-name: Dotnet image build
+name: Caddy  image build
 on:
   push:
     branches: [ "main" ]

@@ -1,4 +1,4 @@
-name: Dotnet image build
+name: Web Ui image build
 on:
   push:
     branches: [ "main" ]
