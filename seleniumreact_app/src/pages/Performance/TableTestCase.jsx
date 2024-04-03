@@ -270,8 +270,10 @@ export default function TableTestCase({
                     fontSize: 14,
                     backgroundColor: "rgb(101, 77, 247)",
                     color: "#ffffff",
+                    textTransform: "none",
                     cursor: "pointer",
                   }}
+                  disabled={!selectedFile}
                   onClick={handleFileSaving}
                 >
                   Save
