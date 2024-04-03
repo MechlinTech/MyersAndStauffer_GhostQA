@@ -1,7 +1,20 @@
 version: '3.8'
 
 services:
-  selenium-report-api:
+  webui:
+      build:
+        context: .
+        dockerfile: ./seleniumreact_app/Dockerfile
+      ports:
+        - "3000:80"
+      # volumes:
+        # - ./src:/app/src
+        # - ./public:/app/public
+      environment:
+        - NODE_ENV=production
+      stdin_open: true
+  
+  dotnetapi:
     build:
       context: .
       dockerfile: SeleniumReportAPI\Dockerfile
@@ -13,7 +26,16 @@ services:
   db:
     image: mcr.microsoft.com/mssql/server:latest
     ports:
-      - "1434:1433"
+      - "1435:1433"
     environment:
       SA_PASSWORD: "P@ssw0rd@123###"
       ACCEPT_EULA: "Y"
+  
+  caddy:
+    build:
+      context: .
+      dockerfile: ./compose/caddy/Dockerfile
+    ports:
+      - "30001:30001"
+    extra_hosts:
+      - host.docker.internal:host-gateway
