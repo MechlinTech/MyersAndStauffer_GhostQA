@@ -65,22 +65,22 @@ export default function Summary() {
       ?.flatMap((item) => item.raw_data?.map((data) => data.Connect))
       .filter((item) => item !== null) || [];
 
-      console.log({Xaxis,Yaxis, YaxisConnect})
+      console.log({Xaxis, Yaxis, YaxisConnect})
 
-  useEffect(() => {
-    if (
-      Array.isArray(Yaxis) &&
-      Array.isArray(Xaxis) &&
-      Yaxis.length > 0 &&
-      Xaxis.length > 0
-    ) {
-      const yValid = Yaxis.some((value) => value !== null);
-      const xValid = Xaxis.some((value) => value !== null && !isNaN(value));
-      setIsValidData(yValid && xValid);
-    } else {
-      setIsValidData(false);
-    }
-  }, [Yaxis, Xaxis]);
+  // useEffect(() => {
+  //   if (
+  //     Array.isArray(Yaxis) &&
+  //     Array.isArray(Xaxis) &&
+  //     Yaxis.length > 0 &&
+  //     Xaxis.length > 0
+  //   ) {
+  //     const yValid = Yaxis.some((value) => value !== null);
+  //     const xValid = Xaxis.some((value) => value !== null && !isNaN(value));
+  //     setIsValidData(yValid && xValid);
+  //   } else {
+  //     setIsValidData(false);
+  //   }
+  // }, [Yaxis, Xaxis]);
 
   useEffect(() => {
     if (
