@@ -28,6 +28,7 @@
             public string shouldLessValue { get; set; }
             public string containTextValue { get; set; }
             public string haveAttributeValue { get; set; }
+            public string textValue { get; set; }
         }
     }
 }

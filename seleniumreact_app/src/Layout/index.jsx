@@ -79,7 +79,9 @@ export default function MiniDrawer() {
             alignItems="center"
           >
             <Grid item>
+              <Box style={{paddingTop:'8px'}}>
               <img src={"/images/Logo_GhostQA.svg"} alt="logo" />{" "}
+              </Box>
             </Grid>
             <Grid item>
               <Link

@@ -307,35 +307,48 @@ export default function EditTestCase() {
     navigate(-1);
   };
   const handleAddMoreSteps = () => {
-    setSteps([
-      ...steps,
-      {
-        action: null,
-        stepDescription: "",
-        isOptional: false,
-        selectorType: "",
-        selectorValue: "",
-        sendKeyInput: "",
-        scrollPixel: "",
-        url: "",
-        selectedUser: "",
-        fileName: null,
-        elementValue: "",
-        cssValue: "",
-        cssProperty: "",
-        pageTitle: "",
-        currentUrl: "",
-        shouldNotEqualValue: "",
-        shouldIncludeValue: "",
-        shouldEqualValue: "",
-        shouldGreaterThanValue: "",
-        shouldLessValue: "",
-        containTextValue: "",
-        haveAttributeValue: "",
-        shouldEqualValue: "",
-        textValue:""
-      },
-    ]);
+    const isEmptyField = steps.some(step => {
+      console.log('step',step)
+      for (const key in step) {
+        if (step.hasOwnProperty(key) && (step[key] === "" || step[key] === null)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  
+    if (isEmptyField) {
+      toast.error("Cannot add a new step with empty fields.");
+    } else {
+      setSteps([
+        ...steps,
+        {
+          action: null,
+          stepDescription: "",
+          isOptional: false,
+          // selectorType: "",
+          // selectorValue: "",
+          // sendKeyInput: "",
+          // scrollPixel: "",
+          // url: "",
+          // selectedUser: "",
+          // fileName: null,
+          // elementValue: "",
+          // cssValue: "",
+          // cssProperty: "",
+          // pageTitle: "",
+          // currentUrl: "",
+          // shouldNotEqualValue: "",
+          // shouldIncludeValue: "",
+          // shouldEqualValue: "",
+          // shouldGreaterThanValue: "",
+          // shouldLessValue: "",
+          // containTextValue: "",
+          // haveAttributeValue: "",
+          // textValue: ""
+        },
+      ]);
+    }
   };
   const handleRemoveStep = (curr) => {
     const updatedSteps = steps.filter((step) => step !== curr);
@@ -343,109 +356,182 @@ export default function EditTestCase() {
   };
 
   const handleInputChange = (inputValue, index, inputType) => {
-    let updatedSteps = steps.map((step, i) => {
-      switch (inputType) {
-        case "action":
-          return i === index ? { ...step, action: inputValue?.value } : step;
-        case "stepDescription":
-          return i === index
-            ? { ...step, stepDescription: inputValue?.target.value }
-            : step;
-        case "selectorType":
-          return i === index
-            ? { ...step, selectorType: inputValue?.value }
-            : step;
-        case "selectorValue":
-          return i === index
-            ? { ...step, selectorValue: inputValue.target.value }
-            : step;
-        case "isOptional":
-          return i === index
-            ? { ...step, isOptional: inputValue.target.checked }
-            : step;
-        case "sendKeyInput":
-          return i === index
-            ? { ...step, sendKeyInput: inputValue.target.value }
-            : step;
-        case "scrollPixel":
-          return i === index
-            ? { ...step, scrollPixel: inputValue.target.value }
-            : step;
-        case "url":
-          return i === index ? { ...step, url: inputValue.target.value } : step;
-        case "elementValue":
-          return i === index
-            ? { ...step, elementValue: inputValue.target.value }
-            : step;
-        case "selectedUser":
-          return i === index
-            ? { ...step, selectedUser: inputValue?.target.value }
-            : step;
-        case "fileName":
-          return i === index
-            ? { ...step, fileName: inputValue.target.files[0] }
-            : step;
-
-        case "cssProperty":
-          return i === index
-            ? { ...step, cssProperty: inputValue.target.value }
-            : step;
-        case "cssValue":
-          return i === index
-            ? { ...step, cssValue: inputValue.target.value }
-            : step;
-
-        case "pageTitle":
-          return i === index
-            ? { ...step, pageTitle: inputValue.target.value }
-            : step;
-        case "currentUrl":
-          return i === index
-            ? { ...step, currentUrl: inputValue.target.value }
-            : step;
-        case "shouldNotEqualValue":
-          return i === index
-            ? { ...step, shouldNotEqualValue: inputValue.target.value }
-            : step;
-        case "shouldIncludeValue":
-          return i === index
-            ? { ...step, shouldIncludeValue: inputValue.target.value }
-            : step;
-        case "shouldEqualValue":
-          return i === index
-            ? { ...step, shouldEqualValue: inputValue.target.value }
-            : step;
-
-        case "shouldGreaterThanValue":
-          return i === index
-            ? { ...step, shouldGreaterThanValue: inputValue.target.value }
-            : step;
-        case "shouldLessValue":
-          return i === index
-            ? { ...step, shouldLessValue: inputValue.target.value }
-            : step;
-        case "containTextValue":
-          return i === index
-            ? { ...step, containTextValue: inputValue.target.value }
-            : step;
-        case "haveAttributeValue":
-          return i === index
-            ? { ...step, haveAttributeValue: inputValue.target.value }
-            : step;
-        case "shouldEqualValue":
-          return i === index
-            ? { ...step, shouldEqualValue: inputValue.target.value }
-            : step;
-        case "textValue":
-          return i === index
-            ? { ...step, textValue: inputValue.target.value }
-            : step;
+    const updateAdditionalFields = (step, action) => {
+      const additionalField = {};
+      switch (action) {
+        case "type":
+          additionalField.sendKeyInput = "";
+          break;
+        case "scroll_to_window":
+          additionalField.scrollPixel = "";
+          break;
+        case "go_to_url":
+          additionalField.url = "";
+          break;
+        case "select_option":
+          additionalField.selectedUser = "";
+          break;
+        case "upload_file":
+          additionalField.fileName = null;
+          break;
+        case "element_has_value":
+          additionalField.elementValue = "";
+          break;
+        case "element_has_css_property_with_value":
+          additionalField.cssProperty = "";
+          additionalField.cssValue = "";
+          break;
+        case "validate_page_title":
+          additionalField.pageTitle = "";
+          break;
+        case "validate_current_url":
+          additionalField.currentUrl = "";
+          break;
+        case "should_not_equal":
+          additionalField.shouldNotEqualValue = "";
+          break;
+        case "should_include":
+          additionalField.shouldIncludeValue = "";
+          break;
+        case "should_equal":
+          additionalField.shouldEqualValue = "";
+          break;
+        case "should_be_greater_than":
+          additionalField.shouldGreaterThanValue = "";
+          break;
+        case "should_be_less_than":
+          additionalField.shouldLessValue = "";
+          break;
+        case "contain_text":
+          additionalField.containTextValue = "";
+          break;
+        case "have_attribute":
+          additionalField.haveAttributeValue = "";
+          break;
+        case "click element using text":
+          additionalField.textValue = "";
+          break;
         default:
-          return step;
+          break;
       }
+      return { stepDescription: "",
+      isOptional: false, ...additionalField,action:action };
+    };
+  
+    setSteps(prevSteps => {
+      return prevSteps.map((step, i) => {
+        if (i === index) {
+          if (inputType === 'action') {
+            return updateAdditionalFields(step, inputValue.value);
+          } else {
+            // Update other input types
+            switch (inputType) {
+              case "action":
+                return i === index ? { ...step, action: inputValue?.value } : step;
+              case "stepDescription":
+                return i === index
+                  ? { ...step, stepDescription: inputValue?.target.value }
+                  : step;
+              case "selectorType":
+                return i === index
+                  ? { ...step, selectorType: inputValue?.value }
+                  : step;
+              case "selectorValue":
+                return i === index
+                  ? { ...step, selectorValue: inputValue.target.value }
+                  : step;
+              case "isOptional":
+                return i === index
+                  ? { ...step, isOptional: inputValue.target.checked }
+                  : step;
+              case "sendKeyInput":
+                return i === index
+                  ? { ...step, sendKeyInput: inputValue.target.value }
+                  : step;
+              case "scrollPixel":
+                return i === index
+                  ? { ...step, scrollPixel: inputValue.target.value }
+                  : step;
+              case "url":
+                return i === index ? { ...step, url: inputValue.target.value } : step;
+              case "elementValue":
+                return i === index
+                  ? { ...step, elementValue: inputValue.target.value }
+                  : step;
+              case "selectedUser":
+                return i === index
+                  ? { ...step, selectedUser: inputValue?.target.value }
+                  : step;
+              case "fileName":
+                return i === index
+                  ? { ...step, fileName: inputValue.target.files[0] }
+                  : step;
+      
+              case "cssProperty":
+                return i === index
+                  ? { ...step, cssProperty: inputValue.target.value }
+                  : step;
+              case "cssValue":
+                return i === index
+                  ? { ...step, cssValue: inputValue.target.value }
+                  : step;
+      
+              case "pageTitle":
+                return i === index
+                  ? { ...step, pageTitle: inputValue.target.value }
+                  : step;
+              case "currentUrl":
+                return i === index
+                  ? { ...step, currentUrl: inputValue.target.value }
+                  : step;
+              case "shouldNotEqualValue":
+                return i === index
+                  ? { ...step, shouldNotEqualValue: inputValue.target.value }
+                  : step;
+              case "shouldIncludeValue":
+                return i === index
+                  ? { ...step, shouldIncludeValue: inputValue.target.value }
+                  : step;
+              case "shouldEqualValue":
+                return i === index
+                  ? { ...step, shouldEqualValue: inputValue.target.value }
+                  : step;
+      
+              case "shouldGreaterThanValue":
+                return i === index
+                  ? { ...step, shouldGreaterThanValue: inputValue.target.value }
+                  : step;
+              case "shouldLessValue":
+                return i === index
+                  ? { ...step, shouldLessValue: inputValue.target.value }
+                  : step;
+              case "containTextValue":
+                return i === index
+                  ? { ...step, containTextValue: inputValue.target.value }
+                  : step;
+              case "haveAttributeValue":
+                return i === index
+                  ? { ...step, haveAttributeValue: inputValue.target.value }
+                  : step;
+              case "shouldEqualValue":
+                return i === index
+                  ? { ...step, shouldEqualValue: inputValue.target.value }
+                  : step;
+              case "textValue":
+                return i === index
+                  ? { ...step, textValue: inputValue.target.value }
+                  : step;
+              default:
+                return step;
+            }
+          }
+        } else {
+          return step; // Keep other elements unchanged
+        }
+      });
     });
-    setSteps(updatedSteps);
   };
+  
 
   const findLabelByValue = (value) => {
     for (const pair of userActionsOptions) {
@@ -478,12 +564,12 @@ export default function EditTestCase() {
           }}
         >
           <StyledTypography>Step {index + 1}</StyledTypography>
-          {isEditable && (
+          {/* {isEditable && (
             <DeleteIcon
               onClick={() => handleRemoveStep(step)}
               sx={{ cursor: "pointer", color: "red" }}
             />
-          )}
+          )} */}
         </Box>
         <Paper
           elevation={1}
@@ -700,7 +786,7 @@ export default function EditTestCase() {
             >
               <Grid item xs={12} md={3}>
                 <StyledTypography sx={{ fontSize: "18px", fontWeight: "400" }}>
-                  Sample Testcase
+                  Sample Test Case
                 </StyledTypography>
               </Grid>
               <Grid item xs={12} md={4} display="flex" justifyContent="end">
@@ -793,7 +879,7 @@ export default function EditTestCase() {
             <Grid container spacing={1} mb={1} mt={1}>
               <Grid item xs={12} md={4} display="flex" alignItems="center">
                 <StyledTypography mr={1} minWidth={"105px"}>
-                  Testcase Title :
+                  Test Case Title :
                 </StyledTypography>
                 <StyledFormControl>
                   <StyledOutlinedInput

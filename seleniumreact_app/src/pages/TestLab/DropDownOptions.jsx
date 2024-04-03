@@ -240,7 +240,7 @@ const userActionsOptions = [
   { label: "SendKeys", value: "type" },
   { label: "Drag and Drop", value: "drag_and_drop" },
   { label: "Check checkboxes", value: "checkbox" },
-  { label: "UnCheck checkboxes", value: "uncheck_checkbox" },
+  { label: "UnCheck checkboxes", value: "uncheckbox" },
   { label: "Submit Form", value: "submit_form" },
   { label: "Select Option from dropdown", value: "select_option" },
   { label: "Upload file", value: "upload_file" },
@@ -290,13 +290,13 @@ const userActionsOptions = [
   { label: "Should be hidden", value: "should_be_hidden" },
   { label: "Should be selected", value: "should_be_selected" },
   { label: "Should be checked", value: "should_be_checked" },
-  { label: "Exist", value: "exist" },
-  { label: "Equal", value: "equal" },
-  { label: "Contain", value: "contain" },
-  { label: "Have.class", value: "have.class" },
-  { label: "Not exist", value: "not.exist" },
-  { label: "Have length", value: "have.length" },
-  { label: "Click element using text", value: "click element using text" }
+  // { label: "Exist", value: "exist" },
+  // { label: "Equal", value: "equal" },
+  // { label: "Contain", value: "contain" },
+  // { label: "Have.class", value: "have.class" },
+  // { label: "Not exist", value: "not.exist" },
+  // { label: "Have length", value: "have.length" },
+  // { label: "Click element using text", value: "click element using text" }
 ];
 
 export const users = [

@@ -15,7 +15,7 @@ BEGIN TRY
 		DELETE FROM tbl_TestStepsDetails 
 		WHERE TestCaseDetailsId = JSON_VALUE(@AddStepsJson, '$.testCaseID')
 
-		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [Action], StepDescription, IsOptional, SelectorType, SelectorValue, SendKeyInput, ScrollPixel, [Url], SelectedUser, [FileName], ElementValue, CssValue, CssProperty, PageTitle, CurrentUrl, ShouldNotEqualValue, ShouldIncludeValue, ShouldEqualValue, ShouldGreaterThanValue, ShouldLessValue, ContainTextValue, HaveAttributeValue)
+		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [Action], StepDescription, IsOptional, SelectorType, SelectorValue, SendKeyInput, ScrollPixel, [Url], SelectedUser, [FileName], ElementValue, CssValue, CssProperty, PageTitle, CurrentUrl, ShouldNotEqualValue, ShouldIncludeValue, ShouldEqualValue, ShouldGreaterThanValue, ShouldLessValue, ContainTextValue, HaveAttributeValue, TextValue)
 		SELECT 
 			JSON_VALUE(@AddStepsJson, '$.testCaseID'),
 			act.[action],
@@ -39,7 +39,8 @@ BEGIN TRY
 			act.[shouldGreaterThanValue],
 			act.[shouldLessValue],
 			act.[containTextValue],
-			act.[haveAttributeValue]
+			act.[haveAttributeValue],
+			act.[textValue]
 		FROM 
 			OPENJSON(@AddStepsJson, '$.actions') 
 			WITH (
@@ -64,7 +65,8 @@ BEGIN TRY
 				[shouldGreaterThanValue] NVARCHAR(50) '$.shouldGreaterThanValue',
 				[shouldLessValue] NVARCHAR(50) '$.shouldLessValue',
 				[containTextValue] NVARCHAR(50) '$.containTextValue',
-				[haveAttributeValue] NVARCHAR(50) '$.haveAttributeValue'
+				[haveAttributeValue] NVARCHAR(50) '$.haveAttributeValue',
+				[textValue] NVARCHAR(50) '$.textValue'
 			) AS act;
 		IF @@ERROR = 0
 		BEGIN
