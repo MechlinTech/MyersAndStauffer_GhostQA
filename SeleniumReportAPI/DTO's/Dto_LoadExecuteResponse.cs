@@ -1,4 +1,6 @@
-﻿namespace SeleniumReportAPI.DTO_s
+﻿using Newtonsoft.Json;
+
+namespace SeleniumReportAPI.DTO_s
 {
     public class Dto_LoadExecuteResponse
     {
@@ -19,9 +21,16 @@
 
     public class Scenarios
     {
+        [JsonProperty("id")]
         public int Id { get; set; }
+
+        [JsonProperty("scenarioName")]
         public string ScenarioName { get; set; }
+
+        [JsonProperty("duration")]
         public int Duration { get; set; }
+
+        [JsonProperty("location")]
         public string Location { get; set; }
     }
 }
