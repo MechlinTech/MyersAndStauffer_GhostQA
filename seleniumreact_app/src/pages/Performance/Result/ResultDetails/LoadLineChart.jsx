@@ -2,8 +2,10 @@ import React from "react";
 import Chart from "react-apexcharts";
 
 const LineChart = ({ height, Yaxis, Xaxis }) => {
-
-  const xCategories = Xaxis && Xaxis.filter(item => item !== null).map(item => (item ? item.toString() : ""));
+  // Filter out null values from Xaxis data and format timestamps
+  const xCategories = Xaxis && Xaxis.filter(item => item !== null).map(item => (item ? formatTimestamp(item) : ""));
+  
+  // Filter out null values from Yaxis data
   const yData = Yaxis && Yaxis.filter(item => item !== null);
 
   const options = {
@@ -17,7 +19,7 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     xaxis: {
       categories: xCategories || [],
       title: {
-        text: "Time (ms)",
+        text: "Time (hh:mm:ss)",
       },
     },
     yaxis: {
@@ -30,7 +32,6 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
         formatter: function (value) {
           return value;
         },
-        yaxis: yData || [],
       },
     },
     stroke: {
@@ -51,17 +52,13 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
 
   const series = [
     {
-      name: "Time (ms)",
-      type: "line",
-      data: Xaxis ? Xaxis.filter(item => item !== null) : [],
-    },
-    {
       name: "Virtual Users",
       type: "line",
       data: yData || [],
     },
   ];
 
+  // Determine whether to render the chart based on data availability
   const shouldRenderChart = (Yaxis && Yaxis.length > 0 && yData && yData.length > 0) || (xCategories && xCategories.length > 0);
 
   return (
@@ -71,12 +68,21 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
         {shouldRenderChart && (
           <Chart options={options} series={series} type="line" height={height} />
         )}
-        {!shouldRenderChart ? (
+        {!shouldRenderChart && (
           <div>No data available</div>
-        ) : null}
+        )}
       </div>
     </div>
   );
+};
+
+// Function to format timestamps
+const formatTimestamp = timestamp => {
+  const date = new Date(timestamp * 1000);
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+  return `${hours}:${minutes}:${seconds}`;
 };
 
 export default LineChart;

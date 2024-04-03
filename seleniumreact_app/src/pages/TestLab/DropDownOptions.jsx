@@ -230,6 +230,7 @@ const cypressActions = [
 ];
 
 
+
 const userActionsOptions = [
   { label: "Visit", value: "visit" },
   { label: "Left click", value: "click" },

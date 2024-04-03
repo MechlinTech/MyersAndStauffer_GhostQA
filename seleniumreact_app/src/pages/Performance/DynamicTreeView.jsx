@@ -190,6 +190,7 @@ const Card = ({
                     className={styleClass.updateEdit}
                     style={{
                       display: expandedInputId === item.id ? "block" : "block",
+                      marginLeft:'20px'
                     }}
                   >
                     <input
@@ -361,7 +362,6 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
           };
           handleCRUDAtParent(newItem);
           setExpanded([...expanded, parentId]);
-
           setNewElementName("");
         }
       } else {

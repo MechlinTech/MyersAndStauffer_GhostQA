@@ -117,7 +117,7 @@ export default function TableTestCase({ testCase, rootId }) {
       );
       console.log('res',res)
       if (res.data.status === "success") {
-        toast.info("Successfully delete", {
+        toast.info("successfully deleted", {
           style: {
             background: "rgb(101, 77, 247)",
             color: "rgb(255, 255, 255)",

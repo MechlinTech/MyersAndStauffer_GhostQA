@@ -39,6 +39,22 @@ export default function Summary() {
     executerData?.results
       ?.flatMap((item) => item.raw_data?.map((itemData) => itemData.timeStamp))
       .filter((item) => item !== null && !isNaN(item)) || [];
+
+  // const Xaxis =
+  // executerData?.results
+  //   ?.flatMap((item) => item.raw_data?.map((itemData) => Math.round(itemData.timeStamp / 10000)))
+  //   .filter((item) => item !== null && !isNaN(item)) || [];
+
+  
+  // const convertTimestampToSeconds = (timestamp) => {
+  //   return Math.round(timestamp / 1000);
+  // };
+
+  // const Xaxis =
+  // executerData?.results
+  //   ?.flatMap((item) => item.raw_data?.map((itemData) => convertTimestampToSeconds(itemData.timeStamp)))
+  //   .filter((item) => item !== null && !isNaN(item)) || [];
+
   const Yaxis =
     executerData?.results
       ?.flatMap((item) => item.raw_data?.map((data) => data.allThreads))
@@ -120,7 +136,7 @@ export default function Summary() {
     { label: "Ended", value: endedTime || "" },
     { label: "Test Type", value: "JMeter" },
     { label: "Response Codes", value: "2xx" },
-    { label: "Locations", value: location ? location : "Unknown" },
+    { label: "Locations", value: "Default" },
   ];
 
   const calculateHeight = () => {
@@ -132,6 +148,7 @@ export default function Summary() {
     return `${(parentContainerHeight * desiredPercentage) / 100}px`;
   };
 
+  console.log("executeJMXData",executeJMXData)
   return (
     <>
       <Grid className={classes.mainContainer}>

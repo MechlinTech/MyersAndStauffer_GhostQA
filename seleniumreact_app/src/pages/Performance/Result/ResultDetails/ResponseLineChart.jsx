@@ -2,9 +2,20 @@ import React from "react";
 import Chart from "react-apexcharts";
 
 const LineChart = ({ height, Yaxis, Xaxis }) => {
-  const xCategories = Xaxis && Xaxis.filter(item => item !== null).map(item => (item ? item.toString() : ""));
-  const yData = Yaxis && Yaxis.filter(item => item !== null);
+  const xCategories = Xaxis && Xaxis.filter(item => item !== null).map(item => (item ? formatTimestamp(item) : ""));
+   const yData = Yaxis && Yaxis.filter(item => item !== null);
 
+   console.log("xCategories",xCategories)
+
+  //    // Remove duplicates from Xaxis data
+  // const uniqueXaxis = [...new Set(Xaxis)].filter(item => item !== null);
+
+  // // Format timestamps for X-axis labels
+  // const xCategories = uniqueXaxis.map(item => (item ? formatTimestamp(item) : ""));
+
+  // // Filter out null values from Yaxis data
+  // const yData = Yaxis && Yaxis.filter(item => item !== null);
+  
   const options = {
     chart: {
       id: "smooth-line",
@@ -12,29 +23,31 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
         show: false,
       },
     },
-    colors: ["#0000ff", "#ff0000"],
+    colors: ["#ff0000", "#0000ff"],
     xaxis: {
       categories: xCategories || [],
       title: {
-        text: "Time (ms)",
+        text: "Time (hh:mm:ss)",
       },
     },
     yaxis: {
       min: 0,
       max: yData ? Math.max(...yData) : 0,
       title: {
-        text: "Time (ms)",
+        text: "Response Time (ms)",
       },
       labels: {
         formatter: function (value) {
-          return value;
+          return parseInt(value); // Convert to integer
         },
-        yaxis: yData || [],
       },
     },
     stroke: {
       curve: "smooth",
       width: 2,
+      markers: {
+        show: false, // Hide markers
+      },
     },
     legend: {
       position: "top",
@@ -48,27 +61,41 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     height: 280,
   };
 
+  
+
   const series = [
+    // {
+    //   name: "Time (ms)",
+    //   type: "line",
+    //   data: Xaxis ? Xaxis.filter(item => item !== null) : [],
+    // },
     {
-      name: "Time (ms)",
-      type: "line",
-      data: Xaxis ? Xaxis.filter(item => item !== null) : [],
-    },
-    {
-      name: "Error",
+      name: "Response Time (ms)",
       type: "line",
       data: yData || [],
     },
   ];
 
+  const shouldRenderChart =
+    (Yaxis && Yaxis.length > 0 && yData && yData.length > 0) || (xCategories && xCategories.length > 0);
+
   return (
     <div>
       <div style={{ textAlign: "center" }}>Response time</div>
       <div style={{ height: "calc(45vh - 20px)", marginBottom: "10px" }} className="line-container">
-        <Chart options={options} series={series} type="line" height={height} />
+        {shouldRenderChart && <Chart options={options} series={series} type="line" height={height} />}
+        {!shouldRenderChart ? <div>No data available</div> : null}
       </div>
     </div>
   );
+};
+
+const formatTimestamp = timestamp => {
+  const date = new Date(timestamp * 1000);
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+  return `${hours}:${minutes}:${seconds}`;
 };
 
 export default LineChart;

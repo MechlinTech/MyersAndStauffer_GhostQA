@@ -1,11 +1,4 @@
-USE [SeleniumTest]
-GO
-/****** Object:  StoredProcedure [dbo].[stp_AddExecuteData]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddExecuteData]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddExecuteData]
 @TestSuite                VARCHAR(100),
 @TestCase	              VARCHAR(100),
 @TestCaseDetailsId        INT,
@@ -58,12 +51,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddExecutePerformanceData]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE    PROCEDURE [dbo].[stp_AddExecutePerformanceData]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddExecutePerformanceData]
 @RootId                   INT,
 @Name	                  VARCHAR(100),
 @RunId                    VARCHAR(100),
@@ -120,12 +108,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddLocation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddLocation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddLocation]
 @PerformanceFileId    INT,
 @Name	              NVARCHAR(MAX),
 @NumberUser	          INT,
@@ -167,12 +150,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddPerformance]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddPerformance]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddPerformance]
 @RootId         int,
 @TestCaseName	NVARCHAR(MAX),
 @FileName       NVARCHAR(MAX),
@@ -214,12 +192,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddProjectRootRelation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[stp_AddProjectRootRelation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddProjectRootRelation]
 @ParentId	        int,
 @Name           NVARCHAR(MAX)
 AS
@@ -272,12 +245,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddProperties]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddProperties]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddProperties]
 @PerformanceFileId    INT,
 @Name	              NVARCHAR(MAX),
 @Value	              NVARCHAR(MAX)
@@ -318,12 +286,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddRootRelation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddRootRelation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddRootRelation]
 @RootId         int = 0,
 @Node		    int,
 @Parent	        int,
@@ -370,12 +333,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddTestCaseDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddTestCaseDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddTestCaseDetails]
 @TestCaseDetailsId         int = 0,
 @RootId		               int,
 @StartUrl                  VARCHAR(100),
@@ -430,12 +388,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddTestData]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE     PROCEDURE [dbo].[stp_AddTestData]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddTestData]
 @PerformanceFileId    INT,
 @Name	              NVARCHAR(MAX),
 @JsonData	          NVARCHAR(MAX),
@@ -477,12 +430,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddTestStepsDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE     PROCEDURE [dbo].[stp_AddTestStepsDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddTestStepsDetails]
 @AddStepsJson                 NVARCHAR(MAX)
 AS
 /**************************************************************************************
@@ -573,12 +521,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddUpdateApplication]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddUpdateApplication]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateApplication]
 @ApplicationId			INT = 0,
 @ApplicationName		NVARCHAR(100)
 AS
@@ -647,12 +590,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddUpdateBrowser]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddUpdateBrowser]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateBrowser]
 @BrowserName		VARCHAR(100),
 @BrowserId			INT = 0
 AS
@@ -721,12 +659,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddUpdateEnvironment]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddUpdateEnvironment]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateEnvironment]
 @EnvironmentName		VARCHAR(100),
 @EnvironmentId			INT = 0,
 @ApplicationId          INT,
@@ -811,12 +744,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddUpdateLoadData]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddUpdateLoadData]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateLoadData]
 @PerformanceFileId		INT,
 @TotalUser				INT,
 @DurationMin			INT,
@@ -871,12 +799,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddUpdateTestSuites]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_AddUpdateTestSuites]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateTestSuites]
 @TestSuiteName			VARCHAR(100),
 @TestSuiteType			VARCHAR(100),
 @ApplicationId			INT,
@@ -967,12 +890,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_AddUser]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE    PROCEDURE [dbo].[stp_AddUser]
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddUser]
 @Id         uniqueidentifier,
 @Email		VARCHAR(100),
 @Password	VARCHAR(100),
@@ -1016,12 +934,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteApplication]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeleteApplication]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteApplication]
 @ApplicationId			INT
 AS
 /**************************************************************************************
@@ -1084,12 +997,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [ApplicationListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteBrowser]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeleteBrowser]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteBrowser]
 @BrowserId			INT
 AS
 /**************************************************************************************
@@ -1152,12 +1060,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [BrowserListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteEnvironment]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeleteEnvironment]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteEnvironment]
 @EnvironmentId			INT
 AS
 /**************************************************************************************
@@ -1220,12 +1123,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [EnvironmentListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteLoad]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeleteLoad]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteLoad]
 @Id			INT
 AS
 /**************************************************************************************
@@ -1269,12 +1167,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [LoadListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteLocation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeleteLocation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteLocation]
 @Id			INT
 AS
 /**************************************************************************************
@@ -1318,12 +1211,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [LocationListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeletePerformanceFile]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeletePerformanceFile]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeletePerformanceFile]
 @Id			INT
 AS
 /**************************************************************************************
@@ -1367,12 +1255,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [performanceFileListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteProjectRootRelation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE  PROCEDURE [dbo].[stp_DeleteProjectRootRelation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteProjectRootRelation]
 @Id			    Int,
 @ParentId		Int
 AS
@@ -1430,12 +1313,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteProperties]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeleteProperties]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteProperties]
 @Id			INT
 AS
 /**************************************************************************************
@@ -1479,12 +1357,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [PropertyListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteRootRelation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeleteRootRelation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteRootRelation]
     @RootId     INT,
     @ParentId   INT
 AS
@@ -1542,12 +1415,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteTestCaseDetailsByTestCaseDetailsId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeleteTestCaseDetailsByTestCaseDetailsId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteTestCaseDetailsByTestCaseDetailsId]
 @TestCaseDetailsId			INT
 AS
 /**************************************************************************************
@@ -1591,12 +1459,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestDataJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteTestData]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE     PROCEDURE [dbo].[stp_DeleteTestData]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteTestData]
 @Id			INT
 AS
 /**************************************************************************************
@@ -1640,12 +1503,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestDataJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DeleteTestSuites]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DeleteTestSuites]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteTestSuites]
 @TestSuiteName			VARCHAR(100)
 AS
 /**************************************************************************************
@@ -1693,12 +1551,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [testSuiteListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_DisableEnableUser]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_DisableEnableUser]
+CREATE OR ALTER PROCEDURE [dbo].[stp_DisableEnableUser]
 @IsDisabled		        VARCHAR(100),
 @UserId			        NVARCHAR(450)
 AS
@@ -1748,12 +1601,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetApplications]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetApplications]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetApplications]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetApplications
@@ -1775,12 +1623,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [ApplicationListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetBrowsers]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetBrowsers]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetBrowsers]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetBrowsers
@@ -1802,12 +1645,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [Browsers]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetCustomTestSuites]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetCustomTestSuites]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetCustomTestSuites]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetCustomTestSuites
@@ -1829,12 +1667,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [testSuiteListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetDashBoardChartDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetDashBoardChartDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetDashBoardChartDetails]
 @TestSuitName			VARCHAR(100),
 @FilterType				VARCHAR(100),
 @FilterValue			INT = 7
@@ -1921,12 +1754,7 @@ BEGIN CATCH
     -- Add error handling logic here
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetDashBoardDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetDashBoardDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetDashBoardDetails]
 @TestSuitName			VARCHAR(100)
 AS
 /**************************************************************************************
@@ -1973,12 +1801,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuiteName]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetEnvironment]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetEnvironment]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetEnvironment]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetEnvironment
@@ -2017,12 +1840,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [EnvironmentListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetEnvironmentById]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetEnvironmentById]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetEnvironmentById]
 @EnvironmentId int
 AS
 /**************************************************************************************
@@ -2057,12 +1875,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [GetEnvironment]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetExcutedByRootId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetExcutedByRootId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetExcutedByRootId]
 @RootId           Int,
 @TestName         VARCHAR(50)
 AS
@@ -2111,12 +1924,7 @@ END CATCH
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetExecutedPerformanceByClientId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetExecutedPerformanceByClientId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetExecutedPerformanceByClientId]
 @ClientId          VARCHAR(100)
 AS
 /**************************************************************************************
@@ -2162,12 +1970,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetExecutedPerformanceByRootId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE    PROCEDURE [dbo].[stp_GetExecutedPerformanceByRootId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetExecutedPerformanceByRootId]
 @RootId          INT
 AS
 /**************************************************************************************
@@ -2219,12 +2022,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetExecutePerformanceData]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetExecutePerformanceData]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetExecutePerformanceData]
 @RootId             INT
 AS
 /**************************************************************************************
@@ -2272,12 +2070,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetLoadByPerformanceFileId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetLoadByPerformanceFileId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetLoadByPerformanceFileId]
 @PerformanceFileId           INT
 AS
 /**************************************************************************************
@@ -2321,12 +2114,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetLocationByPerformanceFileId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetLocationByPerformanceFileId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetLocationByPerformanceFileId]
 @PerformanceFileId           INT
 AS
 /**************************************************************************************
@@ -2369,12 +2157,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetPerformaceFile]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetPerformaceFile]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetPerformaceFile]
 @RootId      INT
 AS
 /**************************************************************************************
@@ -2401,13 +2184,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [PerformanceFile]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetProfileByEmail]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE    PROCEDURE [dbo].[stp_GetProfileByEmail]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetProfileByEmail]
 @Email		        VARCHAR(100)
 AS
 /**************************************************************************************
@@ -2435,12 +2212,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [GetUserProfile]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetProjectRootRelation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetProjectRootRelation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetProjectRootRelation]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetProjectRootRelation
@@ -2463,12 +2235,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [ProjectRootRelation]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetPropertyByPerformanceFileId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE    PROCEDURE [dbo].[stp_GetPropertyByPerformanceFileId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetPropertyByPerformanceFileId]
 @PerformanceFileId           INT
 AS
 /**************************************************************************************
@@ -2510,12 +2277,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetRootRelation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE     PROCEDURE [dbo].[stp_GetRootRelation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetRootRelation]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetRootRelation
@@ -2539,12 +2301,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [RootRelation]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetRunDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetRunDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetRunDetails]
 @TestSuitName VARCHAR(100)
 AS
 /**************************************************************************************
@@ -2595,12 +2352,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuiteName]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetRunId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetRunId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetRunId]
 @TestSuite		VARCHAR(1000)
 AS
 BEGIN TRY
@@ -2618,12 +2370,7 @@ BEGIN CATCH
 	SELECT CONCAT('TestRun-',CAST(ERROR_MESSAGE() AS VARCHAR(20))) [TestRunName] 
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestCaseDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestCaseDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestCaseDetails]
 @TestSuiteName			VARCHAR(100),
 @TestRunId				VARCHAR(100)
 AS
@@ -2665,12 +2412,7 @@ BEGIN CATCH
     SELECT ERROR_MESSAGE() [ERROR_MESSAGE]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestCaseDetailsByRootId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestCaseDetailsByRootId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestCaseDetailsByRootId]
 @RootId int
 AS
 /**************************************************************************************
@@ -2712,12 +2454,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestCaseDetailsByTestDetailId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestCaseDetailsByTestDetailId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestCaseDetailsByTestDetailId]
 @TestDetailId              INT
 AS
 /**************************************************************************************
@@ -2759,13 +2496,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestCaseDetailsLab]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE    PROCEDURE [dbo].[stp_GetTestCaseDetailsLab]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestCaseDetailsLab]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestCaseDetailsLab
@@ -2789,12 +2520,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestCaseDetails]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestCases]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestCases]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestCases]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestCases
@@ -2816,12 +2542,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestCasesListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestCaseStepsDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestCaseStepsDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestCaseStepsDetails]
 @TestSuiteName		VARCHAR(100),
 @TestRunName		VARCHAR(100),
 @TestCaseName		VARCHAR(100)
@@ -2855,12 +2576,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuiteName]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestDataByPerformanceFileId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE     PROCEDURE [dbo].[stp_GetTestDataByPerformanceFileId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestDataByPerformanceFileId]
 @PerformanceFileId           INT
 AS
 /**************************************************************************************
@@ -2903,12 +2619,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestDetailByTestCaseName]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE  PROCEDURE [dbo].[stp_GetTestDetailByTestCaseName]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestDetailByTestCaseName]
 @TestName           NVARCHAR(MAX)
 AS
 /**************************************************************************************
@@ -2953,12 +2664,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestStepsDetailByTestCaseId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestStepsDetailByTestCaseId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestStepsDetailByTestCaseId]
 @TestCaseId           NVARCHAR(MAX)
 AS
 /**************************************************************************************
@@ -2998,12 +2704,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestStepsDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE     PROCEDURE [dbo].[stp_GetTestStepsDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestStepsDetails]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestStepsDetails
@@ -3031,12 +2732,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestStepsDetails]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestStepsDetailsByTestStepsId]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestStepsDetailsByTestStepsId]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestStepsDetailsByTestStepsId]
 @TestStepsId int
 AS
 /**************************************************************************************
@@ -3098,12 +2794,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestSuiteDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestSuiteDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestSuiteDetails]
 @TestSuiteName			VARCHAR(100)
 AS
 /**************************************************************************************
@@ -3129,12 +2820,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuiteDetailsJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestSuits]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestSuits]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestSuits]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestSuits
@@ -3160,12 +2846,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuites]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetTestSuitsByName]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetTestSuitsByName]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestSuitsByName]
 @TestSuiteName VARCHAR(100)
 AS
 /**************************************************************************************
@@ -3194,12 +2875,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [GetTestSuites]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_GetUserDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_GetUserDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetUserDetails]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetUserDetails
@@ -3224,12 +2900,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [UsersListJson]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_InsertBuiltInTestSuiteDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_InsertBuiltInTestSuiteDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_InsertBuiltInTestSuiteDetails]
 @DynamicObject			NVARCHAR(MAX)
 AS
 /**************************************************************************************
@@ -3307,12 +2978,7 @@ BEGIN CATCH
 		)) 
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_IsExecutionInProgress]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_IsExecutionInProgress]
+CREATE OR ALTER PROCEDURE [dbo].[stp_IsExecutionInProgress]
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_IsExecutionInProgress
@@ -3337,12 +3003,7 @@ BEGIN CATCH
 	SELECT @ExecutionInProgress [ExecutionInProgress]
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_SaveCustomTestSuiteExecutionData]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_SaveCustomTestSuiteExecutionData]
+CREATE OR ALTER PROCEDURE [dbo].[stp_SaveCustomTestSuiteExecutionData]
 @TestSuiteJson			NVARCHAR(MAX)
 AS
 /**************************************************************************************
@@ -3413,12 +3074,7 @@ BEGIN CATCH
 		))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_SaveExecutionInProgress]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_SaveExecutionInProgress]
+CREATE OR ALTER PROCEDURE [dbo].[stp_SaveExecutionInProgress]
 @TestSuiteName		VARCHAR(150),
 @TestRunName		VARCHAR(150),
 @TestCaseName		VARCHAR(150),
@@ -3442,12 +3098,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE()
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_SaveTestSuites]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_SaveTestSuites]
+CREATE OR ALTER PROCEDURE [dbo].[stp_SaveTestSuites]
 @TestSuiteName			VARCHAR(100),
 @TestSuiteType			VARCHAR(100),
 @ApplicationId			INT,
@@ -3490,12 +3141,7 @@ BEGIN CATCH
 		))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpdateExecutionInProgress]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_UpdateExecutionInProgress]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateExecutionInProgress]
 @TestSuiteName		VARCHAR(150),
 @TestRunName		VARCHAR(150),
 @TestCaseName		VARCHAR(150),
@@ -3523,12 +3169,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE()
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpdateExecutionInProgressFlag]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_UpdateExecutionInProgressFlag]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateExecutionInProgressFlag]
 @TestSuiteName		VARCHAR(150),
 @TestRunName		VARCHAR(150),
 @TestCaseName		VARCHAR(150),
@@ -3557,12 +3198,7 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE()
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpdateLocation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_UpdateLocation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateLocation]
 @Id                   INT,
 @Name                 VARCHAR(100),
 @NumberUser           INT,
@@ -3608,12 +3244,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpdateProjectRootRelation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_UpdateProjectRootRelation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateProjectRootRelation]
 @Id             int,
 @Name           NVARCHAR(MAX)
 AS
@@ -3661,12 +3292,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpdateRootRelation]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_UpdateRootRelation]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateRootRelation]
 @RootId         int,
 @Name           NVARCHAR(MAX)
 AS
@@ -3714,12 +3340,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpdateTestCaseDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_UpdateTestCaseDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateTestCaseDetails]
 @TestCaseDetailsId         INT,
 @StartUrl                  VARCHAR(100),
 @TestCaseName              VARCHAR(100)
@@ -3775,12 +3396,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpdateTestStepData]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_UpdateTestStepData]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateTestStepData]
 @testStepJson			NVARCHAR(MAX),
 @TableName				VARCHAR(100),
 @testSuite				VARCHAR(100),
@@ -3801,12 +3417,7 @@ BEGIN CATCH
 	SELECT ERROR_LINE(), ERROR_MESSAGE(), ERROR_SEVERITY()
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpdateTestStepsDetails]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_UpdateTestStepsDetails]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateTestStepsDetails]
 @TestStepsDetailsId         int,
 @TestCaseDetailsId		    int,
 @TestStepsName	            VARCHAR(100),
@@ -3856,12 +3467,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpdateUserProfile]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE    PROCEDURE [dbo].[stp_UpdateUserProfile]
+CREATE OR ALTER  PROCEDURE [dbo].[stp_UpdateUserProfile]
 @FullName		        VARCHAR(100),
 @OrganizationName		VARCHAR(100),
 @Email		            VARCHAR(100),
@@ -3907,12 +3513,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_UpsertTableData]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_UpsertTableData]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpsertTableData]
 @DynamicObject			NVARCHAR(MAX),
 @TableName				NVARCHAR(100)
 AS
@@ -3968,12 +3569,7 @@ BEGIN CATCH
 	END
 END CATCH
 GO
-/****** Object:  StoredProcedure [dbo].[stp_ValidateUser]    Script Date: 4/2/2024 10:52:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[stp_ValidateUser]
+CREATE OR ALTER PROCEDURE [dbo].[stp_ValidateUser]
 @UserName			VARCHAR(100),
 @Password			NVARCHAR(1000)
 AS

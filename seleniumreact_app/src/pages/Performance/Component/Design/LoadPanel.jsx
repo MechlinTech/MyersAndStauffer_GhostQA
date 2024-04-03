@@ -44,6 +44,12 @@ export default function LoadPanel({ PerformanceFileId }) {
         title: {
           text: "Duration (min)",
         },
+        labels: {
+          style: {
+            fontSize: '14px', // Set the font size for x-axis labels
+            fontFamily: 'Lexend Deca',
+          }
+        }
       },
       yaxis: {
         title: {
@@ -51,14 +57,18 @@ export default function LoadPanel({ PerformanceFileId }) {
         },
           labels: {
             formatter: function (value) {
-              return value.toFixed(2); // Limit to 2 decimal points
+              return value.toFixed(2); // 
             },
+            style: {
+              fontSize: '14px', // Set the font size for x-axis labels
+              fontFamily: 'Lexend Deca',
+            }
           },
       },
       fill: {
         type: "solid",
-        colors: ["#654DF7"], // Change the color to your desired color code
-        opacity: 1, // Adjust opacity as needed
+        colors: ["#654DF7"],
+        opacity: 1, 
       },
       tooltip: {
         y: {
@@ -66,6 +76,10 @@ export default function LoadPanel({ PerformanceFileId }) {
             return "" + val.toFixed(2) + " ";
           },
         },
+        
+      },
+      dataLabels: {
+        enabled: false, // Disable data labels in tooltip
       },
     },
     series: [
@@ -243,13 +257,13 @@ export default function LoadPanel({ PerformanceFileId }) {
                 <StyledTypography> Total Users* </StyledTypography>
               </TableCell>
               <TableCell align="center">
-                <StyledTypography>Duration(m)*</StyledTypography>
+                <StyledTypography>Duration(m)</StyledTypography>
               </TableCell>
               <TableCell align="center">
-                <StyledTypography>Ramp up Time (s)</StyledTypography>
+                <StyledTypography>Ramp up Time(s)</StyledTypography>
               </TableCell>
               <TableCell align="center">
-                <StyledTypography>Ramp up steps</StyledTypography>
+                <StyledTypography>Ramp up Steps</StyledTypography>
               </TableCell>
             </TableRow>
           </TableHead>
