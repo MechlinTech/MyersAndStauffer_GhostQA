@@ -3031,18 +3031,13 @@ BEGIN TRY
 								  [TestSuiteStartDateTime], [TestSuiteEndDateTime], [TestRunStartDateTime], [TestRunEndDateTime], 
 								  [TestCaseSteps], [TesterName], [TestEnvironment])
 		SELECT
-			JSON_VALUE(@TestSuiteJson, '$.TestSuiteName') AS TestSuiteName,
-			JSON_VALUE(@TestSuiteJson, '$.TestRunName') AS TestRunName,
-			JSON_VALUE(@TestSuiteJson, '$.TestCaseName') AS TestCaseName,
-			JSON_VALUE(@TestSuiteJson, '$.TestCaseStatus') AS TestCaseStatus,
-			JSON_VALUE(@TestSuiteJson, '$.TestCaseVideoURL') AS TestCaseVideoURL,
-			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestSuiteStartDateTime') AS DATETIMEOFFSET) AS TestSuiteStartDateTime,
-			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestSuiteEndDateTime') AS DATETIMEOFFSET) AS TestSuiteEndDateTime,
-			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestRunStartDateTime') AS DATETIMEOFFSET) AS TestRunStartDateTime,
-			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestRunEndDateTime') AS DATETIMEOFFSET) AS TestRunEndDateTime,
-			JSON_VALUE(@TestSuiteJson, '$.TestCaseSteps') AS TestCaseSteps,
-			JSON_VALUE(@TestSuiteJson, '$.TesterName') AS TesterName,
-			JSON_VALUE(@TestSuiteJson, '$.TestEnvironment') AS TestEnvironment
+			TestSuiteName, TestRunName, TestCaseName, TestCaseStatus, TestCaseVideoURL,	CONVERT(datetimeoffset, TestSuiteStartDateTime),
+			CONVERT(datetimeoffset, TestSuiteEndDateTime), CONVERT(datetimeoffset, TestRunStartDateTime), CONVERT(datetimeoffset, TestRunEndDateTime),
+			TestCaseSteps, TesterName, TestEnvironment
+		FROM OPENJSON(@TestSuiteJson) WITH (
+			TestSuiteName NVARCHAR(100), TestRunName NVARCHAR(100), TestCaseName NVARCHAR(100), TestCaseStatus NVARCHAR(50), TestCaseVideoURL NVARCHAR(MAX),
+			TestSuiteStartDateTime DATETIMEOFFSET, TestSuiteEndDateTime DATETIMEOFFSET, TestRunStartDateTime DATETIMEOFFSET, TestRunEndDateTime DATETIMEOFFSET,
+			TestCaseSteps NVARCHAR(MAX), TesterName NVARCHAR(100), TestEnvironment NVARCHAR(50))
 	END
 	ELSE
 	BEGIN
