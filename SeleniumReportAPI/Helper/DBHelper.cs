@@ -2513,6 +2513,7 @@ namespace SeleniumReportAPI.Helper
             var totalRampUpTime = 0;
             var scenarios = new List<Scenarios>();
             var maxDuration = 0;
+            string estimate = string.Empty;
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -2569,6 +2570,7 @@ namespace SeleniumReportAPI.Helper
                     };
                     scenarios.Add(scenario);
                     maxDuration = executedData.Max(data => data.DurationInMinutes);
+                    estimate = DateTimeOffset.Parse(startDate).AddSeconds(maxDuration).ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
                 }
                 endDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
             }
@@ -2588,7 +2590,8 @@ namespace SeleniumReportAPI.Helper
                 TotalRampUpSteps = totalRampUpSteps,
                 TotalRampUpTime = totalRampUpTime,
                 maxDuration = maxDuration,
-                Scenarios = scenarios
+                Scenarios = scenarios,
+                EstimatedTime = estimate
             };
         }
 
@@ -2752,7 +2755,8 @@ namespace SeleniumReportAPI.Helper
                                         EndDate = result[0].EndDate,
                                         RootId = result[0].RootId,
                                         maxDuration = result[0].maxDuration,
-                                        Name = result[0].Name
+                                        Name = result[0].Name,
+                                        EstimatedTime = DateTimeOffset.Parse(result[0].StartDate).AddSeconds(result[0].maxDuration).ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                                     };
                                     responses.Add(mdl);
                                     data = JsonConvert.SerializeObject(responses);

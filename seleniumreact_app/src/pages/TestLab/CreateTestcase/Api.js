@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { headerCypres } from "../../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export const AddTestCaseDetails = async (payload, actions, goBack) => {
   try {

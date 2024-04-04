@@ -22,7 +22,7 @@ import { header, headerForm } from "../../../../utils/authheader";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Delete, Edit } from "@material-ui/icons";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 export default function DataEntryPanel({ PerformanceFileId }) {
   const [testDataList, settestDataList] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);

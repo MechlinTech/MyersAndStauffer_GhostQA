@@ -40,7 +40,7 @@ const Card = ({
   handleTask,
   keyData = 0,
   selectedNodeId,
-  setSelectedNodeId, 
+  setSelectedNodeId,
 }) => {
   const styleClass = useStylesTree();
 
@@ -74,90 +74,109 @@ const Card = ({
                       : {} // Apply border only if the current node is the selected node
                   }
                 >
-                  <div style={{display:'flex'}}>
-                  {data.some((child) => child.parentId === item.id) && (
-                    <>
-                      {!expanded.includes(item.id) ? (
-                        <ExpandMoreIcon onClick={() => toggleExpand(item.id)} />
-                      ) : (
-                        <ExpandLessIcon onClick={() => toggleExpand(item.id)} />
-                      )}
-                    </>
-                  )}
-                  {editMode === item.id && (
-                    <div className={styleClass.updateEdit}>
-                      <input
-                        type="text"
-                        value={editData}
-                        className={styleClass.editTheFolder}
-                        onChange={(e) =>
-                          handleEditChange(item.id, e.currentTarget.value)
-                        }
-                        onKeyPress={(event) =>
-                          handleKeyPressEdit(event, item.id, nodeCount)
-                        }
-                        maxLength={250}
-                        required
-                      />
-                    </div>
-                  )}
-                  {editMode !== item.id && (
-                    <span
-                      onClick={() => {
-                        console.log('item',item)
-                        handleTask(item,nodeCount);
-                        setSelectedNodeId(item.id); // Update the clicked node ID
-                      }}
-                      style={{
-                        cursor: "pointer",
-                        fontSize: "18px",
-                      }}
-                    >
-                      <Tooltip title={item.name.length>30 && item.name}>
-                      <Typography
-                        style={{ fontFamily: "Lexend Deca", fontSize: "14px" }}
+                  <div style={{ display: "flex" }}>
+                    {data.some((child) => child.parentId === item.id) && (
+                      <>
+                        {!expanded.includes(item.id) ? (
+                          <ExpandMoreIcon
+                            onClick={() => toggleExpand(item.id)}
+                          />
+                        ) : (
+                          <ExpandLessIcon
+                            onClick={() => toggleExpand(item.id)}
+                          />
+                        )}
+                      </>
+                    )}
+                    {editMode === item.id && (
+                      <div className={styleClass.updateEdit}>
+                        <input
+                          type="text"
+                          value={editData}
+                          className={styleClass.editTheFolder}
+                          onChange={(e) =>
+                            handleEditChange(item.id, e.currentTarget.value)
+                          }
+                          onKeyPress={(event) =>
+                            handleKeyPressEdit(event, item.id, nodeCount)
+                          }
+                          maxLength={250}
+                          required
+                        />
+                      </div>
+                    )}
+                    {editMode !== item.id && (
+                      <span
+                        onClick={() => {
+                          console.log("item", item);
+                          handleTask(item, nodeCount);
+                          setSelectedNodeId(item.id); // Update the clicked node ID
+                        }}
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "18px",
+                        }}
                       >
-                        {" "}
-                        {item.name.length>30?item.name.slice(0,30)+"...":item.name}
-                      </Typography>
-                      </Tooltip>
-                    </span>
-                  )}
+                        <Tooltip title={item.name.length > 30 && item.name}>
+                          <Typography
+                            style={{
+                              fontFamily: "Lexend Deca",
+                              fontSize: "14px",
+                            }}
+                          >
+                            {" "}
+                            {item.name.length > 30
+                              ? item.name.slice(0, 30) + "..."
+                              : item.name}
+                          </Typography>
+                        </Tooltip>
+                      </span>
+                    )}
                   </div>
                   <div className={styleClass.crud} style={{}}>
-                  
                     {editMode == 0 && (
-                      <EditIcon
-                        sx={{
-                          color:
-                            selectedNodeId === item.id ? "white" : "#654df7",
-                        }}
-                        onClick={() => handleEdit(item.id, item.name)}
-                        style={{ cursor: "pointer", marginLeft: "10px" }}
-                      />
+                      <Tooltip title="Edit" arrow>
+                        <EditIcon
+                          sx={{
+                            color:
+                              selectedNodeId === item.id ? "white" : "#654df7",
+                          }}
+                          onClick={() => handleEdit(item.id, item.name)}
+                          style={{ cursor: "pointer", marginLeft: "10px" }}
+                        />
+                      </Tooltip>
                     )}
-                    {editMode === item.id && <CancelIcon
-                        sx={{ color: "#f74d4d"}}
+                    {editMode === item.id && (
+                       <Tooltip title="Cancel" arrow>
+                      <CancelIcon
+                        sx={{ color: "#f74d4d" }}
                         onClick={() => handleEdit(item.id, item.name, "cancel")}
-                      />}
-                    <DeleteIcon
-                      sx={{
-                        color: selectedNodeId === item.id ? "white" : "#f74d4d",
-                      }}
-                      onClick={() => handleDelete(item.id)}
-                      style={{ cursor: "pointer" }}
-                    />
-                    {nodeCount < 4 && (
-                      <AddIcon
+                      />
+                      </Tooltip>
+                    )}
+                    <Tooltip title="Delete" arrow>
+                      <DeleteIcon
                         sx={{
                           color:
-                            selectedNodeId === item.id ? "white" : "#654df7",
+                            selectedNodeId === item.id ? "white" : "#f74d4d",
                         }}
-                        onClick={(event) => handleCRUD(event, item.id)}
-                        style={{
-                          marginLeft: "auto",
-                        }}
+                        onClick={() => handleDelete(item.id)}
+                        style={{ cursor: "pointer" }}
                       />
+                    </Tooltip>
+                    {nodeCount < 4 && (
+                      <Tooltip title="Add" arrow>
+                        <AddIcon
+                          sx={{
+                            color:
+                              selectedNodeId === item.id ? "white" : "#654df7",
+                          }}
+                          onClick={(event) => handleCRUD(event, item.id)}
+                          style={{
+                            marginLeft: "auto",
+                          }}
+                        />
+                      </Tooltip>
                     )}
                   </div>
                 </div>
@@ -217,8 +236,8 @@ const Card = ({
                     handleCRUDCancel={handleCRUDCancel}
                     handleKeyPress={handleKeyPress}
                     handleDelete={handleDelete}
-                    selectedNodeId={selectedNodeId} 
-                    setSelectedNodeId={setSelectedNodeId} 
+                    selectedNodeId={selectedNodeId}
+                    setSelectedNodeId={setSelectedNodeId}
                   />
                 )}
               </li>
@@ -256,7 +275,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
     };
 
     fetchData();
-  }, [setListData]); 
+  }, [setListData]);
   const handleCRUD = (event, parentId) => {
     event.preventDefault();
     console.log(parentId);

@@ -29,7 +29,7 @@ import {
 } from "../../redux/actions/ResultAction";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Design({ rootId }) {
   const classes = useStyles();

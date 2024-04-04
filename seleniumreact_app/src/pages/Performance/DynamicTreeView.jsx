@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { ResetLocationScenarioVUCount } from "../../redux/actions/settingAction";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 const Card = ({
   newElementName,

@@ -7,7 +7,7 @@ export const ADD_EXECUTER_DATA = "ADD_EXECUTER_DATA";
 export const SET_EXECUTEJMX_DATA = "SET_EXECUTEJMX_DATA";
 export const SET_RUNNING_ROOT_ID = "SET_RUNNING_ROOT_ID";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export const setIsRunning = (isRunning) => {
   console.log("Setting isRunning to:", isRunning);

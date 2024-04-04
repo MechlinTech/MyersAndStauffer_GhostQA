@@ -12,7 +12,7 @@ import axios from "axios";
 import { header } from "../../utils/authheader";
 import { Box } from "@mui/material";
 import { useLocation } from 'react-router-dom';
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Performance() {
   const classes = useStyles();
