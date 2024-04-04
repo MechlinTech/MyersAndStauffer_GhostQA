@@ -27,9 +27,10 @@ import {
   setExecuteJMXData,
   setRunningRootId,
 } from "../../redux/actions/ResultAction";
+import { getBaseUrl } from "../../utils/configService";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Design({ rootId }) {
   const classes = useStyles();
@@ -53,6 +54,7 @@ export default function Design({ rootId }) {
   const fetchData = async () => {
     setisScnerioCountRunning(true);
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
         header()
@@ -86,6 +88,7 @@ export default function Design({ rootId }) {
 
   const getCounts = async (testId) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const loadRes = await axios.get(
         `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${testId}`,
         header()
@@ -117,6 +120,7 @@ export default function Design({ rootId }) {
     dispatch(setRunningRootId(rootId));
     const testername = getName();
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/ExecutePerformanceJMX`,
         { rootId: rootId, testerName: testername, name: folderName },
@@ -154,6 +158,7 @@ export default function Design({ rootId }) {
       } else {
         data = { ...data, responseData: res.data };
         console.log("data", data);
+        const BASE_URL = await getBaseUrl();
         dispatch(setIsRunning(false));
         const response = await axios.post(
           `${BASE_URL}/Performance/AddExecuterData`,

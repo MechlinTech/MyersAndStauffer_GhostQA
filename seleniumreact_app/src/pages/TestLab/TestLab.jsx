@@ -13,7 +13,10 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import DynamicTreeView from "./DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
+
 
 export default function TestLab() {
   const classes = useStyles();
@@ -32,6 +35,7 @@ export default function TestLab() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.get(
           `${BASE_URL}/AddTestLab/GetDataRootRelation`,
           header()
@@ -50,6 +54,7 @@ export default function TestLab() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/AddTestLab/AddRootRelation`,
         {

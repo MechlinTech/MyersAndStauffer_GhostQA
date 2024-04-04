@@ -15,7 +15,10 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { StyledTypography } from "./styles";
 import { Delete } from "@material-ui/icons";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
+
 
 export default function TableTestCase({ testCase, rootId }) {
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ export default function TableTestCase({ testCase, rootId }) {
       [row.TestCaseName]: true,
     }));
     try {
+      const BASE_URL = await getBaseUrl();
       const jsonData = await axios.get(
         `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${row.TestCaseName}`
       );
@@ -67,6 +71,7 @@ export default function TableTestCase({ testCase, rootId }) {
         }));
         const rundetails = res.data;
         try {
+          const BASE_URL = await getBaseUrl();
           const res = await axios.post(`${BASE_URL}/AddTestLab/AddExecuteResult?testCaseDetailId=${row.TestCaseDetailsId}`,rundetails,header())
           if (res.data.status === "success") {
               toast.info("Successfully executed", {
@@ -98,6 +103,7 @@ export default function TableTestCase({ testCase, rootId }) {
 
   const fetchData = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${rootId}`,
         header()
@@ -112,6 +118,7 @@ export default function TableTestCase({ testCase, rootId }) {
   };
   const handleDelete = async(testId)=>{
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/AddTestLab/DeleteTestCaseDetailsByTestCaseDetailsId?TestCaseDetailsId=${testId}`
       );

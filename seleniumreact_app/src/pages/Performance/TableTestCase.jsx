@@ -21,7 +21,9 @@ import { header, headerForm } from "../../utils/authheader";
 import { StyledTypography } from "./styles";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 export default function TableTestCase({
   testCase,
@@ -39,6 +41,7 @@ export default function TableTestCase({
   const [expandedAccord, setExpandedAccord] = useState("");
   const fetchData = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
         header()
@@ -93,6 +96,7 @@ export default function TableTestCase({
     formData.append("fileName", selectedFile.name);
 
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/AddPerformanceFile`,
         formData,
@@ -111,6 +115,7 @@ export default function TableTestCase({
   const handleDeleteElement = async (id, event) => {
     event.stopPropagation();
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/DeletePerformanceFile?Id=${id}`,
         { Id: id },

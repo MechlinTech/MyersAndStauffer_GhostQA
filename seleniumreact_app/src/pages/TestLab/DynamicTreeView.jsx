@@ -10,7 +10,10 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 import { Tooltip } from "@mui/material";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+
 
 const Card = ({
   newElementName,
@@ -260,6 +263,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.get(
           `${BASE_URL}/AddTestLab/GetDataRootRelation`,
           header()
@@ -286,6 +290,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
   };
   const handleCRUDAtParent = async (newItem) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/AddTestLab/AddRootRelation`,
         {
@@ -336,6 +341,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
       setEditMode(0);
       const itemToEdit = listData.find((item) => item.id === itemId);
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.post(
           `${BASE_URL}/AddTestLab/UpdateRootRelation`,
           {
@@ -397,6 +403,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
     console.log(itemId, listData);
     const itemToDelete = listData.find((item) => item.id === itemId);
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/AddTestLab/DeleteRootRelation`,
         {
@@ -423,6 +430,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
 
       console.log(newData, itemId, itemToDelete, childrenToDelete);
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.get(
           `${BASE_URL}/AddTestLab/GetDataRootRelation`,
           header()

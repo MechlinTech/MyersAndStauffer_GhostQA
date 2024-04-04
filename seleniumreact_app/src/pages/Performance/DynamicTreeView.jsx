@@ -8,12 +8,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
+import { getBaseUrl } from "../../utils/configService";
 import { header } from "../../utils/authheader";
 import { useDispatch } from "react-redux";
 import { ResetLocationScenarioVUCount } from "../../redux/actions/settingAction";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 const Card = ({
   newElementName,
@@ -274,6 +275,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.get(
           `${BASE_URL}/Performance/GetProjectData`,
           header()
@@ -332,6 +334,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
   };
   const handleCRUDAtParent = async (newItem) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/AddProjectData`,
         {
@@ -380,6 +383,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
       setEditMode(0);
       const itemToEdit = listData.find((item) => item.id === itemId);
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.post(
           `${BASE_URL}/Performance/UpdateProjectData`,
           {
@@ -440,6 +444,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
     console.log(itemId, listData);
     const itemToDelete = listData.find((item) => item.id === itemId);
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/DeleteProjectData`,
         {
