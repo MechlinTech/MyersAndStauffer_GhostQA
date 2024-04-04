@@ -1,5 +1,3 @@
-﻿
-dotnet tool uninstall dotnet-ef
-dotnet tool install dotnet-ef --version 6.0.25
+﻿#!/bin/bash
 dotnet ef database update
 
