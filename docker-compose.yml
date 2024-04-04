@@ -39,13 +39,46 @@ services:
     environment:
       - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###;
 
+  # db:
+  #   image: mcr.microsoft.com/mssql/server:latest
+  #   ports:
+  #     - "1435:1433"
+  #   environment:
+  #     SA_PASSWORD: "P@ssw0rd@123###"
+  #     ACCEPT_EULA: "Y"
+
   db:
-    image: mcr.microsoft.com/mssql/server:latest
+    image: mcr.microsoft.com/mssql/server:2019-latest
     ports:
       - "1435:1433"
     environment:
-      SA_PASSWORD: "P@ssw0rd@123###"
       ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "P@ssw0rd@123###"
+    hostname: db
+    container_name: db
+    restart: unless-stopped
+    volumes:
+      - ./ms_data/data:/var/opt/mssql/data
+      - ./ms_data/log:/var/opt/mssql/log
+      - ./ms_data/secrets:/var/opt/mssql/secrets
+    healthcheck:
+      test: ["CMD", "sqlcmd", "-U", "sa", "-P", "P@ssw0rd@123###", "-Q", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  # db:
+  #   hostname: db
+  #   image: mcr.microsoft.com/mssql/server:2022-latest
+  #   user: root
+  #   container_name: db
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #     - MSSQL_SA_PASSWORD=P@ssw0rd@123###
+  #     - MSSQL_PID=Developer
+  #   ports:
+  #     - "1435:1433"
+  #   volumes:
+  #     - ms_data:/var/opt/mssql/data
   
   caddy:
     build:
@@ -55,3 +88,6 @@ services:
       - "30001:30001"
     extra_hosts:
       - host.docker.internal:host-gateway
+
+volumes:
+  ms_data:
