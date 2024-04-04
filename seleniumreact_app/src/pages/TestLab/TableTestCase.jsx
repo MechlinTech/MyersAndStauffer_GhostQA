@@ -182,7 +182,7 @@ export default function TableTestCase({ testCase, rootId }) {
               </TableCell>
               <TableCell align="center">
                 <StyledTypography>
-                  {executingTest[row.TestCaseName] ?'running':""}
+                  {executingTest[row.TestCaseName] ?'Running':""}
                 </StyledTypography>
               </TableCell>
               {/* <TableCell align="center">

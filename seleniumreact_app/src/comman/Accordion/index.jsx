@@ -15,9 +15,19 @@ export default function BasicAccordion() {
     setExpandedAccord(isExpanded ? panel : "");
   };
 
+  console.log("testSuiteLists",testSuiteLists)
+
+  let sortedData = testSuiteLists.sort((a, b) => {
+    const dateA = new Date(a.TestRunDateYear + ", " + new Date().getFullYear()).getTime();
+    const dateB = new Date(b.TestRunDateYear + ", " + new Date().getFullYear()).getTime();
+    return dateB - dateA; // Sort in descending order
+  });
+
+  console.log("sortedData",sortedData)
+
   return (
     <Box sx={{ }}>
-      {testSuiteLists?.map((item, index) => (
+      {sortedData?.map((item, index) => (
         <Accordion
           expanded={expandedAccord === item}
           onChange={handleExpandAccord(item)}
