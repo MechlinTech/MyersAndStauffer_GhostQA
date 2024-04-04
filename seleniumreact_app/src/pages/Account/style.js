@@ -11,6 +11,12 @@ export const useStyles = makeStyles((theme) => ({
         alignItems:'center',
         flexDirection:'column',
     },
+    inputError: {
+      color: "red",
+      textAlign: 'left',
+      fontSize: '14px !important',
+      // paddingLeft: '10px',
+  },
     btnStyle:{
         // backgroundColor: "rgb(101, 77, 247)",
         // height:'38px',

@@ -25,13 +25,17 @@ export const login = (data, setLoading) => {
           "userData",
           JSON.stringify({ ...response.data, token: response.token })
         );
-        sessionStorage.setItem('email',data.email.toString())
+        sessionStorage.setItem('email', data.email.toString())
         dispatch({
           type: LOG_IN,
           payload: { ...response.data, token: response.token },
         });
-      }else{
-        toast.error(response.message)
+      } else {
+        if (response.message === "User Name or Password is Wrong") {
+          toast.error("Invalid username or password");
+        } else {
+          toast.error(response.message);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -41,6 +45,7 @@ export const login = (data, setLoading) => {
     }
   };
 };
+
 
 export const logout = () => {
   return (dispatch) => {
