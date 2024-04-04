@@ -24,12 +24,12 @@ RUN apt-get update \
         netcat
 
 # Install dependencies
-COPY Pipfile Pipfile.lock /app/
+COPY djangoapp/Pipfile djangoapp/Pipfile.lock /app/
 RUN pipenv install --system --deploy --ignore-pipfile
 RUN pipenv install gunicorn
 
 # Copy project
-COPY ./ghostqa/ /app/
+COPY ./djangoapp/ghostqa/ /app/
 
 CMD python manage.py collectstatic
 

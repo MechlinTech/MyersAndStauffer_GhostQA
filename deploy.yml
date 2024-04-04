@@ -2,22 +2,15 @@ version: '3.8'
 
 services:
   webui:
-      build:
-        context: .
-        dockerfile: ./seleniumreact_app/Dockerfile
+      image: ghostqa/webui:latest
       ports:
         - "3000:80"
-      # volumes:
-        # - ./src:/app/src
-        # - ./public:/app/public
       environment:
         - NODE_ENV=production
       stdin_open: true
   
   dotnetapi:
-    build:
-      context: .
-      dockerfile: SeleniumReportAPI\Dockerfile
+    image: ghostqa/dotnetapi:latest
     ports:
       - "5000:80"
     environment:
@@ -30,9 +23,7 @@ services:
       - host.docker.internal:host-gateway
       
   migrations:
-    build:
-      context: .
-      dockerfile: SeleniumReportAPI\Dockerfile.migrations
+    image: ghostqa/dotnetapi-migrations:latest
     command: "/src/migrations.sh"
     ports:
       - "5001:80"
@@ -75,9 +66,7 @@ services:
       - ~/ghostqa/postgres-data:/var/lib/postgresql/data 
   
   codeengine: &django_app
-    build:
-      context: .
-      dockerfile: djangoapp/Dockerfile
+    image: ghostqa/codeengine:latest
     command:  pipenv run gunicorn ghostqa.wsgi -w 4 -b 0.0.0.0:8000 -t 1000000000
     environment:
       - SHARED_PATH=/automation-tests
@@ -102,6 +91,7 @@ services:
       - postgres
     ports:
       - "5000"
+  
   adminuser:
     <<: *django_app
     command: python manage.py createsuperuser --noinput
@@ -113,9 +103,7 @@ services:
       DJANGO_SUPERUSER_PASSWORD: Admin@1234
 
   caddy:
-    build:
-      context: .
-      dockerfile: ./compose/caddy/Dockerfile
+    build: ghostqa/caddy:latest
     ports:
       - "30001:30001"
     extra_hosts:

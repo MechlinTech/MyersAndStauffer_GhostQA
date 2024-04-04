@@ -32,7 +32,7 @@ router.register(r"performance-container-runs",PerformanceContainersRunsViewSet)
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('codeengine/admin/', admin.site.urls),
     # path('api/',include('cypress.urls')),
     path('codeengine/api/', include(router.urls)),
     path('codeengine/api/docs/schema', SpectacularAPIView.as_view(), name='schema'),
