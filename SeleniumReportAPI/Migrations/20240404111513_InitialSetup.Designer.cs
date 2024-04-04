@@ -12,8 +12,8 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240313110838_tbl_performanceLocation_performanceProperties")]
-    partial class tbl_performanceLocation_performanceProperties
+    [Migration("20240404111513_InitialSetup")]
+    partial class InitialSetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -270,6 +270,122 @@ namespace SeleniumReportAPI.Migrations
                     b.ToTable("tbl_Browsers");
                 });
 
+            modelBuilder.Entity("SeleniumReportAPI.Models.CypressDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("EndDateTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StartDateTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SuiteDuration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TestCaseDetailsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TestCaseId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestCaseName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestDuration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestScreenShotUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestStepJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestSuite")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestVideoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TesterName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_CypressTestExecution");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.CypressPerfomanceDetaills", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("EndDateTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LoactionDataJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("LoadDataJson")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("MaxDuration")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PropertyDataJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RootId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RunId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Scenarios")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StartDateTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestDataJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TesterName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalDuration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalRampUpSteps")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalRampUpTime")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalUser")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_CypressPerfomanceDetaills");
+                });
+
             modelBuilder.Entity("SeleniumReportAPI.Models.Environments", b =>
                 {
                     b.Property<int>("EnvironmentId")
@@ -339,13 +455,22 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("VARCHAR(10)")
                         .HasColumnName("Status");
 
+                    b.Property<string>("SuiteDuration")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("TestCase")
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("TestCase");
 
+                    b.Property<string>("TestDuration")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("TestRun")
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("TestCaseName");
+
+                    b.Property<string>("TestScreenShotUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestStepJson")
                         .HasColumnType("nvarchar(max)");
@@ -354,7 +479,41 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("TestSuite");
 
+                    b.Property<string>("TestVideoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TesterName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.ToTable("tbl_InternalTestExecutions");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.Load", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("DurationInMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PerformanceFileId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RampUpSteps")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RampUpTimeInSeconds")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalUsers")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_Load");
                 });
 
             modelBuilder.Entity("SeleniumReportAPI.Models.PerformanceFile", b =>
@@ -366,6 +525,9 @@ namespace SeleniumReportAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RootId")
@@ -545,6 +707,31 @@ namespace SeleniumReportAPI.Migrations
                     b.ToTable("tbl_TestCaseDetails");
                 });
 
+            modelBuilder.Entity("SeleniumReportAPI.Models.TestData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JsonData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PerformanceFileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_TestData");
+                });
+
             modelBuilder.Entity("SeleniumReportAPI.Models.TestExecution", b =>
                 {
                     b.Property<int>("ExecutionId")
@@ -588,55 +775,40 @@ namespace SeleniumReportAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TestStepsDetailsId"), 1L, 1);
 
-                    b.Property<string>("Accessibility")
+                    b.Property<string>("Action")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AccessibilityModifier")
+                    b.Property<string>("ContainTextValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AssignInputValue")
+                    b.Property<string>("CssProperty")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ClickType")
+                    b.Property<string>("CssValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ElementSelector")
+                    b.Property<string>("CurrentUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ExecuteJavaScript")
+                    b.Property<string>("ElementValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ExitTestStatus")
+                    b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ExtractVariable")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImportingStepFrom")
+                    b.Property<string>("HaveAttributeValue")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsOptional")
                         .HasColumnType("bit");
 
-                    b.Property<string>("JavaScriptCode")
+                    b.Property<string>("PageTitle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("JavascriptVariable")
+                    b.Property<string>("ScrollPixel")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("KeyPressValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NavigateTo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PauseTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SelectedDragDroptype")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SelectedModifierKey")
+                    b.Property<string>("SelectedUser")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SelectorType")
@@ -645,22 +817,34 @@ namespace SeleniumReportAPI.Migrations
                     b.Property<string>("SelectorValue")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SendKeyInput")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShouldEqualValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShouldGreaterThanValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShouldIncludeValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShouldLessValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShouldNotEqualValue")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("StepDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TestCaseDetailsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("TextValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VariableInput")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VariableName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("extractJavaScript")
+                    b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TestStepsDetailsId");

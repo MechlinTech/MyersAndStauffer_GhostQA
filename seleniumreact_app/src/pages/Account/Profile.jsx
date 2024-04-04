@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { UpdateUserProfile } from "../../redux/actions/authActions";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Profile() {
   const classes = useStyles();

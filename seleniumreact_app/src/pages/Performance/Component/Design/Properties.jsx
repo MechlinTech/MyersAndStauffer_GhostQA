@@ -7,7 +7,7 @@ import { header } from "../../../../utils/authheader";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Properties({ PerformanceFileId }) {
   const [propertyList, setPropertyList] = useState([]);

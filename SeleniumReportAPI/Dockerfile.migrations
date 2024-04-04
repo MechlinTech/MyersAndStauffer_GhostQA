@@ -19,22 +19,14 @@ COPY . .
 WORKDIR "/src/SeleniumReportAPI"
 RUN dotnet build "SeleniumReportAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "SeleniumReportAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-
-# Copy the SQL script
-COPY ["SeleniumReportAPI/SqlScript/AllGhostQA_SP.sql", "./SqlScript/AllGhostQA_SP.sql"]
-
+RUN dotnet tool uninstall dotnet-ef
+RUN dotnet tool install dotnet-ef --version 6.0.25
 # Copy and set permissions for the entrypoint script
-COPY ["SeleniumReportAPI/entrypoint.sh", "/app/"]
-
+COPY ["SeleniumReportAPI/migrations.sh", "/src/"]
 # Use the entrypoint script to start the application
-RUN sed -i 's/\r//' /app/entrypoint.sh \
-	&& chmod +x /app/entrypoint.sh
-# ENTRYPOINT ["/bin/bash","/app/entrypoint.sh"]
-ENTRYPOINT ["dotnet" ,"SeleniumReportAPI.dll"]
+RUN sed -i 's/\r//' /src/migrations.sh \
+	&& chmod +x /src/migrations.sh
+
+
+ENTRYPOINT ["/bin/bash", "/src/migrations.sh"]
+# ENTRYPOINT [ "tail -f /dev/null" ]

@@ -12,7 +12,7 @@ export const GET_BROWSER_LIST ="GET_BROWSER_LIST"
 export const GET_TEST_CASE_LIST ="GET_TESTCASE_LIST"
 export const ADD_UPDATE_TEST_SUITS ="ADD_UPDATE_TEST_SUITS"
 export const SUITE_TO_EDIT ="SUITE_TO_EDIT"
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'api';
 
 export const getTestSuites = () => {
   return async (dispatch) => {

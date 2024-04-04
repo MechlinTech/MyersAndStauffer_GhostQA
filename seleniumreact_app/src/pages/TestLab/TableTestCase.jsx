@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { StyledTypography } from "./styles";
 import { Delete } from "@material-ui/icons";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function TableTestCase({ testCase, rootId }) {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ export default function TableTestCase({ testCase, rootId }) {
         request_json: jsonData.data,
       };
       const executedDetail = await axios.post(
-        "http://65.1.188.67:8010/api/test-suitesV2/execute3/",
+        "http://65.1.188.67:8010/codeengine/api/test-suitesV2/execute3/",
         payload,
         headerCypres()
       );

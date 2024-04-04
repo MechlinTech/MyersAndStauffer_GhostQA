@@ -6,7 +6,7 @@ import TableTestCase from "./TableTestCase";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 
 export default function AddTestCase({addTestCase}) {
