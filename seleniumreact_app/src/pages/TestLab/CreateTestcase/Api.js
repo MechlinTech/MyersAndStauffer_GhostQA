@@ -120,7 +120,7 @@ export const SaveAndExecute = async (data,steps,testCaseDetailId,handleExecuteLo
     const jsonData = await axios.get(`${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${testCaseDetail.rootId}&TestName=${testCaseDetail.testCaseName}`);
     const payload = { name: "name", request_json: jsonData.data };
 
-    const executedDetail = await axios.post("http://65.1.188.67:8010/api/test-suitesV2/execute3/", payload, headerCypres());
+    const executedDetail = await axios.post(`http://65.1.188.67:8010/codeengine/api/test-suitesV2/execute3/`, payload, headerCypres());
     const runId = executedDetail.data.container_runs[0].id;
 
     console.log("execution detail", executedDetail);
@@ -136,7 +136,7 @@ export const SaveAndExecute = async (data,steps,testCaseDetailId,handleExecuteLo
 const getRunDetail = async (runId, delay, testCaseDetailId,handleExecuteLoading) => {
   try {
     const res = await axios.get(
-      `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
+      `http://65.1.188.67:8010/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
     );
 
     if (res.data.container_status === "exited") {
