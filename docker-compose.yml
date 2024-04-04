@@ -24,7 +24,9 @@ services:
       - AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
     depends_on:
       - db
-  
+    extra_hosts:
+      - host.docker.internal:host-gateway
+      
   migrations:
     build:
       context: .
