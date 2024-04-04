@@ -45,7 +45,6 @@ export default function Summary() {
   //   ?.flatMap((item) => item.raw_data?.map((itemData) => Math.round(itemData.timeStamp / 10000)))
   //   .filter((item) => item !== null && !isNaN(item)) || [];
 
-  
   // const convertTimestampToSeconds = (timestamp) => {
   //   return Math.round(timestamp / 1000);
   // };
@@ -65,7 +64,7 @@ export default function Summary() {
       ?.flatMap((item) => item.raw_data?.map((data) => data.Connect))
       .filter((item) => item !== null) || [];
 
-      console.log({Xaxis, Yaxis, YaxisConnect})
+  console.log({ Xaxis, Yaxis, YaxisConnect });
 
   // useEffect(() => {
   //   if (
@@ -148,7 +147,7 @@ export default function Summary() {
     return `${(parentContainerHeight * desiredPercentage) / 100}px`;
   };
 
-  console.log("executeJMXData",executeJMXData)
+  console.log("executeJMXData", executeJMXData);
   return (
     <>
       <Grid className={classes.mainContainer}>
@@ -330,7 +329,10 @@ export default function Summary() {
                         <ErrorIcon />
                         <span style={{ color: "#F64E4E" }}>
                           <span className={`${classes.fontSize50}`}>
-                            {executerData?.summary?.errorPct}
+                            {/* {executerData?.summary?.errorPct} */}
+                            {typeof executerData?.summary?.errorPct === "number"
+                              ? executerData?.summary?.errorPct.toFixed(2)
+                              : null}
                           </span>
                           %
                         </span>

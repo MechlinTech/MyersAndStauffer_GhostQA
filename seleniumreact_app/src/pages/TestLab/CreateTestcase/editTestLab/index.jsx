@@ -307,16 +307,19 @@ export default function EditTestCase() {
     navigate(-1);
   };
   const handleAddMoreSteps = () => {
-    const isEmptyField = steps.some(step => {
-      console.log('step',step)
+    const isEmptyField = steps.some((step) => {
+      console.log("step", step);
       for (const key in step) {
-        if (step.hasOwnProperty(key) && (step[key] === "" || step[key] === null)) {
+        if (
+          step.hasOwnProperty(key) &&
+          (step[key] === "" || step[key] === null)
+        ) {
           return true;
         }
       }
       return false;
     });
-  
+
     if (isEmptyField) {
       toast.error("Cannot add a new step with empty fields.");
     } else {
@@ -414,24 +417,30 @@ export default function EditTestCase() {
         default:
           break;
       }
-      if(!selectorNoOptionList.includes(action)){
-        additionalField.selectorType=""
-        additionalField.selectorValue=""
+      if (!selectorNoOptionList.includes(action)) {
+        additionalField.selectorType = "";
+        additionalField.selectorValue = "";
       }
-      return { stepDescription:"",
-      isOptional: false, ...additionalField,action:action };
+      return {
+        stepDescription: step?.stepDescription,
+        isOptional: false,
+        ...additionalField,
+        action: action,
+      };
     };
-  
-    setSteps(prevSteps => {
+
+    setSteps((prevSteps) => {
       return prevSteps.map((step, i) => {
         if (i === index) {
-          if (inputType === 'action') {
-            return updateAdditionalFields(step, inputValue.value);
+          if (inputType === "action") {
+            return updateAdditionalFields(step, inputValue?.value);
           } else {
             // Update other input types
             switch (inputType) {
               case "action":
-                return i === index ? { ...step, action: inputValue?.value } : step;
+                return i === index
+                  ? { ...step, action: inputValue?.value }
+                  : step;
               case "stepDescription":
                 return i === index
                   ? { ...step, stepDescription: inputValue?.target.value }
@@ -457,7 +466,9 @@ export default function EditTestCase() {
                   ? { ...step, scrollPixel: inputValue.target.value }
                   : step;
               case "url":
-                return i === index ? { ...step, url: inputValue.target.value } : step;
+                return i === index
+                  ? { ...step, url: inputValue.target.value }
+                  : step;
               case "elementValue":
                 return i === index
                   ? { ...step, elementValue: inputValue.target.value }
@@ -470,7 +481,7 @@ export default function EditTestCase() {
                 return i === index
                   ? { ...step, fileName: inputValue.target.files[0] }
                   : step;
-      
+
               case "cssProperty":
                 return i === index
                   ? { ...step, cssProperty: inputValue.target.value }
@@ -479,7 +490,7 @@ export default function EditTestCase() {
                 return i === index
                   ? { ...step, cssValue: inputValue.target.value }
                   : step;
-      
+
               case "pageTitle":
                 return i === index
                   ? { ...step, pageTitle: inputValue.target.value }
@@ -500,7 +511,7 @@ export default function EditTestCase() {
                 return i === index
                   ? { ...step, shouldEqualValue: inputValue.target.value }
                   : step;
-      
+
               case "shouldGreaterThanValue":
                 return i === index
                   ? { ...step, shouldGreaterThanValue: inputValue.target.value }
@@ -535,7 +546,6 @@ export default function EditTestCase() {
       });
     });
   };
-  
 
   const findLabelByValue = (value) => {
     for (const pair of userActionsOptions) {
@@ -568,7 +578,7 @@ export default function EditTestCase() {
           }}
         >
           <StyledTypography>Step {index + 1}</StyledTypography>
-          {(isEditable && index>0 ) && (
+          {isEditable && index > 0 && (
             <DeleteIcon
               onClick={() => handleRemoveStep(step)}
               sx={{ cursor: "pointer", color: "red" }}
