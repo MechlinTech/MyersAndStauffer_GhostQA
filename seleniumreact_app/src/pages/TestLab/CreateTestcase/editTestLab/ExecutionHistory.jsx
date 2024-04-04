@@ -18,7 +18,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import CustomeTableChell from "./CustomeTableChell";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 export default function ExecutionHistory({executionDetail}) {
   const classes = useStyles();
@@ -30,6 +32,7 @@ export default function ExecutionHistory({executionDetail}) {
 
   const getStpeDetail = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestStepsDetailByTestCaseId?TestCaseId=${selectedRunId}`
       );

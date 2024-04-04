@@ -4,10 +4,12 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { getBaseUrl } from "../../utils/configService";
 import { useStyles, StyledTableCell,IOSSwitch } from "./style";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 export function CustomTable({ users}) {
 
@@ -18,6 +20,7 @@ export function CustomTable({ users}) {
 
   useEffect(() => {
     const getUserList = async () => {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/Selenium/GetUserDetails`,
         header()
@@ -36,6 +39,7 @@ export function CustomTable({ users}) {
       "isDisabled": e.target.checked
     }
     const EnableDisableUser = async () => {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Selenium/DisableEnableUser`,payload,
         header()

@@ -1,5 +1,5 @@
 {
-    "baseUrl": "",
-    "codeEngineBaseUrl": ""
+    "REACT_APP_BASE_URL": "api",
+    "coreEngineBaseUrl": ""
     
 }

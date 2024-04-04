@@ -12,7 +12,9 @@ import axios from "axios";
 import { header } from "../../utils/authheader";
 import { Box } from "@mui/material";
 import { useLocation } from 'react-router-dom';
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 export default function Performance() {
   const classes = useStyles();
@@ -32,6 +34,7 @@ export default function Performance() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.get(
           `${BASE_URL}/Performance/GetProjectData`,
           header()
@@ -51,6 +54,7 @@ export default function Performance() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/AddProjectData`,
         {

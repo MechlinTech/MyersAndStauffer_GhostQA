@@ -41,13 +41,6 @@ services:
     environment:
       - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###;
 
-  # db:
-  #   image: mcr.microsoft.com/mssql/server:latest
-  #   ports:
-  #     - "1435:1433"
-  #   environment:
-  #     SA_PASSWORD: "P@ssw0rd@123###"
-  #     ACCEPT_EULA: "Y"
 
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -68,19 +61,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-  # db:
-  #   hostname: db
-  #   image: mcr.microsoft.com/mssql/server:2022-latest
-  #   user: root
-  #   container_name: db
-  #   environment:
-  #     - ACCEPT_EULA=Y
-  #     - MSSQL_SA_PASSWORD=P@ssw0rd@123###
-  #     - MSSQL_PID=Developer
-  #   ports:
-  #     - "1435:1433"
-  #   volumes:
-  #     - ms_data:/var/opt/mssql/data
+
   
   caddy:
     build:

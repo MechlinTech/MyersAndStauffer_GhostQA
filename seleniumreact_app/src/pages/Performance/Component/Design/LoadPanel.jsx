@@ -15,7 +15,9 @@ import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
 import { useDispatch } from "react-redux";
 import { GetLocationScenarioVUCount } from "../../../../redux/actions/settingAction";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 export default function LoadPanel({ PerformanceFileId }) {
   const classes = useStyles();
@@ -100,6 +102,7 @@ export default function LoadPanel({ PerformanceFileId }) {
 
   const fetchData = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
         header()
@@ -207,6 +210,7 @@ export default function LoadPanel({ PerformanceFileId }) {
   };
   const submitGraphData = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Performance/AddUpdateLoadData`,
         {

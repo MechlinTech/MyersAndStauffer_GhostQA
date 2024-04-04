@@ -1,13 +1,14 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
+import { getBaseUrl } from "../../utils/configService";
 export const RESULT_LIST = "RESULT_LIST";
 export const SET_IS_RUNNING = "SET_IS_RUNNING";
 export const ADD_EXECUTER_DATA = "ADD_EXECUTER_DATA";
 export const SET_EXECUTEJMX_DATA = "SET_EXECUTEJMX_DATA";
 export const SET_RUNNING_ROOT_ID = "SET_RUNNING_ROOT_ID";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export const setIsRunning = (isRunning) => {
   console.log("Setting isRunning to:", isRunning);
@@ -209,6 +210,7 @@ export const GetResultsList = (rootId, setLoading) => {
   setLoading(true);
   return async (dispatch) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/GetExecutedPerformanceByRootId?RootId=${rootId}`,
         header()
@@ -229,6 +231,7 @@ export const GetResultsList = (rootId, setLoading) => {
 export const GetResultsDetailsBysRunId = (runId) => {
   return async (dispatch) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/stp_GetExecutedPerformanceByClientId?ClientId=${runId}`,
         header()
