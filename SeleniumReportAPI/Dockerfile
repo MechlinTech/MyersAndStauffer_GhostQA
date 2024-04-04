@@ -36,5 +36,5 @@ COPY ["SeleniumReportAPI/entrypoint.sh", "/app/"]
 # Use the entrypoint script to start the application
 RUN sed -i 's/\r//' /app/entrypoint.sh \
 	&& chmod +x /app/entrypoint.sh
-# ENTRYPOINT ["/bin/bash","/app/entrypoint.sh"]
-ENTRYPOINT ["dotnet" ,"SeleniumReportAPI.dll"]
+ENTRYPOINT ["/bin/bash","/app/entrypoint.sh"]
+# ENTRYPOINT ["dotnet" ,"SeleniumReportAPI.dll"]

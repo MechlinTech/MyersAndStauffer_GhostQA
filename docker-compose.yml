@@ -22,6 +22,7 @@ services:
       - "5000:80"
     environment:
       - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
+    command: dotnet SeleniumReportAPI.dll
     depends_on:
       - db
       - migrations
@@ -32,6 +33,7 @@ services:
     build:
       context: .
       dockerfile: SeleniumReportAPI\Dockerfile.migrations
+    command: "/src/migrations.sh"
     ports:
       - "5001:80"
     depends_on:
