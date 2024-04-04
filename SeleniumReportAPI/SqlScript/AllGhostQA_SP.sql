@@ -1875,6 +1875,8 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [GetEnvironment]
 END CATCH
 GO
+USE [SeleniumTest]
+GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetExcutedByRootId]
 @RootId           Int,
 @TestName         VARCHAR(50)
@@ -1906,7 +1908,15 @@ BEGIN TRY
 														WHEN tsd.[SelectorType] = 'NAME' THEN CONCAT('[name=',tsd.[SelectorValue],']')
 													ELSE tsd.[SelectorValue]
 													END)
-                                        ) [selector], tsd.[StepDescription] [text],
+												) [selector],
+												(
+													(CASE
+														WHEN tsd.[Action] = 'type' OR tsd.[Action] = 'element_text_contains' THEN tsd.[SendKeyInput]
+														ELSE tsd.[StepDescription]
+														END
+													)
+												) [text],
+										tsd.[StepDescription] [name],
 										tsd.[IsOptional]
 					FROM tbl_TestStepsDetails tsd
 					WHERE tsd.[TestCaseDetailsId] = tcd.[TestCaseDetailsId]
@@ -1921,8 +1931,6 @@ END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [Excute]
 END CATCH
-
-
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetExecutedPerformanceByClientId]
 @ClientId          VARCHAR(100)
