@@ -30,7 +30,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           file: djangoapp/Dockerfile
-          context: .
           no-cache: false
           push: true
           tags: |
