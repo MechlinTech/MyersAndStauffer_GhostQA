@@ -44,16 +44,18 @@ export const useStylesTree = makeStyles({
 },
     editTheFolder: {
     border: '1px solid #654df7',
-    padding: '4px 10px',
+    padding: '4px 5px',
     fontSize: '18px',
     fontWeight: '400',
     borderRadius: '10px',
-    width:'90%',
+    width:'80%',
     outline:'none'
 },
 updateEdit:{
     display: "flex",
     alignItems: 'center',
+    flexWrap:'nowrap',
+    justifyContent:'space-between',
 },
 orgTree:{
     overflow:"auto",
