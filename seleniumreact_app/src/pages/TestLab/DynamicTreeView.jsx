@@ -10,7 +10,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 import { Tooltip } from "@mui/material";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 const Card = ({
   newElementName,

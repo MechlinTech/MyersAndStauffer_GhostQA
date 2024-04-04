@@ -12,7 +12,7 @@ import Radio from "@material-ui/core/Radio";
 import useStyles from "./style";
 import clsx from "clsx";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 const Graph = (props) => {
   const classes = useStyles();

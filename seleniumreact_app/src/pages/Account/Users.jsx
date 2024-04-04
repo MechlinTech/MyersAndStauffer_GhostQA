@@ -8,7 +8,7 @@ import { CustomTable } from "./CustomTable";
 import SearchField from "../../comman/SearchField";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Users() {
   const classes = useStyles();

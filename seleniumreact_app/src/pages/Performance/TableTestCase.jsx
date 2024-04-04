@@ -21,7 +21,7 @@ import { header, headerForm } from "../../utils/authheader";
 import { StyledTypography } from "./styles";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function TableTestCase({
   testCase,

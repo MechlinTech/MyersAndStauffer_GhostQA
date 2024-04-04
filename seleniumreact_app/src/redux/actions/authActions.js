@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export const login = (data, setLoading) => {
   return async (dispatch) => {

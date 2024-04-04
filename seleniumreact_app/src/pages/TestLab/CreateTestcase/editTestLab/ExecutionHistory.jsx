@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import CustomeTableChell from "./CustomeTableChell";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function ExecutionHistory({executionDetail}) {
   const classes = useStyles();
