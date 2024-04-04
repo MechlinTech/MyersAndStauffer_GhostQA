@@ -1,5 +1,6 @@
 import { Grid, Paper } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
+import { getBaseUrl } from "../../utils/configService";
 import { StyledOutlinedInput, StyledTypography, useStyles } from "./style";
 import { Button, FormControl } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -8,7 +9,7 @@ import { CustomTable } from "./CustomTable";
 import SearchField from "../../comman/SearchField";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Users() {
   const classes = useStyles();
@@ -23,6 +24,7 @@ export default function Users() {
 
   useEffect(() => {
     const getUserList = async () => {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/Selenium/GetUserDetails`,
         header()

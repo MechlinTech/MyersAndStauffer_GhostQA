@@ -1,5 +1,5 @@
 {
-    "baseUrl": "",
+    "REACT_APP_BASE_URL": "https://codearrest.dyndns.org:3006/api",
     "coreEngineBaseUrl": ""
     
 }

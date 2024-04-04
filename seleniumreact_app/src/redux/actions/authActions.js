@@ -1,15 +1,17 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
+import { getBaseUrl } from "../../utils/configService";
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 export const login = (data, setLoading) => {
+  // console.log("BASE_URL",BASE_URL,config.REACT_APP_BASE_URL)
   return async (dispatch) => {
     try {
       setLoading(true);
-
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(`${BASE_URL}/Login`, data);
       const response = res.data;
       if (response?.result === 'Success') {
@@ -50,6 +52,7 @@ export const logout = () => {
 export const InviteUser = (email)=>{
   return async (dispatch)=>{
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/AddInBuildTestSuite/InviteUser?toEmail=${email}`,email);
       console.log('response ' ,res)
@@ -73,6 +76,7 @@ export const InviteUser = (email)=>{
 export const AcceptInvitation = (email,handeSetAccept)=>{
   return async (dispatch)=>{
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/AddInBuildTestSuite/AcceptInvitation?toEmail=${email}`,email);
       console.log('response ' ,res)
@@ -95,6 +99,7 @@ export const AcceptInvitation = (email,handeSetAccept)=>{
 export const ChangePasswordReq = (payload)=>{
   return async (dispatch)=>{
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/AddInBuildTestSuite/ChangePassword`,payload);
       console.log('payload ' ,payload)
@@ -116,6 +121,7 @@ export const ChangePasswordReq = (payload)=>{
 export const UpdateUserProfile = (payload)=>{
   return async (dispatch)=>{
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Selenium/UpdateUserProfile`,payload,header());
         console.log('res',res)
