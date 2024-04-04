@@ -25,7 +25,7 @@ import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
 import { StyledFormControl } from "../styleTestCase";
 import RenderActionFields from "../RenderActionFields";
 import ExecutionHistory from "./ExecutionHistory";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function EditTestCase() {
   const classes = useStyles();

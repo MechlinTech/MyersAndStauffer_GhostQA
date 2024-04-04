@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
 import { useDispatch } from "react-redux";
 import { GetLocationScenarioVUCount } from "../../../../redux/actions/settingAction";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function LoadPanel({ PerformanceFileId }) {
   const classes = useStyles();

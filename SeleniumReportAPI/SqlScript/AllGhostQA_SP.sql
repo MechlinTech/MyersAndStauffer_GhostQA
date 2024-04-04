@@ -2712,34 +2712,7 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestStepsDetails]
-AS
-/**************************************************************************************
-PROCEDURE NAME	:	stp_GetTestStepsDetails
-CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	1st March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
-PROC EXEC		:
-				EXEC stp_GetTestStepsDetails
-**************************************************************************************/
-BEGIN TRY
-	SELECT [result] = JSON_QUERY((
-		SELECT  [TestStepsDetailsId],
-			    [TestCaseDetailsId],
-                [ActionName],
-                [Description],
-                [IsOption],
-				[SelectorType],
-				[SelectorValue],
-				[Text]
-		FROM tbl_TestStepsDetails
-	FOR JSON PATH))
-END TRY
-BEGIN CATCH
-	SELECT ERROR_MESSAGE() [TestStepsDetails]
-END CATCH
-GO
+
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestStepsDetailsByTestStepsId]
 @TestStepsId int
 AS
@@ -3420,56 +3393,7 @@ BEGIN CATCH
 	SELECT ERROR_LINE(), ERROR_MESSAGE(), ERROR_SEVERITY()
 END CATCH
 GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateTestStepsDetails]
-@TestStepsDetailsId         int,
-@TestCaseDetailsId		    int,
-@TestStepsName	            VARCHAR(100),
-@ActionName                 VARCHAR(100)
-AS
-/**************************************************************************************
-PROCEDURE NAME	:	stp_UpdateTestStepsDetails
-CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	1st March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
-PROC EXEC		:  EXEC stp_UpdateTestStepsDetails 
-				
-**************************************************************************************/
-BEGIN TRY
-	BEGIN
-		UPDATE [dbo].[tbl_TestStepsDetails]
-		SET [TestCaseDetailsId] = @TestCaseDetailsId,
-		    [TestStepsName]     = @TestStepsName,
-            [ActionName]        = @ActionName
-			WHERE [TestStepsDetailsId]  = @TestStepsDetailsId
-		IF @@ERROR = 0
-		BEGIN
-			SELECT [result] = JSON_QUERY((
-				SELECT 'success' [status], 'Added Successfully' [message],
-				[Data] = JSON_QUERY((
-						SELECT TestStepsDetailsId [id], TestCaseDetailsId [testCaseDetailsId], [TestStepsName] [testStepsName] , [ActionName] [actionName]
-						FROM tbl_TestStepsDetails where [TestStepsDetailsId] = @TestStepsDetailsId
-						FOR JSON PATH
-					))
-				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-			))
-		END
-		ELSE
-		BEGIN
-			SELECT [result] = JSON_QUERY((
-				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
-				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-			))
-		END
-	END
-END TRY
-BEGIN CATCH
-	SELECT [result] = JSON_QUERY((
-		SELECT 'fail' [status], ERROR_MESSAGE() [message]
-		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-	))
-END CATCH
-GO
+
 CREATE OR ALTER  PROCEDURE [dbo].[stp_UpdateUserProfile]
 @FullName		        VARCHAR(100),
 @OrganizationName		VARCHAR(100),
@@ -3606,6 +3530,6 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [isValidUser]
 END CATCH
 GO
-INSERT [dbo].[AspNetUsers] ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount], [Discriminator], [FullName], [OrganizationName], [IsDisabled]) 
-VALUES (N'5782a89b-3714-4a0d-88f0-8f5b9435454c', N'admin@gmail.com', N'ADMIN@GMAIL.COM', N'admin@gmail.com', N'ADMIN@GMAIL.COM', 1, N'AQAAAAEAACcQAAAAEF9od4ctb7cCtxt+Zgt+CfHmvDi2110P+vpVyp0lu3UzouCAuABPxS/6MlQlBL3YRA==', N'FSOXQWQ74ENCJSXTOUB7DEYA7IQBC727', N'72ca7ec6-bb75-4781-88e7-f0c573ba0e53', NULL, 0, 0, NULL, 1, 0, N'', NULL, NULL, NULL)
+INSERT [dbo].[AspNetUsers] ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount],  [FullName], [OrganizationName], [IsDisabled]) 
+VALUES (N'5782a89b-3714-4a0d-88f0-8f5b9435454c', N'admin@gmail.com', N'ADMIN@GMAIL.COM', N'admin@gmail.com', N'ADMIN@GMAIL.COM', 1, N'AQAAAAEAACcQAAAAEF9od4ctb7cCtxt+Zgt+CfHmvDi2110P+vpVyp0lu3UzouCAuABPxS/6MlQlBL3YRA==', N'FSOXQWQ74ENCJSXTOUB7DEYA7IQBC727', N'72ca7ec6-bb75-4781-88e7-f0c573ba0e53', NULL, 0, 0, NULL, 1, 0,  NULL, NULL, NULL)
 GO

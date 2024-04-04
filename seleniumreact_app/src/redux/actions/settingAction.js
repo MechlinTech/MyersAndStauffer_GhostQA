@@ -7,7 +7,7 @@ export const GET_LOC_COUNT = "GET_LOC_COUNT";
 export const GET_USER_COUNT = "GET_USER_COUNT";
 export const RESET_USER_COUNT = "RESET_USER_COUNT";
 export const RESET_LOC_COUNT = "RESET_LOC_COUNT";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'api';
 
 export const getTestSuitesList = () => {
   return async (dispatch) => {

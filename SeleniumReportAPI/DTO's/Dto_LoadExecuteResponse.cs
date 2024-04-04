@@ -17,6 +17,7 @@ namespace SeleniumReportAPI.DTO_s
         public int TotalRampUpSteps { get; set; }
         public int TotalRampUpTime { get; set; }
         public int maxDuration { get; set; }
+        public string EstimatedTime { get; set; }
     }
 
     public class Scenarios
