@@ -26,4 +26,14 @@ RUN dotnet publish "SeleniumReportAPI.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "SeleniumReportAPI.dll"]
+
+# Copy the SQL script
+COPY ["SeleniumReportAPI/SqlScript/AllGhostQA_SP.sql", "./SqlScript/AllGhostQA_SP.sql"]
+
+# Copy and set permissions for the entrypoint script
+COPY ["SeleniumReportAPI/entrypoint.sh", "/app/"]
+
+# Use the entrypoint script to start the application
+RUN sed -i 's/\r//' /app/entrypoint.sh \
+	&& chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/bin/bash","/app/entrypoint.sh"]

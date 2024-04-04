@@ -21,7 +21,9 @@ services:
     ports:
       - "5000:80"
     environment:
-      - AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###;
+      - AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
+    depends_on:
+      - db
 
   db:
     image: mcr.microsoft.com/mssql/server:latest
