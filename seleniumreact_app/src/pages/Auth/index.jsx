@@ -21,7 +21,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { UserIcon, LockIcon } from "../../comman/icons";
 import { login } from "../../redux/actions/authActions";
 import { useSelector, useDispatch } from "react-redux";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 const theme = createTheme();
 
@@ -30,18 +30,30 @@ export default function SignIn() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setshowPassword] = useState(false);
-  const [Error, setError] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (e.target.id === "outlined-adornment-email") {
+        // If the email input field is focused, focus on the password input field
+        document.getElementById("outlined-adornment-password").focus();
+      } else if (e.target.id === "outlined-adornment-password") {
+        // If the password input field is focused, trigger the login action
+        handleLogin();
+      }
+    }
+  };
 
   const handleLogin = () => {
     setError({});
     let errors = {};
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
     if (!email) {
       errors.email = "Email is required";
-    } else if (!regex.test(email)) {
+    } else if (!emailRegex.test(email)) {
       errors.email = "Email is invalid";
     }
 
@@ -49,17 +61,20 @@ export default function SignIn() {
       errors.password = "Password is required";
     } else if (password.length < 4) {
       errors.password = "Password must be more than 4 characters";
+    } else if (/\s{6,}/.test(password)) {
+      errors.password = "Enter a valid password";
     }
 
     if (errors.email || errors.password) {
       setError(errors);
-    } else {
-      let data = {
-        email: email,
-        password: password,
-      };
-      dispatch(login(data, setLoading));
+      return;
     }
+
+    let data = {
+      email: email,
+      password: password,
+    };
+    dispatch(login(data, setLoading));
   };
 
   return (
@@ -73,7 +88,6 @@ export default function SignIn() {
           minHeight: "100vh",
         }}
       >
-        {/* <CssBaseline /> */}
         <Box
           sx={{
             marginTop: 20,
@@ -82,28 +96,8 @@ export default function SignIn() {
             alignItems: "center",
           }}
         >
-          <Box
-            sx={{ display: "flex", alignItems: "center", marginBottom: "40px" }}
-          >
-
-            <img src={"/images/GhostQA-Logo.png"} alt="logo" />{" "}
-            {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar> */}
-            {/* <Typography
-              variant="h6"
-              style={{
-                fontFamily: "Poppins",
-                fontSize: "26px",
-                fontWeight: "bold",
-                lineHeight: "44px",
-              }}
-            >
-              <span style={{ color: "rgb(33, 35, 48)", fontWeight: "bold" }}>
-                Ghost{" "}
-              </span>{" "}
-              <span style={{ color: "#654DF7", fontWeight: "bold" }}>QA</span>
-            </Typography> */}
+          <Box sx={{ display: "flex", alignItems: "center", marginBottom: "40px" }}>
+            <img src={"/images/GhostQA-Logo.png"} alt="logo" />
           </Box>
           <Box>
             <Typography className={classes.primaryTitle}>Welcome</Typography>
@@ -119,13 +113,12 @@ export default function SignIn() {
             spacing={2}
             className={classes.formContainer}
           >
-            {/* E-mail field */}
             <Grid item className={classes.input}>
               <FormControl
                 className={clsx(classes.margin, classes.textField)}
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderColor: 'transparent !important',
+                  "& .MuiOutlinedInput-root": {
+                    borderColor: "transparent !important",
                     "&:hover fieldset": {
                       borderColor: "#654DF7",
                     },
@@ -135,16 +128,15 @@ export default function SignIn() {
                   },
                 }}
               >
-                {/* <TextField placeholder="E-mail" startAdornment={<UserIcon />} /> */}
-
                 <OutlinedInput
                   className={classes.Outlined}
                   id="outlined-adornment-email"
-                  type="e-mail"
+                  type="email"
                   placeholder="E-mail"
-                  error={Error.email ? true : false}
+                  error={error.email ? true : false}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   startAdornment={
                     <InputAdornment
                       position="start"
@@ -155,13 +147,10 @@ export default function SignIn() {
                   }
                 />
               </FormControl>
-              {Error.email && (
-                <Typography className={classes.inputError}>
-                  {Error.email}
-                </Typography>
+              {error.email && (
+                <Typography className={classes.inputError}>{error.email}</Typography>
               )}
             </Grid>
-            {/* Password field */}
             <Grid item className={classes.input}>
               <FormControl
                 className={clsx(classes.margin, classes.textField)}
@@ -182,16 +171,20 @@ export default function SignIn() {
                   id="outlined-adornment-password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  error={Error.password ? true : false}
+                  error={error.password ? true : false}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   endAdornment={
-                    <InputAdornment position="end" className={classes.lockMain}>
+                    <InputAdornment
+                      position="end"
+                      className={classes.lockMain}
+                    >
                       <IconButton
                         className={classes.lock}
                         aria-label="toggle password visibility"
                         edge="end"
-                        onClick={() => setshowPassword(!showPassword)}
+                        onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
@@ -207,10 +200,8 @@ export default function SignIn() {
                   }
                 />
               </FormControl>
-              {Error.password && (
-                <Typography className={classes.inputError}>
-                  {Error.password}
-                </Typography>
+              {error.password && (
+                <Typography className={classes.inputError}>{error.password}</Typography>
               )}
             </Grid>
 
@@ -221,12 +212,10 @@ export default function SignIn() {
                   fullWidth
                   variant="contained"
                   sx={{ margin: "10px" }}
-                  // sx={{ mt: 3, mb: 2 }}
-
-                  onClick={() => handleLogin()}
+                  onClick={handleLogin}
                   endIcon={loading && <CircularProgress size={20} color="inherit" />}
                 >
-                    {loading ? 'Logging In...' : 'Log In'}
+                  {loading ? "Logging In..." : "Log In"}
                 </Button>
               </div>
             </Grid>
