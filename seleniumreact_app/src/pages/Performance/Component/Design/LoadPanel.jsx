@@ -257,7 +257,7 @@ export default function LoadPanel({ PerformanceFileId }) {
                 <StyledTypography> Total Users* </StyledTypography>
               </TableCell>
               <TableCell align="center">
-                <StyledTypography>Duration(m)</StyledTypography>
+                <StyledTypography>Duration(s)</StyledTypography>
               </TableCell>
               <TableCell align="center">
                 <StyledTypography>Ramp up Time(s)</StyledTypography>
