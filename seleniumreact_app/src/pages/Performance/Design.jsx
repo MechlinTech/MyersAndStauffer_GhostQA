@@ -19,8 +19,7 @@ import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import {
   GetLocationScenarioVUCount,
-  ResetLocationScenarioVUCount,
-} from "../../redux/actions/settingAction";
+} from "../../redux/actions/performanceAction";
 import {
   setIsRunning,
   addExecuterData,
@@ -28,8 +27,8 @@ import {
   setRunningRootId,
 } from "../../redux/actions/ResultAction";
 import { useNavigate } from "react-router-dom";
-
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+const DJANGO_URL = process.env.CODE_ENGINE_BASE_URL
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Design({ rootId }) {
   const classes = useStyles();
@@ -139,7 +138,7 @@ export default function Design({ rootId }) {
   const getRunDetail = async (data, clientId, delay) => {
     try {
       const res = await axios.get(
-        `http://65.1.188.67:8010/api/performance-container-runs/?client_reference_id=${clientId}`,
+        `http://65.1.188.67:8010/codeengine/api/performance-container-runs/?client_reference_id=${clientId}`,
         header()
       );
       const result = res.data.results;

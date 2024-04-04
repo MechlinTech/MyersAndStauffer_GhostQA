@@ -418,7 +418,7 @@ export default function EditTestCase() {
         additionalField.selectorType=""
         additionalField.selectorValue=""
       }
-      return { stepDescription: "",
+      return { stepDescription:"",
       isOptional: false, ...additionalField,action:action };
     };
   

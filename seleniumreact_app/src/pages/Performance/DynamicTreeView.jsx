@@ -10,7 +10,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 import { useDispatch } from "react-redux";
-import { ResetLocationScenarioVUCount } from "../../redux/actions/settingAction";
+import { ResetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
@@ -363,6 +363,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
           handleCRUDAtParent(newItem);
           setExpanded([...expanded, parentId]);
           setNewElementName("");
+          setSelectedNodeId(newId)
         }
       } else {
         alert("Maximum node limit reached.");

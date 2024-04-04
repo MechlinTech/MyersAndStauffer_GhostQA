@@ -653,7 +653,7 @@ export default function CreateTestCase() {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => navigate(-1)}
+                  onClick={() => goBack()}
                   sx={{
                     backgroundColor: "rgb(108, 117, 125)",
                     color: "#f1f1f1",

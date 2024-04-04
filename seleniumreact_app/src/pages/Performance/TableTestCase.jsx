@@ -28,7 +28,7 @@ export default function TableTestCase({
   showAddNewElement,
   setShowAddNewElement,
   rootId,
-  apiCalling
+  apiCalling,
 }) {
   const navigate = useNavigate();
   const classes = useStyles();
@@ -100,7 +100,7 @@ export default function TableTestCase({
       );
       console.log("response", response);
       fetchData();
-      apiCalling()
+      apiCalling();
       setSelectedFile(null);
       setExpandedAccord(testNamefield.current.value);
       testNamefield.current.value = "";
@@ -145,23 +145,28 @@ export default function TableTestCase({
   };
   return (
     <TableContainer
-      // component={Paper}
-      // style={{
-      //   border: testCaseData.length > 0 ? "solid 2px #DADADA" : "none",
-      //   borderRadius: testCaseData.length > 0 ? "5px" : "",
-      // }}
+    // component={Paper}
+    // style={{
+    //   border: testCaseData.length > 0 ? "solid 2px #DADADA" : "none",
+    //   borderRadius: testCaseData.length > 0 ? "5px" : "",
+    // }}
     >
       <Table aria-label="simple table">
         {testCaseData.length > 0 && (
           <TableHead sx={{ backgroundColor: "#dedede" }}>
             <TableRow>
-              <TableCell align="left">
-                <StyledTypography>Scenario</StyledTypography>
+              <TableCell colSpan={3}>
+                <Stack
+                  width="100%"
+                  display="felx"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                >
+                  <StyledTypography>Scenario</StyledTypography>
+                  <StyledTypography>File Name</StyledTypography>
+                  <StyledTypography>Action</StyledTypography>
+                </Stack>
               </TableCell>
-              <TableCell align="left">
-                <StyledTypography>File Name</StyledTypography>
-              </TableCell>
-              <TableCell align="left"></TableCell>
             </TableRow>
           </TableHead>
         )}
@@ -231,7 +236,13 @@ export default function TableTestCase({
             <TableRow
             // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell>
+              <TableCell colSpan={3}>
+                <Stack
+                  width="100%"
+                  display="felx"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                >
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -249,12 +260,11 @@ export default function TableTestCase({
                     borderRadius: "4px",
                     border: "1px solid #654df7",
                     outline: "none",
-                    padding: "6px 14px",
+                    padding: "6px",
                   }}
                 />
-              </TableCell>
-              <TableCell onClick={handleButtonClick} align="left">
                 <Button
+                onClick={handleButtonClick}
                   style={{
                     backgroundColor: "rgb(101, 77, 247)",
                     color: "#ffffff",
@@ -266,8 +276,6 @@ export default function TableTestCase({
                     {selectedFile ? `${selectedFile.name}` : "Choose file"}
                   </StyledTypography>
                 </Button>
-              </TableCell>
-              <TableCell align="right">
                 <Button
                   style={{
                     fontSize: 14,
@@ -283,11 +291,12 @@ export default function TableTestCase({
                 >
                   Save
                 </Button>
+                </Stack>
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-     </TableContainer>
+    </TableContainer>
   );
 }
