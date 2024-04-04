@@ -13,6 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeleniumReportAPI", "Seleni
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "seleniumreact_app", "seleniumreact_app\seleniumreact_app.esproj", "{50462AD7-F977-4E0E-AE34-FEA63434C207}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3024648-BCE6-4372-BBDA-65A38554A77D}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
