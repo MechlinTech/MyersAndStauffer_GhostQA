@@ -19,7 +19,8 @@ COPY . .
 WORKDIR "/src/SeleniumReportAPI"
 RUN dotnet build "SeleniumReportAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-
+RUN dotnet tool uninstall dotnet-ef
+RUN dotnet tool install dotnet-ef --version 6.0.25
 # Copy and set permissions for the entrypoint script
 COPY ["SeleniumReportAPI/migrations.sh", "/src/"]
 # Use the entrypoint script to start the application
