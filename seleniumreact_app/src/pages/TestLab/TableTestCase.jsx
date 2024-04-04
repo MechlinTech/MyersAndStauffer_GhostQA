@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { StyledTypography } from "./styles";
 import { Delete } from "@material-ui/icons";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TableTestCase({ testCase, rootId }) {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ export default function TableTestCase({ testCase, rootId }) {
         request_json: jsonData.data,
       };
       const executedDetail = await axios.post(
-        "http://65.1.188.67:8010/codeengine/api/test-suitesV2/execute3/",
+        `http://65.1.188.67:8010/codeengine/api/test-suitesV2/execute3/`,
         payload,
         headerCypres()
       );
@@ -57,10 +57,18 @@ export default function TableTestCase({ testCase, rootId }) {
   const getRunDetail = async (runId, delay, row) => {
     try {
       const res = await axios.get(
-        `http://65.1.188.67:8010/api/test-suitesV2/${runId}/monitor_container_run/`
+        `http://65.1.188.67:8010/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
       );
 
       if (res.data.container_status === "exited") {
+        if(Object.keys(res.data.json).length === 0){
+          toast.error("No data in json")
+          setexecutingTest((prev) => ({
+            ...prev,
+            [row.TestCaseName]: false,
+          }));
+          return;
+        }
         setexecutingTest((prev) => ({
           ...prev,
           [row.TestCaseName]: false,
@@ -141,9 +149,9 @@ export default function TableTestCase({ testCase, rootId }) {
             <TableCell align="center">
               <StyledTypography>Status</StyledTypography>
             </TableCell>
-            <TableCell align="center">
+            {/* <TableCell align="center">
               <StyledTypography>Video</StyledTypography>
-            </TableCell>
+            </TableCell> */}
             <TableCell align="center">
               <StyledTypography>Last run on</StyledTypography>
             </TableCell>
@@ -177,7 +185,7 @@ export default function TableTestCase({ testCase, rootId }) {
                   {executingTest[row.TestCaseName] ?'running':""}
                 </StyledTypography>
               </TableCell>
-              <TableCell align="center">
+              {/* <TableCell align="center">
                 <span
                   style={{
                     border: "2px solid #1E1E1E",
@@ -193,7 +201,7 @@ export default function TableTestCase({ testCase, rootId }) {
                 >
                   <PlayArrowOutlinedIcon />
                 </span>
-              </TableCell>
+              </TableCell> */}
               <TableCell align="center">
                 <StyledTypography></StyledTypography>
               </TableCell>
