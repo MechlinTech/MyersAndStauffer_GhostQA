@@ -26,13 +26,13 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     chart: {
       id: "smooth-line",
       toolbar: {
-        show: true,
+        show: false,
         tools: {
           download: false,
           selection: false,
           zoom: false,
-          zoomin: true,
-          zoomout: true,
+          zoomin: false,
+          zoomout: false,
           pan: false,
           reset: false, // Show reset zoom button
         },
