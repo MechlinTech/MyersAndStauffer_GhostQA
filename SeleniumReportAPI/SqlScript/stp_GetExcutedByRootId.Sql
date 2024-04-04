@@ -5,8 +5,8 @@ AS
 PROCEDURE NAME	:	stp_GetExcutedByRootId
 CREATED BY		:	Mohammad Mobin
 CREATED DATE	:	5th March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
+MODIFIED BY		:	Mohammad Mobin
+MODIFIED DATE	:	4th April 2024
 PROC EXEC		:
 				EXEC stp_GetExcutedByRootId
 **************************************************************************************/
