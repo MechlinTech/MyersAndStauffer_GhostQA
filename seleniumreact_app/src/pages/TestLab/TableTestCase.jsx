@@ -15,7 +15,8 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { StyledTypography } from "./styles";
 import { Delete } from "@material-ui/icons";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TableTestCase({ testCase, rootId }) {
   const navigate = useNavigate();

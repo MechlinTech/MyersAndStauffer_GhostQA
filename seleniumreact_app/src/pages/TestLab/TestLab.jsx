@@ -14,7 +14,8 @@ import DynamicTreeView from "./DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 import { useLocation } from "react-router-dom";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TestLab() {
   const classes = useStyles();

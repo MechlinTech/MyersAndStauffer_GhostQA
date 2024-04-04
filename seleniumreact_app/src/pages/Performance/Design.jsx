@@ -29,7 +29,7 @@ import {
 import { getBaseUrl } from "../../utils/configService";
 import { useNavigate } from "react-router-dom";
 const DJANGO_URL = process.env.CODE_ENGINE_BASE_URL
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+// const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Design({ rootId }) {
   const classes = useStyles();
