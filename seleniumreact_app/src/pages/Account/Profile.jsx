@@ -13,7 +13,9 @@ import { useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
 import { useDispatch } from "react-redux";
-import { UpdateUserProfile } from "../../redux/actions/authActions";
+import {
+  UpdateUserProfile,
+} from "../../redux/actions/authActions";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
@@ -36,7 +38,6 @@ export default function Profile() {
 
   useEffect(() => {
     const emailFromSession = sessionStorage.getItem("email");
-
     const updateUserByEmail = async () => {
       try {
         const BASE_URL = await getBaseUrl();
@@ -62,6 +63,15 @@ export default function Profile() {
     const i = email.indexOf("@");
     const name = email.substring(0, i);
     return name.charAt(0).toUpperCase() + name.slice(1);
+  };
+
+  const handleCancel = (err) => {
+    console.log("res.data", user);
+
+    setEmail(user?.Email || "");
+    setfullName(user?.FullName || "");
+    setorganizationName(user?.OrganizationName || "");
+    setisEditable(false);
   };
   const handleSave = () => {
     const payload = {
@@ -91,7 +101,7 @@ export default function Profile() {
     }
   };
 
-  console.log("Error", Error);
+  console.log("fullName", fullName, email, organizationName);
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={12} md={12} lg={8}>
@@ -247,7 +257,8 @@ export default function Profile() {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => setisEditable(false)}
+                        // onClick={() => setisEditable(false)}
+                        onClick={handleCancel}
                         sx={{
                           backgroundColor: "rgb(108, 117, 125)",
                           color: "#f1f1f1",

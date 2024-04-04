@@ -162,16 +162,19 @@ export default function CreateTestCase() {
   };
 
   const handleAddMoreSteps = () => {
-    const isEmptyField = steps.some(step => {
-      console.log('step',step)
+    const isEmptyField = steps.some((step) => {
+      console.log("step", step);
       for (const key in step) {
-        if (step.hasOwnProperty(key) && (step[key] === "" || step[key] === null)) {
+        if (
+          step.hasOwnProperty(key) &&
+          (step[key] === "" || step[key] === null)
+        ) {
           return true;
         }
       }
       return false;
     });
-  
+
     if (isEmptyField) {
       toast.error("Cannot add a new step with empty fields.");
     } else {
@@ -205,7 +208,6 @@ export default function CreateTestCase() {
       ]);
     }
   };
-  
 
   const handleRemoveStep = (curr) => {
     const updatedSteps = steps.filter((step) => step !== curr);
@@ -271,24 +273,30 @@ export default function CreateTestCase() {
         default:
           break;
       }
-      if(!selectorNoOptionList.includes(action)){
-        additionalField.selectorType=""
-        additionalField.selectorValue=""
+      if (!selectorNoOptionList.includes(action)) {
+        additionalField.selectorType = "";
+        additionalField.selectorValue = "";
       }
-      return { stepDescription: "",
-      isOptional: false, ...additionalField,action:action };
+      return {
+        stepDescription: step?.stepDescription,
+        isOptional: false,
+        ...additionalField,
+        action: action,
+      };
     };
-  
-    setSteps(prevSteps => {
+
+    setSteps((prevSteps) => {
       return prevSteps.map((step, i) => {
         if (i === index) {
-          if (inputType === 'action') {
-            return updateAdditionalFields(step, inputValue.value);
+          if (inputType === "action") {
+            return updateAdditionalFields(step, inputValue?.value);
           } else {
             // Update other input types
             switch (inputType) {
               case "action":
-                return i === index ? { ...step, action: inputValue?.value } : step;
+                return i === index
+                  ? { ...step, action: inputValue?.value }
+                  : step;
               case "stepDescription":
                 return i === index
                   ? { ...step, stepDescription: inputValue?.target.value }
@@ -314,7 +322,9 @@ export default function CreateTestCase() {
                   ? { ...step, scrollPixel: inputValue.target.value }
                   : step;
               case "url":
-                return i === index ? { ...step, url: inputValue.target.value } : step;
+                return i === index
+                  ? { ...step, url: inputValue.target.value }
+                  : step;
               case "elementValue":
                 return i === index
                   ? { ...step, elementValue: inputValue.target.value }
@@ -327,7 +337,7 @@ export default function CreateTestCase() {
                 return i === index
                   ? { ...step, fileName: inputValue.target.files[0] }
                   : step;
-      
+
               case "cssProperty":
                 return i === index
                   ? { ...step, cssProperty: inputValue.target.value }
@@ -336,7 +346,7 @@ export default function CreateTestCase() {
                 return i === index
                   ? { ...step, cssValue: inputValue.target.value }
                   : step;
-      
+
               case "pageTitle":
                 return i === index
                   ? { ...step, pageTitle: inputValue.target.value }
@@ -357,7 +367,7 @@ export default function CreateTestCase() {
                 return i === index
                   ? { ...step, shouldEqualValue: inputValue.target.value }
                   : step;
-      
+
               case "shouldGreaterThanValue":
                 return i === index
                   ? { ...step, shouldGreaterThanValue: inputValue.target.value }
@@ -392,7 +402,6 @@ export default function CreateTestCase() {
       });
     });
   };
-  
 
   const findLabelByValue = (value) => {
     for (const pair of userActionsOptions) {
@@ -425,10 +434,12 @@ export default function CreateTestCase() {
         }}
       >
         <StyledTypography>Step {index + 1}</StyledTypography>
-        {index >0 &&<DeleteIcon
-          onClick={() => handleRemoveStep(step)}
-          sx={{ cursor: "pointer", color: "red" }}
-        />}
+        {index > 0 && (
+          <DeleteIcon
+            onClick={() => handleRemoveStep(step)}
+            sx={{ cursor: "pointer", color: "red" }}
+          />
+        )}
       </Box>
       <Paper
         elevation={1}
@@ -461,10 +472,10 @@ export default function CreateTestCase() {
               options={userActionsOptions}
               value={
                 step
-                  ? step.action
+                  ? step?.action
                     ? {
-                        label: findLabelByValue(step.action),
-                        value: step.action,
+                        label: findLabelByValue(step?.action),
+                        value: step?.action,
                       }
                     : null
                   : null
@@ -631,7 +642,7 @@ export default function CreateTestCase() {
                 </StyledTypography>
               </Grid>
               <Grid item sx={6}>
-              <Button
+                {/* <Button
                   onClick={handleAddMoreSteps}
                   sx={{
                     backgroundColor: "rgb(101, 77, 247)",
@@ -649,12 +660,13 @@ export default function CreateTestCase() {
                   }}
                 >
                   + Add More Steps
-                </Button>
+                </Button> */}
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => goBack()}
                   sx={{
+                    textTransform:'none',
                     backgroundColor: "rgb(108, 117, 125)",
                     color: "#f1f1f1",
                     "&:hover": {
@@ -668,6 +680,7 @@ export default function CreateTestCase() {
                 <Button
                   onClick={handleSave}
                   sx={{
+                    textTransform:'none',
                     backgroundColor: "rgb(101, 77, 247)",
                     "&:hover": {
                       backgroundColor: "rgb(101, 77, 247) !important",
@@ -721,12 +734,36 @@ export default function CreateTestCase() {
           <Grid xs={12}>
             <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
               <ul>
-                
                 {/* step 2  starts from here */}
                 {listOfSteps}
               </ul>
+              <Button
+                onClick={handleAddMoreSteps}
+                sx={{
+                  margin: "0 0 30px 30px",
+                  textTransform:'none',
+                  backgroundColor: "rgb(101, 77, 247)",
+                  "&:hover": {
+                    backgroundColor: "rgb(101, 77, 247) !important",
+                    borderColor: "#654DF7",
+                    color: "#fff",
+                    "&:before": {
+                      backgroundColor: "rgb(101, 77, 247) !important",
+                      color: "#fff",
+                    },
+                  },
+                  color: "#fff",
+                }}
+              >
+                + Add More Steps
+              </Button>
             </Box>
           </Grid>
+          {/* <Grid xs={12}>
+            <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
+              
+            </Box>
+          </Grid> */}
         </Paper>
       </Grid>
     </div>
