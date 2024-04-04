@@ -34,7 +34,7 @@ RUN apt-get update && \
     curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && \
     ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
-    
+
 # Copy the SQL script
 COPY ["SeleniumReportAPI/SqlScript/AllGhostQA_SP.sql", "./SqlScript/AllGhostQA_SP.sql"]
 
@@ -44,5 +44,5 @@ COPY ["SeleniumReportAPI/entrypoint.sh", "/app/"]
 # Use the entrypoint script to start the application
 RUN sed -i 's/\r//' /app/entrypoint.sh \
 	&& chmod +x /app/entrypoint.sh
-ENTRYPOINT ["/bin/bash","/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash","/app/entrypoint.sh" ,"dotnet","SeleniumReportAPI.dll"]
 # ENTRYPOINT ["dotnet" ,"SeleniumReportAPI.dll"]

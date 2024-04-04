@@ -61,6 +61,14 @@ export default function TableTestCase({ testCase, rootId }) {
       );
 
       if (res.data.container_status === "exited") {
+        if(Object.keys(res.data.json).length === 0){
+          toast.error("No data in json")
+          setexecutingTest((prev) => ({
+            ...prev,
+            [row.TestCaseName]: false,
+          }));
+          return;
+        }
         setexecutingTest((prev) => ({
           ...prev,
           [row.TestCaseName]: false,
