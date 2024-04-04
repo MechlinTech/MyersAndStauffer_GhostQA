@@ -44,12 +44,14 @@ export default function Design({ rootId }) {
   const [folderName, setfolderName] = useState("");
   const [uvCount, setuvCount] = useState(virtualUser);
   const [callingApi, setCallingApi] = useState(0);
+  const [isScnerioCountRunning, setisScnerioCountRunning] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, [rootId]);
 
   const fetchData = async () => {
+    setisScnerioCountRunning(true);
     try {
       const response = await axios.get(
         `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
@@ -75,8 +77,10 @@ export default function Design({ rootId }) {
         setscenarioCount(0);
         setuvCount(0);
       }
+      setisScnerioCountRunning(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setisScnerioCountRunning(false);
     }
   };
 
@@ -131,7 +135,7 @@ export default function Design({ rootId }) {
     }
   };
 
-  console.log("rootId", rootId, runningRootId);
+  console.log("scenarioCount", scenarioCount);
   const getRunDetail = async (data, clientId, delay) => {
     try {
       const res = await axios.get(
@@ -225,29 +229,30 @@ export default function Design({ rootId }) {
         padding: "10px",
       }}
     >
-      <Grid
-        container
-        alignItems="center"
-        style={{
-          margin: "20px 0px",
-        }}
-      >
-        <Grid item xs={8} style={{ display: "flex", alignItems: "center" }}>
-          <Typography
-            sx={{
-              fontFamily: "Lexend Deca",
-              fontSize: "18px",
-              fontWeight: "500",
-            }}
-          >
-            Scenarios
-          </Typography>
+      {scenarioCount > 0 && !isScnerioCountRunning && (
+        <Grid
+          container
+          alignItems="center"
+          style={{
+            margin: "20px 0px",
+          }}
+        >
+          <Grid item xs={8} style={{ display: "flex", alignItems: "center" }}>
+            <Typography
+              sx={{
+                fontFamily: "Lexend Deca",
+                fontSize: "18px",
+                fontWeight: "500",
+              }}
+            >
+              Scenarios
+            </Typography>
 
-          <List
-            sx={{ width: "100%" }}
-            style={{ display: "flex", justifyContent: "flex-end" }}
-          >
-            {/*<ListItem
+            <List
+              sx={{ width: "100%" }}
+              style={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              {/*<ListItem
               key={"LocationOnOutlinedIcon"}
               disableGutters
               style={{
@@ -273,62 +278,62 @@ export default function Design({ rootId }) {
                 }
               />
             </ListItem> */}
-            <ListItem
-              key={"FeaturedPlayListOutlinedIcon"}
-              disableGutters
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                width: "28%",
-              }}
-            >
-              <FeaturedPlayListOutlinedIcon
-                sx={{ color: "#654df7" }}
-                style={{ marginRight: "8px" }}
-              />
-              <ListItemText
-                primary={
-                  <span
-                    style={{
-                      fontFamily: "Lexend Deca",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {scenarioCount} Scenarios
-                  </span>
-                }
-              />
-            </ListItem>
-            <ListItem
-              key={"PersonOutlineOutlinedIcon"}
-              disableGutters
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                width: "25%",
-              }}
-            >
-              <PersonOutlineOutlinedIcon
-                sx={{ color: "#654df7" }}
-                style={{ marginRight: "8px" }}
-              />
-              <ListItemText
-                primary={
-                  <span
-                    style={{
-                      fontFamily: "Lexend Deca",
-                      fontSize: "14px",
-                    }}
-                  >
-                    {virtualUser} VU
-                  </span>
-                }
-              />
-            </ListItem>
-          </List>
-        </Grid>
-        <Grid item xs={4} style={{ textAlign: "right" }}>
-          {/* <Button
+              <ListItem
+                key={"FeaturedPlayListOutlinedIcon"}
+                disableGutters
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  width: "28%",
+                }}
+              >
+                <FeaturedPlayListOutlinedIcon
+                  sx={{ color: "#654df7" }}
+                  style={{ marginRight: "8px" }}
+                />
+                <ListItemText
+                  primary={
+                    <span
+                      style={{
+                        fontFamily: "Lexend Deca",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {scenarioCount} Scenarios
+                    </span>
+                  }
+                />
+              </ListItem>
+              <ListItem
+                key={"PersonOutlineOutlinedIcon"}
+                disableGutters
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  width: "25%",
+                }}
+              >
+                <PersonOutlineOutlinedIcon
+                  sx={{ color: "#654df7" }}
+                  style={{ marginRight: "8px" }}
+                />
+                <ListItemText
+                  primary={
+                    <span
+                      style={{
+                        fontFamily: "Lexend Deca",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {virtualUser} VU
+                    </span>
+                  }
+                />
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item xs={4} style={{ textAlign: "right" }}>
+            {/* <Button
             variant="contained"
             style={{
               fontSize: 14,
@@ -350,42 +355,45 @@ export default function Design({ rootId }) {
             )}
           </Button> */}
 
-          <Button
-            variant="contained"
-            style={{
-              fontSize: 14,
-              backgroundColor: isRunning
-                ? "rgba(101, 77, 247, 0.5)"
-                : "rgb(101, 77, 247)",
-              color: "#ffffff",
-              cursor: isRunning ? "not-allowed" : "pointer",
-              padding: "12px 18px",
-              textTransform: "none",
-            }}
-            // disabled={isRunning || rootId !== runningRootId}
-            onClick={handleRunNow}
-          >
-            {isRunning && rootId === runningRootId ? ( 
-              <CircularProgress style={{ color: "white" }} size={25} />
-            ) : (
-              <>
-                <PlayCircleOutlineIcon /> Run Now
-              </>
-            )}
-          </Button>
+            <Button
+              variant="contained"
+              style={{
+                fontSize: 14,
+                backgroundColor: isRunning
+                  ? "rgba(101, 77, 247, 0.5)"
+                  : "rgb(101, 77, 247)",
+                color: "#ffffff",
+                cursor: isRunning ? "not-allowed" : "pointer",
+                padding: "12px 18px",
+                textTransform: "none",
+              }}
+              // disabled={isRunning || rootId !== runningRootId}
+              onClick={handleRunNow}
+            >
+              {isRunning && rootId === runningRootId ? (
+                <CircularProgress style={{ color: "white" }} size={25} />
+              ) : (
+                <>
+                  <PlayCircleOutlineIcon /> Run Now
+                </>
+              )}
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container alignItems="center">
-        <Grid item xs={12}>
-          <TableTestCase
-            rootId={rootId}
-            setShowAddNewElement={setShowAddNewElement}
-            showAddNewElement={showAddNewElement}
-          />
+      )}
+      {scenarioCount > 0 && !isScnerioCountRunning && (
+        <Grid container alignItems="center">
+          <Grid item xs={12}>
+            <TableTestCase
+              rootId={rootId}
+              setShowAddNewElement={setShowAddNewElement}
+              showAddNewElement={showAddNewElement}
+            />
+          </Grid>
+          <Grid item xs={12}></Grid>
         </Grid>
-        <Grid item xs={12}></Grid>
-      </Grid>
-      {showAddNewElement && (
+      )}
+      {/* {showAddNewElement && (
         <Button
           variant="contained"
           onClick={() => setShowAddNewElement(!showAddNewElement)}
@@ -402,7 +410,37 @@ export default function Design({ rootId }) {
         >
           {scenarioCount ? "Add More Test" : "Add Test"}
         </Button>
-      )}
+      )} */}
+      <Grid
+        container
+        style={{
+          justifyContent:
+            scenarioCount === 0 || isScnerioCountRunning
+              ? "center"
+              : "flex-end",
+        }}
+      >
+        {showAddNewElement && (
+          <Button
+            variant="contained"
+            onClick={() => setShowAddNewElement(!showAddNewElement)}
+            style={{
+              fontSize: 14,
+              backgroundColor: isRunning
+                  ? "rgba(101, 77, 247, 0.5)"
+                  : "rgb(101, 77, 247)",
+                color: "#ffffff",
+                cursor: isRunning ? "not-allowed" : "pointer",
+              padding: "12px 18px",
+              marginTop: "10px",
+              textTransform: "none",
+            }}
+            disabled={isRunning}
+          >
+            {scenarioCount ? "Add More Test" : "Add Test"}
+          </Button>
+        )}
+      </Grid>
     </Grid>
   );
 }
