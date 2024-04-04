@@ -1,4 +1,5 @@
 ﻿#!/bin/bash
+cmd="$@"
 
 # Function to check if SQL Server is up and accepting connections.
 wait_for_sql() {
@@ -15,6 +16,7 @@ wait_for_sql() {
 # Wait for SQL Server to be ready.
 wait_for_sql
 
+exec $cmd
 
 
 
