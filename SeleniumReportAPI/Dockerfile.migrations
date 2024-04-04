@@ -19,4 +19,12 @@ COPY . .
 WORKDIR "/src/SeleniumReportAPI"
 RUN dotnet build "SeleniumReportAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-ENTRYPOINT ["dotnet", "ef", "database" "update"]
+
+# Copy and set permissions for the entrypoint script
+COPY ["SeleniumReportAPI/migrations.sh", "/src/"]
+# Use the entrypoint script to start the application
+RUN sed -i 's/\r//' /src/migrations.sh \
+	&& chmod +x /src/migrations.sh
+
+
+ENTRYPOINT ["/bin/bash", "/src/migrations.sh"]
