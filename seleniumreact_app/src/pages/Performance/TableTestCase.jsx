@@ -139,7 +139,6 @@ export default function TableTestCase({
     background: "#654DF7",
     color: "white",
     borderRadius: "5px",
-    
   };
   return (
     <TableContainer
@@ -173,7 +172,7 @@ export default function TableTestCase({
                       boxShadow: "none",
                       paddingLeft: "0px",
                       // border:'1px solid red',
-                      marginTop:'6px'
+                      marginTop: "6px",
                     }}
                   >
                     <AccordionSummary
@@ -268,10 +267,12 @@ export default function TableTestCase({
                 <Button
                   style={{
                     fontSize: 14,
-                    backgroundColor: "rgb(101, 77, 247)",
+                    backgroundColor: !selectedFile
+                      ? "rgba(101, 77, 247, 0.5)"
+                      : "rgb(101, 77, 247)",
                     color: "#ffffff",
+                    cursor: !selectedFile ? "not-allowed" : "pointer",
                     textTransform: "none",
-                    cursor: "pointer",
                   }}
                   disabled={!selectedFile}
                   onClick={handleFileSaving}

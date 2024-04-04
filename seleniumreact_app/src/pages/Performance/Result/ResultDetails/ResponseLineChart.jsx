@@ -2,10 +2,14 @@ import React from "react";
 import Chart from "react-apexcharts";
 
 const LineChart = ({ height, Yaxis, Xaxis }) => {
-  const xCategories = Xaxis && Xaxis.filter(item => item !== null).map(item => (item ? formatTimestamp(item) : ""));
-   const yData = Yaxis && Yaxis.filter(item => item !== null);
+  const xCategories =
+    Xaxis &&
+    Xaxis.filter((item) => item !== null).map((item) =>
+      item ? formatTimestamp(item) : ""
+    );
+  const yData = Yaxis && Yaxis.filter((item) => item !== null);
 
-   console.log("xCategories",xCategories)
+  console.log("xCategories", xCategories);
 
   //    // Remove duplicates from Xaxis data
   // const uniqueXaxis = [...new Set(Xaxis)].filter(item => item !== null);
@@ -15,7 +19,7 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
 
   // // Filter out null values from Yaxis data
   // const yData = Yaxis && Yaxis.filter(item => item !== null);
-  
+
   const options = {
     chart: {
       id: "smooth-line",
@@ -28,6 +32,12 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
       categories: xCategories || [],
       title: {
         text: "Time (hh:mm:ss)",
+        style: {
+          fontSize: "16px",
+          fontFamily: "Lexend Deca",
+          color: "#646464",
+          fontWeight: "500",
+        },
       },
     },
     yaxis: {
@@ -35,6 +45,12 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
       max: yData ? Math.max(...yData) : 0,
       title: {
         text: "Response Time (ms)",
+        style: {
+          fontSize: "16px",
+          fontFamily: "Lexend Deca",
+          color: "#646464",
+          fontWeight: "500",
+        },
       },
       labels: {
         formatter: function (value) {
@@ -61,8 +77,6 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     height: 280,
   };
 
-  
-
   const series = [
     // {
     //   name: "Time (ms)",
@@ -77,25 +91,55 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
   ];
 
   const shouldRenderChart =
-    (Yaxis && Yaxis.length > 0 && yData && yData.length > 0) || (xCategories && xCategories.length > 0);
+    (Yaxis && Yaxis.length > 0 && yData && yData.length > 0) ||
+    (xCategories && xCategories.length > 0);
 
   return (
     <div>
-      <div style={{ textAlign: "center" }}>Response time</div>
-      <div style={{ height: "calc(45vh - 20px)", marginBottom: "10px" }} className="line-container">
-        {shouldRenderChart && <Chart options={options} series={series} type="line" height={height} />}
+      <div
+        style={{
+          textAlign: "center",
+          fontFamily: "Lexend Deca",
+          color: "#646464",
+          fontSize: "16px",
+          fontWeight: "500",
+        }}
+      >
+        Response time
+      </div>
+      <div
+        style={{ height: "calc(45vh - 20px)", marginBottom: "10px" }}
+        className="line-container"
+      >
+        {shouldRenderChart && (
+          <Chart
+            options={options}
+            series={series}
+            type="line"
+            height={height}
+          />
+        )}
         {!shouldRenderChart ? <div>No data available</div> : null}
       </div>
     </div>
   );
 };
 
-const formatTimestamp = timestamp => {
+// const formatTimestamp = timestamp => {
+//   const date = new Date(timestamp * 1000);
+//   const hours = String(date.getUTCHours()).padStart(2, "0");
+//   const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+//   const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+//   return `${hours}:${minutes}:${seconds}`;
+// };
+
+const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp * 1000);
-  const hours = String(date.getUTCHours()).padStart(2, "0");
-  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-  const seconds = String(date.getUTCSeconds()).padStart(2, "0");
-  return `${hours}:${minutes}:${seconds}`;
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const amPM = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12; // Convert hour to 12-hour format
+  return `${hours}:${minutes} ${amPM}`;
 };
 
 export default LineChart;

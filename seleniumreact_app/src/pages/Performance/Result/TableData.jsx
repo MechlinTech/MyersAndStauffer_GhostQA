@@ -30,7 +30,6 @@ export function TableData({ rows }) {
   const [activeRow, setActiveRow] = React.useState(null);
 
   const handleRowClick = (payload) => {
-    console.log("data+++",payload)
     dispatch(GetResultsDetailsBysRunId(payload.RunId))
     setActiveRow((prevSuite) => (prevSuite === payload ? null : payload));
   };

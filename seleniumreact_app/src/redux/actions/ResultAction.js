@@ -5,6 +5,7 @@ export const RESULT_LIST = "RESULT_LIST";
 export const SET_IS_RUNNING = "SET_IS_RUNNING";
 export const ADD_EXECUTER_DATA = "ADD_EXECUTER_DATA";
 export const SET_EXECUTEJMX_DATA = "SET_EXECUTEJMX_DATA";
+export const SET_RUNNING_ROOT_ID = "SET_RUNNING_ROOT_ID";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -13,6 +14,14 @@ export const setIsRunning = (isRunning) => {
   return {
     type: SET_IS_RUNNING,
     payload: isRunning,
+  };
+};
+
+export const setRunningRootId = (id) => {
+  console.log("Setting id to:", id);
+  return {
+    type: SET_RUNNING_ROOT_ID,
+    payload: id,
   };
 };
 
