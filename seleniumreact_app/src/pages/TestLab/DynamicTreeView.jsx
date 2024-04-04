@@ -10,7 +10,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 import { Tooltip } from "@mui/material";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Card = ({
   newElementName,
@@ -64,7 +64,6 @@ const Card = ({
               <li key={item.id} className={styleClass.cardListHolder}>
                 <div
                   className={styleClass.cardListHolderList}
-                  // onClick={() => toggleExpand(item.id)} 
                   style={
                     selectedNodeId === item.id
                       ? {
@@ -72,7 +71,7 @@ const Card = ({
                           border: "2px solid #654df7",
                           color: "white",
                         }
-                      : {} 
+                      : {} // Apply border only if the current node is the selected node
                   }
                 >
                   <div style={{ display: "flex" }}>
@@ -89,7 +88,7 @@ const Card = ({
                         )}
                       </>
                     )}
-                    {/* {editMode === item.id && (
+                    {editMode === item.id && (
                       <div className={styleClass.updateEdit}>
                         <input
                           type="text"
@@ -105,7 +104,7 @@ const Card = ({
                           required
                         />
                       </div>
-                    )} */}
+                    )}
                     {editMode !== item.id && (
                       <span
                         onClick={() => {
@@ -148,13 +147,11 @@ const Card = ({
                       </Tooltip>
                     )}
                     {editMode === item.id && (
-                      <Tooltip title="Cancel" arrow>
-                        <CancelIcon
-                          sx={{ color: "#f74d4d" }}
-                          onClick={() =>
-                            handleEdit(item.id, item.name, "cancel")
-                          }
-                        />
+                       <Tooltip title="Cancel" arrow>
+                      <CancelIcon
+                        sx={{ color: "#f74d4d" }}
+                        onClick={() => handleEdit(item.id, item.name, "cancel")}
+                      />
                       </Tooltip>
                     )}
                     <Tooltip title="Delete" arrow>
