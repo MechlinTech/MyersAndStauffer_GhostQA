@@ -24,6 +24,17 @@ services:
       - AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
     depends_on:
       - db
+  
+  migrations:
+    build:
+      context: .
+      dockerfile: SeleniumReportAPI\Dockerfile.migrations
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+    environment:
+      - AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###;
 
   db:
     image: mcr.microsoft.com/mssql/server:latest
