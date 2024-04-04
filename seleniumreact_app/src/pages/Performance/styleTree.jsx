@@ -54,6 +54,8 @@ export const useStylesTree = makeStyles({
 updateEdit:{
     display: "flex",
     alignItems: 'center',
+    flexWrap:'nowrap',
+    justifyContent:'space-between',
 },
 orgTree:{
     overflow:"auto",

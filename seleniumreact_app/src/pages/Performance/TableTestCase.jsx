@@ -139,8 +139,8 @@ export default function TableTestCase({
     }
   }
   const selectedAccodStyle = {
-    background: "#654DF7",
-    color: "white",
+    border: "2px solid #654DF7",
+    // color: "white",
     borderRadius: "5px",
   };
   return (
@@ -167,70 +167,66 @@ export default function TableTestCase({
         )}
 
         <TableBody>
-        {testCaseData.length > 0 && (
-          <TableRow>
-            <TableCell colSpan={3} style={{ padding: "0px" }}>
-              {testCaseData?.map((item, index) => (
-                <React.Fragment key={index}>
-                  <Accordion
-                    expanded={expandedAccord === item.testCaseName}
-                    onChange={handleExpandAccord(item.testCaseName)}
-                    sx={{
-                      boxShadow: "none",
-                      paddingLeft: "0px",
-                      // border:'1px solid red',
-                      marginTop: "6px",
-                    }}
+          {testCaseData?.map((item, index) => (
+            <TableRow key={index}>
+              <TableCell colSpan={3} style={{ padding: "0px" }}>
+                <Accordion
+                  expanded={expandedAccord === item.testCaseName}
+                  onChange={handleExpandAccord(item.testCaseName)}
+                  sx={{
+                    boxShadow: "none",
+                    paddingLeft: "0px",
+                    // border:'1px solid red',
+                    marginTop: "6px",
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={
+                      <ExpandMoreIcon
+                        style={{
+                          color:
+                            expandedAccord === item.testCaseName
+                              ? "white"
+                              : "black",
+                        }}
+                      />
+                    }
+                    style={
+                      expandedAccord === item.testCaseName
+                        ? selectedAccodStyle
+                        : {}
+                    }
                   >
-                    <AccordionSummary
-                      expandIcon={
-                        <ExpandMoreIcon
-                          style={{
-                            color:
-                              expandedAccord === item.testCaseName
-                                ? "white"
-                                : "black",
-                          }}
-                        />
-                      }
-                      style={
-                        expandedAccord === item.testCaseName
-                          ? selectedAccodStyle
-                          : {}
-                      }
+                    <Stack
+                      width="100%"
+                      display="felx"
+                      flexDirection="row"
+                      justifyContent="space-between"
                     >
-                      <Stack
-                        width="100%"
-                        display="felx"
-                        flexDirection="row"
-                        justifyContent="space-between"
-                      >
-                        <StyledTypography align="left">
-                          {item.testCaseName}
-                        </StyledTypography>
-                        <StyledTypography align="left">
-                          {truncateFileName(item.fileName, 40)}
-                        </StyledTypography>
-                        <DeleteIcon
-                          style={{
-                            color:
-                              expandedAccord === item.testCaseName
-                                ? "white"
-                                : "red",
-                          }}
-                          onClick={(e) => handleDeleteElement(item.id, e)}
-                        />
-                      </Stack>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <DesignTabs PerformanceFileId={item.id} />
-                    </AccordionDetails>
-                  </Accordion>
-                </React.Fragment>
-              ))}
-            </TableCell>
-          </TableRow>
-        )}
+                      <StyledTypography align="left">
+                        {item.testCaseName}
+                      </StyledTypography>
+                      <StyledTypography align="left">
+                        {truncateFileName(item.fileName, 40)}
+                      </StyledTypography>
+                      <DeleteIcon
+                        style={{
+                          color:
+                            expandedAccord === item.testCaseName
+                              ? "white"
+                              : "red",
+                        }}
+                        onClick={(e) => handleDeleteElement(item.id, e)}
+                      />
+                    </Stack>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <DesignTabs PerformanceFileId={item.id} />
+                  </AccordionDetails>
+                </Accordion>
+              </TableCell>
+            </TableRow>
+          ))}
           {!showAddNewElement && (
             <TableRow
             // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

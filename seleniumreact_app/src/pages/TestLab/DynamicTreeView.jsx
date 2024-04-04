@@ -166,6 +166,8 @@ const Card = ({
                     className={styleClass.updateEdit}
                     style={{
                       display: expandedInputId === item.id ? "block" : "block",
+                      marginLeft:'20px'
+
                     }}
                   >
                     <input
@@ -181,7 +183,7 @@ const Card = ({
                     <CancelIcon
                       sx={{ color: "#f74d4d" }}
                       onClick={() => handleCRUDCancel()}
-                      style={{ marginLeft: "20px" }}
+                      // style={{ marginLeft: "20px" }}
                     />
                   </div>
                 )}

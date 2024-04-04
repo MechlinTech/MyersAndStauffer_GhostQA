@@ -243,6 +243,7 @@ export default function Design({ rootId }) {
                 fontFamily: "Lexend Deca",
                 fontSize: "18px",
                 fontWeight: "500",
+                marginLeft:'10px'
               }}
             >
               Scenarios

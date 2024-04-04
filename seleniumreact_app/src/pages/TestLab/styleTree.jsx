@@ -53,6 +53,8 @@ export const useStylesTree = makeStyles({
 updateEdit:{
     display: "flex",
     alignItems: 'center',
+    flexWrap:'nowrap',
+    justifyContent:'space-between',
     // marginLeft: '36px',
    
 },

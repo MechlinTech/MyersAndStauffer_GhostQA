@@ -206,7 +206,7 @@ const Card = ({
                     <CancelIcon
                       sx={{ color: "#f74d4d" }}
                       onClick={() => handleCRUDCancel()}
-                      style={{ marginLeft: "20px" }}
+                      // style={{ marginLeft: "20px" }}
                     />
                   </div>
                 )}
