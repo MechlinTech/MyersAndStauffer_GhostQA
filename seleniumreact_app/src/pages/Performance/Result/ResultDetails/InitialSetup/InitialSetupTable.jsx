@@ -34,7 +34,7 @@ export function InitialSetupTable({ data }) {
               <StyledTableCell first>{row.scenarioName}</StyledTableCell>
               <StyledTableCell>{row.duration}</StyledTableCell>
               {/* <StyledTableCell>{row.location}</StyledTableCell> */}
-              <StyledTableCell last>
+              <StyledTableCell last style={{ textAlign: "right" }}>
                 {" "}
                 <Button
                   style={{
