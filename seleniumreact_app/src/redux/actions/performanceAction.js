@@ -1,12 +1,13 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
+import { getBaseUrl } from "../../utils/configService";
 export const GET_LOC_COUNT = "GET_LOC_COUNT";
 export const GET_USER_COUNT = "GET_USER_COUNT";
 export const RESET_USER_COUNT = "RESET_USER_COUNT";
 export const RESET_LOC_COUNT = "RESET_LOC_COUNT";
 export const SCENARIO_COUNT = "SCENARIO_COUNT";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+// const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
 
@@ -14,6 +15,7 @@ export const GetLocationScenarioVUCount = (testId)=>{
 
   return async (dispatch)=>{
     try {
+      const BASE_URL = await getBaseUrl();
       const loadRes = await axios.get(
         `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${testId}`,
         header()
@@ -28,25 +30,25 @@ export const GetLocationScenarioVUCount = (testId)=>{
       const userCount = Array.isArray(loadRes.data)
         ? loadRes.data[0].TotalUsers
         : 0;
-        dispatch({
-          type: GET_USER_COUNT,
-          payload: userCount,
-        });
-        dispatch({
-          type: GET_LOC_COUNT,
-          payload: locCount,
-        });
-        
-    }catch (error) {
-      toast.error('Network error')
+      dispatch({
+        type: GET_USER_COUNT,
+        payload: userCount,
+      });
+      dispatch({
+        type: GET_LOC_COUNT,
+        payload: locCount,
+      });
+    } catch (error) {
+      toast.error("Network error");
     }
-  }
-}
+  };
+};
 
 export const getScenarioCount = (rootId)=>{
 
   return async (dispatch)=>{
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
         header()
@@ -73,5 +75,5 @@ export const ResetLocationScenarioVUCount = ()=>{
       type: RESET_LOC_COUNT,
       payload: 0,
     });
-  }
-}
+  };
+};

@@ -17,7 +17,9 @@ import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
 import { useDispatch } from "react-redux";
 import { GetLocationScenarioVUCount } from "../../../../redux/actions/settingAction";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 const data = [
   {
@@ -46,6 +48,7 @@ export default function LocationPanel({ PerformanceFileId }) {
   const [designTabsActive, setDesignTabsActive] = useState(false);
   const fetchData = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
         header()
@@ -118,6 +121,7 @@ export default function LocationPanel({ PerformanceFileId }) {
       }else{
         
         try {
+          const BASE_URL = await getBaseUrl();
           const res =await axios.post(
             `${BASE_URL}/Performance/UpdateLoaction`,
             locationToUpdate,
@@ -171,6 +175,7 @@ export default function LocationPanel({ PerformanceFileId }) {
 
   const submitLocation = async (payload) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Performance/AddLocation`,
         payload,
@@ -202,6 +207,7 @@ export default function LocationPanel({ PerformanceFileId }) {
 
   const handleDelete = async (locationId) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Performance/DeleteLocation?Id=${locationId}`,
         header()

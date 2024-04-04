@@ -3,11 +3,14 @@ import { StyledFormControl, StyledOutlinedInput } from "./style";
 import { Grid } from "@mui/material";
 import { Box } from "@material-ui/core";
 import Divider from "@mui/material/Divider";
+import { getBaseUrl } from "../../../../utils/configService";
 import { header } from "../../../../utils/authheader";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
+
 
 export default function Properties({ PerformanceFileId }) {
   const [propertyList, setPropertyList] = useState([]);
@@ -20,6 +23,7 @@ export default function Properties({ PerformanceFileId }) {
 
   const fetchData = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/GetPropertyByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
         header()
@@ -63,6 +67,7 @@ export default function Properties({ PerformanceFileId }) {
 
   const submitProperty = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Performance/AddProperty`,
         {
@@ -95,6 +100,7 @@ export default function Properties({ PerformanceFileId }) {
 
   const handleDelete = async (pId) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Performance/DeleteProperties?Id=${pId}`,
         header()

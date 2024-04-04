@@ -6,7 +6,10 @@ import TableTestCase from "./TableTestCase";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
+
 
 
 export default function AddTestCase({addTestCase,nameSuite}) {
@@ -17,6 +20,7 @@ export default function AddTestCase({addTestCase,nameSuite}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.post(
           `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${addTestCase}`,
           header()

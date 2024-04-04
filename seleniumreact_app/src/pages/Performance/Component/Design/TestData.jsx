@@ -22,13 +22,17 @@ import { header, headerForm } from "../../../../utils/authheader";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Delete, Edit } from "@material-ui/icons";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
+
 export default function DataEntryPanel({ PerformanceFileId }) {
   const [testDataList, settestDataList] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [expandedAccord, setExpandedAccord] = useState("");
   const fetchData = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/GetTestDataByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
         header()
@@ -72,6 +76,7 @@ export default function DataEntryPanel({ PerformanceFileId }) {
 
   const submitTestData = async (formData) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Performance/AddTestData`,
         formData,
@@ -97,6 +102,7 @@ export default function DataEntryPanel({ PerformanceFileId }) {
   const handleDelete = async (testId, event) => {
     event.stopPropagation();
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Performance/DeleteTestData?Id=${testId}`,
         header()

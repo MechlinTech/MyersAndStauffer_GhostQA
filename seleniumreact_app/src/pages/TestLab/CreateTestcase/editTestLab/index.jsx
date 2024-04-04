@@ -25,7 +25,9 @@ import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
 import { StyledFormControl } from "../styleTestCase";
 import RenderActionFields from "../RenderActionFields";
 import ExecutionHistory from "./ExecutionHistory";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 export default function EditTestCase() {
   const classes = useStyles();
@@ -43,6 +45,7 @@ export default function EditTestCase() {
 
   const getExecutionHistory = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestDetailByTestName?TestName=${testCaseName}`
       );
@@ -54,6 +57,7 @@ export default function EditTestCase() {
   };
   useEffect(() => {
     const getSteps = async () => {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestStepsDetailsByTestStepsId?TestStepsId=${testId}` // change this uri
       );
@@ -62,6 +66,7 @@ export default function EditTestCase() {
       console.log("steps list : ", res.data);
     };
     const getTestCaseDetail = async () => {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestCaseDetailsByTestDetailId?TestCaseId=${testId}` // change this uri
       );
