@@ -28,12 +28,14 @@ export default function TableTestCase({
   showAddNewElement,
   setShowAddNewElement,
   rootId,
+  apiCalling
 }) {
   const navigate = useNavigate();
   const classes = useStyles();
   const location = useLocation();
   const testNamefield = useRef();
   const [testCaseData, setTestCaseData] = useState([]);
+  console.log("testCaseData", testCaseData);
   const [expandedAccord, setExpandedAccord] = useState("");
   const fetchData = async () => {
     try {
@@ -98,6 +100,7 @@ export default function TableTestCase({
       );
       console.log("response", response);
       fetchData();
+      apiCalling()
       setSelectedFile(null);
       setExpandedAccord(testNamefield.current.value);
       testNamefield.current.value = "";
@@ -142,25 +145,29 @@ export default function TableTestCase({
   };
   return (
     <TableContainer
-      component={Paper}
-      style={{
-        border: "solid 2px #DADADA",
-        borderRadius: "5px",
-      }}
+      // component={Paper}
+      // style={{
+      //   border: testCaseData.length > 0 ? "solid 2px #DADADA" : "none",
+      //   borderRadius: testCaseData.length > 0 ? "5px" : "",
+      // }}
     >
       <Table aria-label="simple table">
-        <TableHead sx={{ backgroundColor: "#dedede" }}>
-          <TableRow>
-            <TableCell align="left">
-              <StyledTypography>Scenario</StyledTypography>
-            </TableCell>
-            <TableCell align="left">
-              <StyledTypography>File Name</StyledTypography>
-            </TableCell>
-            <TableCell align="left"></TableCell>
-          </TableRow>
-        </TableHead>
+        {testCaseData.length > 0 && (
+          <TableHead sx={{ backgroundColor: "#dedede" }}>
+            <TableRow>
+              <TableCell align="left">
+                <StyledTypography>Scenario</StyledTypography>
+              </TableCell>
+              <TableCell align="left">
+                <StyledTypography>File Name</StyledTypography>
+              </TableCell>
+              <TableCell align="left"></TableCell>
+            </TableRow>
+          </TableHead>
+        )}
+
         <TableBody>
+        {testCaseData.length > 0 && (
           <TableRow>
             <TableCell colSpan={3} style={{ padding: "0px" }}>
               {testCaseData?.map((item, index) => (
@@ -223,6 +230,7 @@ export default function TableTestCase({
               ))}
             </TableCell>
           </TableRow>
+        )}
           {!showAddNewElement && (
             <TableRow
             // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -284,6 +292,6 @@ export default function TableTestCase({
           )}
         </TableBody>
       </Table>
-    </TableContainer>
+     </TableContainer>
   );
 }

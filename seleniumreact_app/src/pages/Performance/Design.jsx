@@ -48,7 +48,7 @@ export default function Design({ rootId }) {
 
   useEffect(() => {
     fetchData();
-  }, [rootId]);
+  }, [rootId, showAddNewElement]);
 
   const fetchData = async () => {
     setisScnerioCountRunning(true);
@@ -229,7 +229,7 @@ export default function Design({ rootId }) {
         padding: "10px",
       }}
     >
-      {scenarioCount > 0 && !isScnerioCountRunning && (
+      {scenarioCount > 0 && (
         <Grid
           container
           alignItems="center"
@@ -381,18 +381,18 @@ export default function Design({ rootId }) {
           </Grid>
         </Grid>
       )}
-      {scenarioCount > 0 && !isScnerioCountRunning && (
-        <Grid container alignItems="center">
-          <Grid item xs={12}>
-            <TableTestCase
-              rootId={rootId}
-              setShowAddNewElement={setShowAddNewElement}
-              showAddNewElement={showAddNewElement}
-            />
-          </Grid>
-          <Grid item xs={12}></Grid>
+
+      <Grid container alignItems="center">
+        <Grid item xs={12}>
+          <TableTestCase
+            rootId={rootId}
+            setShowAddNewElement={setShowAddNewElement}
+            showAddNewElement={showAddNewElement}
+            apiCalling={fetchData}
+          />
         </Grid>
-      )}
+        <Grid item xs={12}></Grid>
+      </Grid>
       {/* {showAddNewElement && (
         <Button
           variant="contained"
@@ -427,10 +427,10 @@ export default function Design({ rootId }) {
             style={{
               fontSize: 14,
               backgroundColor: isRunning
-                  ? "rgba(101, 77, 247, 0.5)"
-                  : "rgb(101, 77, 247)",
-                color: "#ffffff",
-                cursor: isRunning ? "not-allowed" : "pointer",
+                ? "rgba(101, 77, 247, 0.5)"
+                : "rgb(101, 77, 247)",
+              color: "#ffffff",
+              cursor: isRunning ? "not-allowed" : "pointer",
               padding: "12px 18px",
               marginTop: "10px",
               textTransform: "none",
