@@ -188,6 +188,7 @@ const Card = ({
                     className={styleClass.updateEdit}
                     style={{
                       display: expandedInputId === item.id ? "block" : "block",
+                      marginLeft: "20px",
                     }}
                   >
                     <input
@@ -203,7 +204,7 @@ const Card = ({
                     <CancelIcon
                       sx={{ color: "#f74d4d" }}
                       onClick={() => handleCRUDCancel()}
-                      style={{ marginLeft: "20px" }}
+                      // style={{ marginLeft: "20px" }}
                     />
                   </div>
                 )}
@@ -251,7 +252,7 @@ const Card = ({
   );
 };
 
-const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
+const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   const styleClass = useStylesTree();
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [nodeCount, setNodeCount] = useState(0);
@@ -260,6 +261,14 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
   const [editMode, setEditMode] = useState(0); // State to store the value of the input field
   const [expanded, setExpanded] = useState([]);
   const [newElementName, setNewElementName] = useState(""); // State to store the value of the input field
+
+  useEffect(() => {
+    if (params !== null && params !== undefined) {
+      setSelectedNodeId(parseInt(params));
+    }
+  }, [params]);
+  console.log("selectedNodeId", params);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -302,7 +311,9 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
 
         header()
       );
-      setListData([...listData, response.data.Data[0]]); // Reset form data
+      setListData([...listData, response.data.Data[0]]); // need to check the response
+      setSelectedNodeId(response.data.Data[0].id)
+      console.log('response after creating new node',response)
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -312,7 +323,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
     (parentId, nodeData) => {
       if (nodeCount < 5) {
         setExpandedInputId(null); // Hide the input field
-        if (newElementName) {
+        if (newElementName) { // we can trim and check if its able to add with wide space
           const newId = Math.max(...listData.map((item) => item.id)) + 1;
           const newItem = {
             name: newElementName,
@@ -322,7 +333,6 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
           };
           handleCRUDAtParent(newItem);
           setExpanded([...expanded, parentId]);
-
           setNewElementName("");
         }
       } else {

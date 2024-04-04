@@ -11,7 +11,7 @@ import axios from "axios";
 import { getBaseUrl } from "../../utils/configService";
 import { header } from "../../utils/authheader";
 import { useDispatch } from "react-redux";
-import { ResetLocationScenarioVUCount } from "../../redux/actions/settingAction";
+import { ResetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
@@ -207,7 +207,7 @@ const Card = ({
                     <CancelIcon
                       sx={{ color: "#f74d4d" }}
                       onClick={() => handleCRUDCancel()}
-                      style={{ marginLeft: "20px" }}
+                      // style={{ marginLeft: "20px" }}
                     />
                   </div>
                 )}
@@ -366,6 +366,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
           handleCRUDAtParent(newItem);
           setExpanded([...expanded, parentId]);
           setNewElementName("");
+          setSelectedNodeId(newId)
         }
       } else {
         alert("Maximum node limit reached.");

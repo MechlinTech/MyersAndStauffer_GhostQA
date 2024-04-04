@@ -419,7 +419,11 @@ export default function EditTestCase() {
         default:
           break;
       }
-      return { stepDescription: "",
+      if(!selectorNoOptionList.includes(action)){
+        additionalField.selectorType=""
+        additionalField.selectorValue=""
+      }
+      return { stepDescription:"",
       isOptional: false, ...additionalField,action:action };
     };
   
@@ -569,12 +573,12 @@ export default function EditTestCase() {
           }}
         >
           <StyledTypography>Step {index + 1}</StyledTypography>
-          {/* {isEditable && (
+          {(isEditable && index>0 ) && (
             <DeleteIcon
               onClick={() => handleRemoveStep(step)}
               sx={{ cursor: "pointer", color: "red" }}
             />
-          )} */}
+          )}
         </Box>
         <Paper
           elevation={1}
@@ -883,7 +887,7 @@ export default function EditTestCase() {
           <Grid item xs={12} display="flex">
             <Grid container spacing={1} mb={1} mt={1}>
               <Grid item xs={12} md={4} display="flex" alignItems="center">
-                <StyledTypography mr={1} minWidth={"105px"}>
+                <StyledTypography mr={1} minWidth={"120px"}>
                   Test Case Title :
                 </StyledTypography>
                 <StyledFormControl>
