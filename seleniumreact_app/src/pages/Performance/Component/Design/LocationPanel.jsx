@@ -16,7 +16,7 @@ import { header } from "../../../../utils/authheader";
 import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
 import { useDispatch } from "react-redux";
-import { GetLocationScenarioVUCount } from "../../../../redux/actions/settingAction";
+import { GetLocationScenarioVUCount } from "../../../../redux/actions/performanceAction";
 import { getBaseUrl } from "../../../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 

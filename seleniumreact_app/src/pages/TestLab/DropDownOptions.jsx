@@ -231,7 +231,7 @@ const cypressActions = [
 
 
 const userActionsOptions = [
-  { label: "Visit", value: "visit" },
+  // { label: "Visit", value: "visit" },
   { label: "Left click", value: "click" },
   { label: "Double click", value: "dblclick" },
   { label: "Right click", value: "rightclick" },

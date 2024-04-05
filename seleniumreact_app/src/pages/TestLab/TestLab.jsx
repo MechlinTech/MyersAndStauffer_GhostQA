@@ -13,16 +13,14 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import DynamicTreeView from "./DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getBaseUrl } from "../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TestLab() {
   const classes = useStyles();
   
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const rootId = queryParams.get('rootId');
+  const {nodeId} = useParams()
 
   const [addTestCase, setAddTestCase] = useState(0);
   const [addNewProject, setAddNewProject] = useState(false);
@@ -165,7 +163,7 @@ export default function TestLab() {
                   TestCaseHandle={handleTestCaseList}
                   listData={listData}
                   setListData={setListData}
-                  params = {rootId}
+                  params = {nodeId}
                 />
               </Grid>
             </Card>

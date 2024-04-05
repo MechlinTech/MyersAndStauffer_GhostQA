@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Typography, Paper, Box, Card } from "@material-ui/core";
-import { useStylesTestCase } from "./styles";
-import Button from '@mui/material/Button';
+import { StyledTypography, useStylesTestCase } from "./styles";
+import Button from "@mui/material/Button";
 import TableTestCase from "./TableTestCase";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -9,14 +9,11 @@ import { header } from "../../utils/authheader";
 import { getBaseUrl } from "../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
-
-
-
-export default function AddTestCase({addTestCase,nameSuite}) {
+export default function AddTestCase({ addTestCase, nameSuite }) {
   const classes = useStylesTestCase();
-  const [testCase,setTestCase]=useState([])
+  const [testCase, setTestCase] = useState([]);
   const navigate = useNavigate();
-  localStorage.setItem('rootId',addTestCase)
+  localStorage.setItem("rootId", addTestCase);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,9 +22,13 @@ export default function AddTestCase({addTestCase,nameSuite}) {
           `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${addTestCase}`,
           header()
         );
-        
+
         // Assuming response.data is the array of data you want to set as listData
-        setTestCase((response.data.status ==='fail' || response.data == '' ? [] : response.data));
+        setTestCase(
+          response.data.status === "fail" || response.data == ""
+            ? []
+            : response.data
+        );
         console.log(response);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -38,52 +39,56 @@ export default function AddTestCase({addTestCase,nameSuite}) {
     fetchData(); // Call the fetchData function when the component mounts
   }, [addTestCase]);
 
-
   return (
     <>
-  <Grid
-          container
-          className={classes.header}
-          justifyContent="space-between"
-          alignItems="center"
-          spacing={2}
-        >
-          <Grid item xs={6}  className={`${classes.header}`}>
-          <div className={classes.highlight}>{nameSuite.length>40?nameSuite.slice(0,40)+'...':nameSuite}</div>
-          </Grid>
-          <Grid item>
-            <Button
-              className={classes.button}
-              //onClick={handleAddEnvironment}
-              sx={{
-                backgroundColor: "rgb(101, 77, 247)",
-                "&:hover": {
-                  backgroundColor: "rgb(101, 77, 247) !important",
-                  borderColor: "#654DF7",
-                  color: "#fff",
-                  "&:before": {
-                    backgroundColor: "rgb(101, 77, 247) !important",
-                    color: "#fff",
-                  },
-                },
+      <Grid
+        container
+        className={classes.header}
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={2}
+      >
+        <Grid item xs={6} className={`${classes.header}`}>
+          <div className={classes.highlight}>
+            {nameSuite.length > 40 ? nameSuite.slice(0, 40) + "..." : nameSuite}
+          </div>
+        </Grid>
+        <Grid item>
+          <Button
+            className={classes.button}
+            //onClick={handleAddEnvironment}
+            sx={{
+              backgroundColor: "rgb(101, 77, 247)",
+              "&:hover": {
+                backgroundColor: "rgb(101, 77, 247) !important",
+                borderColor: "#654DF7",
                 color: "#fff",
-              }}
-              onClick={()=>navigate(`/testLab/createTestcase/${addTestCase}`)}
-            >
-              Add New TestCase
-            </Button>
-          </Grid>
+                "&:before": {
+                  backgroundColor: "rgb(101, 77, 247) !important",
+                  color: "#fff",
+                },
+              },
+              color: "#fff",
+            }}
+            onClick={() => navigate(`/testLab/createTestcase/${addTestCase}`)}
+          >
+            Add New TestCase
+          </Button>
         </Grid>
-          <Grid container justifyContent="center" alignItems="center" spacing={2}>
-          <Grid item xs={12}>
-            <Card style={{ textAlign: "center", margin: "20px" }}>
-             
-              <Grid item>
-              {testCase.length!==0 && <TableTestCase testCase={testCase} rootId={addTestCase}/>}
-              </Grid>
-            </Card>
-          </Grid>
+      </Grid>
+      <Grid container justifyContent="center" alignItems="center" spacing={2}>
+        <Grid item xs={12}>
+          <Card style={{ textAlign: "center", margin: "20px" }}>
+            <Grid item>
+              {testCase.length === 0 ? (
+                <StyledTypography p={5}>No test cases found</StyledTypography>
+              ) : (
+                <TableTestCase testCase={testCase} rootId={addTestCase} />
+              )}
+            </Grid>
+          </Card>
         </Grid>
+      </Grid>
     </>
   );
 }
