@@ -70,7 +70,7 @@ export default function AddTestCase({addTestCase,nameSuite}) {
               }}
               onClick={()=>navigate(`/testLab/createTestcase/${addTestCase}`)}
             >
-              Add New TestCase
+              Add New Testcase
             </Button>
           </Grid>
         </Grid>
