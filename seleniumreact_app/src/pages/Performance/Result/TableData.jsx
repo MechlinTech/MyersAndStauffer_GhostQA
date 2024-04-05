@@ -24,7 +24,7 @@ function formatTime(dateTimeString) {
   );
   return formattedTime;
 }
-export function TableData({ rows }) {
+export function TableData({ rows,rootId }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [activeRow, setActiveRow] = React.useState(null);
@@ -57,7 +57,7 @@ export function TableData({ rows }) {
             >
               <StyledTableCell component="th" scope="row">
                 <Link
-                  to={`/result/summary`}
+                  to={`/result/${rootId}/summary`}
                   style={{ textDecoration: "none" }}
                   onClick={() => handleRowClick(row)}
                 >

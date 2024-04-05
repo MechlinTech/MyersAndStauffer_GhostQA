@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
 import { Tooltip } from "@mui/material";
 import { getBaseUrl } from "../../utils/configService";
+import { useNavigate } from "react-router-dom";
 import DeleteModal from "./Comman/DeleteModal";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -46,7 +47,7 @@ const Card = ({
   setSelectedNodeId,
 }) => {
   const styleClass = useStylesTree();
-
+ const navigate = useNavigate()
   return (
     <>
       <ul
@@ -114,6 +115,7 @@ const Card = ({
                           console.log("item", item);
                           handleTask(item, nodeCount);
                           setSelectedNodeId(item.id); // Update the clicked node ID
+                          navigate(`/testLab/${item.id}`)
                         }}
                         style={{
                           cursor: "pointer",
@@ -273,11 +275,42 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
 
   useEffect(() => {
     if (params !== null && params !== undefined) {
-      setSelectedNodeId(parseInt(params));
+    const nodeId = parseInt(params)
+    setSelectedNodeId(nodeId);
     }
+    
   }, [params]);
-  console.log("selectedNodeId", params);
 
+  useEffect(()=>{
+    if (selectedNodeId) {
+      const expandedNode = listData.find(item => item.id === selectedNodeId);
+      if (expandedNode) {
+       let  parentid = expandedNode.parentId
+        const parentids = []
+        while(parentid !== 0){
+          parentids.unshift(parentid)
+          let parentNode = listData.find(item => item.id === parentid);
+          parentid = parentNode.parentId
+        }
+        parentids.unshift(parentid)
+        setExpanded([...parentids]);
+        const nodeCount = findDepth(expandedNode,listData)
+        TestCaseHandle(expandedNode,nodeCount-1)
+      }
+    }
+  },[listData,selectedNodeId])
+  const findDepth = (item, items) => {
+    if (item.parentId === 0) {
+        return 1; // Base case: root item
+    } else {
+        const parentItem = items.find(parent => parent.id === item.parentId);
+        if (parentItem) {
+            return 1 + findDepth(parentItem, items); // Recursive call to find parent's depth
+        } else {
+            return 1; // If parent item is not found, assume depth of 1
+        }
+    }
+};
   useEffect(() => {
     const fetchData = async () => {
       try {

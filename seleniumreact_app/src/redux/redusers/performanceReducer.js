@@ -11,13 +11,13 @@ const performanceReducer = (state = initialState, action) => {
     case GET_LOC_COUNT: {
       return {
         ...state,
-        totalLocation: state.totalLocation + action.payload,
+        totalLocation:action.payload,
       };
     }
     case GET_USER_COUNT: {
-      return {
+        return {
         ...state,
-        virtualUser: state.virtualUser + action.payload,
+        virtualUser:action.payload,
       };
     }
     case RESET_USER_COUNT: {

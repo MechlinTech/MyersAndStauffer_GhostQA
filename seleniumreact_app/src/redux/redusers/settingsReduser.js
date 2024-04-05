@@ -14,30 +14,6 @@ const settingsReduser = (state = initialState, action) => {
         testSuitsList: action.payload,
       };
     }
-    case GET_LOC_COUNT: {
-      return {
-        ...state,
-        totalLocation: state.totalLocation + action.payload,
-      };
-    }
-    case GET_USER_COUNT: {
-      return {
-        ...state,
-        virtualUser: state.virtualUser + action.payload,
-      };
-    }
-    case RESET_USER_COUNT: {
-      return {
-        ...state,
-        virtualUser: action.payload,
-      };
-    }
-    case RESET_LOC_COUNT: {
-      return {
-        ...state,
-        totalLocation: action.payload,
-      };
-    }
     default:
       return state;
   }

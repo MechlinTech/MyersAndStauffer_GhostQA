@@ -203,47 +203,47 @@ export const DeleteBrowser = (brwId) => {
   };
 };
 
-export const GetLocationScenarioVUCount = (testId) => {
-  return async (dispatch) => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const loadRes = await axios.get(
-        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${testId}`,
-        header()
-      );
-      const locationRes = await axios.get(
-        `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${testId}`,
-        header()
-      );
-      const locCount = Array.isArray(locationRes.data)
-        ? locationRes.data.length
-        : 0;
-      const userCount = Array.isArray(loadRes.data)
-        ? loadRes.data[0].TotalUsers
-        : 0;
-      dispatch({
-        type: GET_USER_COUNT,
-        payload: userCount,
-      });
-      dispatch({
-        type: GET_LOC_COUNT,
-        payload: locCount,
-      });
-    } catch (error) {
-      toast.error("Network error");
-    }
-  };
-};
+// export const GetLocationScenarioVUCount = (testId) => {
+//   return async (dispatch) => {
+//     try {
+//       const BASE_URL = await getBaseUrl();
+//       const loadRes = await axios.get(
+//         `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${testId}`,
+//         header()
+//       );
+//       const locationRes = await axios.get(
+//         `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${testId}`,
+//         header()
+//       );
+//       const locCount = Array.isArray(locationRes.data)
+//         ? locationRes.data.length
+//         : 0;
+//       const userCount = Array.isArray(loadRes.data)
+//         ? loadRes.data[0].TotalUsers
+//         : 0;
+//       dispatch({
+//         type: GET_USER_COUNT,
+//         payload: userCount,
+//       });
+//       dispatch({
+//         type: GET_LOC_COUNT,
+//         payload: locCount,
+//       });
+//     } catch (error) {
+//       toast.error("Network error");
+//     }
+//   };
+// };
 
-export const ResetLocationScenarioVUCount = () => {
-  return async (dispatch) => {
-    dispatch({
-      type: RESET_USER_COUNT,
-      payload: 0,
-    });
-    dispatch({
-      type: RESET_LOC_COUNT,
-      payload: 0,
-    });
-  };
-};
+// export const ResetLocationScenarioVUCount = () => {
+//   return async (dispatch) => {
+//     dispatch({
+//       type: RESET_USER_COUNT,
+//       payload: 0,
+//     });
+//     dispatch({
+//       type: RESET_LOC_COUNT,
+//       payload: 0,
+//     });
+//   };
+// };

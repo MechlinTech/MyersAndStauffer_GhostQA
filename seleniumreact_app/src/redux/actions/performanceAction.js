@@ -11,38 +11,48 @@ export const SCENARIO_COUNT = "SCENARIO_COUNT";
 
 
 
-export const GetLocationScenarioVUCount = (testId)=>{
-
-  return async (dispatch)=>{
+export const GetLocationScenarioVUCount = (testList) => {
+  return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
-      const loadRes = await axios.get(
-        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${testId}`,
-        header()
-      );
-      const locationRes = await axios.get(
-        `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${testId}`,
-        header()
-      );
-      const locCount = Array.isArray(locationRes.data)
-        ? locationRes.data.length
-        : 0;
-      const userCount = Array.isArray(loadRes.data)
-        ? loadRes.data[0].TotalUsers
-        : 0;
+      let totalUserCount = 0;
+      let totalLocationCount = 0;
+
+      await Promise.all(testList.map(async (test) => {
+        const loadRes = await axios.get(
+          `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${test.id}`,
+          header()
+        );
+        const locationRes = await axios.get(
+          `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${test.id}`,
+          header()
+        );
+        const locCount = Array.isArray(locationRes.data)
+          ? locationRes.data.length
+          : 0;
+        const userCount = Array.isArray(loadRes.data)
+          ? loadRes.data[0].TotalUsers
+          : 0;
+
+        totalUserCount += userCount;
+        totalLocationCount += locCount;
+      }));
+
+      // Dispatch the sums
       dispatch({
         type: GET_USER_COUNT,
-        payload: userCount,
+        payload: totalUserCount,
       });
       dispatch({
         type: GET_LOC_COUNT,
-        payload: locCount,
+        payload: totalLocationCount,
       });
     } catch (error) {
       toast.error("Network error");
     }
   };
 };
+
 
 export const getScenarioCount = (rootId)=>{
 

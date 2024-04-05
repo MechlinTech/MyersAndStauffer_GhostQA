@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { ResetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import DeleteModal from "./Comman/DeleteModal";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
@@ -361,7 +362,13 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
 
         header()
       );
-      setListData([...listData, response.data.Data[0]]); // Reset form data
+      if(response.data.status === "fail"){
+        toast.error("Duplicate name")
+      }else{
+        setListData([...listData, response.data.Data[0]]); // Reset form data
+        setSelectedNodeId(response.data.Data[0].id)
+      }
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -382,7 +389,6 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
           handleCRUDAtParent(newItem);
           setExpanded([...expanded, parentId]);
           setNewElementName("");
-          setSelectedNodeId(newId);
         }
       } else {
         alert("Maximum node limit reached.");
