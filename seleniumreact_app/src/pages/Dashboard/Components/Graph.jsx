@@ -136,11 +136,11 @@ const Graph = (props) => {
                 data: TotalTestCase,
               },
               {
-                name: "Total Passed Test Case",
+                name: "Passed",
                 data: TotalPassedTestCase,
               },
               {
-                name: "Total Failed Test Case",
+                name: "Failed",
                 data: TotalFailedTestCase,
               },
              

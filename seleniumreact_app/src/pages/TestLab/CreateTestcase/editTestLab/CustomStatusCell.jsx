@@ -1,38 +1,38 @@
 import React from "react";
 import { TableCell, Chip } from "@mui/material";
 
-const CustomStatusCell = ({ status }) => {
+const CustomStatusCell = ({ status, selected }) => {
+  console.log("selected", selected);
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
   const getStatusStyle = () => {
+    let style = {
+      backgroundColor: selected ? "transparent" : "",
+      color: "rgb(253, 253, 253)",
+      borderRadius: "0",
+    };
+
     switch (status) {
       case "passed":
-        return {
-          backgroundColor: "rgb(7, 217, 176)",
-          color: "rgb(253, 253, 253)",
-          borderRadius: "0",
-        };
+        style.backgroundColor = selected ? "transparent" : "rgb(7, 217, 176)";
+        break;
       case "failed":
-        return {
-          backgroundColor: "rgb(247, 77, 77)",
-          color: "rgb(253, 253, 253)",
-          borderRadius: "0",
-        };
+        style.backgroundColor = selected ? "transparent" : "rgb(247, 77, 77)";
+        break;
       default:
-        return {
-          backgroundColor: "rgb(247, 169, 77)",
-          color: "rgb(253, 253, 253)",
-          borderRadius: "0",
-        };
+        style.backgroundColor = selected ? "transparent" : "rgb(247, 169, 77)";
+        break;
     }
+
+    return style;
   };
 
   return (
     <TableCell>
       <Chip
-        label={capitalizeFirstLetter(status)} 
+        label={capitalizeFirstLetter(status)}
         style={{ ...getStatusStyle(), height: "24px" }}
       />
     </TableCell>

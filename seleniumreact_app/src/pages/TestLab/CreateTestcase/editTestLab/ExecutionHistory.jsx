@@ -186,7 +186,7 @@ export default function ExecutionHistory({executionDetail}) {
                         {row.Status}
                       </Box>
                     </StyledTableCell> */}
-                     <CustomStatusCell status={row.Status} />
+                     <CustomStatusCell status={row.Status} selected={selectedRunId === row.TestCase}/>
                     <StyledTableCell
                       sx={{
                         color:
