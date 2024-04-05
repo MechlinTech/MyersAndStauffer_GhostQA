@@ -8,12 +8,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
+import { getBaseUrl } from "../../utils/configService";
 import { header } from "../../utils/authheader";
 import { useDispatch } from "react-redux";
 import { ResetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { toast } from "react-toastify";
+import DeleteModal from "./Comman/DeleteModal";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 const Card = ({
   newElementName,
@@ -46,8 +49,8 @@ const Card = ({
   setSelectedNodeId,
 }) => {
   const styleClass = useStylesTree();
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     function updateNodeDepth(data, parentId, depth) {
       const children = data.filter((node) => node.parentId === parentId);
@@ -96,60 +99,69 @@ const Card = ({
                       : {}
                   }
                 >
-                  <div style={{display:'flex'}}>
-                  {data.some((child) => child.parentId === item.id) && (
-                    <>
-                      {!expanded.includes(item.id) ? (
-                        <ExpandMoreIcon onClick={() => toggleExpand(item.id)} />
-                      ) : (
-                        <ExpandLessIcon onClick={() => toggleExpand(item.id)} />
-                      )}
-                    </>
-                  )}
-                  {editMode === item.id && (
-                    <div className={styleClass.updateEdit}>
-                      <input
-                        type="text"
-                        value={editData}
-                        className={styleClass.editTheFolder}
-                        onChange={(e) =>
-                          handleEditChange(item.id, e.currentTarget.value)
-                        }
-                        onKeyPress={(event) =>
-                          handleKeyPressEdit(event, item.id, nodeCount)
-                        }
-                        maxLength={250}
-                      />
-                      {/* <CancelIcon
+                  <div style={{ display: "flex" }}>
+                    {data.some((child) => child.parentId === item.id) && (
+                      <>
+                        {!expanded.includes(item.id) ? (
+                          <ExpandMoreIcon
+                            onClick={() => toggleExpand(item.id)}
+                          />
+                        ) : (
+                          <ExpandLessIcon
+                            onClick={() => toggleExpand(item.id)}
+                          />
+                        )}
+                      </>
+                    )}
+                    {editMode === item.id && (
+                      <div className={styleClass.updateEdit}>
+                        <input
+                          type="text"
+                          value={editData}
+                          className={styleClass.editTheFolder}
+                          onChange={(e) =>
+                            handleEditChange(item.id, e.currentTarget.value)
+                          }
+                          onKeyPress={(event) =>
+                            handleKeyPressEdit(event, item.id, nodeCount)
+                          }
+                          maxLength={250}
+                        />
+                        {/* <CancelIcon
                         sx={{ color: "#f74d4d" }}
                         onClick={() => handleEdit(item.id, item.name, "cancel")}
                       /> */}
-                    </div>
-                  )}
-                  {editMode !== item.id && (
-                    <span
-                      onClick={() => {
-                        navigate('/performance') 
-                        handleTask(item.id,nodeCount);
-                        setSelectedNodeId(item.id);
-                        if(item.id !== selectedNodeId)
-                        dispatch(ResetLocationScenarioVUCount())
-                      }}
-                      style={{
-                        cursor: "pointer",
-                        fontSize: "18px",
-                      }}
-                    >
-                     <Tooltip title={item.name.length>30 && item.name}>
-                      <Typography
-                        style={{ fontFamily: "Lexend Deca", fontSize: "14px" }}
+                      </div>
+                    )}
+                    {editMode !== item.id && (
+                      <span
+                        onClick={() => {
+                          navigate("/performance");
+                          handleTask(item.id, nodeCount);
+                          setSelectedNodeId(item.id);
+                          if (item.id !== selectedNodeId)
+                            dispatch(ResetLocationScenarioVUCount());
+                        }}
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "18px",
+                        }}
                       >
-                        {" "}
-                        {item.name.length>30?item.name.slice(0,30)+"...":item.name}
-                      </Typography>
-                      </Tooltip>
-                    </span>
-                  )}
+                        <Tooltip title={item.name.length > 30 && item.name}>
+                          <Typography
+                            style={{
+                              fontFamily: "Lexend Deca",
+                              fontSize: "14px",
+                            }}
+                          >
+                            {" "}
+                            {item.name.length > 30
+                              ? item.name.slice(0, 30) + "..."
+                              : item.name}
+                          </Typography>
+                        </Tooltip>
+                      </span>
+                    )}
                   </div>
                   <div className={styleClass.crud} style={{}}>
                     {editMode == 0 && (
@@ -162,13 +174,17 @@ const Card = ({
                         style={{ cursor: "pointer", marginLeft: "10px" }}
                       />
                     )}
-                    {editMode === item.id && <CancelIcon
+                    {editMode === item.id && (
+                      <CancelIcon
                         sx={{ color: "#f74d4d" }}
                         onClick={() => handleEdit(item.id, item.name, "cancel")}
-                      />}
+                      />
+                    )}
                     <DeleteIcon
-                      sx={{ color: selectedNodeId === item.id?'white': "#f74d4d" }}
-                      onClick={() => handleDelete(item.id)}
+                      sx={{
+                        color: selectedNodeId === item.id ? "white" : "#f74d4d",
+                      }}
+                      onClick={() => handleDelete(item)}
                       style={{ cursor: "pointer" }}
                     />
                     {nodeCount < 2 && (
@@ -190,7 +206,7 @@ const Card = ({
                     className={styleClass.updateEdit}
                     style={{
                       display: expandedInputId === item.id ? "block" : "block",
-                      marginLeft:'20px'
+                      marginLeft: "20px",
                     }}
                   >
                     <input
@@ -254,7 +270,7 @@ const Card = ({
   );
 };
 
-const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => {
+const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   const styleClass = useStylesTree();
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [nodeCount, setNodeCount] = useState(0);
@@ -262,18 +278,21 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
   const [editData, setEditData] = useState(""); // State to store the value of the input field
   const [editMode, setEditMode] = useState(0); // State to store the value of the input field
   const [expanded, setExpanded] = useState([]);
-  const [newElementName, setNewElementName] = useState(""); // State to store the value of the input field
+  const [newElementName, setNewElementName] = useState("");
+  const [openDelModal, setopenDelModal] = useState(false);
+  const [deleteItem, setsDeleteItem] = useState("");
 
   useEffect(() => {
     if (params !== null && params !== undefined) {
-      setSelectedNodeId(parseInt(params)); 
-    } 
+      setSelectedNodeId(parseInt(params));
+    }
   }, [params]);
 
-  console.log("selectedNodeId", params)
+  console.log("selectedNodeId", params);
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.get(
           `${BASE_URL}/Performance/GetProjectData`,
           header()
@@ -291,35 +310,35 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
   }, [setListData]);
   useEffect(() => {
     if (selectedNodeId) {
-      const expandedNode = listData.find(item => item.id === selectedNodeId);
+      const expandedNode = listData.find((item) => item.id === selectedNodeId);
       if (expandedNode) {
-       let  parentid = expandedNode.parentId
-        const parentids = []
-        while(parentid !== 0){
-          parentids.unshift(parentid)
-          let parentNode = listData.find(item => item.id === parentid);
-          parentid = parentNode.parentId
+        let parentid = expandedNode.parentId;
+        const parentids = [];
+        while (parentid !== 0) {
+          parentids.unshift(parentid);
+          let parentNode = listData.find((item) => item.id === parentid);
+          parentid = parentNode.parentId;
         }
-        parentids.unshift(parentid)
+        parentids.unshift(parentid);
         setExpanded([...parentids]);
-        const nodeCount = findDepth(expandedNode,listData)
-        TestCaseHandle(expandedNode.id,nodeCount-1)
+        const nodeCount = findDepth(expandedNode, listData);
+        TestCaseHandle(expandedNode.id, nodeCount - 1);
       }
     }
   }, [listData, selectedNodeId]);
 
   const findDepth = (item, items) => {
     if (item.parentId === 0) {
-        return 1; // Base case: root item
+      return 1; // Base case: root item
     } else {
-        const parentItem = items.find(parent => parent.id === item.parentId);
-        if (parentItem) {
-            return 1 + findDepth(parentItem, items); // Recursive call to find parent's depth
-        } else {
-            return 1; // If parent item is not found, assume depth of 1
-        }
+      const parentItem = items.find((parent) => parent.id === item.parentId);
+      if (parentItem) {
+        return 1 + findDepth(parentItem, items); // Recursive call to find parent's depth
+      } else {
+        return 1; // If parent item is not found, assume depth of 1
+      }
     }
-};
+  };
   const handleCRUD = (event, parentId) => {
     event.preventDefault();
     console.log(parentId);
@@ -332,6 +351,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
   };
   const handleCRUDAtParent = async (newItem) => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/AddProjectData`,
         {
@@ -342,7 +362,13 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
 
         header()
       );
-      setListData([...listData, response.data.Data[0]]); // Reset form data
+      if(response.data.status === "fail"){
+        toast.error("Duplicate name")
+      }else{
+        setListData([...listData, response.data.Data[0]]); // Reset form data
+        setSelectedNodeId(response.data.Data[0].id)
+      }
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -363,7 +389,6 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
           handleCRUDAtParent(newItem);
           setExpanded([...expanded, parentId]);
           setNewElementName("");
-          setSelectedNodeId(newId)
         }
       } else {
         alert("Maximum node limit reached.");
@@ -381,6 +406,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
       setEditMode(0);
       const itemToEdit = listData.find((item) => item.id === itemId);
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.post(
           `${BASE_URL}/Performance/UpdateProjectData`,
           {
@@ -437,10 +463,17 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
       handleCRUDNewItem(parentId, nodeData);
     }
   };
+
+  const handleDeleTeModal = (item) => {
+    console.log("item", item);
+    setsDeleteItem(item);
+    setopenDelModal(true);
+  };
+
   const handleDelete = async (itemId) => {
-    console.log(itemId, listData);
     const itemToDelete = listData.find((item) => item.id === itemId);
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/DeleteProjectData`,
         {
@@ -474,42 +507,53 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData,  params }) => 
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    setopenDelModal(false);
   };
 
   return (
-    <div className={styleClass.orgTree}>
-      {listData.length != 0 && (
-        <Card
-          handleEdit={handleEdit}
-          handleKeyPressEdit={handleKeyPressEdit}
-          handleEditChange={handleEditChange}
-          editData={editData}
-          setEditData={setEditData}
-          editMode={editMode}
-          setEditMode={setEditMode}
-          data={listData}
-          keyData={0}
-          handleTask={TestCaseHandle}
-          nodeData={0}
-          handleCRUDAtParent={handleCRUDAtParent}
-          nodeCount={nodeCount}
-          handleNodeCount={handleNodeCount}
-          expandedInputId={expandedInputId}
-          setExpandedInputId={setExpandedInputId}
-          setListData={setListData}
-          newElementName={newElementName}
-          setNewElementName={setNewElementName}
-          handleCRUD={handleCRUD}
-          expanded={expanded}
-          toggleExpand={toggleExpand}
-          handleCRUDCancel={handleCRUDCancel}
-          handleKeyPress={handleKeyPress}
-          handleDelete={handleDelete}
-          selectedNodeId={selectedNodeId}
-          setSelectedNodeId={setSelectedNodeId}
-        />
-      )}
-    </div>
+    <>
+      <DeleteModal
+        open={openDelModal}
+        onClose={() => setopenDelModal(false)}
+        deleteItem={deleteItem}
+        handleDelete={handleDelete}
+      />
+
+      <div className={styleClass.orgTree}>
+        {listData.length != 0 && (
+          <Card
+            handleEdit={handleEdit}
+            handleKeyPressEdit={handleKeyPressEdit}
+            handleEditChange={handleEditChange}
+            editData={editData}
+            setEditData={setEditData}
+            editMode={editMode}
+            setEditMode={setEditMode}
+            data={listData}
+            keyData={0}
+            handleTask={TestCaseHandle}
+            nodeData={0}
+            handleCRUDAtParent={handleCRUDAtParent}
+            nodeCount={nodeCount}
+            handleNodeCount={handleNodeCount}
+            expandedInputId={expandedInputId}
+            setExpandedInputId={setExpandedInputId}
+            setListData={setListData}
+            newElementName={newElementName}
+            setNewElementName={setNewElementName}
+            handleCRUD={handleCRUD}
+            expanded={expanded}
+            toggleExpand={toggleExpand}
+            handleCRUDCancel={handleCRUDCancel}
+            handleKeyPress={handleKeyPress}
+            // handleDelete={handleDelete}
+            handleDelete={handleDeleTeModal}
+            selectedNodeId={selectedNodeId}
+            setSelectedNodeId={setSelectedNodeId}
+          />
+        )}
+      </div>
+    </>
   );
 };
 

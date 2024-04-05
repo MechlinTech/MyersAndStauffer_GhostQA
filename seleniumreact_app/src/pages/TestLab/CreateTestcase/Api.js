@@ -1,10 +1,14 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { headerCypres } from "../../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
+
 
 export const AddTestCaseDetails = async (payload, actions, goBack) => {
   try {
+    const BASE_URL = await getBaseUrl();
     const res = await axios.post(
       `${BASE_URL}/AddTestLab/AddTestCaseDetails`,
       payload
@@ -42,12 +46,13 @@ export const AddTestCaseDetails = async (payload, actions, goBack) => {
 export const UpdateTestStepsDetails = async(payload, savetoEdit) => {
   
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/AddTestLab/AddTestStepsDetails`,
         payload
       );
       if (res.data.status === "success") {
-        toast.info("Successfully steps", {
+        toast.info("Successfully update steps", {
           style: {
             background: "rgb(101, 77, 247)",
             color: "rgb(255, 255, 255)",
@@ -65,13 +70,14 @@ export const UpdateTestStepsDetails = async(payload, savetoEdit) => {
 export const UpdateTestCaseDetail = async(payload) => {
   
   try {
+    const BASE_URL = await getBaseUrl();
     const res = await axios.post(
       `${BASE_URL}/AddTestLab/UpdateTestCaseDetails`,
       payload
     );
     console.log(res)
     if (res.data.status === "success") {
-      toast.info("Successfully testcase", {
+      toast.info("Successfully update testcase", {
         style: {
           background: "rgb(101, 77, 247)",
           color: "rgb(255, 255, 255)",
@@ -87,6 +93,7 @@ export const UpdateTestCaseDetail = async(payload) => {
 
 export const SaveAndExecute = async (data,steps,testCaseDetailId,handleExecuteLoading) => {
   try {
+    const BASE_URL = await getBaseUrl();
     // Combined HTTP Requests
     const [updateRes, addStepsRes] = await Promise.all([
       axios.post(`${BASE_URL}/AddTestLab/UpdateTestCaseDetails`, data),
@@ -135,6 +142,7 @@ export const SaveAndExecute = async (data,steps,testCaseDetailId,handleExecuteLo
 
 const getRunDetail = async (runId, delay, testCaseDetailId,handleExecuteLoading) => {
   try {
+    const BASE_URL = await getBaseUrl();
     const res = await axios.get(
       `http://65.1.188.67:8010/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
     );

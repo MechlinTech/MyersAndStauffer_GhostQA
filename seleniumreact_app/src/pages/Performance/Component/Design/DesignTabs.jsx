@@ -44,7 +44,7 @@ function a11yProps(index) {
   };
 }
 
-export default function DesignTabs({PerformanceFileId}) {
+export default function DesignTabs({PerformanceFileId,testCaseData}) {
   const theme = useTheme();
   const [value, setValue] = useState('Load');
   
@@ -94,7 +94,7 @@ export default function DesignTabs({PerformanceFileId}) {
         </Tabs>
 
         <TabPanel value={value} index={'Load'} dir={theme.direction}>
-       <LoadPanel PerformanceFileId={PerformanceFileId}/>
+       <LoadPanel PerformanceFileId={PerformanceFileId} testCaseData={testCaseData}/>
         </TabPanel>
         <TabPanel value={value} index={"Location"} dir={theme.direction}>
         <LocationPanel PerformanceFileId={PerformanceFileId}/>

@@ -14,6 +14,7 @@
 
     reverse_proxy /api/* dotnetapi
     reverse_proxy /swagger/* dotnetapi
+    reverse_proxy /codeengine/* codeengine:8000
 
     reverse_proxy  webui
 }

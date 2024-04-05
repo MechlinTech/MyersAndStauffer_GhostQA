@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Typography, Paper, Box, Card } from "@material-ui/core";
+import { getBaseUrl } from "../../utils/configService";
 import { useStylesTestCase } from "./styles";
 import Button from '@mui/material/Button';
 import TableTestCase from "./TableTestCase";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 
 export default function AddTestCase({addTestCase}) {
@@ -16,6 +17,7 @@ export default function AddTestCase({addTestCase}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const BASE_URL = await getBaseUrl();
         const response = await axios.post(
           `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${addTestCase}`,
           header()

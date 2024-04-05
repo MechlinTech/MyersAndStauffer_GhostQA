@@ -25,7 +25,9 @@ import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
 import { StyledFormControl } from "../styleTestCase";
 import RenderActionFields from "../RenderActionFields";
 import ExecutionHistory from "./ExecutionHistory";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 export default function EditTestCase() {
   const classes = useStyles();
@@ -43,6 +45,7 @@ export default function EditTestCase() {
 
   const getExecutionHistory = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestDetailByTestName?TestName=${testCaseName}`
       );
@@ -54,6 +57,7 @@ export default function EditTestCase() {
   };
   useEffect(() => {
     const getSteps = async () => {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestStepsDetailsByTestStepsId?TestStepsId=${testId}` // change this uri
       );
@@ -62,6 +66,7 @@ export default function EditTestCase() {
       console.log("steps list : ", res.data);
     };
     const getTestCaseDetail = async () => {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestCaseDetailsByTestDetailId?TestCaseId=${testId}` // change this uri
       );
@@ -83,117 +88,10 @@ export default function EditTestCase() {
     setIsEditable(false);
     navigate(-1);
   };
-  const handleSave = () => {
-    let payload = {
-      testCaseID: testId,
-      actions: steps,
-    };
-    console.log("payload ", payload);
-    let errors = steps?.map((step) => {
-      let additionalErrors = {};
-      let stepType = step?.action;
-      additionalErrors.selectorTypeError = !step.selectorType;
-      additionalErrors.selectorValueError = !step.selectorValue;
-      switch (stepType) {
-        case "type":
-          additionalErrors.sendKeyInputError = !step.sendKeyInput;
-          break;
-        case "scroll_to_window":
-          additionalErrors.scrollPixelError = !step.scrollPixel;
-          break;
-        case "go_to_url":
-          additionalErrors.urlError = !step.url;
-          break;
-        case "select_option":
-          additionalErrors.selectedUserError = !step.selectedUser;
-          break;
-        case "upload_file":
-          additionalErrors.fileNameError = !step.fileName;
-          break;
-        case "element_has_value":
-          additionalErrors.elementValueError = !step.elementValue;
-          break;
-        case "element_has_css_property_with_value":
-          additionalErrors.cssPropertyError = !step.cssProperty;
-          additionalErrors.cssValueError = !step.cssValue;
-          break;
-        case "validate_page_title":
-          additionalErrors.pageTitleError = !step.pageTitle;
-          break;
-        case "validate_current_url":
-          additionalErrors.currentUrlError = !step.currentUrl;
-          break;
-        case "should_not_equal":
-          additionalErrors.shouldNotEqualError = !step.shouldNotEqualValue;
-          break;
-        case "should_include":
-          additionalErrors.shouldIncludeError = !step.shouldIncludeValue;
-          break;
-        case "should_equal":
-          additionalErrors.shouldEqualError = !step.shouldEqualValue;
-          break;
-        case "should_be_greater_than":
-          additionalErrors.shouldGreaterThanError =
-            !step.shouldGreaterThanValue;
-          break;
-        case "should_be_less_than":
-          additionalErrors.shouldLessError = !step.shouldLessValue;
-          break;
-        case "contain_text":
-          additionalErrors.containTextError = !step.containTextValue;
-          break;
-        case "have_attribute":
-          additionalErrors.haveAttributeError = !step.haveAttributeValue;
-          break;
-        default:
-          break;
-      }
-      if (selectorNoOptionList.includes(stepType)) {
-        additionalErrors.selectorTypeError = false;
-        additionalErrors.selectorValueError = false;
-      }
-      return {
-        typeError: !step?.action,
-        descriptionError: !step?.stepDescription,
-        ...additionalErrors,
-      };
-    });
-    setErrors(errors);
-    let titleError = "";
-    let urlError = "";
-    if (!testCaseTitle.trim()) {
-      settestCaseTitleError("test case title required");
-      titleError = "test case title required";
-    } else {
-      settestCaseTitleError("");
-    }
-    if (!startUrl.trim()) {
-      setstartUrlError("url is  required");
-      urlError = "url is  required";
-    } else {
-      setstartUrlError("");
-    }
-    const hasError = errors.some((error) =>
-      Object.values(error).some((value) => value)
-    );
-
-    if (!hasError && !titleError && !urlError) {
-      let data = {
-        testCaseDetailsId: testId,
-        rootId: 0,
-        testCaseName: testCaseTitle,
-        startUrl: startUrl,
-      };
-      UpdateTestCaseDetail(data);
-      UpdateTestStepsDetails(payload, savetoEdit);
-    } else {
-      console.log("There is an error in at least one element.", errors);
-      toast.error("Some fields are empty");
-    }
-  };
-
-  const handleSaveAndExecute = () => {
+  const handleSave = (saveOrExecute) => {
+    if(saveOrExecute !== 'save')
     setisExecuting(true);
+    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
     let payload = {
       testCaseID: testId,
       actions: steps,
@@ -203,7 +101,7 @@ export default function EditTestCase() {
       let additionalErrors = {};
       let stepType = step?.action;
       additionalErrors.selectorTypeError = !step.selectorType;
-      additionalErrors.selectorValueError = !step.selectorValue;
+      additionalErrors.selectorValueError = !step.selectorValue?.trim();
       switch (stepType) {
         case "type":
           additionalErrors.sendKeyInputError = !step.sendKeyInput;
@@ -212,7 +110,10 @@ export default function EditTestCase() {
           additionalErrors.scrollPixelError = !step.scrollPixel;
           break;
         case "go_to_url":
-          additionalErrors.urlError = !step.url;
+          const isValidUrl = !step.url.trim() || !urlPattern.test(step.url)
+          additionalErrors.urlError = isValidUrl;
+          if(isValidUrl)
+          toast.error('Enter valid url')
           break;
         case "select_option":
           additionalErrors.selectedUserError = !step.selectedUser;
@@ -255,9 +156,6 @@ export default function EditTestCase() {
         case "have_attribute":
           additionalErrors.haveAttributeError = !step.haveAttributeValue;
           break;
-        case "click element using text":
-          additionalErrors.textValueError = !step.textValue;
-          break;
         default:
           break;
       }
@@ -267,22 +165,28 @@ export default function EditTestCase() {
       }
       return {
         typeError: !step?.action,
-        descriptionError: !step?.stepDescription,
+        descriptionError: !step?.stepDescription.trim(),
         ...additionalErrors,
       };
     });
     setErrors(errors);
     let titleError = "";
     let urlError = "";
-    if (!testCaseTitle.trim()) {
+    if (!testCaseTitle.trim()|| urlPattern.test(testCaseTitle)) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
+      toast.error("Enter valid title")
+    setisExecuting(false);
+      return
     } else {
       settestCaseTitleError("");
     }
-    if (!startUrl.trim()) {
-      setstartUrlError("url is  required");
-      urlError = "url is  required";
+    if (!startUrl.trim() || !urlPattern.test(startUrl)) {
+      setstartUrlError("url not valid");
+      urlError = "url not valid";
+      toast.error("Enter valid start url")
+    setisExecuting(false);
+      return
     } else {
       setstartUrlError("");
     }
@@ -297,12 +201,133 @@ export default function EditTestCase() {
         testCaseName: testCaseTitle,
         startUrl: startUrl,
       };
+      if(saveOrExecute === 'save'){
+        UpdateTestCaseDetail(data);
+        UpdateTestStepsDetails(payload, savetoEdit);
+      }else
       SaveAndExecute(data, payload, testId, handleExecuteLoading);
+      
     } else {
-      console.log("There is an error in at least one element.", errors);
-      toast.error("Some fields are empty");
+      if(errors[0].urlError === undefined || !errors[0].urlError )
+      toast.error("Some field are empty");
+      if(saveOrExecute !== 'save')
+      setisExecuting(false);
     }
   };
+
+  // const handleSaveAndExecuteds = () => {
+  //   setisExecuting(true);
+  //   let payload = {
+  //     testCaseID: testId,
+  //     actions: steps,
+  //   };
+  //   console.log("payload ", payload);
+  //   let errors = steps?.map((step) => {
+  //     let additionalErrors = {};
+  //     let stepType = step?.action;
+  //     additionalErrors.selectorTypeError = !step.selectorType;
+  //     additionalErrors.selectorValueError = !step.selectorValue?.trim();
+  //     switch (stepType) {
+  //       case "type":
+  //         additionalErrors.sendKeyInputError = !step.sendKeyInput;
+  //         break;
+  //       case "scroll_to_window":
+  //         additionalErrors.scrollPixelError = !step.scrollPixel;
+  //         break;
+  //       case "go_to_url":
+  //         additionalErrors.urlError = !step.url;
+  //         break;
+  //       case "select_option":
+  //         additionalErrors.selectedUserError = !step.selectedUser;
+  //         break;
+  //       case "upload_file":
+  //         additionalErrors.fileNameError = !step.fileName;
+  //         break;
+  //       case "element_has_value":
+  //         additionalErrors.elementValueError = !step.elementValue;
+  //         break;
+  //       case "element_has_css_property_with_value":
+  //         additionalErrors.cssPropertyError = !step.cssProperty;
+  //         additionalErrors.cssValueError = !step.cssValue;
+  //         break;
+  //       case "validate_page_title":
+  //         additionalErrors.pageTitleError = !step.pageTitle;
+  //         break;
+  //       case "validate_current_url":
+  //         additionalErrors.currentUrlError = !step.currentUrl;
+  //         break;
+  //       case "should_not_equal":
+  //         additionalErrors.shouldNotEqualError = !step.shouldNotEqualValue;
+  //         break;
+  //       case "should_include":
+  //         additionalErrors.shouldIncludeError = !step.shouldIncludeValue;
+  //         break;
+  //       case "should_equal":
+  //         additionalErrors.shouldEqualError = !step.shouldEqualValue;
+  //         break;
+  //       case "should_be_greater_than":
+  //         additionalErrors.shouldGreaterThanError =
+  //           !step.shouldGreaterThanValue;
+  //         break;
+  //       case "should_be_less_than":
+  //         additionalErrors.shouldLessError = !step.shouldLessValue;
+  //         break;
+  //       case "contain_text":
+  //         additionalErrors.containTextError = !step.containTextValue;
+  //         break;
+  //       case "have_attribute":
+  //         additionalErrors.haveAttributeError = !step.haveAttributeValue;
+  //         break;
+  //       case "click element using text":
+  //         additionalErrors.textValueError = !step.textValue;
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //     if (selectorNoOptionList.includes(stepType)) {
+  //       additionalErrors.selectorTypeError = false;
+  //       additionalErrors.selectorValueError = false;
+  //     }
+  //     return {
+  //       typeError: !step?.action,
+  //       descriptionError: !step?.stepDescription?.trim(),
+  //       ...additionalErrors,
+  //     };
+  //   });
+  //   setErrors(errors);
+  //   let titleError = "";
+  //   let urlError = "";
+  //   if (!testCaseTitle.trim()) {
+  //     settestCaseTitleError("test case title required");
+  //     titleError = "test case title required";
+  //   } else {
+  //     settestCaseTitleError("");
+  //   }
+  //   if (!startUrl.trim()) {
+  //     setstartUrlError("url is  required");
+  //     urlError = "url is  required";
+  //   } else {
+  //     setstartUrlError("");
+  //   }
+  //   const hasError = errors.some((error) =>
+  //     Object.values(error).some((value) => value)
+  //   );
+
+  //   if (!hasError && !titleError && !urlError) {
+  //     let data = {
+  //       testCaseDetailsId: testId,
+  //       rootId: 0,
+  //       testCaseName: testCaseTitle,
+  //       startUrl: startUrl,
+  //     };
+  //     SaveAndExecute(data, payload, testId, handleExecuteLoading);
+  //   } else {
+  //     console.log("There is an error in at least one element.", errors);
+  //     toast.error("Some fields are empty");
+  //   setisExecuting(false);
+
+  //   }
+  // };
   const handleCancle = () => {
     navigate(-1);
   };
@@ -822,7 +847,7 @@ export default function EditTestCase() {
                 {isEditable ? (
                   <>
                     <Button
-                      onClick={handleSave}
+                      onClick={()=>handleSave("save")}
                       sx={{
                         backgroundColor: "rgb(101, 77, 247)",
                         "&:hover": {
@@ -841,7 +866,7 @@ export default function EditTestCase() {
                       Save
                     </Button>
                     <Button
-                      onClick={handleSaveAndExecute}
+                      onClick={()=>handleSave("saveAndexecute")}
                       sx={{
                         backgroundColor: "rgb(101, 77, 247)",
                         "&:hover": {

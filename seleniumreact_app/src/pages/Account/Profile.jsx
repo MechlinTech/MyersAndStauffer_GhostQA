@@ -8,6 +8,7 @@ import {
   Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getBaseUrl } from "../../utils/configService";
 import { useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
@@ -17,7 +18,7 @@ import {
 } from "../../redux/actions/authActions";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Profile() {
   const classes = useStyles();
@@ -39,6 +40,7 @@ export default function Profile() {
     const emailFromSession = sessionStorage.getItem("email");
     const updateUserByEmail = async () => {
       try {
+        const BASE_URL = await getBaseUrl();
         const res = await axios.post(
           `${BASE_URL}/Selenium/GetProfilByEmail?Email=${emailFromSession}`,
           emailFromSession,

@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import axios from "axios";
 import { header, headerCypres, headerForm } from "../../utils/authheader";
@@ -15,10 +15,12 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { StyledTypography } from "./styles";
 import { Delete } from "@material-ui/icons";
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TableTestCase({ testCase, rootId }) {
   const navigate = useNavigate();
+  const {nodeId} = useParams()
   const [executingTest, setexecutingTest] = React.useState({});
   const [testCaseList, setTestCaseList] = React.useState(testCase)
   const handleExecution = async (row) => {
@@ -28,6 +30,7 @@ export default function TableTestCase({ testCase, rootId }) {
       [row.TestCaseName]: true,
     }));
     try {
+      const BASE_URL = await getBaseUrl();
       const jsonData = await axios.get(
         `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${row.TestCaseName}`
       );
@@ -75,6 +78,7 @@ export default function TableTestCase({ testCase, rootId }) {
         }));
         const rundetails = res.data;
         try {
+          const BASE_URL = await getBaseUrl();
           const res = await axios.post(`${BASE_URL}/AddTestLab/AddExecuteResult?testCaseDetailId=${row.TestCaseDetailsId}`,rundetails,header())
           if (res.data.status === "success") {
               toast.info("Successfully executed", {
@@ -106,6 +110,7 @@ export default function TableTestCase({ testCase, rootId }) {
 
   const fetchData = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${rootId}`,
         header()
@@ -120,6 +125,7 @@ export default function TableTestCase({ testCase, rootId }) {
   };
   const handleDelete = async(testId)=>{
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/AddTestLab/DeleteTestCaseDetailsByTestCaseDetailsId?TestCaseDetailsId=${testId}`
       );
@@ -138,6 +144,25 @@ export default function TableTestCase({ testCase, rootId }) {
       toast.error("NETWORK ERROR")
     }
   }
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    // Check if the date is invalid
+    if (isNaN(date.getTime())) {
+      return ""; // Return empty string for invalid dates
+    }
+    
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    };
+    return date.toLocaleString("en-US", options);
+  };
+  
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -203,7 +228,9 @@ export default function TableTestCase({ testCase, rootId }) {
                 </span>
               </TableCell> */}
               <TableCell align="center">
-                <StyledTypography></StyledTypography>
+                <StyledTypography>
+                  {formatDate(row.StartDateTime)}
+                </StyledTypography>
               </TableCell>
               <TableCell align="center">
                 {!executingTest[row.TestCaseName] ? (

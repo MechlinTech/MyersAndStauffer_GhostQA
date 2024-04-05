@@ -21,7 +21,10 @@ import { header, headerForm } from "../../utils/authheader";
 import { StyledTypography } from "./styles";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../utils/configService";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { useDispatch } from "react-redux";
+import { GetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
 
 export default function TableTestCase({
   testCase,
@@ -32,6 +35,7 @@ export default function TableTestCase({
 }) {
   const navigate = useNavigate();
   const classes = useStyles();
+  const dispatch = useDispatch()
   const location = useLocation();
   const testNamefield = useRef();
   const [testCaseData, setTestCaseData] = useState([]);
@@ -39,12 +43,15 @@ export default function TableTestCase({
   const [expandedAccord, setExpandedAccord] = useState("");
   const fetchData = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
         header()
       );
       // Assuming response.data is the array of data you want to set as listData
       setTestCaseData(response.data == "" ? [] : response.data);
+      dispatch(GetLocationScenarioVUCount(response.data == "" ? [] : response.data))
+
       const searchParams = new URLSearchParams(location.search);
       const testId = parseInt(searchParams.get("testid"));
       if (testId && Array.isArray(response.data)) {
@@ -84,6 +91,21 @@ export default function TableTestCase({
     if (!selectedFile) {
       toast.error("please select file");
       return;
+    }else{
+      const fileName = selectedFile.name;
+      const extension = fileName.split('.').pop().toLowerCase();
+      
+      if (extension !== 'jmx') {
+        toast.error("Invalid file format. Please select a .jmx file.");
+        // Optionally, clear the file input
+        // selectedFile(null)
+        return;
+      }
+    }
+
+    if(testNamefield.current.value.trim() == ""){
+      toast.error("Scenario name required")
+      return
     }
     const formData = new FormData();
     formData.append("id", 0);
@@ -93,6 +115,7 @@ export default function TableTestCase({
     formData.append("fileName", selectedFile.name);
 
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/AddPerformanceFile`,
         formData,
@@ -111,6 +134,7 @@ export default function TableTestCase({
   const handleDeleteElement = async (id, event) => {
     event.stopPropagation();
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/DeletePerformanceFile?Id=${id}`,
         { Id: id },
@@ -226,7 +250,7 @@ export default function TableTestCase({
                     </Stack>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <DesignTabs PerformanceFileId={item.id} />
+                    <DesignTabs PerformanceFileId={item.id} testCaseData={testCaseData}/>
                   </AccordionDetails>
                 </Accordion>
               </TableCell>
@@ -262,6 +286,7 @@ export default function TableTestCase({
                     outline: "none",
                     padding: "6px",
                   }}
+                  required
                 />
                 <Button
                 onClick={handleButtonClick}

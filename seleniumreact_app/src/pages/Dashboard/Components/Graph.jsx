@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Chart from "react-apexcharts";
 import axios from "axios";
+import { getBaseUrl } from "../../../utils/configService";
 import { header } from "../../../utils/authheader";
 import Select from "react-select";
 
@@ -12,7 +13,8 @@ import Radio from "@material-ui/core/Radio";
 import useStyles from "./style";
 import clsx from "clsx";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 const Graph = (props) => {
   const classes = useStyles();
@@ -94,6 +96,7 @@ const Graph = (props) => {
   const [empty, setEmpty] = useState(true);
   useEffect(() => {
     const get_host = async () => {
+      const BASE_URL = await getBaseUrl();
       await axios
         .get(
           `${BASE_URL}/Selenium/GetChartDetails?TestSuiteName=${props.testSuitName.TestSuiteName}&Filtertype=${filterType}&FilterValue=${filterValue.value}`,
@@ -133,11 +136,11 @@ const Graph = (props) => {
                 data: TotalTestCase,
               },
               {
-                name: "Total Passed Test Case",
+                name: "Passed",
                 data: TotalPassedTestCase,
               },
               {
-                name: "Total Failed Test Case",
+                name: "Failed",
                 data: TotalFailedTestCase,
               },
              

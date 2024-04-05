@@ -55,7 +55,7 @@ export default function Results({ rootId }) {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails sx={{ p: "0" }}>
-                <TableData rows={item.RunDetails} />
+                <TableData rows={item.RunDetails} rootId={rootId} />
               </AccordionDetails>
             </Accordion>
           ))

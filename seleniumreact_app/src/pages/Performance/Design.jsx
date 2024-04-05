@@ -26,22 +26,23 @@ import {
   setExecuteJMXData,
   setRunningRootId,
 } from "../../redux/actions/ResultAction";
+import { getBaseUrl } from "../../utils/configService";
 import { useNavigate } from "react-router-dom";
 const DJANGO_URL = process.env.CODE_ENGINE_BASE_URL
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+// const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Design({ rootId }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { isRunning, runningRootId } = useSelector((state) => state.result);
-  const { virtualUser, totalLocation } = useSelector((state) => state.settings);
+  const { virtualUser, totalLocation } = useSelector((state) => state.performance);
   const navigate = useNavigate();
 
-  const [locationCount, setlocationCount] = useState(totalLocation);
+  // const [locationCount, setlocationCount] = useState(totalLocation);
   const [scenarioCount, setscenarioCount] = useState(0);
   const [showAddNewElement, setShowAddNewElement] = useState(true);
   const [folderName, setfolderName] = useState("");
-  const [uvCount, setuvCount] = useState(virtualUser);
+  // const [uvCount, setuvCount] = useState(virtualUser);
   const [callingApi, setCallingApi] = useState(0);
   const [isScnerioCountRunning, setisScnerioCountRunning] = useState(false);
 
@@ -52,6 +53,7 @@ export default function Design({ rootId }) {
   const fetchData = async () => {
     setisScnerioCountRunning(true);
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.get(
         `${BASE_URL}/Performance/GetPerformanceFileByRootId?RootId=${rootId}`,
         header()
@@ -67,14 +69,16 @@ export default function Design({ rootId }) {
       const testList = response.data;
       if (Array.isArray(testList)) {
         setscenarioCount(testList.length);
-        testList.map((test) => {
-          dispatch(GetLocationScenarioVUCount(test.id));
-          // getCounts(test.id);
-        });
+        dispatch(GetLocationScenarioVUCount(testList));
+
+        // testList.map((test) => {
+        //   dispatch(GetLocationScenarioVUCount(test.id));
+        //   // getCounts(test.id);
+        // });
       } else {
-        setlocationCount(0);
+        // setlocationCount(0);
         setscenarioCount(0);
-        setuvCount(0);
+        // setuvCount(0);
       }
       setisScnerioCountRunning(false);
     } catch (error) {
@@ -83,26 +87,7 @@ export default function Design({ rootId }) {
     }
   };
 
-  const getCounts = async (testId) => {
-    try {
-      const loadRes = await axios.get(
-        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${testId}`,
-        header()
-      );
-      const locationRes = await axios.get(
-        `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${testId}`,
-        header()
-      );
-      const locCount = Array.isArray(locationRes.data)
-        ? locationRes.data.length
-        : 0;
-      const userCount = Array.isArray(loadRes.data)
-        ? loadRes.data[0].TotalUsers
-        : 0;
-      setuvCount((pre) => pre + userCount);
-      setlocationCount((pre) => pre + locCount);
-    } catch (error) {}
-  };
+  
 
   const getName = () => {
     const email = sessionStorage.getItem("email");
@@ -111,28 +96,59 @@ export default function Design({ rootId }) {
     return name.charAt(0).toUpperCase() + name.slice(1);
   };
 
+  // const handleRunNow = async () => {
+  //   dispatch(setIsRunning(true));
+  //   dispatch(setRunningRootId(rootId));
+  //   const testername = getName();
+  //   try {
+  //     const BASE_URL = await getBaseUrl();
+  //     const response = await axios.post(
+  //       `${BASE_URL}/Performance/ExecutePerformanceJMX`,
+  //       { rootId: rootId, testerName: testername, name: folderName },
+  //       header()
+  //     );
+  //     console.log("response676", response.data);
+  //     const clientId = response.data.client_Id;
+  //     dispatch(setExecuteJMXData(response.data));
+  //     // Navigate to the desired page after API response
+  //     navigate("/result/summary");
+  //     getRunDetail(response.data, clientId, 2000);
+  //   } catch (error) {
+  //     toast.error("NETWORK ERROR");
+  //     dispatch(setIsRunning(false));
+  //     dispatch(setRunningRootId(null));
+  //   }
+  // };
+
   const handleRunNow = async () => {
     dispatch(setIsRunning(true));
     dispatch(setRunningRootId(rootId));
     const testername = getName();
     try {
+      const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/ExecutePerformanceJMX`,
         { rootId: rootId, testerName: testername, name: folderName },
         header()
       );
-      console.log("response", response.data);
+      console.log("response676", response.data);
       const clientId = response.data.client_Id;
-      dispatch(setExecuteJMXData(response.data));
-      // Navigate to the desired page after API response
-      navigate("/result/summary");
-      getRunDetail(response.data, clientId, 2000);
+      if (response.data.totalUser !== 0 && response.data.totalDuration !== 0 && response.data.totalRampUpSteps && response.data.totalRampUpTime) {
+        dispatch(setExecuteJMXData(response.data));
+        // Navigate to the desired page after API response
+        navigate(`/result/${rootId}/summary`);
+        getRunDetail(response.data, clientId, 2000);
+      } else {
+        toast.warn("Total Users, Duration, Ramp-up Time, or Ramp-up Steps cannot be zero. Unable to proceed.");
+        dispatch(setIsRunning(false));
+      }
     } catch (error) {
       toast.error("NETWORK ERROR");
       dispatch(setIsRunning(false));
       dispatch(setRunningRootId(null));
     }
   };
+  
 
   console.log("scenarioCount", scenarioCount);
   const getRunDetail = async (data, clientId, delay) => {
@@ -153,6 +169,7 @@ export default function Design({ rootId }) {
       } else {
         data = { ...data, responseData: res.data };
         console.log("data", data);
+        const BASE_URL = await getBaseUrl();
         dispatch(setIsRunning(false));
         const response = await axios.post(
           `${BASE_URL}/Performance/AddExecuterData`,

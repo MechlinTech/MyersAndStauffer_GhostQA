@@ -41,13 +41,6 @@ services:
     environment:
       - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###;
 
-  # db:
-  #   image: mcr.microsoft.com/mssql/server:latest
-  #   ports:
-  #     - "1435:1433"
-  #   environment:
-  #     SA_PASSWORD: "P@ssw0rd@123###"
-  #     ACCEPT_EULA: "Y"
 
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -68,20 +61,57 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-  # db:
-  #   hostname: db
-  #   image: mcr.microsoft.com/mssql/server:2022-latest
-  #   user: root
-  #   container_name: db
-  #   environment:
-  #     - ACCEPT_EULA=Y
-  #     - MSSQL_SA_PASSWORD=P@ssw0rd@123###
-  #     - MSSQL_PID=Developer
-  #   ports:
-  #     - "1435:1433"
-  #   volumes:
-  #     - ms_data:/var/opt/mssql/data
+
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: "yourusername"  # Set your PostgreSQL username here
+      POSTGRES_PASSWORD: "yourpassword"  # Set your PostgreSQL password here
+      POSTGRES_DB: "yourdatabase"  # Set your PostgreSQL database name here
+    ports:
+      - "5432:5432"  # Expose PostgreSQL port
+    volumes:
+      - ~/ghostqa/postgres-data:/var/lib/postgresql/data 
   
+  codeengine: &django_app
+    build:
+      context: .
+      dockerfile: djangoapp/Dockerfile
+    command:  pipenv run gunicorn ghostqa.wsgi -w 4 -b 0.0.0.0:8000 -t 1000000000
+    environment:
+      - SHARED_PATH=/automation-tests
+      - SHARED_PERFORMACE_PATH=/tests/
+      - DATABASE_URL=postgres://yourusername:yourpassword@postgres:5432/yourdatabase 
+    volumes:
+      - ./app/media:/app/media
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /automation-tests:/automation-tests
+      - /tests/performace:/tests/performace
+    ports:
+      - "8010:8000"
+    depends_on:
+      - postgres
+      - django_app_migrate
+
+  
+  django_app_migrate:
+    <<: *django_app
+    command: python manage.py migrate
+    depends_on:
+      - postgres
+    ports:
+      - "5000"
+  adminuser:
+    <<: *django_app
+    command: python manage.py createsuperuser --noinput
+    ports:
+      - "5000"
+    environment:
+      DJANGO_SUPERUSER_USERNAME: dev
+      DJANGO_SUPERUSER_EMAIL: dev@ghostqa.com
+      DJANGO_SUPERUSER_PASSWORD: Admin@1234
+
   caddy:
     build:
       context: .

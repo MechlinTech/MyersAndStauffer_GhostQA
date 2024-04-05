@@ -18,7 +18,10 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import CustomeTableChell from "./CustomeTableChell";
-const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+import { getBaseUrl } from "../../../../utils/configService";
+import CustomStatusCell from "./CustomStatusCell";
+// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
+
 
 export default function ExecutionHistory({executionDetail}) {
   const classes = useStyles();
@@ -30,6 +33,7 @@ export default function ExecutionHistory({executionDetail}) {
 
   const getStpeDetail = async () => {
     try {
+      const BASE_URL = await getBaseUrl();
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestStepsDetailByTestCaseId?TestCaseId=${selectedRunId}`
       );
@@ -162,7 +166,7 @@ export default function ExecutionHistory({executionDetail}) {
                     >
                       {formatTime(row.EndDateTime)}
                     </StyledTableCell>
-                    <StyledTableCell
+                    {/* <StyledTableCell
                       sx={{
                         color: selectedRunId === row.TestCase ? "white" : "black",
                       }}
@@ -174,14 +178,15 @@ export default function ExecutionHistory({executionDetail}) {
                           backgroundColor:
                             selectedRunId === row.TestCase
                               ? ""
-                              : row.status === "failed"
+                              : row.status == "failed"
                               ? "#48fab9"
                               : "#fa3737",
                         }}
                       >
                         {row.Status}
                       </Box>
-                    </StyledTableCell>
+                    </StyledTableCell> */}
+                     <CustomStatusCell status={row.Status} selected={selectedRunId === row.TestCase}/>
                     <StyledTableCell
                       sx={{
                         color:
