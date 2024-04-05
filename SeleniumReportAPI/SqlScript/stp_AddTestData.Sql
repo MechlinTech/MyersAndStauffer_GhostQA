@@ -8,7 +8,7 @@ AS
 PROCEDURE NAME	:	stp_AddTestData
 CREATED BY		:	Mohammed Yaseer
 CREATED DATE	:	15th March 2024
-MODIFIED BY		:	
+MODIFIED BY		:	Mohammed Yaseer
 MODIFIED DATE	:	
 PROC EXEC		:  EXEC stp_AddTestData
 				
