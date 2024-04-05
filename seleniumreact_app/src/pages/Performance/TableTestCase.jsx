@@ -87,6 +87,21 @@ export default function TableTestCase({
     if (!selectedFile) {
       toast.error("please select file");
       return;
+    }else{
+      const fileName = selectedFile.name;
+      const extension = fileName.split('.').pop().toLowerCase();
+      
+      if (extension !== 'jmx') {
+        toast.error("Invalid file format. Please select a .jmx file.");
+        // Optionally, clear the file input
+        // selectedFile(null)
+        return;
+      }
+    }
+
+    if(testNamefield.current.value.trim() == ""){
+      toast.error("Scenario name required")
+      return
     }
     const formData = new FormData();
     formData.append("id", 0);
@@ -231,7 +246,7 @@ export default function TableTestCase({
                     </Stack>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <DesignTabs PerformanceFileId={item.id} />
+                    <DesignTabs PerformanceFileId={item.id} testCaseData={testCaseData}/>
                   </AccordionDetails>
                 </Accordion>
               </TableCell>
@@ -267,6 +282,7 @@ export default function TableTestCase({
                     outline: "none",
                     padding: "6px",
                   }}
+                  required
                 />
                 <Button
                 onClick={handleButtonClick}

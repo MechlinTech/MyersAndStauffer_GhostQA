@@ -67,6 +67,7 @@ export default function Navigations() {
             <Route path="User" element={<UserManagement />} />
           </Route>
           <Route path="testLab" element={<TestLab />} />
+          <Route path="testLab/:nodeId" element={<TestLab />} />
           <Route
             path="testLab/createTestcase/:rootId"
             element={<CreateTestCase />}
@@ -78,10 +79,10 @@ export default function Navigations() {
         </Route>
         <Route path="performance" element={<Performance />}></Route>
         <Route path="/result" element={<Results />}>
-          <Route path="/result/summary" element={<Summary />} />
-          <Route path="error" element={<Error />} />
-          <Route path="initial-setup" element={<InitialSetup />} />
-          <Route path="request-state" element={<RequestState />} />
+          <Route path="/result/:rootId/summary" element={<Summary />} />
+          <Route path="/result/:rootId/error" element={<Error />} />
+          <Route path="/result/:rootId/initial-setup" element={<InitialSetup />} />
+          <Route path="/result/:rootId/request-state" element={<RequestState />} />
         </Route>
         <Route path="performance/compare/:compareName" element={<CompareGraph/>}/>
         <Route path="api" element={<Api />}>

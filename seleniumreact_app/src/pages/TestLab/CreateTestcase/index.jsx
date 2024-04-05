@@ -55,6 +55,7 @@ export default function CreateTestCase() {
   };
 
   const handleSave = () => {
+    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
     console.log("final steps,", steps);
     let payload = {
       testCaseName: testCaseTitle,
@@ -65,7 +66,7 @@ export default function CreateTestCase() {
       let additionalErrors = {};
       let stepType = step?.action;
       additionalErrors.selectorTypeError = !step.selectorType;
-      additionalErrors.selectorValueError = !step.selectorValue;
+      additionalErrors.selectorValueError = !step.selectorValue?.trim();
       switch (stepType) {
         case "type":
           additionalErrors.sendKeyInputError = !step.sendKeyInput;
@@ -74,7 +75,10 @@ export default function CreateTestCase() {
           additionalErrors.scrollPixelError = !step.scrollPixel;
           break;
         case "go_to_url":
-          additionalErrors.urlError = !step.url;
+          const isValidUrl = !step.url.trim() || !urlPattern.test(step.url)
+          additionalErrors.urlError = isValidUrl;
+          if(isValidUrl)
+          toast.error('Enter valid url')
           break;
         case "select_option":
           additionalErrors.selectedUserError = !step.selectedUser;
@@ -129,22 +133,26 @@ export default function CreateTestCase() {
       }
       return {
         typeError: !step?.action,
-        descriptionError: !step?.stepDescription,
+        descriptionError: !step?.stepDescription.trim(),
         ...additionalErrors,
       };
     });
     setErrors(errors);
     let titleError = "";
     let urlError = "";
-    if (!testCaseTitle.trim()) {
+    if (!testCaseTitle.trim() || urlPattern.test(testCaseTitle)) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
+      toast.error("Enter valid title")
+      return
     } else {
       settestCaseTitleError("");
     }
-    if (!startUrl.trim()) {
-      setstartUrlError("url is  required");
-      urlError = "url is  required";
+    if (!startUrl.trim() || !urlPattern.test(startUrl)) {
+      setstartUrlError("url not valid");
+      urlError = "url not valid";
+      toast.error("Enter valid start url")
+      return
     } else {
       setstartUrlError("");
     }
@@ -157,6 +165,7 @@ export default function CreateTestCase() {
       AddTestCaseDetails(payload, steps, goBack);
       console.log("steps ", steps);
     } else {
+      if(errors[0].urlError === undefined || !errors[0].urlError )
       toast.error("Some field are empty");
     }
   };
