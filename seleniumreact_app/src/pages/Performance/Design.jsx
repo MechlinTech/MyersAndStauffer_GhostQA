@@ -114,6 +114,30 @@ export default function Design({ rootId }) {
     return name.charAt(0).toUpperCase() + name.slice(1);
   };
 
+  // const handleRunNow = async () => {
+  //   dispatch(setIsRunning(true));
+  //   dispatch(setRunningRootId(rootId));
+  //   const testername = getName();
+  //   try {
+  //     const BASE_URL = await getBaseUrl();
+  //     const response = await axios.post(
+  //       `${BASE_URL}/Performance/ExecutePerformanceJMX`,
+  //       { rootId: rootId, testerName: testername, name: folderName },
+  //       header()
+  //     );
+  //     console.log("response676", response.data);
+  //     const clientId = response.data.client_Id;
+  //     dispatch(setExecuteJMXData(response.data));
+  //     // Navigate to the desired page after API response
+  //     navigate("/result/summary");
+  //     getRunDetail(response.data, clientId, 2000);
+  //   } catch (error) {
+  //     toast.error("NETWORK ERROR");
+  //     dispatch(setIsRunning(false));
+  //     dispatch(setRunningRootId(null));
+  //   }
+  // };
+
   const handleRunNow = async () => {
     dispatch(setIsRunning(true));
     dispatch(setRunningRootId(rootId));
@@ -125,18 +149,24 @@ export default function Design({ rootId }) {
         { rootId: rootId, testerName: testername, name: folderName },
         header()
       );
-      console.log("response", response.data);
+      console.log("response676", response.data);
       const clientId = response.data.client_Id;
-      dispatch(setExecuteJMXData(response.data));
-      // Navigate to the desired page after API response
-      navigate("/result/summary");
-      getRunDetail(response.data, clientId, 2000);
+      if (response.data.totalUser !== 0 && response.data.totalDuration !== 0 && response.data.totalRampUpSteps && response.data.totalRampUpTime) {
+        dispatch(setExecuteJMXData(response.data));
+        // Navigate to the desired page after API response
+        navigate("/result/summary");
+        getRunDetail(response.data, clientId, 2000);
+      } else {
+        toast.warn("Total Users, Duration, Ramp-up Time, or Ramp-up Steps cannot be zero. Unable to proceed.");
+        dispatch(setIsRunning(false));
+      }
     } catch (error) {
       toast.error("NETWORK ERROR");
       dispatch(setIsRunning(false));
       dispatch(setRunningRootId(null));
     }
   };
+  
 
   console.log("scenarioCount", scenarioCount);
   const getRunDetail = async (data, clientId, delay) => {

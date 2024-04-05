@@ -122,7 +122,7 @@ export default function TestLab() {
                 className={classes.bodyHeader}
               >
                 <Grid item xs={6}>
-                  Workspace
+                 Workspaces
                 </Grid>
                 <Grid item xs={6} style={{ textAlign: "right" }}>
                   <Button
