@@ -246,7 +246,7 @@ const userActionsOptions = [
   { label: "Upload file", value: "upload_file" },
   { label: "ScrollIntoView", value: "scroll_into_view" },
   { label: "Scroll to window", value: "scroll_to_window" },
-  { label: "Go To URL", value: "go_to_url" },
+  // { label: "Go To URL", value: "go_to_url" },
   { label: "Go back", value: "go_back" },
   { label: "Go forward", value: "go_forward" },
   { label: "Refresh Page", value: "refresh_page" },

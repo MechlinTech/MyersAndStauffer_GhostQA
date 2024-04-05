@@ -23,7 +23,8 @@ import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getBaseUrl } from "../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
-
+import { useDispatch } from "react-redux";
+import { GetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
 
 export default function TableTestCase({
   testCase,
@@ -34,6 +35,7 @@ export default function TableTestCase({
 }) {
   const navigate = useNavigate();
   const classes = useStyles();
+  const dispatch = useDispatch()
   const location = useLocation();
   const testNamefield = useRef();
   const [testCaseData, setTestCaseData] = useState([]);
@@ -48,6 +50,8 @@ export default function TableTestCase({
       );
       // Assuming response.data is the array of data you want to set as listData
       setTestCaseData(response.data == "" ? [] : response.data);
+      dispatch(GetLocationScenarioVUCount(response.data == "" ? [] : response.data))
+
       const searchParams = new URLSearchParams(location.search);
       const testId = parseInt(searchParams.get("testid"));
       if (testId && Array.isArray(response.data)) {
