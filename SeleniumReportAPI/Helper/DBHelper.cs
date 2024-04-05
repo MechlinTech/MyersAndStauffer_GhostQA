@@ -17,13 +17,7 @@ using Environments = SeleniumReportAPI.Models.Environments;
 using SmtpClient = System.Net.Mail.SmtpClient;
 using ExcelDataReader;
 using Newtonsoft.Json.Linq;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System.Net.Http.Headers;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using GitHub;
-using AventStack.ExtentReports.Gherkin.Model;
 using System.IO.Compression;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -156,6 +150,18 @@ namespace SeleniumReportAPI.Helper
                             {
                                 reader.Read();
                                 RunDetailsJson = reader["RunDetailsJson"].ToString();
+
+                                JArray jsonArray = JArray.Parse(RunDetailsJson);
+
+                                foreach (JObject obj in jsonArray)
+                                {
+                                    string dateYear = obj["TestRunDateYear"].Value<string>();
+                                    DateTime date = DateTime.Parse(dateYear);
+                                    string formattedDate = date.ToString("MMM dd");
+                                    obj["TestRunDateYear"] = formattedDate;
+                                }
+
+                                RunDetailsJson = JsonConvert.SerializeObject(jsonArray);
                             }
                         }
                     }
@@ -2579,19 +2585,19 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
             return new Dto_LoadExecuteResponse()
-            {
-                Name = model.Name,
-                Client_Id = guid,
-                TesterName = model.TesterName,
-                RootId = model.RootId,
-                StartDate = startDate,
-                TotalUser = totalUserCount,
-                TotalDuration = totalDuration,
-                TotalRampUpSteps = totalRampUpSteps,
-                TotalRampUpTime = totalRampUpTime,
-                maxDuration = maxDuration,
-                Scenarios = scenarios,
-                EstimatedTime = estimate
+                {
+                    Name = model.Name,
+                    Client_Id = guid,
+                    TesterName = model.TesterName,
+                    RootId = model.RootId,
+                    StartDate = startDate,
+                    TotalUser = totalUserCount,
+                    TotalDuration = totalDuration,
+                    TotalRampUpSteps = totalRampUpSteps,
+                    TotalRampUpTime = totalRampUpTime,
+                    maxDuration = maxDuration,
+                    Scenarios = scenarios,
+                    EstimatedTime = estimate
             };
         }
 

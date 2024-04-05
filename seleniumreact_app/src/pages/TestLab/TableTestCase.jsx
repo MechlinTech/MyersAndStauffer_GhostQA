@@ -144,6 +144,25 @@ export default function TableTestCase({ testCase, rootId }) {
       toast.error("NETWORK ERROR")
     }
   }
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    // Check if the date is invalid
+    if (isNaN(date.getTime())) {
+      return ""; // Return empty string for invalid dates
+    }
+    
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    };
+    return date.toLocaleString("en-US", options);
+  };
+  
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -210,7 +229,7 @@ export default function TableTestCase({ testCase, rootId }) {
               </TableCell> */}
               <TableCell align="center">
                 <StyledTypography>
-                  {row.StartDateTime}
+                  {formatDate(row.StartDateTime)}
                 </StyledTypography>
               </TableCell>
               <TableCell align="center">
