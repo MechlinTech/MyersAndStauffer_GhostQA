@@ -204,7 +204,7 @@ export default function EditTestCase() {
       if(saveOrExecute === 'save'){
         UpdateTestCaseDetail(data);
         UpdateTestStepsDetails(payload, savetoEdit);
-      }
+      }else
       SaveAndExecute(data, payload, testId, handleExecuteLoading);
       
     } else {
