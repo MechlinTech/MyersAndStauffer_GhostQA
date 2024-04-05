@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Stack from "@mui/material/Stack";
 import { useStyles } from "../../Layout/styles";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate,useParams } from "react-router-dom";
 import { Grid, Button } from "@material-ui/core";
 import CircularProgress from "@mui/material/CircularProgress";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -11,6 +11,7 @@ export default function Results() {
   const classes = useStyles();
   const location = useLocation();
   const navigate = useNavigate();
+  const {rootId } = useParams()
   const { isRunning } = useSelector((state) => state.result);
 
   return (
@@ -30,9 +31,9 @@ export default function Results() {
       >
         <Grid item>
           <Link
-            to="/result/summary"
+            to={`/result/${rootId}/summary`}
             className={`${classes.linkStyle} ${
-              location.pathname === "/result/summary" && classes.activeLink
+              location.pathname === `/result/${rootId}/summary` && classes.activeLink
             }`}
           >
             Summary
@@ -40,9 +41,9 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to="/result/request-state"
+            to={`/result/${rootId}/request-state`}
             className={`${classes.linkStyle} ${
-              location.pathname.startsWith("/result/request-state") &&
+              location.pathname.startsWith(`/result/${rootId}/request-state`) &&
               classes.activeLink
             }`}
             style={{ marginLeft: "20px" }}
@@ -52,10 +53,10 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to="/result/error"
+            to={`/result/${rootId}/error`}
             style={{ marginLeft: "20px" }}
             className={`${classes.linkStyle} ${
-              location.pathname.startsWith("/result/error") &&
+              location.pathname.startsWith(`/result/${rootId}/error`) &&
               classes.activeLink
             }`}
           >
@@ -64,10 +65,10 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to="/result/initial-setup"
+            to={`/result/${rootId}/initial-setup`}
             style={{ marginLeft: "20px" }}
             className={`${classes.linkStyle} ${
-              location.pathname.startsWith("/result/initial-setup") &&
+              location.pathname.startsWith(`/result/${rootId}/initial-setup`) &&
               classes.activeLink
             }`}
           >
@@ -94,7 +95,7 @@ export default function Results() {
             <Button
               className={classes.backBtn}
               onClick={() => {
-                navigate(-1);
+                navigate(`/performance?rootId=${rootId}`);
               }}
             >
               <ArrowBackIcon fontSize="small" />

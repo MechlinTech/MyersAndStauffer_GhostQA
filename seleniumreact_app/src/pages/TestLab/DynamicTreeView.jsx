@@ -8,12 +8,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
 import { Tooltip } from "@mui/material";
 import { getBaseUrl } from "../../utils/configService";
+import { useNavigate } from "react-router-dom";
+import DeleteModal from "./Comman/DeleteModal";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-
 
 const Card = ({
   newElementName,
@@ -46,7 +47,7 @@ const Card = ({
   setSelectedNodeId,
 }) => {
   const styleClass = useStylesTree();
-
+ const navigate = useNavigate()
   return (
     <>
       <ul
@@ -114,6 +115,7 @@ const Card = ({
                           console.log("item", item);
                           handleTask(item, nodeCount);
                           setSelectedNodeId(item.id); // Update the clicked node ID
+                          navigate(`/testLab/${item.id}`)
                         }}
                         style={{
                           cursor: "pointer",
@@ -150,11 +152,13 @@ const Card = ({
                       </Tooltip>
                     )}
                     {editMode === item.id && (
-                       <Tooltip title="Cancel" arrow>
-                      <CancelIcon
-                        sx={{ color: "#f74d4d" }}
-                        onClick={() => handleEdit(item.id, item.name, "cancel")}
-                      />
+                      <Tooltip title="Cancel" arrow>
+                        <CancelIcon
+                          sx={{ color: "#f74d4d" }}
+                          onClick={() =>
+                            handleEdit(item.id, item.name, "cancel")
+                          }
+                        />
                       </Tooltip>
                     )}
                     <Tooltip title="Delete" arrow>
@@ -163,7 +167,7 @@ const Card = ({
                           color:
                             selectedNodeId === item.id ? "white" : "#f74d4d",
                         }}
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => handleDelete(item)}
                         style={{ cursor: "pointer" }}
                       />
                     </Tooltip>
@@ -193,6 +197,11 @@ const Card = ({
                   >
                     <input
                       type="text"
+                      style={{
+                        fontFamily: "Lexend Deca",
+                        fontSize: "14px",
+                      }}
+                      placeholder={nodeCount == 0 ? "Add Project": "Add Test"}
                       className={styleClass.editTheFolder}
                       value={newElementName}
                       key={item.id}
@@ -260,15 +269,48 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   const [editData, setEditData] = useState(""); // State to store the value of the input field
   const [editMode, setEditMode] = useState(0); // State to store the value of the input field
   const [expanded, setExpanded] = useState([]);
-  const [newElementName, setNewElementName] = useState(""); // State to store the value of the input field
+  const [newElementName, setNewElementName] = useState("");
+  const [openDelModal, setopenDelModal] = useState(false);
+  const [deleteItem, setsDeleteItem] = useState("");
 
   useEffect(() => {
     if (params !== null && params !== undefined) {
-      setSelectedNodeId(parseInt(params));
+    const nodeId = parseInt(params)
+    setSelectedNodeId(nodeId);
     }
+    
   }, [params]);
-  console.log("selectedNodeId", params);
 
+  useEffect(()=>{
+    if (selectedNodeId) {
+      const expandedNode = listData.find(item => item.id === selectedNodeId);
+      if (expandedNode) {
+       let  parentid = expandedNode.parentId
+        const parentids = []
+        while(parentid !== 0){
+          parentids.unshift(parentid)
+          let parentNode = listData.find(item => item.id === parentid);
+          parentid = parentNode.parentId
+        }
+        parentids.unshift(parentid)
+        setExpanded([...parentids]);
+        const nodeCount = findDepth(expandedNode,listData)
+        TestCaseHandle(expandedNode,nodeCount-1)
+      }
+    }
+  },[listData,selectedNodeId])
+  const findDepth = (item, items) => {
+    if (item.parentId === 0) {
+        return 1; // Base case: root item
+    } else {
+        const parentItem = items.find(parent => parent.id === item.parentId);
+        if (parentItem) {
+            return 1 + findDepth(parentItem, items); // Recursive call to find parent's depth
+        } else {
+            return 1; // If parent item is not found, assume depth of 1
+        }
+    }
+};
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -299,6 +341,12 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   };
   const handleCRUDAtParent = async (newItem) => {
     try {
+      // Check if newItem.name contains only whitespace
+      if (newItem.name.trim() === "") {
+        console.log("Name cannot be empty.");
+        toast.error("Whitespace is not allowed.");
+        return; 
+      }
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/AddTestLab/AddRootRelation`,
@@ -312,8 +360,8 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
         header()
       );
       setListData([...listData, response.data.Data[0]]); // need to check the response
-      setSelectedNodeId(response.data.Data[0].id)
-      console.log('response after creating new node',response)
+      setSelectedNodeId(response.data.Data[0].id);
+      console.log("response after creating new node", response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -323,7 +371,8 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
     (parentId, nodeData) => {
       if (nodeCount < 5) {
         setExpandedInputId(null); // Hide the input field
-        if (newElementName) { // we can trim and check if its able to add with wide space
+        if (newElementName) {
+          // we can trim and check if its able to add with wide space
           const newId = Math.max(...listData.map((item) => item.id)) + 1;
           const newItem = {
             name: newElementName,
@@ -351,6 +400,11 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
       setEditMode(0);
       const itemToEdit = listData.find((item) => item.id === itemId);
       try {
+        if (editData.trim() === "") {
+          console.log("Name cannot be empty.", editData);
+          toast.error("Whitespace is not allowed.");
+          return; 
+        }
         const BASE_URL = await getBaseUrl();
         const response = await axios.post(
           `${BASE_URL}/AddTestLab/UpdateRootRelation`,
@@ -409,6 +463,13 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
       handleCRUDNewItem(parentId, nodeData);
     }
   };
+
+  const handleDeleTeModal = (item) => {
+    console.log("item", item);
+    setsDeleteItem(item);
+    setopenDelModal(true);
+  };
+
   const handleDelete = async (itemId) => {
     console.log(itemId, listData);
     const itemToDelete = listData.find((item) => item.id === itemId);
@@ -454,42 +515,52 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    setopenDelModal(false);
   };
 
   return (
-    <div className={styleClass.orgTree}>
-      {listData.length != 0 && (
-        <Card
-          handleEdit={handleEdit}
-          handleKeyPressEdit={handleKeyPressEdit}
-          handleEditChange={handleEditChange}
-          editData={editData}
-          setEditData={setEditData}
-          editMode={editMode}
-          setEditMode={setEditMode}
-          data={listData}
-          keyData={0}
-          handleTask={TestCaseHandle}
-          nodeData={0}
-          handleCRUDAtParent={handleCRUDAtParent}
-          nodeCount={nodeCount}
-          handleNodeCount={handleNodeCount}
-          expandedInputId={expandedInputId}
-          setExpandedInputId={setExpandedInputId}
-          setListData={setListData}
-          newElementName={newElementName}
-          setNewElementName={setNewElementName}
-          handleCRUD={handleCRUD}
-          expanded={expanded}
-          toggleExpand={toggleExpand}
-          handleCRUDCancel={handleCRUDCancel}
-          handleKeyPress={handleKeyPress}
-          handleDelete={handleDelete}
-          selectedNodeId={selectedNodeId}
-          setSelectedNodeId={setSelectedNodeId}
-        />
-      )}
-    </div>
+    <>
+      <DeleteModal
+        open={openDelModal}
+        onClose={() => setopenDelModal(false)}
+        deleteItem={deleteItem}
+        handleDelete={handleDelete}
+      />
+      <div className={styleClass.orgTree}>
+        {listData.length != 0 && (
+          <Card
+            handleEdit={handleEdit}
+            handleKeyPressEdit={handleKeyPressEdit}
+            handleEditChange={handleEditChange}
+            editData={editData}
+            setEditData={setEditData}
+            editMode={editMode}
+            setEditMode={setEditMode}
+            data={listData}
+            keyData={0}
+            handleTask={TestCaseHandle}
+            nodeData={0}
+            handleCRUDAtParent={handleCRUDAtParent}
+            nodeCount={nodeCount}
+            handleNodeCount={handleNodeCount}
+            expandedInputId={expandedInputId}
+            setExpandedInputId={setExpandedInputId}
+            setListData={setListData}
+            newElementName={newElementName}
+            setNewElementName={setNewElementName}
+            handleCRUD={handleCRUD}
+            expanded={expanded}
+            toggleExpand={toggleExpand}
+            handleCRUDCancel={handleCRUDCancel}
+            handleKeyPress={handleKeyPress}
+            // handleDelete={handleDelete}
+            handleDelete={handleDeleTeModal}
+            selectedNodeId={selectedNodeId}
+            setSelectedNodeId={setSelectedNodeId}
+          />
+        )}
+      </div>
+    </>
   );
 };
 

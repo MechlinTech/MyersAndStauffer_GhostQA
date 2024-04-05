@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import axios from "axios";
 import { header, headerCypres, headerForm } from "../../utils/authheader";
@@ -20,6 +20,7 @@ import { getBaseUrl } from "../../utils/configService";
 
 export default function TableTestCase({ testCase, rootId }) {
   const navigate = useNavigate();
+  const {nodeId} = useParams()
   const [executingTest, setexecutingTest] = React.useState({});
   const [testCaseList, setTestCaseList] = React.useState(testCase)
   const handleExecution = async (row) => {
@@ -208,7 +209,9 @@ export default function TableTestCase({ testCase, rootId }) {
                 </span>
               </TableCell> */}
               <TableCell align="center">
-                <StyledTypography></StyledTypography>
+                <StyledTypography>
+                  {row.StartDateTime}
+                </StyledTypography>
               </TableCell>
               <TableCell align="center">
                 {!executingTest[row.TestCaseName] ? (

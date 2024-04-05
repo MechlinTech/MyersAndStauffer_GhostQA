@@ -14,12 +14,12 @@ import { header } from "../../../../utils/authheader";
 import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
 import { useDispatch } from "react-redux";
-import { GetLocationScenarioVUCount } from "../../../../redux/actions/settingAction";
 import { getBaseUrl } from "../../../../utils/configService";
+import { ResetLocationScenarioVUCount,GetLocationScenarioVUCount } from "../../../../redux/actions/performanceAction";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 
-export default function LoadPanel({ PerformanceFileId }) {
+export default function LoadPanel({ PerformanceFileId,testCaseData }) {
   const classes = useStyles();
   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ export default function LoadPanel({ PerformanceFileId }) {
       xaxis: {
         categories: [1, 2, 3, 4, 5, 6, 7, 8],
         title: {
-          text: "Duration (min)",
+          text: "Duration (s)",
         },
         labels: {
           style: {
@@ -223,7 +223,7 @@ export default function LoadPanel({ PerformanceFileId }) {
         header()
       );
       console.log("res", res);
-      dispatch(GetLocationScenarioVUCount(PerformanceFileId))
+      dispatch(GetLocationScenarioVUCount(testCaseData))
       // if (res.data === "Success") {
         toast.info("Successfully saved", {
           style: {
