@@ -285,6 +285,7 @@ export const DeleteTestSuite = (suiteName) => {
       );
       console.log("response ", res);
       if (res.status === 200) {
+        dispatch(getTestSuites())
         toast.info("Successfully deleted", {
           style: {
             background: "rgb(101, 77, 247)",
