@@ -39,7 +39,7 @@ export default function TableTestCase({ testCase, rootId }) {
         request_json: jsonData.data,
       };
       const executedDetail = await axios.post(
-        `http://65.1.188.67:8010/codeengine/api/test-suitesV2/execute3/`,
+        `/codeengine/api/test-suitesV2/execute3/`,
         payload,
         headerCypres()
       );
@@ -60,7 +60,7 @@ export default function TableTestCase({ testCase, rootId }) {
   const getRunDetail = async (runId, delay, row) => {
     try {
       const res = await axios.get(
-        `http://65.1.188.67:8010/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
+        `/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
       );
 
       if (res.data.container_status === "exited") {
