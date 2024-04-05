@@ -62,3 +62,4 @@ Thumbs.db
 /MyBoelterAutomation/GoBoelterSeleniumTests/bin/
 /MyBoelterAutomation/GoBoelterSeleniumTests/obj/
 ms_data/
+app/media/*

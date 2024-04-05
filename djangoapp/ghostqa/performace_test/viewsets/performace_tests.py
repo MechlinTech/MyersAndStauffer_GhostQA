@@ -166,11 +166,11 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         JMETER_CONFIG_PATH = os.path.abspath(os.path.join(BASE_DIR,"performace_test","jmeter"))
         
         name = container_run.container_name
-        volume_path = f"/tests/performace/{name}/"
+        volume_path = f"/tests/performace/{name}"
         volume_path = get_full_path(volume_path)
         volume_path = convert_to_unix_path(volume_path)
         if settings.SHARED_PERFORMACE_PATH:
-                volume_path = f"{settings.SHARED_PERFORMACE_PATH}/performace/{name}/"
+                volume_path = f"{settings.SHARED_PERFORMACE_PATH}/performace/{name}"
         
         if instance.type == "jmeter":
             create_directory(f"{volume_path}")
