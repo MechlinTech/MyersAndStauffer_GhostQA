@@ -11,20 +11,19 @@ import DynamicTreeView from "./DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 import { Box } from "@mui/material";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import { getBaseUrl } from "../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
-
 
 export default function Performance() {
   const classes = useStyles();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const rootId = queryParams.get('rootId');
+  const rootId = queryParams.get("rootId");
 
   const [addTestCase, setAddTestCase] = useState(rootId);
   const [addNewProject, setAddNewProject] = useState(false);
-  const [depth, setdepth] = useState(0)
+  const [depth, setdepth] = useState(0);
   const [formData, setFormData] = useState({ name: "" });
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -32,24 +31,24 @@ export default function Performance() {
   const [listData, setListData] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const BASE_URL = await getBaseUrl();
-        const response = await axios.get(
-          `${BASE_URL}/Performance/GetProjectData`,
-          header()
-        );
-        // Assuming response.data is the array of data you want to set as listData
-        setListData(response.data == "" ? [] : response.data);
-        console.log(response);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setListData([]);
-      }
-    };
-
-    fetchData(); // Call the fetchData function when the component mounts
+    fetchData(); 
   }, [addTestCase, addNewProject]);
+
+  const fetchData = async () => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.get(
+        `${BASE_URL}/Performance/GetProjectData`,
+        header()
+      );
+      // Assuming response.data is the array of data you want to set as listData
+      setListData(response.data == "" ? [] : response.data);
+      console.log(response);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setListData([]);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -67,7 +66,7 @@ export default function Performance() {
       );
       setListData([...listData, response.data.Data[0]]); // Reset form data
       setFormData({ name: "" });
-      setAddNewProject(!addNewProject);
+      setAddNewProject(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -81,14 +80,18 @@ export default function Performance() {
     setFormData({ name: value, id: Math.random(), parentId: 0 });
   };
 
-  const handleTestCaseList = (id,node) => {
-    setdepth(node)
+  const handleTestCaseList = (id, node) => {
+    setdepth(node);
     setAddNewProject(false);
-    if(node>1){
+    if (node > 1) {
       setAddTestCase(id);
-    }else
-      setAddTestCase(0)
+    } else setAddTestCase(0);
   };
+
+  const handleCancel = () => {
+     setAddNewProject(false)
+     setFormData({ name: "" });
+  }
 
   const treeStyle = drawerOpen ? {} : { display: "none" };
   return (
@@ -97,27 +100,24 @@ export default function Performance() {
         <Grid container spacing={2}>
           <Box
             onClick={() => setDrawerOpen(!drawerOpen)}
-            style={{ position: "absolute", left: "3px", cursor: "pointer"}}
+            style={{ position: "absolute", left: "3px", cursor: "pointer" }}
           >
             {!drawerOpen && <KeyboardDoubleArrowRightIcon />}
           </Box>
 
           <Grid item xs={12} md={3} xl={2} style={treeStyle}>
-              <Card
-                className={classes.card}
-                style={{ paddingBottom: "30px"}}
+            <Card className={classes.card} style={{ paddingBottom: "30px" }}>
+              <Grid
+                container
+                alignItems="center"
+                className={classes.bodyHeader}
+                style={{ position: "relative" }}
               >
-                <Grid
-                  container
-                  alignItems="center"
-                  className={classes.bodyHeader}
-                  style={{position:'relative'}}
-                >
-                  <Grid item xs={6}>
-                    Workspaces
-                  </Grid>
-                  <Grid item xs={5} style={{ textAlign: "right" }}>
-                    <Button
+                <Grid item xs={6}>
+                  Workspaces
+                </Grid>
+                <Grid item xs={5} style={{ textAlign: "right" }}>
+                  {/* <Button
                       variant="contained"
                       onClick={() => setAddNewProject((current) => !current)}
                       style={{
@@ -128,38 +128,73 @@ export default function Performance() {
                       }}
                     >
                       {!addNewProject?<Add />:'Cancel'}
-                    </Button>
-                  </Grid>
-                  <Grid item xs={1} style={{position:'absolute',right:'-14px',top:'-6px'}}>
-                    <Box
-                      onClick={() => setDrawerOpen(!drawerOpen)}
-                      sx={{cursor:'pointer'}}
+                    </Button> */}
+                  {addNewProject ? (
+                    <Button
+                      variant="contained"
+                      onClick={handleCancel}
+                      style={{
+                        fontSize: 14,
+                        backgroundColor: "rgb(101, 77, 247)",
+                        color: "#ffffff",
+                        cursor: "pointer",
+                      }}
                     >
-                      {drawerOpen && <KeyboardDoubleArrowLeftIcon />}
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12}>
-                    {addNewProject && (
-                      <AddNewProject
-                        handleChange={handleChange}
-                        handleSubmit={handleSubmit}
-                        formData={formData}
-                      />
-                    )}
-                  </Grid>
+                      Cancel
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={() => setAddNewProject(true)}
+                      style={{
+                        fontSize: 14,
+                        backgroundColor: "rgb(101, 77, 247)",
+                        color: "#ffffff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Add />
+                    </Button>
+                  )}
                 </Grid>
-                <Grid>
-                  <DynamicTreeView
-                    TestCaseHandle={handleTestCaseList}
-                    listData={listData}
-                    setListData={setListData}
-                    params={rootId}
-                  />
+                <Grid
+                  item
+                  xs={1}
+                  style={{ position: "absolute", right: "-14px", top: "-6px" }}
+                >
+                  <Box
+                    onClick={() => setDrawerOpen(!drawerOpen)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {drawerOpen && <KeyboardDoubleArrowLeftIcon />}
+                  </Box>
                 </Grid>
-              </Card>
+                <Grid item xs={12}>
+                  {addNewProject && (
+                    <AddNewProject
+                      handleChange={handleChange}
+                      handleSubmit={handleSubmit}
+                      formData={formData}
+                    />
+                  )}
+                </Grid>
+              </Grid>
+              <Grid>
+                <DynamicTreeView
+                  TestCaseHandle={handleTestCaseList}
+                  listData={listData}
+                  setListData={setListData}
+                  params={rootId}
+                />
+              </Grid>
+            </Card>
           </Grid>
           <Grid item xs={12} md={drawerOpen ? 9 : 12} xl={10}>
-            {depth>1?(addTestCase !== 0 && <TabsPanel rootId={addTestCase} />):(<Box/>)}
+            {depth > 1 ? (
+              addTestCase !== 0 && <TabsPanel rootId={addTestCase} />
+            ) : (
+              <Box />
+            )}
           </Grid>
         </Grid>
       </div>

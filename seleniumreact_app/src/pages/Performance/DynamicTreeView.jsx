@@ -211,6 +211,11 @@ const Card = ({
                   >
                     <input
                       type="text"
+                      style={{
+                        fontFamily: "Lexend Deca",
+                        fontSize: "14px",
+                      }}
+                      placeholder={nodeCount == 0 ? "Add Project": nodeCount == 1 ? "Add Suite": "Test" }
                       className={styleClass.editTheFolder}
                       value={newElementName}
                       key={item.id}
@@ -351,6 +356,12 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   };
   const handleCRUDAtParent = async (newItem) => {
     try {
+       // Check if newItem.name contains only whitespace
+       if (newItem.name.trim() === "") {
+        console.log("Name cannot be empty.");
+        toast.error("Whitespace is not allowed.");
+        return; 
+      }
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/AddProjectData`,
@@ -406,6 +417,11 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
       setEditMode(0);
       const itemToEdit = listData.find((item) => item.id === itemId);
       try {
+        if (editData.trim() === "") {
+          console.log("Name cannot be empty.", editData);
+          toast.error("Whitespace is not allowed.");
+          return; 
+        }
         const BASE_URL = await getBaseUrl();
         const response = await axios.post(
           `${BASE_URL}/Performance/UpdateProjectData`,
@@ -484,6 +500,15 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
 
         header()
       );
+      if(response.data.status == "success"){
+        setopenDelModal(false);
+        toast.info("Successfully deleted", {
+          style: {
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
+          },
+      });
+      }
       const childrenToDelete = listData.filter(
         (item) => item.parentId === itemId
       );
