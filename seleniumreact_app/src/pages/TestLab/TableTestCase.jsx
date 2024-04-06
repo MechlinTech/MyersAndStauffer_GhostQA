@@ -47,6 +47,7 @@ export default function TableTestCase({ testCase, rootId }) {
         headerCypres()
       );
 
+
       const runId = executedDetail.data.container_runs[0].id;
       console.log("execution detail", executedDetail);
       getRunDetail(runId, 1000, row);
@@ -59,6 +60,7 @@ export default function TableTestCase({ testCase, rootId }) {
       }));
     }
   };
+
 
   const getRunDetail = async (runId, delay, row) => {
     try {
