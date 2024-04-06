@@ -73,7 +73,7 @@ export default function TestLab() {
 
         header()
       );
-      setListData([...listData, response.data.Data[0]]); // Reset form data
+      setListData([...listData, response.data?.Data[0]]); // Reset form data
       setFormData({ name: "" });
       setAddNewProject(false);
     } catch (error) {

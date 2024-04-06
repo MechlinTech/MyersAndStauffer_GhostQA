@@ -825,7 +825,7 @@ export default function EditTestCase() {
             >
               <Grid item xs={12} md={3}>
                 <StyledTypography sx={{ fontSize: "18px", fontWeight: "400" }}>
-                  Sample Test Case
+                  Test Cases
                 </StyledTypography>
               </Grid>
               <Grid item xs={12} md={4} display="flex" justifyContent="end">
