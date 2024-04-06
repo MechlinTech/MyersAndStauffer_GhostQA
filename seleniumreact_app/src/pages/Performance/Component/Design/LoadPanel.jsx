@@ -181,27 +181,6 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
     fileInputRef.current.click();
   };
   const [expanded, setExpanded] = useState([]);
-  // const handleInputData = (event, type) => {
-  //   const value = event.target.value;
-  //   if (value >= 0) {
-  //     switch (type) {
-  //       case "totalUsers":
-  //         settotalusers(value);
-  //         break;
-  //       case "duration":
-  //         setDuration(value);
-  //         break;
-  //       case "rampUpTime":
-  //         setRampUpTime(value);
-  //         break;
-  //       case "rampUpSteps":
-  //         setRampUpSteps(value);
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //   }
-  // };
 
   const handleInputData = (event, type) => {
     const value = event.target.value;
@@ -209,13 +188,13 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
       const maxDuration = 20;
       const maxRampUpSteps = 20;
       if (type === "totalUsers" && value > 10) {
-        toast.error("Maximum allowed users is 10");
+        toast.error("The maximum total users allowed is 10.");
       } else if (type === "duration" && value > maxDuration) {
-        toast.error(`Maximum duration allowed is ${maxDuration} minutes`);
+        toast.error(`The maximum duration allowed for the test is ${maxDuration} minutes.`);
       } else if (type === "rampUpTime" && (value > duration || value < 0)) {
-        toast.error("Ramp up time cannot exceed duration or be negative");
+        toast.error("Ramp up Time cannot exceed the duration.");
       } else if (type === "rampUpSteps" && value > maxRampUpSteps) {
-        toast.error(`Maximum ramp up steps allowed is ${maxRampUpSteps}`);
+        toast.error(`Ramp-up steps cannot exceed ${maxRampUpSteps}`);
       } else {
         switch (type) {
           case "totalUsers":
