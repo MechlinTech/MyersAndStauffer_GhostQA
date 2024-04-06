@@ -54,7 +54,7 @@ namespace SeleniumReportAPI.DTO_s
         public DateTime end { get; set; }
         public int duration { get; set; }
         public int testsRegistered { get; set; }
-        public int passPercent { get; set; }
+        public float passPercent { get; set; }
         public int pendingPercent { get; set; }
         public int other { get; set; }
         public bool hasOther { get; set; }

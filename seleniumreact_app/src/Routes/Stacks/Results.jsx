@@ -11,9 +11,9 @@ export default function Results() {
   const classes = useStyles();
   const location = useLocation();
   const navigate = useNavigate();
-  const {rootId } = useParams()
+  const {rootId,tab,runId } = useParams()
   const { isRunning } = useSelector((state) => state.result);
-
+console.log('runid in sumamay',runId)
   return (
     <>
       <Grid
@@ -31,9 +31,9 @@ export default function Results() {
       >
         <Grid item>
           <Link
-            to={`/result/${rootId}/summary`}
+            to={`/result/${rootId}/${tab}/summary/${runId}`}
             className={`${classes.linkStyle} ${
-              location.pathname === `/result/${rootId}/summary` && classes.activeLink
+              location.pathname.includes("summary") && classes.activeLink
             }`}
           >
             Summary
@@ -41,9 +41,9 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to={`/result/${rootId}/request-state`}
+            to={`/result/${rootId}/${tab}/request-state/${runId}`}
             className={`${classes.linkStyle} ${
-              location.pathname.startsWith(`/result/${rootId}/request-state`) &&
+              location.pathname.includes("request-state") &&
               classes.activeLink
             }`}
             style={{ marginLeft: "20px" }}
@@ -53,10 +53,10 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to={`/result/${rootId}/error`}
+            to={`/result/${rootId}/${tab}/error/${runId}`}
             style={{ marginLeft: "20px" }}
             className={`${classes.linkStyle} ${
-              location.pathname.startsWith(`/result/${rootId}/error`) &&
+              location.pathname.includes("error") &&
               classes.activeLink
             }`}
           >
@@ -65,10 +65,10 @@ export default function Results() {
         </Grid>
         <Grid item>
           <Link
-            to={`/result/${rootId}/initial-setup`}
+            to={`/result/${rootId}/${tab}/initial-setup/${runId}`}
             style={{ marginLeft: "20px" }}
             className={`${classes.linkStyle} ${
-              location.pathname.startsWith(`/result/${rootId}/initial-setup`) &&
+              location.pathname.includes("initial-setup") &&
               classes.activeLink
             }`}
           >
@@ -95,7 +95,7 @@ export default function Results() {
             <Button
               className={classes.backBtn}
               onClick={() => {
-                navigate(`/performance?rootId=${rootId}`);
+                navigate(`/performance?rootId=${rootId}&tab=${tab}&runId=${runId}`);
               }}
             >
               <ArrowBackIcon fontSize="small" />

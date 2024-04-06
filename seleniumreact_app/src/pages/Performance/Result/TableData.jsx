@@ -47,7 +47,7 @@ export function TableData({ rows,rootId }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows?.map((row) => (
+          {rows.RunDetails?.map((row) => (
             <TableRow
               style={{ height: "34px !important" }}
               key={row.RunId}
@@ -57,7 +57,7 @@ export function TableData({ rows,rootId }) {
             >
               <StyledTableCell component="th" scope="row">
                 <Link
-                  to={`/result/${rootId}/summary`}
+                  to={`/result/${rootId}/Results/summary/${rows.RunDetails[0].RunId}`}
                   style={{ textDecoration: "none" }}
                   onClick={() => handleRowClick(row)}
                 >

@@ -20,7 +20,8 @@ export default function Performance() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const rootId = queryParams.get("rootId");
-
+  const tab = queryParams.get('tab');
+  const runId = queryParams.get('runId');
   const [addTestCase, setAddTestCase] = useState(rootId);
   const [addNewProject, setAddNewProject] = useState(false);
   const [depth, setdepth] = useState(0);
@@ -191,7 +192,7 @@ export default function Performance() {
           </Grid>
           <Grid item xs={12} md={drawerOpen ? 9 : 12} xl={10}>
             {depth > 1 ? (
-              addTestCase !== 0 && <TabsPanel rootId={addTestCase} />
+              addTestCase !== 0 && <TabsPanel rootId={addTestCase} tab={tab} runId={runId}/>
             ) : (
               <Box />
             )}
