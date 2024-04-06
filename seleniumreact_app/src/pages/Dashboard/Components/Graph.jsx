@@ -220,7 +220,7 @@ const Graph = (props) => {
             className={clsx(classes.customFontSize)}
             mr={3}
           >
-            Application
+            For
           </Typography>
           <Select
             options={staticOptions}
