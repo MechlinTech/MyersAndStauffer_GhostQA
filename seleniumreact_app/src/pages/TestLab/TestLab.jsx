@@ -19,8 +19,8 @@ import { getBaseUrl } from "../../utils/configService";
 
 export default function TestLab() {
   const classes = useStyles();
-  
-  const {nodeId} = useParams()
+
+  const { nodeId } = useParams();
 
   const [addTestCase, setAddTestCase] = useState(0);
   const [addNewProject, setAddNewProject] = useState(false);
@@ -32,28 +32,34 @@ export default function TestLab() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [listData, setListData] = useState([]);
   const [depth, setdepth] = useState(null);
-  const [childOfFirstTwoParent, setchildOfFirstTwoParent] = useState([])
+  const [childOfFirstTwoParent, setchildOfFirstTwoParent] = useState([]);
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const BASE_URL = await getBaseUrl();
-        const response = await axios.get(
-          `${BASE_URL}/AddTestLab/GetDataRootRelation`,
-          header()
-        );
-        // Assuming response.data is the array of data you want to set as listData
-        setListData(response.data == "" ? [] : response.data);
-        console.log(response);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setListData([]);
-      }
-    };
-
     fetchData(); // Call the fetchData function when the component mounts
-  }, [addTestCase, addNewProject]);
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  }, [addTestCase]);
+
+  const fetchData = async () => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.get(
+        `${BASE_URL}/AddTestLab/GetDataRootRelation`,
+        header()
+      );
+      // Assuming response.data is the array of data you want to set as listData
+      setListData(response.data == "" ? [] : response.data);
+      console.log(response);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setListData([]);
+    }
+  };
+
+  const handleCancel = () => {
+    setAddNewProject(false)
+    setFormData({ name: "" });
+ }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
@@ -69,7 +75,7 @@ export default function TestLab() {
       );
       setListData([...listData, response.data.Data[0]]); // Reset form data
       setFormData({ name: "" });
-      setAddNewProject(!addNewProject);
+      setAddNewProject(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -90,8 +96,8 @@ export default function TestLab() {
       setNameSuite(item.name);
       setAddNewProject(false);
     } else {
-      let childs = listData.filter((data)=> data.parentId === item.id )
-      setchildOfFirstTwoParent(childs)
+      let childs = listData.filter((data) => data.parentId === item.id);
+      setchildOfFirstTwoParent(childs);
       setAddTestCase(0);
       setNameSuite("");
       setAddNewProject(false);
@@ -109,10 +115,7 @@ export default function TestLab() {
             {!drawerOpen && <KeyboardDoubleArrowRightIcon />}
           </Box>
           <Grid item xs={12} md={3} xl={2} style={treeStyle}>
-            <Card
-              className={classes.card}
-              style={{ paddingBottom: "30px" }}
-            >
+            <Card className={classes.card} style={{ paddingBottom: "30px" }}>
               <Grid
                 container
                 alignItems="center"
@@ -120,21 +123,36 @@ export default function TestLab() {
                 className={classes.bodyHeader}
               >
                 <Grid item xs={6}>
-                 Workspaces
+                  Workspaces
                 </Grid>
                 <Grid item xs={6} style={{ textAlign: "right" }}>
-                  <Button
-                    variant="contained"
-                    onClick={() => setAddNewProject((current) => !current)}
-                    style={{
-                      fontSize: 14,
-                      backgroundColor: "rgb(101, 77, 247)",
-                      color: "#ffffff",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {!addNewProject ? <Add /> : "Cancel"}
-                  </Button>
+                  {addNewProject ? (
+                    <Button
+                      variant="contained"
+                      onClick={handleCancel}
+                      style={{
+                        fontSize: 14,
+                        backgroundColor: "rgb(101, 77, 247)",
+                        color: "#ffffff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={() => setAddNewProject(true)}
+                      style={{
+                        fontSize: 14,
+                        backgroundColor: "rgb(101, 77, 247)",
+                        color: "#ffffff",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Add />
+                    </Button>
+                  )}
                 </Grid>
                 <Grid
                   item
@@ -163,15 +181,17 @@ export default function TestLab() {
                   TestCaseHandle={handleTestCaseList}
                   listData={listData}
                   setListData={setListData}
-                  params = {nodeId}
+                  params={nodeId}
                 />
               </Grid>
             </Card>
           </Grid>
-          <Grid item xs={12} md={drawerOpen ? 9 : 12} xl={10} >
-            {depth>1 ? (
+          <Grid item xs={12} md={drawerOpen ? 9 : 12} xl={10}>
+            {depth > 1 ? (
               <AddTestCase addTestCase={addTestCase} nameSuite={nameSuite} />
-            ):(<Box/>)}
+            ) : (
+              <Box />
+            )}
           </Grid>
         </Grid>
       </div>

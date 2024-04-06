@@ -201,7 +201,7 @@ const Card = ({
                         fontFamily: "Lexend Deca",
                         fontSize: "14px",
                       }}
-                      placeholder={nodeCount == 0 ? "Add Project": "Add Test"}
+                      placeholder={nodeCount == 0 ? "Add Project": nodeCount == 1 ? "Add Suite": "Test" }
                       className={styleClass.editTheFolder}
                       value={newElementName}
                       key={item.id}
@@ -486,6 +486,16 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
 
         header()
       );
+      console.log("response",response.data)
+      if(response.data.status == "success"){
+        setopenDelModal(false);
+        toast.info("Successfully deleted", {
+          style: {
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
+          },
+      });
+      }
       const childrenToDelete = listData.filter(
         (item) => item.parentId === itemId
       );
