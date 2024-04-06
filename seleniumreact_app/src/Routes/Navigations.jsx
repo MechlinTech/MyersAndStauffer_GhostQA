@@ -79,10 +79,10 @@ export default function Navigations() {
         </Route>
         <Route path="performance" element={<Performance />}></Route>
         <Route path="/result" element={<Results />}>
-          <Route path="/result/:rootId/summary" element={<Summary />} />
-          <Route path="/result/:rootId/error" element={<Error />} />
-          <Route path="/result/:rootId/initial-setup" element={<InitialSetup />} />
-          <Route path="/result/:rootId/request-state" element={<RequestState />} />
+          <Route path="/result/:rootId/:tab/summary/:runId?" element={<Summary />} />
+          <Route path="/result/:rootId/:tab/error/:runId?" element={<Error />} />
+          <Route path="/result/:rootId/:tab/initial-setup/:runId?" element={<InitialSetup />} />
+          <Route path="/result/:rootId/:tab/request-state/:runId?" element={<RequestState />} />
         </Route>
         <Route path="performance/compare/:compareName" element={<CompareGraph/>}/>
         <Route path="api" element={<Api />}>

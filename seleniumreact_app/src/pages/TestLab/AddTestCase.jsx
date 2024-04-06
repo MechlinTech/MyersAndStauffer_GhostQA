@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Typography, Paper, Box, Card } from "@material-ui/core";
 import { StyledTypography, useStylesTestCase } from "./styles";
+import { CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
 import TableTestCase from "./TableTestCase";
 import { useNavigate } from "react-router-dom";
@@ -12,9 +13,12 @@ import { getBaseUrl } from "../../utils/configService";
 export default function AddTestCase({ addTestCase, nameSuite }) {
   const classes = useStylesTestCase();
   const [testCase, setTestCase] = useState([]);
+  const [fetchingTest, setfetchingTest] = useState(true);
   const navigate = useNavigate();
   localStorage.setItem("rootId", addTestCase);
   useEffect(() => {
+    setTestCase([]);
+    setfetchingTest(true);
     const fetchData = async () => {
       try {
         const BASE_URL = await getBaseUrl();
@@ -24,14 +28,17 @@ export default function AddTestCase({ addTestCase, nameSuite }) {
         );
 
         // Assuming response.data is the array of data you want to set as listData
+        console.log("response ", response.data);
         setTestCase(
           response.data.status === "fail" || response.data == ""
             ? []
             : response.data
         );
         console.log(response);
+        setfetchingTest(false);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setfetchingTest(false);
         setTestCase([]);
       }
     };
@@ -39,6 +46,8 @@ export default function AddTestCase({ addTestCase, nameSuite }) {
     fetchData(); // Call the fetchData function when the component mounts
   }, [addTestCase]);
 
+  console.log("test case", testCase);
+  console.log("root id", addTestCase);
   return (
     <>
       <Grid
@@ -80,10 +89,17 @@ export default function AddTestCase({ addTestCase, nameSuite }) {
         <Grid item xs={12}>
           <Card style={{ textAlign: "center", margin: "20px" }}>
             <Grid item>
-              {testCase.length === 0 ? (
-                <StyledTypography p={5}>No test cases found</StyledTypography>
-              ) : (
+              {fetchingTest ? (
+                <StyledTypography p={5}>
+                  <CircularProgress
+                    style={{ color: "rgb(101, 77, 247)" }}
+                    size={25}
+                  />
+                </StyledTypography>
+              ) : testCase.length !== 0 ? (
                 <TableTestCase testCase={testCase} rootId={addTestCase} />
+              ) : (
+                <StyledTypography p={5}>No test cases found</StyledTypography>
               )}
             </Grid>
           </Card>

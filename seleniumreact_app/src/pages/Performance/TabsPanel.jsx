@@ -45,11 +45,14 @@ function a11yProps(index) {
   };
 }
 
-export default function TabsPanel({rootId}) {
+export default function TabsPanel({rootId,tab,runId}) {
   const theme = useTheme();
-  const [value, setValue] = useState('Design');
-  
-  
+  const [value, setValue] = useState(tab?tab:'Design');
+  console.log('tab',tab?'yes':'no')
+  // useEffect(()=>{
+  //   if( tab !== undefined)
+  //     setValue(tab)
+  // },[tab])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -90,7 +93,7 @@ export default function TabsPanel({rootId}) {
         <Design rootId={rootId}/>
         </TabPanel>
         <TabPanel value={value} index={"Results"} dir={theme.direction}>
-        <Results rootId={rootId}/>
+        <Results rootId={rootId} openedAccord={runId}/>
         </TabPanel>
         <TabPanel value={value} index={"Trends"} dir={theme.direction}>
         <Trends/>

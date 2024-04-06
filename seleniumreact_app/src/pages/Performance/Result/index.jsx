@@ -10,12 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetResultsList } from "../../../redux/actions/ResultAction";
 import CircularProgress from "@mui/material/CircularProgress";
 
-export default function Results({ rootId }) {
-  const [expandedAccord, setExpandedAccord] = useState("");
+export default function Results({ rootId,openedAccord }) {
+  const [expandedAccord, setExpandedAccord] = useState(openedAccord);
   const dispatch = useDispatch();
   const { resultsList } = useSelector((state) => state.result);
   const [loading, setLoading] = useState(false);
-
+console.log('result list',resultsList)
   const handleExpandAccord = (panel) => (e, isExpanded) => {
     setExpandedAccord(isExpanded ? panel : "");
   };
@@ -40,8 +40,8 @@ export default function Results({ rootId }) {
       {!loading && resultsList && resultsList.length > 0
         ? resultsList.map((item, index) => (
             <Accordion
-              expanded={expandedAccord === item}
-              onChange={handleExpandAccord(item)}
+              expanded={expandedAccord === item.RunDetails[0].RunId}
+              onChange={handleExpandAccord(item.RunDetails[0].RunId)}
               key={index}
               sx={{
                 boxShadow: "none",
@@ -55,7 +55,7 @@ export default function Results({ rootId }) {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails sx={{ p: "0" }}>
-                <TableData rows={item.RunDetails} rootId={rootId} />
+                <TableData rows={item} rootId={rootId} />
               </AccordionDetails>
             </Accordion>
           ))

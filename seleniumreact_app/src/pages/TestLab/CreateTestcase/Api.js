@@ -52,7 +52,7 @@ export const UpdateTestStepsDetails = async (payload, savetoEdit) => {
             payload
         );
         if (res.data.status === "success") {
-            toast.info("Successfully update steps", {
+            toast.info("Successfully updated steps", {
                 style: {
                     background: "rgb(101, 77, 247)",
                     color: "rgb(255, 255, 255)",
@@ -77,7 +77,7 @@ export const UpdateTestCaseDetail = async (payload) => {
         );
         console.log(res)
         if (res.data.status === "success") {
-            toast.info("Successfully update testcase", {
+            toast.info("Successfully updated testcase", {
                 style: {
                     background: "rgb(101, 77, 247)",
                     color: "rgb(255, 255, 255)",
