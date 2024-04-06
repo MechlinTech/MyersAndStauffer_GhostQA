@@ -63,3 +63,4 @@ Thumbs.db
 /MyBoelterAutomation/GoBoelterSeleniumTests/obj/
 ms_data/
 app/media/*
+seleniumreact_app/public/config.json

@@ -15,13 +15,15 @@ import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
 import { useDispatch } from "react-redux";
 import { getBaseUrl } from "../../../../utils/configService";
-import { ResetLocationScenarioVUCount,GetLocationScenarioVUCount } from "../../../../redux/actions/performanceAction";
+import {
+  ResetLocationScenarioVUCount,
+  GetLocationScenarioVUCount,
+} from "../../../../redux/actions/performanceAction";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
-
-export default function LoadPanel({ PerformanceFileId,testCaseData }) {
+export default function LoadPanel({ PerformanceFileId, testCaseData }) {
   const classes = useStyles();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [graphData, setGraphData] = useState([]);
   const [xaxisCategories, setxaxisCategories] = useState([]);
@@ -30,11 +32,11 @@ export default function LoadPanel({ PerformanceFileId,testCaseData }) {
       chart: {
         type: "line",
         toolbar: {
-          show: false // Set to false to hide the toolbar
+          show: false, // Set to false to hide the toolbar
         },
         zoom: {
-          enabled: false // Disable zooming
-        }
+          enabled: false, // Disable zooming
+        },
       },
       stroke: {
         curve: "stepline",
@@ -44,33 +46,33 @@ export default function LoadPanel({ PerformanceFileId,testCaseData }) {
       xaxis: {
         categories: [1, 2, 3, 4, 5, 6, 7, 8],
         title: {
-          text: "Duration (s)",
+          text: "Duration (m)",
         },
         labels: {
           style: {
-            fontSize: '14px', // Set the font size for x-axis labels
-            fontFamily: 'Lexend Deca',
-          }
-        }
+            fontSize: "14px", // Set the font size for x-axis labels
+            fontFamily: "Lexend Deca",
+          },
+        },
       },
       yaxis: {
         title: {
           text: "Users",
         },
-          labels: {
-            formatter: function (value) {
-              return value.toFixed(2); // 
-            },
-            style: {
-              fontSize: '14px', // Set the font size for x-axis labels
-              fontFamily: 'Lexend Deca',
-            }
+        labels: {
+          formatter: function (value) {
+            return value.toFixed(2); //
           },
+          style: {
+            fontSize: "14px", // Set the font size for x-axis labels
+            fontFamily: "Lexend Deca",
+          },
+        },
       },
       fill: {
         type: "solid",
         colors: ["#654DF7"],
-        opacity: 1, 
+        opacity: 1,
       },
       tooltip: {
         y: {
@@ -78,7 +80,6 @@ export default function LoadPanel({ PerformanceFileId,testCaseData }) {
             return "" + val.toFixed(2) + " ";
           },
         },
-        
       },
       dataLabels: {
         enabled: false, // Disable data labels in tooltip
@@ -120,39 +121,38 @@ export default function LoadPanel({ PerformanceFileId,testCaseData }) {
     fetchData();
   }, []);
   useEffect(() => {
-    if(duration === 0){
-      setxaxisCategories([0])
-      setGraphData([0])
-    }else{
-      const userPerStep = rampUpSteps?(totalusers / rampUpSteps):totalusers;
+    if (duration === 0) {
+      setxaxisCategories([0]);
+      setGraphData([0]);
+    } else {
+      const userPerStep = rampUpSteps ? totalusers / rampUpSteps : totalusers;
       const stepsUntilRampUp = Math.floor(totalusers / userPerStep);
       let data = [];
-  
+
       // Generate data for the slope until rampUpTime
       for (let i = 1; i <= stepsUntilRampUp; i++) {
         data.push(i * userPerStep);
       }
-  
+
       // Add a straight line after rampUpTime
       for (let i = 0; i < stepsUntilRampUp; i++) {
         data.push(totalusers);
       }
-  
+
       let xCatagory = [];
-      const timePerStep = rampUpTime?(rampUpTime/rampUpSteps):0
+      const timePerStep = rampUpTime ? rampUpTime / rampUpSteps : 0;
       for (let i = 0; i < rampUpSteps; i++) {
-        const value = (timePerStep*i).toFixed(1); // Round to 1 decimal place
+        const value = (timePerStep * i).toFixed(1); // Round to 1 decimal place
         xCatagory.push(value.toString()); // Convert to string
       }
-  
+
       // Convert rampUpTime and duration to strings with at most one decimal place
       const rampUpTimeString = rampUpTime.toString();
       const durationString = duration.toString();
-  
+
       setxaxisCategories([...xCatagory, rampUpTimeString, durationString]);
       setGraphData(data);
     }
-    
   }, [totalusers, rampUpSteps, duration, rampUpTime]);
 
   useEffect(() => {
@@ -181,28 +181,65 @@ export default function LoadPanel({ PerformanceFileId,testCaseData }) {
     fileInputRef.current.click();
   };
   const [expanded, setExpanded] = useState([]);
+  // const handleInputData = (event, type) => {
+  //   const value = event.target.value;
+  //   if (value >= 0) {
+  //     switch (type) {
+  //       case "totalUsers":
+  //         settotalusers(value);
+  //         break;
+  //       case "duration":
+  //         setDuration(value);
+  //         break;
+  //       case "rampUpTime":
+  //         setRampUpTime(value);
+  //         break;
+  //       case "rampUpSteps":
+  //         setRampUpSteps(value);
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
+  // };
+
   const handleInputData = (event, type) => {
     const value = event.target.value;
     if (value >= 0) {
-      switch (type) {
-        case "totalUsers":
-          settotalusers(value);
-          break;
-        case "duration":
-          setDuration(value);
-          break;
-        case "rampUpTime":
-          setRampUpTime(value);
-          break;
-        case "rampUpSteps":
-          setRampUpSteps(value);
-          break;
-        default:
-          break;
+      const maxDuration = 20;
+      const maxRampUpSteps = 20;
+      if (type === "totalUsers" && value > 10) {
+        toast.error("Maximum allowed users is 10");
+      } else if (type === "duration" && value > maxDuration) {
+        toast.error(`Maximum duration allowed is ${maxDuration} minutes`);
+      } else if (type === "rampUpTime" && (value > duration || value < 0)) {
+        toast.error("Ramp up time cannot exceed duration or be negative");
+      } else if (type === "rampUpSteps" && value > maxRampUpSteps) {
+        toast.error(`Maximum ramp up steps allowed is ${maxRampUpSteps}`);
+      } else {
+        switch (type) {
+          case "totalUsers":
+            settotalusers(value);
+            break;
+          case "duration":
+            setDuration(value);
+            if (rampUpTime > value) {
+              setRampUpTime(value);
+            }
+            break;
+          case "rampUpTime":
+            setRampUpTime(value);
+            break;
+          case "rampUpSteps":
+            setRampUpSteps(value);
+            break;
+          default:
+            break;
+        }
       }
     }
   };
-  
+
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       submitGraphData();
@@ -217,20 +254,20 @@ export default function LoadPanel({ PerformanceFileId,testCaseData }) {
           performanceFileId: PerformanceFileId,
           totalUsers: totalusers,
           rampupSteps: rampUpSteps,
-          durationInMinutes: duration,
-          rampupTime: rampUpTime,
+          durationInMinutes: duration * 60,
+          rampupTime: rampUpTime * 60,
         },
         header()
       );
       console.log("res", res);
-      dispatch(GetLocationScenarioVUCount(testCaseData))
+      dispatch(GetLocationScenarioVUCount(testCaseData));
       // if (res.data === "Success") {
-        toast.info("Successfully saved", {
-          style: {
-            background: "rgb(101, 77, 247)",
-            color: "rgb(255, 255, 255)",
-          },
-        });
+      toast.info("Successfully saved", {
+        style: {
+          background: "rgb(101, 77, 247)",
+          color: "rgb(255, 255, 255)",
+        },
+      });
       // }
     } catch (error) {
       console.log("error saving ", error);
@@ -261,10 +298,10 @@ export default function LoadPanel({ PerformanceFileId,testCaseData }) {
                 <StyledTypography> Total Users* </StyledTypography>
               </TableCell>
               <TableCell align="center">
-                <StyledTypography>Duration(s)</StyledTypography>
+                <StyledTypography>Duration(m)</StyledTypography>
               </TableCell>
               <TableCell align="center">
-                <StyledTypography>Ramp up Time(s)</StyledTypography>
+                <StyledTypography>Ramp up Time(m)</StyledTypography>
               </TableCell>
               <TableCell align="center">
                 <StyledTypography>Ramp up Steps</StyledTypography>
