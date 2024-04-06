@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+﻿﻿#!/bin/bash
 cmd="$@"
 
 # Function to check if SQL Server is up and accepting connections.

@@ -911,6 +911,7 @@ BEGIN TRY
 		INSERT INTO [dbo].[AspNetUsers] (Id, UserName, Email, EmailConfirmed, PasswordHash, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, 
 		AccessFailedCount, NormalizedEmail,NormalizedUserName,SecurityStamp) 
 		VALUES (@Id, @Email, @Email, 1, @Password, 0, 0, 0 ,0,@normalizeEmail, @normalizeEmail,@securityStamp)
+
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -3390,7 +3391,6 @@ BEGIN CATCH
 	SELECT ERROR_LINE(), ERROR_MESSAGE(), ERROR_SEVERITY()
 END CATCH
 GO
-
 CREATE OR ALTER  PROCEDURE [dbo].[stp_UpdateUserProfile]
 @FullName		        VARCHAR(100),
 @OrganizationName		VARCHAR(100),
@@ -3525,4 +3525,5 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [isValidUser]
-END CATCH
+GO
+
