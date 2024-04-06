@@ -154,7 +154,7 @@ export default function Design({ rootId }) {
   const getRunDetail = async (data, clientId, delay) => {
     try {
       const res = await axios.get(
-        `http://65.1.188.67:8010/codeengine/api/performance-container-runs/?client_reference_id=${clientId}`,
+        `/codeengine/api/performance-container-runs/?client_reference_id=${clientId}`,
         header()
       );
       const result = res.data.results;
@@ -207,7 +207,7 @@ export default function Design({ rootId }) {
   // const getRunDetail = async (data, clientId, delay) => {
   //   try {
   //     const res = await axios.get(
-  //       `http://65.1.188.67:8010/api/performance-container-runs/?client_reference_id=${clientId}`,
+  //       `/api/performance-container-runs/?client_reference_id=${clientId}`,
   //       header()
   //     );
   //     const result = res.data.results;
