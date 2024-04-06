@@ -16,6 +16,12 @@ const fetchConfig = async () => {
   
   export const getBaseUrl = async () => {
     const config = await getConfig();
-    return config ? config.REACT_APP_BASE_URL || "API" : "API";
+    return config ? config.REACT_APP_BASE_URL || "/api" : "/api";
+  };
+
+  export const getCoreEngineBaseUrl = async () => {
+    const config = await getConfig();
+    console.log("config",config)
+    return config ? config.coreEngineBaseUrl || "" : "";
   };
   

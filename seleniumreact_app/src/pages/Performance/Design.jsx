@@ -17,25 +17,25 @@ import axios from "axios";
 import { header } from "../../utils/authheader";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  GetLocationScenarioVUCount,
-} from "../../redux/actions/performanceAction";
+import { GetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
 import {
   setIsRunning,
   addExecuterData,
   setExecuteJMXData,
   setRunningRootId,
 } from "../../redux/actions/ResultAction";
-import { getBaseUrl } from "../../utils/configService";
+import { getBaseUrl, getCoreEngineBaseUrl } from "../../utils/configService";
 import { useNavigate } from "react-router-dom";
-const DJANGO_URL = process.env.CODE_ENGINE_BASE_URL
+const DJANGO_URL = process.env.CODE_ENGINE_BASE_URL;
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Design({ rootId }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { isRunning, runningRootId } = useSelector((state) => state.result);
-  const { virtualUser, totalLocation } = useSelector((state) => state.performance);
+  const { virtualUser, totalLocation } = useSelector(
+    (state) => state.performance
+  );
   const navigate = useNavigate();
 
   // const [locationCount, setlocationCount] = useState(totalLocation);
@@ -87,8 +87,6 @@ export default function Design({ rootId }) {
     }
   };
 
-  
-
   const getName = () => {
     const email = sessionStorage.getItem("email");
     const i = email.indexOf("@");
@@ -133,13 +131,20 @@ export default function Design({ rootId }) {
       );
       console.log("response676", response.data);
       const clientId = response.data.client_Id;
-      if (response.data.totalUser !== 0 && response.data.totalDuration !== 0 && response.data.totalRampUpSteps && response.data.totalRampUpTime) {
+      if (
+        response.data.totalUser !== 0 &&
+        response.data.totalDuration !== 0 &&
+        response.data.totalRampUpSteps &&
+        response.data.totalRampUpTime
+      ) {
         dispatch(setExecuteJMXData(response.data));
         // Navigate to the desired page after API response
         navigate(`/result/${rootId}/summary`);
         getRunDetail(response.data, clientId, 2000);
       } else {
-        toast.warn("Total Users, Duration, Ramp-up Time, or Ramp-up Steps cannot be zero. Unable to proceed.");
+        toast.warn(
+          "Total Users, Duration, Ramp-up Time, or Ramp-up Steps cannot be zero. Unable to proceed."
+        );
         dispatch(setIsRunning(false));
       }
     } catch (error) {
@@ -148,13 +153,13 @@ export default function Design({ rootId }) {
       dispatch(setRunningRootId(null));
     }
   };
-  
 
   console.log("scenarioCount", scenarioCount);
   const getRunDetail = async (data, clientId, delay) => {
     try {
+      const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const res = await axios.get(
-        `/codeengine/api/performance-container-runs/?client_reference_id=${clientId}`,
+        `${CORE_BASE_URL}/codeengine/api/performance-container-runs/?client_reference_id=${clientId}`,
         header()
       );
       const result = res.data.results;
@@ -259,7 +264,7 @@ export default function Design({ rootId }) {
                 fontFamily: "Lexend Deca",
                 fontSize: "18px",
                 fontWeight: "500",
-                marginLeft:'10px'
+                marginLeft: "10px",
               }}
             >
               Scenarios

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { headerCypres } from "../../../utils/authheader";
-import { getBaseUrl } from "../../../utils/configService";
+import { getBaseUrl, getCoreEngineBaseUrl } from "../../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 
@@ -126,8 +126,8 @@ export const SaveAndExecute = async (data, steps, testCaseDetailId, handleExecut
 
         const jsonData = await axios.get(`${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${testCaseDetail.rootId}&TestName=${testCaseDetail.testCaseName}`);
         const payload = { name: "name", request_json: jsonData.data };
-
-        const executedDetail = await axios.post(`/codeengine/api/test-suitesV2/execute3/`, payload, headerCypres());
+        const CORE_BASE_URL = await getCoreEngineBaseUrl();
+        const executedDetail = await axios.post(`${CORE_BASE_URL}/codeengine/api/test-suitesV2/execute3/`, payload, headerCypres());
         const runId = executedDetail.data.container_runs[0].id;
 
         console.log("execution detail", executedDetail);
@@ -144,8 +144,9 @@ export const SaveAndExecute = async (data, steps, testCaseDetailId, handleExecut
 const getRunDetail = async (runId, delay, testCaseDetailId, handleExecuteLoading) => {
     try {
         const BASE_URL = await getBaseUrl();
+        const CORE_BASE_URL = await getCoreEngineBaseUrl()
         const res = await axios.get(
-            `/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
+            `${CORE_BASE_URL}/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
         );
         if (res.data.container_status === "exited") {
             handleExecuteLoading()

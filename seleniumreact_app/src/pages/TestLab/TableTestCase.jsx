@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { StyledTypography } from "./styles";
 import { Delete } from "@material-ui/icons";
-import { getBaseUrl } from "../../utils/configService";
+import { getBaseUrl, getCoreEngineBaseUrl } from "../../utils/configService";
 import DeleteModal from "./Comman/DeleteModal";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -34,6 +34,7 @@ export default function TableTestCase({ testCase, rootId }) {
     }));
     try {
       const BASE_URL = await getBaseUrl();
+      const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const jsonData = await axios.get(
         `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${row.TestCaseName}`
       );
@@ -42,11 +43,10 @@ export default function TableTestCase({ testCase, rootId }) {
         request_json: jsonData.data,
       };
       const executedDetail = await axios.post(
-        `/codeengine/api/test-suitesV2/execute3/`,
+        `${CORE_BASE_URL}/codeengine/api/test-suitesV2/execute3/`,
         payload,
         headerCypres()
       );
-
 
       const runId = executedDetail.data.container_runs[0].id;
       console.log("execution detail", executedDetail);
@@ -61,11 +61,11 @@ export default function TableTestCase({ testCase, rootId }) {
     }
   };
 
-
   const getRunDetail = async (runId, delay, row) => {
     try {
+      const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const res = await axios.get(
-        `/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
+        `${CORE_BASE_URL}/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
       );
 
       if (res.data.container_status === "exited") {
@@ -140,15 +140,15 @@ export default function TableTestCase({ testCase, rootId }) {
   const handleDeleTeModal = (item) => {
     console.log("item", item);
     let data = {
-        id: item?.TestCaseDetailsId,
-        name: item?.TestCaseName
-    }
+      id: item?.TestCaseDetailsId,
+      name: item?.TestCaseName,
+    };
     setsDeleteItem(data);
     setopenDelModal(true);
   };
 
   const handleDelete = async (testId) => {
-    console.log("handleDelete",testId)
+    console.log("handleDelete", testId);
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(
@@ -286,7 +286,7 @@ export default function TableTestCase({ testCase, rootId }) {
                   <Delete
                     style={{ color: "red", cursor: "pointer" }}
                     // onClick={() => handleDelete(row.TestCaseDetailsId)}
-                    onClick={() =>handleDeleTeModal(row)}
+                    onClick={() => handleDeleTeModal(row)}
                   />
                 </TableCell>
               </TableRow>
