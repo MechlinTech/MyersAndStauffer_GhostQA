@@ -172,7 +172,7 @@ export default function EditTestCase() {
     setErrors(errors);
     let titleError = "";
     let urlError = "";
-    if (!testCaseTitle.trim()|| urlPattern.test(testCaseTitle)) {
+    if (!testCaseTitle.trim()|| urlPattern.test(testCaseTitle.trim())) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
       toast.error("Enter valid title")
@@ -181,7 +181,7 @@ export default function EditTestCase() {
     } else {
       settestCaseTitleError("");
     }
-    if (!startUrl.trim() || !urlPattern.test(startUrl)) {
+    if (!startUrl.trim() || !urlPattern.test(startUrl.trim())) {
       setstartUrlError("url not valid");
       urlError = "url not valid";
       toast.error("Enter valid start url")
@@ -926,7 +926,7 @@ export default function EditTestCase() {
                     type="text"
                     placeholder="Enter title name"
                     value={testCaseTitle}
-                    disabled={!(!executionDetail && isEditable)}
+                    disabled={!isEditable}
                     error={testCaseTitleError ? true : false}
                     onChange={(e) => settestCaseTitle(e.target.value)}
                   />

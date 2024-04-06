@@ -140,7 +140,7 @@ export default function CreateTestCase() {
     setErrors(errors);
     let titleError = "";
     let urlError = "";
-    if (!testCaseTitle.trim() || urlPattern.test(testCaseTitle)) {
+    if (!testCaseTitle.trim() || urlPattern.test(testCaseTitle.trim())) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
       toast.error("Enter valid title")
@@ -148,7 +148,7 @@ export default function CreateTestCase() {
     } else {
       settestCaseTitleError("");
     }
-    if (!startUrl.trim() || !urlPattern.test(startUrl)) {
+    if (!startUrl.trim() || !urlPattern.test(startUrl.trim())) {
       setstartUrlError("url not valid");
       urlError = "url not valid";
       toast.error("Enter valid start url")
