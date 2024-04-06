@@ -37,6 +37,7 @@ RUN apt-get update && \
 
 # Copy the SQL script
 COPY ["SeleniumReportAPI/SqlScript/AllGhostQA_SP.sql", "./SqlScript/AllGhostQA_SP.sql"]
+COPY ["SeleniumReportAPI/SqlScript/Insert_FirstUser.sql", "./SqlScript/Insert_FirstUser.sql"]
 
 # Copy and set permissions for the entrypoint script
 COPY ["SeleniumReportAPI/entrypoint.sh", "/app/"]
