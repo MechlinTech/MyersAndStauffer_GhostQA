@@ -26,6 +26,26 @@ export default function TableTestCase({ testCase, rootId }) {
   const [testCaseList, setTestCaseList] = React.useState(testCase);
   const [openDelModal, setopenDelModal] = useState(false);
   const [deleteItem, setsDeleteItem] = useState("");
+
+  const fetchData = async () => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.post(
+        `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${rootId}`,
+        header()
+      );
+
+      // Assuming response.data is the array of data you want to set as listData
+      setTestCaseList(
+        response.data.status === "fail" || response.data == ""
+          ? []
+          : response.data
+      );
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setTestCaseList([]);
+    }
+  };
   const handleExecution = async (row) => {
     console.log("test case name ", row);
     setexecutingTest((prev) => ({
@@ -82,6 +102,7 @@ export default function TableTestCase({ testCase, rootId }) {
           [row.TestCaseName]: false,
         }));
         const rundetails = res.data;
+        console.log(rundetails)
         try {
           const BASE_URL = await getBaseUrl();
           const res = await axios.post(
@@ -97,6 +118,7 @@ export default function TableTestCase({ testCase, rootId }) {
               },
             });
           }
+        fetchData()
         } catch (error) {
           console.log("error", error);
           toast.error("Error AddExecuteResult");
@@ -117,25 +139,7 @@ export default function TableTestCase({ testCase, rootId }) {
     }
   };
 
-  const fetchData = async () => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const response = await axios.post(
-        `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${rootId}`,
-        header()
-      );
-
-      // Assuming response.data is the array of data you want to set as listData
-      setTestCaseList(
-        response.data.status === "fail" || response.data == ""
-          ? []
-          : response.data
-      );
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setTestCaseList([]);
-    }
-  };
+  
 
   const handleDeleTeModal = (item) => {
     console.log("item", item);

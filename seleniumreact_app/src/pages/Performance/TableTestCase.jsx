@@ -211,14 +211,7 @@ export default function TableTestCase({
                 >
                   <AccordionSummary
                     expandIcon={
-                      <ExpandMoreIcon
-                        style={{
-                          color:
-                            expandedAccord === item.testCaseName
-                              ? "white"
-                              : "black",
-                        }}
-                      />
+                      <ExpandMoreIcon/>
                     }
                     style={
                       expandedAccord === item.testCaseName
@@ -240,10 +233,7 @@ export default function TableTestCase({
                       </StyledTypography>
                       <DeleteIcon
                         style={{
-                          color:
-                            expandedAccord === item.testCaseName
-                              ? "white"
-                              : "red",
+                          color: "red",
                         }}
                         onClick={(e) => handleDeleteElement(item.id, e)}
                       />

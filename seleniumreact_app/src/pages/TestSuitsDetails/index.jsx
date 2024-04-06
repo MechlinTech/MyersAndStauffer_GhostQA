@@ -331,7 +331,7 @@ export default function TestSuitsDetails() {
 
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Card style={{ height: "40vh",overflow:'auto' }}>
+                <Card style={{ height: "60vh",overflow:'auto' }}>
                   <Table>
                     <TableHead>
                       <TableRow style={{ backgroundColor: "#f0f0f0" }}>

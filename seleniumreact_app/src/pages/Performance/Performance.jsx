@@ -10,6 +10,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import DynamicTreeView from "./DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
+import { toast } from "react-toastify";
 import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { getBaseUrl } from "../../utils/configService";
@@ -65,9 +66,15 @@ export default function Performance() {
 
         header()
       );
-      setListData([...listData, response.data.Data[0]]); // Reset form data
-      setFormData({ name: "" });
+      if(response.data.status === 'fail'){
+        toast.error(response.data.message)
+      }else{
+        setListData([...listData, response.data.Data[0]]); // Reset form data
+        setFormData({ name: "" });
       setAddNewProject(false);
+      }
+        
+      
     } catch (error) {
       console.error("Error fetching data:", error);
     }

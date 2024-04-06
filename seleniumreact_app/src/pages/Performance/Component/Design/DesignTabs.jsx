@@ -63,7 +63,7 @@ export default function DesignTabs({PerformanceFileId,testCaseData}) {
       <Tabs
          value={value}
          onChange={handleChange}
-         variant="fullWidth"
+        //  variant="fullWidth"
         sx={{
             '& .MuiTabs-indicator': {
               backgroundColor: 'rgba(101, 77, 247,0)',
@@ -75,7 +75,7 @@ export default function DesignTabs({PerformanceFileId,testCaseData}) {
               borderRadius:"4px",
               border:"solid 1px #646464",
               margin:'10px 8px' ,
-             
+              width: '25%',
               '&.Mui-selected': {
                 backgroundColor: 'rgb(101, 77, 247)',
                 color: '#fff',
@@ -87,9 +87,9 @@ export default function DesignTabs({PerformanceFileId,testCaseData}) {
           }}
         >
           <Tab value="Load" label={<StyledTypography>Load</StyledTypography>} />
-          <Tab value="Location" label={<StyledTypography>Location</StyledTypography>}  disabled={true}/>
-          <Tab value="Data Entity" label={<StyledTypography>Test Data</StyledTypography>} disabled={true} />
-          <Tab value="Properties" label={<StyledTypography>Properties</StyledTypography>} disabled={true}/>
+          {/*<Tab value="Location" label={<StyledTypography>Location</StyledTypography>}  disabled={true}/>
+           <Tab value="Data Entity" label={<StyledTypography>Test Data</StyledTypography>} disabled={true} />
+          <Tab value="Properties" label={<StyledTypography>Properties</StyledTypography>} disabled={true}/> */}
           
         </Tabs>
 
