@@ -193,6 +193,7 @@ def copy_files_and_folders(source_dir, destination_dir):
     # Walk through the source directory and copy files and folders
     for root, dirs, files in os.walk(source_dir):
         # Create the corresponding directories in the destination
+        print("source",source_dir,files)
         for dir_name in dirs:
             source_path = os.path.join(root, dir_name)
             destination_path = os.path.join(destination_dir, os.path.relpath(source_path, source_dir))
@@ -203,6 +204,7 @@ def copy_files_and_folders(source_dir, destination_dir):
         for file_name in files:
             source_path = os.path.join(root, file_name)
             destination_path = os.path.join(destination_dir, os.path.relpath(source_path, source_dir))
+            print(f"Coping: {source_path} to {destination_path}")
             shutil.copy2(source_path, destination_path)    
 
 import jsbeautifier
