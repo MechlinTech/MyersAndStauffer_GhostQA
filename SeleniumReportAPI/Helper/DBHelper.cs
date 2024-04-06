@@ -2562,9 +2562,7 @@ namespace SeleniumReportAPI.Helper
                     formData.Add(new StringContent(data.RampUpSteps.ToString()), "jrampup_steps");
                     formData.Add(new StringContent(data.DurationInMinutes.ToString()), "durations");
                     formData.Add(new StringContent(guid), "client_reference_id");
-
-                    response = await httpClient.PostAsync("http://codeengine:8000/codeengine/api/performance-tests/execute2/", formData);
-                    // response = await httpClient.PostAsync(_configuration["CypressAPI:PerformanceExecutor"], formData);
+                    response = await httpClient.PostAsync(_configuration["CypressAPI:PerformanceExecutor"], formData);
                     var res1 = await response.Content.ReadAsStringAsync();
                     fileContent.Dispose();
                     fileStream.Dispose();
