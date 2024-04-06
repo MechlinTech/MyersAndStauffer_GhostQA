@@ -151,17 +151,21 @@ namespace SeleniumReportAPI.Helper
                                 reader.Read();
                                 RunDetailsJson = reader["RunDetailsJson"].ToString();
 
-                                JArray jsonArray = JArray.Parse(RunDetailsJson);
-
-                                foreach (JObject obj in jsonArray)
+                                if (RunDetailsJson.Length > 0)
                                 {
-                                    string dateYear = obj["TestRunDateYear"].Value<string>();
-                                    DateTime date = DateTime.Parse(dateYear);
-                                    string formattedDate = date.ToString("MMM dd");
-                                    obj["TestRunDateYear"] = formattedDate;
-                                }
+                                    JArray jsonArray = JArray.Parse(RunDetailsJson);
 
-                                RunDetailsJson = JsonConvert.SerializeObject(jsonArray);
+                                    foreach (JObject obj in jsonArray)
+                                    {
+                                        string dateYear = obj["TestRunDateYear"].Value<string>();
+                                        DateTime date = DateTime.Parse(dateYear);
+                                        string formattedDate = date.ToString("MMM dd");
+                                        obj["TestRunDateYear"] = formattedDate;
+                                    }
+
+                                    RunDetailsJson = JsonConvert.SerializeObject(jsonArray);
+                                }
+                                else RunDetailsJson = "[]";
                             }
                         }
                     }
