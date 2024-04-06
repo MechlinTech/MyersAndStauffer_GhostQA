@@ -140,13 +140,13 @@ export const SaveAndExecute = async (data, steps, testCaseDetailId, handleExecut
 };
 
 
+
 const getRunDetail = async (runId, delay, testCaseDetailId, handleExecuteLoading) => {
     try {
         const BASE_URL = await getBaseUrl();
         const res = await axios.get(
             `/codeengine/api/test-suitesV2/${runId}/monitor_container_run/`
         );
-
         if (res.data.container_status === "exited") {
             handleExecuteLoading()
             const rundetails = res.data;
