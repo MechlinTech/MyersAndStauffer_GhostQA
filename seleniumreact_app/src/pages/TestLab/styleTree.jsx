@@ -47,7 +47,7 @@ export const useStylesTree = makeStyles({
     fontSize: '18px',
     fontWeight: '400',
     borderRadius: '10px',
-    width:'80%',
+    width:'100%',
     outline:'none'
 },
 updateEdit:{

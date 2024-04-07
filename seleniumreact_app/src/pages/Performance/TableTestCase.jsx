@@ -258,7 +258,6 @@ export default function TableTestCase({
                   justifyContent="space-between"
                   p={0}
                 >
-                  <div style={{width:'33.3%'}}>
                     <div style={{width:'33%'}}>
                   <input
                   type="file"
@@ -298,9 +297,7 @@ export default function TableTestCase({
                   </StyledTypography>
                 </Button>
                 </div>
-                <div style={{width:'33%', textAlign:'right'}}>
-
-                  </div>
+                
                   <div style={{width:'33.3%', textAlign:'right'}}>
                   <Button
                   style={{
@@ -319,7 +316,6 @@ export default function TableTestCase({
                   Save
                 </Button>
                 </div>
-                  </div>
                 
                 
                
