@@ -49,6 +49,9 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
           text: "Duration (m)",
         },
         labels: {
+          formatter: function (value) {
+            return Math.round(value); //
+          },
           style: {
             fontSize: "14px", // Set the font size for x-axis labels
             fontFamily: "Lexend Deca",
@@ -61,7 +64,7 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
         },
         labels: {
           formatter: function (value) {
-            return value.toFixed(2); //
+            return Math.round(value); //
           },
           style: {
             fontSize: "14px", // Set the font size for x-axis labels
