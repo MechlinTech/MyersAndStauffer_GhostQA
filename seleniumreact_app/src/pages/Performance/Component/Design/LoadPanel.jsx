@@ -112,10 +112,17 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
         header()
       );
       const loadData = res.data;
+
       if (Array.isArray(loadData)) {
         settotalusers(loadData[0].TotalUsers);
-        setDuration(loadData[0].DurationInMinutes);
-        setRampUpTime(loadData[0].RampUpTimeInSeconds);
+        const durationInMinutes = loadData[0].DurationInMinutes / 60;
+        setDuration(durationInMinutes);
+        // setDuration(loadData[0].DurationInMinutes);
+        
+        // Convert RampUpTimeInSeconds from seconds to minutes
+        const rampUpTimeInSeconds = loadData[0].RampUpTimeInSeconds / 60;
+        setRampUpTime(rampUpTimeInSeconds);
+        // setRampUpTime(loadData[0].RampUpTimeInSeconds);
         setRampUpSteps(loadData[0].RampUpSteps);
       }
     } catch {}
