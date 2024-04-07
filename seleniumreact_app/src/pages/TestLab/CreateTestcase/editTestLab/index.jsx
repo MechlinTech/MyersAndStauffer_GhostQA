@@ -47,7 +47,8 @@ export default function EditTestCase() {
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.get(
-        `${BASE_URL}/AddTestLab/GetTestDetailByTestName?TestName=${testCaseName}`
+        //it accept testname but later change to id
+        `${BASE_URL}/AddTestLab/GetTestDetailByTestName?TestName=${testId}`
       );
       if (Array.isArray(res.data)) setexecutionDetail(res.data);
       else setexecutionDetail(null);

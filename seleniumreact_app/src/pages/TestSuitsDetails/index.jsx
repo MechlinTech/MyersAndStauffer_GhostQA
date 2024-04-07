@@ -245,7 +245,7 @@ export default function TestSuitsDetails() {
                     >
                       <CardContent className={classess.hederStyle}>
                         <Typography style={{ fontSize: "14px" }}>
-                        Start Date, Time
+                          Start Date, Time
                         </Typography>
                       </CardContent>
 
@@ -331,7 +331,7 @@ export default function TestSuitsDetails() {
 
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Card style={{ height: "60vh",overflow:'auto' }}>
+                <Card style={{ height: "60vh", overflow: "auto" }}>
                   <Table>
                     <TableHead>
                       <TableRow style={{ backgroundColor: "#f0f0f0" }}>
@@ -449,36 +449,50 @@ export default function TestSuitsDetails() {
                       <CardContent
                         style={{
                           display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
+                          justifyContent: "space-around",
+                          padding: "10px 0 0 0",
                         }}
                       >
-                        <Chip
-                          label={`${formatDateStringWithTime(
-                            testCaseSteps.TestCaseStartDate
-                          )}`}
-                          color="primary"
-                          variant="outlined"
-                          style={{ marginRight: 8, marginBottom: 8 }}
-                        />
-                        <Chip
-                          label={`${formatDateStringWithTime(
-                            testCaseSteps.TestCaseEndDate
-                          )}`}
-                          color="secondary"
-                          variant="outlined"
-                          style={{ marginRight: 8, marginBottom: 8 }}
-                        />
-                        <Chip
-                          label={`${formatTimeDifference(
-                            new Date(testCaseSteps.TestCaseEndDate) -
-                              new Date(testCaseSteps.TestCaseStartDate)
-                          )}`}
-                          color="default"
-                          variant="outlined"
-                          style={{ marginBottom: 8 }}
-                        />
+                        <Box textAlign='center'>
+                          <Typography variant="subtitle1" >
+                            Start DateTime
+                          </Typography>
+                          <Chip
+                            label={`${formatDateStringWithTime(
+                              testCaseSteps.TestCaseStartDate
+                            )}`}
+                            color="primary"
+                            variant="outlined"
+                            style={{ marginRight: 8, marginBottom: 8 }}
+                          />
+                        </Box>
+                        <Box textAlign='center'>
+                          <Typography variant="subtitle1">
+                            End DateTime
+                          </Typography>
+                          <Chip
+                            label={`${formatDateStringWithTime(
+                              testCaseSteps.TestCaseEndDate
+                            )}`}
+                            color="secondary"
+                            variant="outlined"
+                            style={{ marginRight: 8, marginBottom: 8 }}
+                          />
+                        </Box>
+                        <Box textAlign='center'>
+                          <Typography variant="subtitle1">Duration</Typography>
+                          <Chip
+                            label={`${formatTimeDifference(
+                              new Date(testCaseSteps.TestCaseEndDate) -
+                                new Date(testCaseSteps.TestCaseStartDate)
+                            )}`}
+                            color="default"
+                            variant="outlined"
+                            style={{ marginBottom: 8 }}
+                          />
+                        </Box>
                       </CardContent>
+                      <hr />
                       <Table>
                         <TableHead>
                           <TableRow>
