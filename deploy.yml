@@ -1,5 +1,9 @@
 version: '3.8'
 
+volumes:
+  ms_data:
+  ms_logs:
+
 services:
   webui:
     image: ghostqa/webui:latest
@@ -58,6 +62,9 @@ services:
     hostname: db
     container_name: db
     restart: unless-stopped
+    volumes:
+      - ms_data:/var/opt/mssql/data
+      - ms_logs:/var/opt/mssql/log
     healthcheck:
       test: ["CMD", "sqlcmd", "-U", "sa", "-P", "P@ssw0rd@123###", "-Q", "SELECT 1"]
       interval: 30s
@@ -123,5 +130,3 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
-volumes:
-  ms_data:
