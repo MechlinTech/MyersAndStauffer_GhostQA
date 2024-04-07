@@ -33,11 +33,11 @@ export default function Design({ rootId }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { isRunning, runningRootId } = useSelector((state) => state.result);
-  const { virtualUser, totalLocation } = useSelector(
+  const { virtualUser, totalLocation,isTotalUserOrDurationZero } = useSelector(
     (state) => state.performance
   );
   const navigate = useNavigate();
-
+  console.log('is user ',isTotalUserOrDurationZero)
   // const [locationCount, setlocationCount] = useState(totalLocation);
   const [scenarioCount, setscenarioCount] = useState(0);
   const [showAddNewElement, setShowAddNewElement] = useState(true);
@@ -398,14 +398,15 @@ export default function Design({ rootId }) {
               variant="contained"
               style={{
                 fontSize: 14,
-                backgroundColor: isRunning
+                backgroundColor: isRunning||isTotalUserOrDurationZero
                   ? "rgba(101, 77, 247, 0.5)"
                   : "rgb(101, 77, 247)",
                 color: "#ffffff",
-                cursor: isRunning ? "not-allowed" : "pointer",
+                cursor: isRunning ||isTotalUserOrDurationZero ? "not-allowed" : "pointer",
                 padding: "12px 18px",
                 textTransform: "none",
               }}
+              disabled={isTotalUserOrDurationZero}
               // disabled={isRunning || rootId !== runningRootId}
               onClick={handleRunNow}
             >

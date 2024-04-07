@@ -124,12 +124,17 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
         setRampUpTime(rampUpTimeInSeconds);
         // setRampUpTime(loadData[0].RampUpTimeInSeconds);
         setRampUpSteps(loadData[0].RampUpSteps);
+      }else{
+        settotalusers(0);
+        setDuration(0);
+        setRampUpTime(0);
+        setRampUpSteps(0);
       }
     } catch {}
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [PerformanceFileId]);
   useEffect(() => {
     if (duration === 0) {
       setxaxisCategories([0]);
