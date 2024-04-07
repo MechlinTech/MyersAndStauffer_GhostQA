@@ -52,12 +52,15 @@ export default function TableTestCase({ testCase, rootId }) {
       ...prev,
       [row.TestCaseName]: true,
     }));
+    
     try {
       const BASE_URL = await getBaseUrl();
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const jsonData = await axios.get(
         `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${row.TestCaseName}`
       );
+      const currentDate = new Date();
+    const formattedStartDateTime = currentDate.toISOString();
       let payload = {
         name: "name",
         request_json: jsonData.data,
@@ -70,7 +73,7 @@ export default function TableTestCase({ testCase, rootId }) {
 
       const runId = executedDetail.data.container_runs[0].id;
       console.log("execution detail", executedDetail);
-      getRunDetail(runId, 1000, row);
+      getRunDetail(runId, 1000, row,formattedStartDateTime);
     } catch (error) {
       console.log("error fetching execution data", error);
       toast.error("network error");
@@ -81,7 +84,7 @@ export default function TableTestCase({ testCase, rootId }) {
     }
   };
 
-  const getRunDetail = async (runId, delay, row) => {
+  const getRunDetail = async (runId, delay, row,formattedStartDateTime) => {
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const res = await axios.get(
@@ -102,12 +105,21 @@ export default function TableTestCase({ testCase, rootId }) {
           [row.TestCaseName]: false,
         }));
         const rundetails = res.data;
-        console.log(rundetails)
+        console.log('rundetial ',rundetails)
+        const currentDate = new Date();
+        const formattedEndDateTime = currentDate.toISOString();
+        let endDate = formattedEndDateTime 
+        console.log('end date',endDate)
         try {
           const BASE_URL = await getBaseUrl();
           const res = await axios.post(
             `${BASE_URL}/AddTestLab/AddExecuteResult?testCaseDetailId=${row.TestCaseDetailsId}`,
-            rundetails,
+            {
+              testCaseDetailId: row.TestCaseDetailsId,
+              data: rundetails,
+              startDate: formattedStartDateTime,
+              endDate: endDate
+            },
             header()
           );
           if (res.data.status === "success") {
@@ -126,7 +138,7 @@ export default function TableTestCase({ testCase, rootId }) {
         console.log("rundetails : ", rundetails);
       } else {
         setTimeout(() => {
-          getRunDetail(runId, delay, row);
+          getRunDetail(runId, delay, row,formattedStartDateTime);
         }, delay);
       }
     } catch (error) {
