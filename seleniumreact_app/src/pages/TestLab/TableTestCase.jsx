@@ -113,7 +113,7 @@ export default function TableTestCase({ testCase, rootId }) {
         try {
           const BASE_URL = await getBaseUrl();
           const res = await axios.post(
-            `${BASE_URL}/AddTestLab/AddExecuteResult?testCaseDetailId=${row.TestCaseDetailsId}`,
+            `${BASE_URL}/AddTestLab/AddExecuteResult`,
             {
               testCaseDetailId: row.TestCaseDetailsId,
               data: rundetails,
