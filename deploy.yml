@@ -80,7 +80,7 @@ services:
       POSTGRES_PASSWORD: "yourpassword"  # Set your PostgreSQL password here
       POSTGRES_DB: "yourdatabase"  # Set your PostgreSQL database name here
     ports:
-      - "5432:5432"  # Expose PostgreSQL port
+      - "5433:5432"  # Expose PostgreSQL port
     volumes:
       - ~/ghostqa/postgres-data:/var/lib/postgresql/data 
   
