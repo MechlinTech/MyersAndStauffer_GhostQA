@@ -148,7 +148,7 @@ export default function Profile() {
                     >
                       <StyledOutlinedInput
                         id="outlined-adornment-name"
-                        type="email"
+                        type="text"
                         placeholder="Enter your full name"
                         disabled={!isEditable}
                         error={Error.nameError ? true : false}
