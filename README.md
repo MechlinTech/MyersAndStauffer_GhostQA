@@ -18,9 +18,15 @@
 
 2. **Download and Execute Deployment Script:**
     - Run the following command in PowerShell:
-        ```
+     - WINDOWS 
+        ```powershell
         powershell -ExecutionPolicy Bypass -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/MechlinTech/MyersAndStauffer_GhostQA/main/deploy.ps1', '.\deploy.ps1'); .\deploy.ps1"
         ```
+        Ubuntu
+        ```sh
+        wget -O - https://raw.githubusercontent.com/MechlinTech/MyersAndStauffer_GhostQA/main/deploy.sh | bash
+        ```
+
     This command will download the deployment script from the specified URL and execute it.
 
 3. **Accessing the Deployed Web Application:**
