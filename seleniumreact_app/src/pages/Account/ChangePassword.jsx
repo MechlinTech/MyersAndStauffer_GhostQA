@@ -13,7 +13,6 @@ import { StyledTypography, StyledOutlinedInput } from "./style";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { ChangePasswordReq } from "../../redux/actions/authActions";
-
 export default function ChangePassword() {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -67,9 +66,22 @@ export default function ChangePassword() {
     }
   };
   return (
-    <Grid container justifyContent="center" alignItems="center" height='100vh'>
-      <Grid item xs={12} sm={12} md={10} lg={8}>
+    <Grid container display='flex' justifyContent="center" alignItems="center" height='100vh' spacing={0}>
+      
+      <Grid item xs={12} sm={12} md={10} lg={8} >
+      
         <Paper elevation={2} className={classes.papercontainer}>
+          <Box style={{width:'100%',display:'flex'}}>
+
+      <img src={"/images/Logo_GhostQA.svg"} alt="logo" style={{ marginLeft: '20px',textAlign:'left' }}/>
+          </Box>
+
+
+      <StyledTypography
+        sx={{  textAlign: 'center', fontSize: '24px',marginBottom:'20px' }}
+      >
+        Change your Password
+      </StyledTypography>
           <Box sx={{ width: "70%" }}>
             <Paper
               variant="outlined"

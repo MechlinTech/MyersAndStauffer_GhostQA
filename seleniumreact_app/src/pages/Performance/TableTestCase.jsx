@@ -228,7 +228,7 @@ export default function TableTestCase({
                       <StyledTypography align="left">
                         {item.testCaseName}
                       </StyledTypography>
-                      <StyledTypography align="left">
+                      <StyledTypography align="center">
                         {truncateFileName(item.fileName, 40)}
                       </StyledTypography>
                       <DeleteIcon
@@ -257,7 +257,8 @@ export default function TableTestCase({
                   flexDirection="row"
                   justifyContent="space-between"
                 >
-                <input
+                  <div style={{width:'33%'}}>
+                  <input
                   type="file"
                   ref={fileInputRef}
                   style={{ display: "none" }}
@@ -278,6 +279,9 @@ export default function TableTestCase({
                   }}
                   required
                 />
+                  </div>
+                  <div style={{width:'33%',textAlign:'center'}}>
+                
                 <Button
                 onClick={handleButtonClick}
                   style={{
@@ -291,8 +295,12 @@ export default function TableTestCase({
                     {selectedFile ? `${selectedFile.name}` : "Choose file"}
                   </StyledTypography>
                 </Button>
+                </div>
+                <div style={{width:'33%', textAlign:'right'}}>
+
                 <Button
                   style={{
+                    
                     fontSize: 14,
                     backgroundColor: !selectedFile
                       ? "rgba(101, 77, 247, 0.5)"
@@ -306,6 +314,7 @@ export default function TableTestCase({
                 >
                   Save
                 </Button>
+                </div>
                 </Stack>
               </TableCell>
             </TableRow>
