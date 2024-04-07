@@ -122,21 +122,35 @@ export default function Design({ rootId }) {
     dispatch(setIsRunning(true));
     dispatch(setRunningRootId(rootId));
     const testername = getName();
+
+    const currentDate = new Date();
+
+  // // Format the date and time separately
+  // const formattedDate = currentDate.toLocaleDateString("en-US");
+  // const formattedTime = currentDate.toLocaleTimeString("en-US", {
+  //   hour: "numeric",
+  //   minute: "2-digit",
+  //   hour12: true,
+  // });
+
+  const formattedDateTime = currentDate.toISOString();
+
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
         `${BASE_URL}/Performance/ExecutePerformanceJMX`,
-        { rootId: rootId, testerName: testername, name: folderName },
+        {
+          rootId: rootId,
+          testerName: testername,
+          name: folderName,
+          startDate: formattedDateTime,
+          // startDate: `${formattedDate}, ${formattedTime}`
+        },
         header()
       );
       console.log("response676", response.data);
       const clientId = response.data.client_Id;
-      if (
-        response.data.totalUser !== 0 &&
-        response.data.totalDuration !== 0 &&
-        response.data.totalRampUpSteps &&
-        response.data.totalRampUpTime
-      ) {
+      if (response.data.totalUser !== 0 && response.data.totalDuration !== 0) {
         dispatch(setExecuteJMXData(response.data));
         // Navigate to the desired page after API response
         navigate(`/result/${rootId}/Design/summary`);
@@ -172,7 +186,10 @@ export default function Design({ rootId }) {
           getRunDetail(data, clientId, delay);
         }, delay);
       } else {
-        data = { ...data, responseData: res.data };
+        const currentDate = new Date();
+        const formattedDateTime = currentDate.toISOString();
+        let endDate = formattedDateTime 
+        data = { ...data, responseData: res.data, endDate: endDate };
         console.log("data", data);
         const BASE_URL = await getBaseUrl();
         dispatch(setIsRunning(false));
