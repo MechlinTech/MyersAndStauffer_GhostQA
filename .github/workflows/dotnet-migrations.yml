@@ -1,4 +1,4 @@
-name: Dotnet image build
+name: Dotnet Migrations image build
 on:
   push:
     branches: [ "main" ]
