@@ -50,6 +50,15 @@ export const useStylesTree = makeStyles({
     width:'100%',
     outline:'none'
 },
+addNewFolder: {
+    border: '1px solid #654df7',
+    padding: '4px 5px',
+    fontSize: '18px',
+    fontWeight: '400',
+    borderRadius: '10px',
+    width:'80%',
+    outline:'none'
+},
 updateEdit:{
     display: "flex",
     alignItems: 'center',

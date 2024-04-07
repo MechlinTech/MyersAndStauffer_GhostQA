@@ -1,102 +1,121 @@
-import React, { useState } from 'react';
-import { Button, Container, Typography, Box, makeStyles } from '@material-ui/core';
+import React, { useState } from "react";
+import {
+  Button,
+  Container,
+  Typography,
+  Box,
+  makeStyles,
+} from "@material-ui/core";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { AcceptInvitation } from '../../redux/actions/authActions';
+import { useDispatch } from "react-redux";
+import { AcceptInvitation } from "../../redux/actions/authActions";
 const useStyles = makeStyles((theme) => ({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '80vh',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "80vh",
   },
   text: {
-    fontSize: '2rem',
-    letterSpacing: '1px',
+    fontFamily: "Lexend Deca",
+    fontSize: "18px",
   },
   btnContainer: {
-    marginTop: '1rem',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    marginTop: "1rem",
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   btn: {
-    cursor: 'pointer',
-    padding: '8px 13px',
-    backgroundColor: '#654df7',
-    outline: 'none',
-    border: '1px solid #654df7',
-    color: '#fff',
-    borderRadius: '5px',
-    fontSize: '14px',
-    '&:hover': {
-      backgroundColor: '#654df7',
-      border: '1px solid #654df7',
+    cursor: "pointer",
+    padding: "8px 13px",
+    backgroundColor: "#654df7",
+    outline: "none",
+    border: "1px solid #654df7",
+    color: "#fff",
+    borderRadius: "5px",
+    fontSize: "14px",
+    "&:hover": {
+      backgroundColor: "#654df7",
+      border: "1px solid #654df7",
     },
   },
   reject: {
-    backgroundColor: 'rgb(108, 117, 125)',
-    border: '1px solid rgb(108, 117, 125)',
-    marginLeft: '10px',
-    '&:hover': {
-      backgroundColor: '#654df7',
-      border: '1px solid #654df7',
+    backgroundColor: "rgb(108, 117, 125)",
+    border: "1px solid rgb(108, 117, 125)",
+    marginLeft: "10px",
+    "&:hover": {
+      backgroundColor: "#654df7",
+      border: "1px solid #654df7",
     },
   },
   acceptMsgBox: {
-    padding: '10px',
-    display: 'none',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: "10px",
+    display: "none",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   imgContainer: {
-    height: '300px',
-    width: '230px',
+    height: "300px",
+    width: "230px",
   },
   rejectMsgBox: {
-    display: 'none',
+    display: "none",
   },
 }));
 
 const Invitation = () => {
   const classes = useStyles();
-  const {toEmail} = useParams()
-  const dispatch = useDispatch()
+  const { toEmail } = useParams();
+  const dispatch = useDispatch();
   const [accepted, setAccepted] = useState(false);
   const [rejected, setRejected] = useState(false);
 
-  const handleSetAccept = ()=>{
+  const handleSetAccept = () => {
     setAccepted(true);
-  }
+  };
   const handleAccept = () => {
-    console.log("email id ", toEmail)
-    dispatch(AcceptInvitation(toEmail,handleSetAccept))
+    console.log("email id ", toEmail);
+    dispatch(AcceptInvitation(toEmail, handleSetAccept));
   };
 
   const handleReject = () => {
     // Handle reject logic if needed
-    setRejected(true)
+    setRejected(true);
   };
 
   return (
     <Container className={classes.container}>
-        <Box style={{ display: !accepted && !rejected ? 'block' : 'none' }}>
-      <div className={classes.text}>You are invited</div>
-      <Box className={classes.btnContainer}>
-        <div className={classes.acceptBox}>
-          <Button className={classes.btn} onClick={handleAccept}>
-            Accept
-          </Button>
+      <Box style={{ display: !accepted && !rejected ? "block" : "none" }}>
+        <Box style={{ width: "100%", display: "flex" }}>
+          <img src={"/images/Logo_GhostQA.svg"} alt="logo" />
+        </Box>
+        <div className={classes.text}>
+          You are invited to you join GhostQA. Please click on Accept button to
+          accept the invitation.
         </div>
-        <div className={classes.rejectBox} onClick={handleReject}>
-          <Button className={`${classes.btn} ${classes.reject}`}>Reject</Button>
-        </div>
+        <Box className={classes.btnContainer}>
+          <div className={classes.acceptBox}>
+            <Button className={classes.btn} onClick={handleAccept}>
+              Accept
+            </Button>
+          </div>
+          <div className={classes.rejectBox} onClick={handleReject}>
+            <Button className={`${classes.btn} ${classes.reject}`}>
+              Reject
+            </Button>
+          </div>
+        </Box>
       </Box>
-      </Box>
-      <div className={classes.acceptMsgBox} style={{ display: accepted ? 'flex' : 'none' }}>
-        <Typography variant="h4">Congratulations! Welcome to Ghost QA</Typography>
+      <div
+        className={classes.acceptMsgBox}
+        style={{ display: accepted ? "flex" : "none" }}
+      >
+        <Typography variant="h4">
+          Congratulations! Welcome to Ghost QA
+        </Typography>
         {/* <div className={classes.imgContainer}>
           <img
             src="https://e7.pngegg.com/pngimages/858/743/png-clipart-halloween-ghost-witch-cartoon-happy-ghost-cartoon-character-face-thumbnail.png"
@@ -104,11 +123,16 @@ const Invitation = () => {
             className={classes.imgContainer}
           />
         </div> */}
-        <Typography>Your temporary password is sent on your emailId, Please check.</Typography>
+        <Typography>
+          Your temporary password is sent on your emailId, Please check.
+        </Typography>
         <Typography>Thank you</Typography>
         {/* <Typography style={{marginTop:'50px'}}>To change password <Link to='/changepassword'>click here</Link></Typography> */}
       </div>
-      <div className={classes.rejectMsgBox} style={{ display: rejected ? 'flex' : 'none' }}>
+      <div
+        className={classes.rejectMsgBox}
+        style={{ display: rejected ? "flex" : "none" }}
+      >
         <Typography variant="h6">Thank You</Typography>
       </div>
     </Container>
