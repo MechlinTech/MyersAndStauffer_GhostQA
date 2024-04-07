@@ -2,7 +2,7 @@ import React, { useState, useEffect, Children } from "react";
 import { Grid, Card, Box } from "@material-ui/core";
 import { useStyles } from "./styles";
 import Button from "@mui/material/Button";
-
+import { toast } from "react-toastify";
 import { Add } from "@mui/icons-material";
 
 import AddTestCase from "./AddTestCase";
@@ -58,28 +58,35 @@ export default function TestLab() {
     setFormData({ name: "" });
  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const BASE_URL = await getBaseUrl();
-      const response = await axios.post(
-        `${BASE_URL}/AddTestLab/AddRootRelation`,
-        {
-          rootId: 0,
-          node: 0,
-          parent: 0,
-          name: formData.name,
-        },
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-        header()
-      );
-      setListData([...listData, response.data?.Data[0]]); // Reset form data
-      setFormData({ name: "" });
-      setAddNewProject(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  // Check if formData.name is empty
+  if (!formData.name.trim()) {
+    toast.error("Whitespace is not allowed.");
+    return; 
+  }
+
+  try {
+    const BASE_URL = await getBaseUrl();
+    const response = await axios.post(
+      `${BASE_URL}/AddTestLab/AddRootRelation`,
+      {
+        rootId: 0,
+        node: 0,
+        parent: 0,
+        name: formData.name,
+      },
+      header()
+    );
+    setListData([...listData, response.data?.Data[0]]); // Reset form data
+    setFormData({ name: "" });
+    setAddNewProject(false);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
   const handleItemClick = (id) => {
     setSelectedItem(id); // Update selected item state
     // onItemClick(id); // Call the onItemClick callback function with the clicked item's id

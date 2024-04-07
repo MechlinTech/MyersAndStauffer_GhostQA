@@ -54,6 +54,10 @@ export default function Performance() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!formData.name.trim()) {
+      toast.error("Whitespace is not allowed.");
+      return; 
+    }
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
