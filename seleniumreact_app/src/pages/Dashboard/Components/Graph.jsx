@@ -107,12 +107,18 @@ const Graph = (props) => {
           const TotalFailedTestCase = [];
           const TotalPassedTestCase = [];
           const TotalTestCase = [];
+          
           if (response.data.length) {
             response.data.forEach((item) => {
               const date = new Date(item.TestRunStartDate);
-              TestRunStartDate.push(
-                date.getDate() + "/" + (date.getMonth() + 1)
-              );
+              console.log("date",date)
+              const formattedDate = date.toLocaleDateString('en-US', {
+                month: 'long', // full month name
+                day: 'numeric', // day of the month
+                year: 'numeric' // full year
+              });
+              
+              TestRunStartDate.push(formattedDate);
               TotalFailedTestCase.push(item.TotalFailedTestCase);
               TotalPassedTestCase.push(item.TotalPassedTestCase);
               TotalTestCase.push(item.TotalTestCase);
