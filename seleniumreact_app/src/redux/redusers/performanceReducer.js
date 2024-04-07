@@ -1,9 +1,10 @@
-import { GET_LOC_COUNT,GET_USER_COUNT,RESET_LOC_COUNT,RESET_USER_COUNT,SCENARIO_COUNT } from "../actions/performanceAction";
+import { GET_LOC_COUNT,GET_USER_COUNT,RESET_LOC_COUNT,RESET_USER_COUNT,SCENARIO_COUNT,IS_USER_OR_DURATION_ZERO } from "../actions/performanceAction";
 
 const initialState = {
  virtualUser:0,
  totalLocation:0,
- totalScenario:0
+ totalScenario:0,
+ isTotalUserOrDurationZero:true
 };
 
 const performanceReducer = (state = initialState, action) => {
@@ -20,6 +21,13 @@ const performanceReducer = (state = initialState, action) => {
         virtualUser:action.payload,
       };
     }
+    case IS_USER_OR_DURATION_ZERO: {
+      return {
+      ...state,
+      isTotalUserOrDurationZero:action.payload,
+    };
+  }
+    
     case RESET_USER_COUNT: {
       return {
         ...state,

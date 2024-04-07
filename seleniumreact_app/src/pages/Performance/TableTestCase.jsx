@@ -250,14 +250,15 @@ export default function TableTestCase({
             <TableRow
             // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell colSpan={3}>
+              <TableCell colSpan={3} padding="16px 10px">
                 <Stack
                   width="100%"
                   display="felx"
                   flexDirection="row"
                   justifyContent="space-between"
+                  p={0}
                 >
-                  <div style={{width:'33%'}}>
+                    <div style={{width:'33%'}}>
                   <input
                   type="file"
                   ref={fileInputRef}
@@ -296,9 +297,9 @@ export default function TableTestCase({
                   </StyledTypography>
                 </Button>
                 </div>
-                <div style={{width:'33%', textAlign:'right'}}>
-
-                <Button
+                
+                  <div style={{width:'33.3%', textAlign:'right'}}>
+                  <Button
                   style={{
                     
                     fontSize: 14,
@@ -315,6 +316,9 @@ export default function TableTestCase({
                   Save
                 </Button>
                 </div>
+                
+                
+               
                 </Stack>
               </TableCell>
             </TableRow>
