@@ -11,4 +11,4 @@ docker pull ghostqa/dotnetapi:latest
 docker pull ghostqa/webui:latest
 
 # Run docker-compose up command
-docker compose up
+docker compose up -d
