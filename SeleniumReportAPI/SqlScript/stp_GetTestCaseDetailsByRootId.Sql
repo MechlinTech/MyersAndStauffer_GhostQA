@@ -16,9 +16,11 @@ BEGIN TRY
         SELECT [result] = JSON_QUERY((
             SELECT [TestCaseDetailsId], 
                    ISNULL([RootId], '') AS [RootId],
-                   ISNULL([StartUrl], '') AS [StartUrl],
-                   [TestCaseName]
-            FROM tbl_TestCaseDetails
+				   ISNULL([StartUrl], '') AS [StartUrl],
+                   [TestCaseName],
+				   (SELECT StartDateTime FROM tbl_CypressTestExecution tcte WHERE  TestCaseDetailsId = tcd.TestCaseDetailsId AND Id = (SELECT MAX(Id) from tbl_CypressTestExecution WHERE  TestCaseDetailsId = tcd.TestCaseDetailsId)) StartDateTime,
+				   (SELECT [Status] FROM tbl_CypressTestExecution tcte WHERE  TestCaseDetailsId = tcd.TestCaseDetailsId AND Id = (SELECT MAX(Id) from tbl_CypressTestExecution WHERE  TestCaseDetailsId = tcd.TestCaseDetailsId)) [Status]
+            FROM tbl_TestCaseDetails tcd
             WHERE RootId = @RootId
             FOR JSON PATH
         ))

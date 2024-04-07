@@ -1,5 +1,17 @@
+ALTER  PROCEDURE [dbo].[stp_GetTestDetailByTestCaseName]
+@TestId           INT
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetTestDetailByTestCaseName
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	21st March 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetTestDetailByTestCaseName "1025"
+**************************************************************************************/
 BEGIN TRY
-    IF EXISTS (SELECT 1 FROM tbl_CypressTestExecution WHERE [TestCaseName] = @TestName)
+    IF EXISTS (SELECT 1 FROM tbl_CypressTestExecution WHERE [TestCaseDetailsId] = @TestId)
     BEGIN
         SELECT [result] = JSON_QUERY((
             SELECT [TestSuite], 
@@ -10,7 +22,7 @@ BEGIN TRY
 				   ISNULL([TestDuration], '') AS [TestDuration],
 				   ISNULL([TestVideoUrl], '') AS [TestVideoUrl]
             FROM tbl_CypressTestExecution
-            WHERE [TestCaseName] = @TestName
+            WHERE [TestCaseDetailsId] = @TestId
             FOR JSON PATH
         ))
     END
