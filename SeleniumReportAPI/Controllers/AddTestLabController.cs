@@ -155,9 +155,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param name="Dto_RootObject"></param>
         /// <returns></returns>
         [HttpPost("AddExecuteResult")]
-        public async Task<ActionResult> AddExecuteResult(int testCaseDetailId, Dto_RootObject json)
+        public async Task<ActionResult> AddExecuteResult(Dto_ExecutedData json)
         {
-            return Ok(await _helper.AddExecuteResult(testCaseDetailId, json));
+            return Ok(await _helper.AddExecuteResult(json));
         }
 
         /// <summary>
@@ -166,9 +166,9 @@ namespace SeleniumReportAPI.Controllers
         /// <param TestName="TestName"></param>
         /// <returns></returns>
         [HttpGet("GetTestDetailByTestName")]
-        public async Task<ActionResult> GetTestDetailByTestName(string TestName)
+        public async Task<ActionResult> GetTestDetailByTestName(int TestId)
         {
-            return Ok(await _helper.GetTestDetailByTestName(TestName));
+            return Ok(await _helper.GetTestDetailByTestName(TestId));
         }
 
         /// <summary>

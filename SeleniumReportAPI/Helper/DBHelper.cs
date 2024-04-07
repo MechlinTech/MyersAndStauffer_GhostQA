@@ -18,6 +18,7 @@ using SmtpClient = System.Net.Mail.SmtpClient;
 using ExcelDataReader;
 using Newtonsoft.Json.Linq;
 using System.IO.Compression;
+using System.Net.Http;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -1007,9 +1008,10 @@ namespace SeleniumReportAPI.Helper
                               </tr>
                               <tr>
                                 <td style=""padding: 20px 0;"">
+                                  <p>You're Invited! Join the GhostQA Platform 🎉<p>
                                   <p>Dear [" + toEmail.ToUpper() + @"],</p>
-                                  <p>We are thrilled to invite you to join Ghost-QA Plateform! 🌟</p>
-                                  <p>To accept your invitation and dive into the excitement, simply click the button below:</p>
+                                  <p>We are thrilled to invite you to join GhostQA Plateform! 🌟</p>
+                                  <p>To accept your invitation and immerse yourself in the QA adventure, simply click the button below:</p>
                                   <p><a href=""http://codearrest.dyndns.org:3009/AcceptInvitation/" + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">View Invitation</a></p>
                                 </td>
                               </tr>
@@ -1747,8 +1749,10 @@ namespace SeleniumReportAPI.Helper
                     return result = "Only JMX file can be uploaded";
                 }
                 string fileName = model.BinaryData.FileName;
-                string directoryPath = @"C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\TestDataFile";
+                string directoryPath = _configuration["LocationFile:JMXFile"];
                 string filePath = Path.Combine(directoryPath, model.FileName);
+                string directoryPathDev = _configuration["LocationFile:JMXFileDev"];
+                string filePathDev = Path.Combine(directoryPathDev, model.FileName);
 
                 // Ensure directory exists
                 if (!Directory.Exists(directoryPath))
@@ -1756,11 +1760,29 @@ namespace SeleniumReportAPI.Helper
                     Directory.CreateDirectory(directoryPath);
                 }
 
-                // Save uploaded file to disk
-                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                // Ensure directory exists
+                if (!Directory.Exists(directoryPathDev))
                 {
-                    await model.BinaryData.CopyToAsync(stream);
+                    Directory.CreateDirectory(directoryPathDev);
                 }
+
+                // Save uploaded file to disk
+                if (!File.Exists(filePath))
+                {
+                    using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await model.BinaryData.CopyToAsync(stream);
+                    }
+                }
+
+                if (!File.Exists(filePathDev))
+                {
+                    using (FileStream stream = new FileStream(filePathDev, FileMode.Create))
+                    {
+                        await model.BinaryData.CopyToAsync(stream);
+                    }
+                }
+
 
                 // Save file path to database
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -2081,7 +2103,7 @@ namespace SeleniumReportAPI.Helper
             {
                 return result = "Only CSV file can be uploaded";
             }
-            string directoryPath = @"C:\GhostQA\SeleniumReportAPI\wwwroot\TestDataCSVFile\";
+            string directoryPath = _configuration["LocationFile:CSVFile"];
             string filePath = Path.Combine(directoryPath, model.File.FileName);
 
             // Ensure directory exists
@@ -2298,12 +2320,16 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<object> AddExecuteResult(int testCaseDetailId, Dto_RootObject model)
+        internal async Task<object> AddExecuteResult(Dto_ExecutedData model)
         {
             string result = string.Empty;
-            var jObj = (JObject)model.json;
+            var jObj = (JObject)model.data.json;
             var jsonData = JsonConvert.DeserializeObject<JsonOption>(jObj.First.First.ToString());
             string fileName = jsonData.results[0].file.Replace("cypress/", "").Replace(".cy.js", "");
+            DateTime startTime = DateTime.Parse(jsonData.stats.start.ToString());
+            DateTime endTime = DateTime.Parse(jsonData.stats.end.ToString());
+
+            TimeSpan duration = endTime - startTime;
 
             List<dynamic> results = new List<dynamic>();
             foreach (var t in jsonData.results[0].suites[0].tests)
@@ -2311,7 +2337,7 @@ namespace SeleniumReportAPI.Helper
                 var addJsonData = new
                 {
                     Status = t.state,
-                    Duration = t.duration,
+                    Duration = duration,
                     stepName = t.title
                 };
                 results.Add(addJsonData);
@@ -2324,18 +2350,18 @@ namespace SeleniumReportAPI.Helper
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@TestSuite", fileName);
-                    command.Parameters.AddWithValue("@TestCase", model.container_id);
+                    command.Parameters.AddWithValue("@TestCase", model.data.container_id);
                     command.Parameters.AddWithValue("@TestCaseName", jsonData.results[0].suites[0].title);
                     command.Parameters.AddWithValue("@Status", jsonData.stats.failures > 0 ? "failed" : "passed");
-                    command.Parameters.AddWithValue("@StartDateTime", jsonData.stats.start.ToString());
-                    command.Parameters.AddWithValue("@EndDateTime", jsonData.stats.end.ToString());
+                    command.Parameters.AddWithValue("@StartDateTime",model.startDate);
+                    command.Parameters.AddWithValue("@EndDateTime", model.endDate);
                     command.Parameters.AddWithValue("@TestStepJson", JsonConvert.SerializeObject(results));
                     command.Parameters.AddWithValue("@SuiteDuration", jsonData.stats.duration.ToString());
                     command.Parameters.AddWithValue("@TestDuration", jsonData.results[0].suites[0].duration.ToString());
-                    command.Parameters.AddWithValue("@TestScreenShot", GetArtifactUrl(model, "screenshot"));
+                    command.Parameters.AddWithValue("@TestScreenShot", GetArtifactUrl(model.data, "screenshot"));
                     command.Parameters.AddWithValue("@TesterName", string.Empty);
-                    command.Parameters.AddWithValue("@TestVideoUrl", GetArtifactUrl(model, "video"));
-                    command.Parameters.AddWithValue("@TestCaseDetailsId", testCaseDetailId);
+                    command.Parameters.AddWithValue("@TestVideoUrl", GetArtifactUrl(model.data, "video"));
+                    command.Parameters.AddWithValue("@TestCaseDetailsId", model.testCaseDetailId);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -2355,7 +2381,7 @@ namespace SeleniumReportAPI.Helper
         {
             return model.runs_artifacts.Where(x => x.type == str).Count() > 0 ? model.runs_artifacts.Where(x => x.type == str).Select(y => y.files).FirstOrDefault() : string.Empty;
         }
-        internal async Task<string> GetTestDetailByTestName(string TestName)
+        internal async Task<string> GetTestDetailByTestName(int TestId)
         {
             string result = string.Empty;
             try
@@ -2366,7 +2392,7 @@ namespace SeleniumReportAPI.Helper
                     using (SqlCommand command = new SqlCommand("stp_GetTestDetailByTestCaseName", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TestName", TestName);
+                        command.Parameters.AddWithValue("@TestId", TestId);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -2515,8 +2541,6 @@ namespace SeleniumReportAPI.Helper
         {
             string result = string.Empty;
             var guid = Guid.NewGuid().ToString();
-            string startDate;
-            string endDate;
             var totalUserCount = 0;
             var totalDuration = 0;
             var totalRampUpSteps = 0;
@@ -2546,68 +2570,69 @@ namespace SeleniumReportAPI.Helper
                 }
 
                 var executedData = JsonConvert.DeserializeObject<List<Dto_ExecutionPerformance>>(result);
-                var httpClient = new HttpClient();
-                HttpResponseMessage response = null;
-                startDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-                foreach (var data in executedData)
+                using (var httpClient = new HttpClient())
                 {
-                    var formData = new MultipartFormDataContent();
-                    formData.Headers.TryAddWithoutValidation("X-CSRFTOKEN", "xJkh4UeQtq6uvMdPjtW2TX5gLZM9VdBsNZ206NwsRTc3XoWNVy8Gk7lGIU9TzV9O");
-                    var fileStream = new FileStream(data.FilePath, FileMode.Open);
-                    var fileContent = new StreamContent(fileStream);
-                    formData.Add(fileContent, "test_file", data.FileName);
-                    formData.Add(new StringContent("GhostQA"), "name");
-                    formData.Add(new StringContent(data.RampUpTimeInSeconds.ToString()), "jrampup_time");
-                    formData.Add(new StringContent(data.TotalUsers.ToString()), "jthreads_total_user");
-                    formData.Add(new StringContent(data.RampUpSteps.ToString()), "jrampup_steps");
-                    formData.Add(new StringContent(data.DurationInMinutes.ToString()), "durations");
-                    formData.Add(new StringContent(guid), "client_reference_id");
-                    response = await httpClient.PostAsync(_configuration["CypressAPI:PerformanceExecutor"], formData);
-                    var res1 = await response.Content.ReadAsStringAsync();
-                    fileContent.Dispose();
-                    fileStream.Dispose();
-                    totalUserCount += data.TotalUsers;
-                    totalDuration += data.DurationInMinutes;
-                    totalRampUpSteps += data.RampUpSteps;
-                    totalRampUpTime += data.RampUpTimeInSeconds;
-                    var scenario = new Scenarios
+                    foreach (var data in executedData)
                     {
-                        Id = data.Id,
-                        ScenarioName = data.TestCaseName,
-                        Duration = data.DurationInMinutes,
-                        Location = "Asia Pacific (Mumbai) Ap-South-1"
-                    };
-                    scenarios.Add(scenario);
-                    maxDuration = executedData.Max(data => data.DurationInMinutes);
-                    estimate = DateTimeOffset.Parse(startDate).AddSeconds(maxDuration).ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                        var formData = new MultipartFormDataContent();
+                        formData.Headers.TryAddWithoutValidation("X-CSRFTOKEN", "xJkh4UeQtq6uvMdPjtW2TX5gLZM9VdBsNZ206NwsRTc3XoWNVy8Gk7lGIU9TzV9O");
+                        var str = $"{_configuration["LocationFile:JMXFileDev"]}\\{data.FileName}";
+                        using (var fileStream = new FileStream($"{_configuration["LocationFile:JMXFileDev"]}\\{data.FileName}", FileMode.Open))
+                        {
+                            var fileContent = new StreamContent(fileStream);
+                            formData.Add(fileContent, "test_file", data.FileName);
+                            formData.Add(new StringContent("GhostQA"), "name");
+                            formData.Add(new StringContent(data.RampUpTimeInSeconds.ToString()), "jrampup_time");
+                            formData.Add(new StringContent(data.TotalUsers.ToString()), "jthreads_total_user");
+                            formData.Add(new StringContent(data.RampUpSteps.ToString()), "jrampup_steps");
+                            formData.Add(new StringContent(data.DurationInMinutes.ToString()), "durations");
+                            formData.Add(new StringContent(guid), "client_reference_id");
+                            using (var response = await httpClient.PostAsync(_configuration["CypressAPI:PerformanceExecutor"], formData))
+                            {
+                                var res1 = await response.Content.ReadAsStringAsync();
+                            }
+                        }
+
+                        totalUserCount += data.TotalUsers;
+                        totalDuration += data.DurationInMinutes;
+                        totalRampUpSteps += data.RampUpSteps;
+                        totalRampUpTime += data.RampUpTimeInSeconds;
+                        var scenario = new Scenarios
+                        {
+                            Id = data.Id,
+                            ScenarioName = data.TestCaseName,
+                            Duration = data.DurationInMinutes,
+                            Location = "Asia Pacific (Mumbai) Ap-South-1"
+                        };
+                        scenarios.Add(scenario);
+                        maxDuration = executedData.Max(data => data.DurationInMinutes);
+                        estimate = DateTimeOffset.Parse(model.StartDate).AddSeconds(maxDuration).ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                    }
                 }
-                endDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
             }
             catch (Exception ex)
             {
                 throw ex;
             }
             return new Dto_LoadExecuteResponse()
-                {
-                    Name = model.Name,
-                    Client_Id = guid,
-                    TesterName = model.TesterName,
-                    RootId = model.RootId,
-                    StartDate = startDate,
-                    TotalUser = totalUserCount,
-                    TotalDuration = totalDuration,
-                    TotalRampUpSteps = totalRampUpSteps,
-                    TotalRampUpTime = totalRampUpTime,
-                    maxDuration = maxDuration,
-                    Scenarios = scenarios,
-                    EstimatedTime = estimate
+            {
+                Name = model.Name,
+                Client_Id = guid,
+                TesterName = model.TesterName,
+                RootId = model.RootId,
+                StartDate = model.StartDate,
+                TotalUser = totalUserCount,
+                TotalDuration = totalDuration,
+                TotalRampUpSteps = totalRampUpSteps,
+                TotalRampUpTime = totalRampUpTime,
+                maxDuration = maxDuration,
+                Scenarios = scenarios,
+                EstimatedTime = estimate
             };
         }
 
         internal async Task<string> AddExecuterData(Dto_LoadExecuteResponse model)
         {
-
-            string endDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
             string result = string.Empty;
             var data = JsonConvert.SerializeObject(model.responseData);
             var dat2 = CompressString(data);
@@ -2622,7 +2647,7 @@ namespace SeleniumReportAPI.Helper
                     command.Parameters.AddWithValue("@RunId", model.Client_Id);
                     command.Parameters.AddWithValue("@Status", "Complete");
                     command.Parameters.AddWithValue("@StartDateTime", model.StartDate);
-                    command.Parameters.AddWithValue("@EndDateTime", endDate);
+                    command.Parameters.AddWithValue("@EndDateTime", model.EndDate);
                     command.Parameters.AddWithValue("@LoadDataJson", dat2);
                     command.Parameters.AddWithValue("@TesterName", model.TesterName);
                     command.Parameters.AddWithValue("@MaxDuration", model.maxDuration);

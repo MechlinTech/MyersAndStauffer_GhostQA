@@ -62,6 +62,15 @@ namespace SeleniumReportAPI.DTO_s
         public bool hasSkipped { get; set; }
     }
 
+    public class Dto_ExecutedData
+    {
+        public int testCaseDetailId { get; set; }
+        public Dto_RootObject data { get; set; }
+        public string startDate { get; set; }
+        public string endDate { get; set; }
+
+    }
+
     public class Dto_RootObject
     {
         public string container_id { get; set; }
