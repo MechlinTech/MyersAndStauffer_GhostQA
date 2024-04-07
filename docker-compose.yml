@@ -62,6 +62,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     ports:
       - "1435:1433"
+    user: root
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "P@ssw0rd@123###"
