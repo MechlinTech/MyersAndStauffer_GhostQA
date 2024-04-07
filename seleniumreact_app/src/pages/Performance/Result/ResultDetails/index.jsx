@@ -102,6 +102,7 @@ export default function Summary() {
   }, [Yaxis, Xaxis, YaxisConnect]);
 
   const formattedStartDate = formatDate(executeJMXData.startDate);
+  const formattedEndDate = formatDate(executeJMXData.endDate)
   const totalDurationInMinutes = executeJMXData.totalDuration / 60;
   const location = executeJMXData?.scenarios?.[0]?.location;
 
@@ -122,9 +123,11 @@ export default function Summary() {
   useEffect(() => {
     if (!isRunning && !endedTime) {
       const currentTime = getCurrentTime();
-      setEndedTime(currentTime);
+      if (executeJMXData.endDate === null) {
+        setEndedTime(currentTime);
+      }
     }
-  }, [isRunning, endedTime]);
+  }, [isRunning, endedTime, executeJMXData.endDate]);
 
   const data = [
     {
@@ -132,7 +135,7 @@ export default function Summary() {
       value: `${totalDurationInMinutes.toFixed(2)} minutes`,
     },
     { label: "Started", value: formattedStartDate },
-    { label: "Ended", value: endedTime || "" },
+    { label: "Ended", value: executeJMXData.endDate ? formatDate(executeJMXData.endDate) : endedTime },
     { label: "Test Type", value: "JMeter" },
     { label: "Response Codes", value: "2xx" },
     { label: "Locations", value: "Default" },
