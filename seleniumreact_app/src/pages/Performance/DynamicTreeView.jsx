@@ -216,7 +216,7 @@ const Card = ({
                         fontSize: "14px",
                       }}
                       placeholder={nodeCount == 0 ? "Add Project": nodeCount == 1 ? "Add Suite": "Test" }
-                      className={styleClass.editTheFolder}
+                      className={styleClass.addNewFolder}
                       value={newElementName}
                       key={item.id}
                       onChange={(e) => setNewElementName(e.target.value)}

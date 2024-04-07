@@ -186,6 +186,15 @@ export default function Design({ rootId }) {
           getRunDetail(data, clientId, delay);
         }, delay);
       } else {
+        const isJsonNull = result.some(
+          (item) => item.json === null
+        );
+        if(isJsonNull){
+          toast.error('Due to corrupted file test failed, Please upload correct file')
+        dispatch(setIsRunning(false));
+
+          return 
+        }
         const currentDate = new Date();
         const formattedDateTime = currentDate.toISOString();
         let endDate = formattedDateTime 
