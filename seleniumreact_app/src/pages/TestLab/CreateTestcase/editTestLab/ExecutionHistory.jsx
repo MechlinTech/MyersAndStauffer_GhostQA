@@ -54,19 +54,35 @@ export default function ExecutionHistory({executionDetail}) {
     setvideoLink(vdUrl)
     setOpenModal(true)
   }
-  function formatTime(dateTimeString) {
+  
+  // function formatTime(dateTimeString) {
+  //   const options = {
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //     second: "numeric",
+  //     hour12: true,
+  //   };
+  //   const formattedTime = new Date(dateTimeString).toLocaleTimeString(
+  //     undefined,
+  //     options
+  //   );
+  //   return formattedTime;
+  // }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
     const options = {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
       hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
       hour12: true,
     };
-    const formattedTime = new Date(dateTimeString).toLocaleTimeString(
-      undefined,
-      options
-    );
-    return formattedTime;
-  }
+    return date.toLocaleString("en-US", options);
+  };
+  // const formattedStartDate = formatDate(dateTimeString);
   return (
     <>
       <Modal
@@ -142,7 +158,7 @@ export default function ExecutionHistory({executionDetail}) {
                     className={`${classes.tableRow} ${
                       selectedRunId === row.TestCase ? classes.activeRow : ""
                     }`}
-                    spacing="3"
+                    // spacing="1"
                     onClick={() => setSelectedRunId(row.TestCase)}
                   >
                     <StyledTableCell
@@ -157,14 +173,14 @@ export default function ExecutionHistory({executionDetail}) {
                         color: selectedRunId === row.TestCase ? "white" : "black",
                       }}
                     >
-                      {formatTime(row.StartDateTime)}
+                      {formatDate(row.StartDateTime)}
                     </StyledTableCell>
                     <StyledTableCell
                       sx={{
                         color: selectedRunId === row.TestCase ? "white" : "black",
                       }}
                     >
-                      {formatTime(row.EndDateTime)}
+                      {formatDate(row.EndDateTime)}
                     </StyledTableCell>
                     {/* <StyledTableCell
                       sx={{
