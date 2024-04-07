@@ -55,25 +55,54 @@ export const StyledTypography = styled(Typography)(({ theme }) => ({
     // Add other styles as needed
   }));
 
-  export const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: "rgb(242, 242, 242)",
-        color: "#5c5c5c",
-        padding: "10px 20px",
-        fontFamily: "Lexend Deca",
-        fontSize: "12px",
-        borderTop: "1px solid rgb(217, 217, 217)",
-        lineHeight: "18px",
-    },
-    [`&.${tableCellClasses.body}`]: {
-        // backgroundColor: "#fdfdfd",
-        padding: "10px 20px",
-        fontSize: "12px",
-        lineHeight: "18px",
-        letterSpacing: "normal",
-        fontFamily: `"Lexend Deca", sans-serif, -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
-    },
+//   export const StyledTableCell = styled(TableCell)(({ theme }) => ({
+//     [`&.${tableCellClasses.head}`]: {
+//         backgroundColor: "rgb(242, 242, 242)",
+//         color: "#5c5c5c",
+//         padding: "10px 20px",
+//         fontFamily: "Lexend Deca",
+//         maxWidth: "200px",
+//         fontSize: "12px",
+//         borderTop: "1px solid rgb(217, 217, 217)",
+//         lineHeight: "18px",
+//     },
+//     [`&.${tableCellClasses.body}`]: {
+//         // backgroundColor: "#fdfdfd",
+//         padding: "10px 20px",
+//         fontSize: "12px",
+//         lineHeight: "18px",
+//         maxWidth: "200px",
+//         letterSpacing: "normal",
+//         fontFamily: `"Lexend Deca", sans-serif, -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
+//     },
+// }));
+export const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+      backgroundColor: "rgb(242, 242, 242)",
+      color: "#5c5c5c",
+      padding: "10px 20px",
+      fontFamily: "Lexend Deca",
+      fontSize: "12px",
+      borderTop: "1px solid rgb(217, 217, 217)",
+      lineHeight: "18px",
+      maxWidth: "200px", // Set maximum width
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+  },
+  [`&.${tableCellClasses.body}`]: {
+      padding: "10px 20px",
+      fontSize: "12px",
+      lineHeight: "18px",
+      letterSpacing: "normal",
+      fontFamily: `"Lexend Deca", sans-serif, -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
+      maxWidth: "200px", // Set maximum width
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+  },
 }));
+
 
 export const StyledFormControl = styled(FormControl)(({theme})=>({
   width:'100%',
