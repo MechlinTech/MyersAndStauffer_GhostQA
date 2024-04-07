@@ -118,7 +118,7 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
         const durationInMinutes = loadData[0].DurationInMinutes / 60;
         setDuration(durationInMinutes);
         // setDuration(loadData[0].DurationInMinutes);
-        
+
         // Convert RampUpTimeInSeconds from seconds to minutes
         const rampUpTimeInSeconds = loadData[0].RampUpTimeInSeconds / 60;
         setRampUpTime(rampUpTimeInSeconds);
@@ -192,40 +192,82 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
   };
   const [expanded, setExpanded] = useState([]);
 
+  // const handleInputData = (event, type) => {
+  //   const value = event.target.value;
+  //   if (value >= 0) {
+  //     const maxDuration = 20;
+  //     const maxRampUpSteps = 20;
+  //     if (type === "totalUsers" && value > 10) {
+  //       toast.error("The maximum total users allowed is 10.");
+  //     } else if (type === "duration" && value > maxDuration) {
+  //       toast.error(`The maximum duration allowed for the test is ${maxDuration} minutes.`);
+  //     } else if (type === "rampUpTime" && (value > duration || value < 0)) {
+  //       toast.error("Ramp up Time cannot exceed the duration.");
+  //     } else if (type === "rampUpSteps" && value > maxRampUpSteps) {
+  //       toast.error(`Ramp-up steps cannot exceed ${maxRampUpSteps}`);
+  //     } else {
+  //       switch (type) {
+  //         case "totalUsers":
+  //           settotalusers(value);
+  //           break;
+  //         case "duration":
+  //           setDuration(value);
+  //           if (rampUpTime > value) {
+  //             setRampUpTime(value);
+  //           }
+  //           break;
+  //         case "rampUpTime":
+  //           setRampUpTime(value);
+  //           break;
+  //         case "rampUpSteps":
+  //           setRampUpSteps(value);
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //     }
+  //   }
+  // };
+
   const handleInputData = (event, type) => {
     const value = event.target.value;
-    if (value >= 0) {
-      const maxDuration = 20;
-      const maxRampUpSteps = 20;
-      if (type === "totalUsers" && value > 10) {
-        toast.error("The maximum total users allowed is 10.");
-      } else if (type === "duration" && value > maxDuration) {
-        toast.error(`The maximum duration allowed for the test is ${maxDuration} minutes.`);
-      } else if (type === "rampUpTime" && (value > duration || value < 0)) {
-        toast.error("Ramp up Time cannot exceed the duration.");
-      } else if (type === "rampUpSteps" && value > maxRampUpSteps) {
-        toast.error(`Ramp-up steps cannot exceed ${maxRampUpSteps}`);
-      } else {
-        switch (type) {
-          case "totalUsers":
-            settotalusers(value);
-            break;
-          case "duration":
-            setDuration(value);
-            if (rampUpTime > value) {
-              setRampUpTime(value);
-            }
-            break;
-          case "rampUpTime":
-            setRampUpTime(value);
-            break;
-          case "rampUpSteps":
-            setRampUpSteps(value);
-            break;
-          default:
-            break;
+    const maxDuration = 20;
+    const maxRampUpSteps = 20;
+
+    if (value < 0) {
+      toast.error("Please enter a positive value.");
+      return;
+    }
+
+    switch (type) {
+      case "totalUsers":
+        if (value > 10) {
+          toast.error("The maximum total users allowed is 10.");
+        } else {
+          settotalusers(value);
         }
-      }
+        break;
+      case "duration":
+        if (value > maxDuration) {
+          toast.error(
+            `The maximum duration allowed for the test is ${maxDuration} minutes.`
+          );
+        } else {
+          setDuration(value);
+        }
+        break;
+      case "rampUpTime":
+        setRampUpTime(value);
+        break;
+      case "rampUpSteps":
+        if (value > maxRampUpSteps) {
+          toast.error(`Ramp-up steps cannot exceed ${maxRampUpSteps}`);
+        } else {
+          setRampUpSteps(value);
+        }
+        break;
+      default:
+        break;
     }
   };
 
@@ -235,6 +277,10 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
     }
   };
   const submitGraphData = async () => {
+    if (rampUpTime > duration) {
+      toast.error("Ramp-up time cannot exceed duration.");
+      return; // Exit the function if condition is not met
+    }
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(
