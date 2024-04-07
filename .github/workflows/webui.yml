@@ -29,7 +29,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          file: SeleniumReportAPI/Dockerfile
+          file: seleniumreact_app/Dockerfile
           no-cache: false
           push: true
           tags: |
