@@ -31,7 +31,7 @@
 
 3. **Accessing the Deployed Web Application:**
     - After successful deployment, open the URL [http://127.0.0.1:30001](http://127.0.0.1:30001) in your web browser.
-    This URL will allow you to access the documentation for the deployed GhostQA web application.
+
 
 **Note:** 
 - Ensure that you have internet connectivity during the deployment process to download the required resources.
