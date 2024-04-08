@@ -108,8 +108,6 @@ services:
       - "8010:8000"
     depends_on:
       - postgres
-      - django_app_migrate
-
   
   django_app_migrate:
     <<: *django_app
@@ -128,7 +126,7 @@ services:
       DJANGO_SUPERUSER_USERNAME: dev
       DJANGO_SUPERUSER_EMAIL: dev@ghostqa.com
       DJANGO_SUPERUSER_PASSWORD: Admin@1234
-      DATABASE_URL=postgres: //yourusername:yourpassword@postgres:5432/yourdatabase
+      DATABASE_URL: postgres://yourusername:yourpassword@postgres:5432/yourdatabase
 
   caddy:
     image: ghostqa/caddy:latest
