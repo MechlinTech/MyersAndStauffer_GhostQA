@@ -57,10 +57,10 @@ export default function ChangePassword() {
     //updating error state before submitting
     setError(error);
     if (Object.keys(error).length === 0) {
-       navigate('/')
       setNewPassword("")
       setOldPassword("")
     dispatch(ChangePasswordReq(payload))
+    navigate('/')
     } else {
       console.log("error saving");
     }

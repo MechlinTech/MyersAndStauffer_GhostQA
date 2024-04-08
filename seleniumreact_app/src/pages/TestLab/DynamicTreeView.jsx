@@ -488,6 +488,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
       );
       console.log("response",response.data)
       if(response.data.status == "success"){
+        TestCaseHandle(itemToDelete,0)
         setopenDelModal(false);
         toast.info("Successfully deleted", {
           style: {

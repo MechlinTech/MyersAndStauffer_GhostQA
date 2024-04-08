@@ -36,11 +36,18 @@ export default function TableTestCase({ testCase, rootId }) {
       );
 
       // Assuming response.data is the array of data you want to set as listData
-      setTestCaseList(
-        response.data.status === "fail" || response.data == ""
-          ? []
-          : response.data
-      );
+      // setTestCaseList(
+      //   response.data.status === "fail" || response.data == ""
+      //     ? []
+      //     : response.data
+      // );
+      if (response.data.status === "fail" || response.data === "") {
+        setTestCaseList([]);
+      } else {
+        const reversedTestCaseList = response.data.reverse(); 
+        console.log('reversed ', reversedTestCaseList);
+        setTestCaseList(reversedTestCaseList);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       setTestCaseList([]);

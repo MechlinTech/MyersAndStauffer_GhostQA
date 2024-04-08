@@ -104,10 +104,10 @@ export default function EditTestCase() {
       additionalErrors.selectorValueError = !step.selectorValue?.trim();
       switch (stepType) {
         case "type":
-          additionalErrors.sendKeyInputError = !step.sendKeyInput;
+          additionalErrors.sendKeyInputError = !step.sendKeyInput.trim();
           break;
         case "scroll_to_window":
-          additionalErrors.scrollPixelError = !step.scrollPixel;
+          additionalErrors.scrollPixelError = !step.scrollPixel.trim();
           break;
         case "go_to_url":
           const isValidUrl = !step.url.trim() || !urlPattern.test(step.url)
@@ -116,45 +116,45 @@ export default function EditTestCase() {
           toast.error('Enter valid url')
           break;
         case "select_option":
-          additionalErrors.selectedUserError = !step.selectedUser;
+          additionalErrors.selectedUserError = !step.selectedUser.trim();
           break;
         case "upload_file":
           additionalErrors.fileNameError = !step.fileName;
           break;
         case "element_has_value":
-          additionalErrors.elementValueError = !step.elementValue;
+          additionalErrors.elementValueError = !step.elementValue.trim();
           break;
         case "element_has_css_property_with_value":
-          additionalErrors.cssPropertyError = !step.cssProperty;
-          additionalErrors.cssValueError = !step.cssValue;
+          additionalErrors.cssPropertyError = !step.cssProperty.trim();
+          additionalErrors.cssValueError = !step.cssValue.trim();
           break;
         case "validate_page_title":
-          additionalErrors.pageTitleError = !step.pageTitle;
+          additionalErrors.pageTitleError = !step.pageTitle.trim();
           break;
         case "validate_current_url":
-          additionalErrors.currentUrlError = !step.currentUrl;
+          additionalErrors.currentUrlError = !step.currentUrl.trim();
           break;
         case "should_not_equal":
-          additionalErrors.shouldNotEqualError = !step.shouldNotEqualValue;
+          additionalErrors.shouldNotEqualError = !step.shouldNotEqualValue.trim();
           break;
         case "should_include":
-          additionalErrors.shouldIncludeError = !step.shouldIncludeValue;
+          additionalErrors.shouldIncludeError = !step.shouldIncludeValue.trim();
           break;
         case "should_equal":
-          additionalErrors.shouldEqualError = !step.shouldEqualValue;
+          additionalErrors.shouldEqualError = !step.shouldEqualValue.trim();
           break;
         case "should_be_greater_than":
           additionalErrors.shouldGreaterThanError =
-            !step.shouldGreaterThanValue;
+            !step.shouldGreaterThanValue.trim();
           break;
         case "should_be_less_than":
-          additionalErrors.shouldLessError = !step.shouldLessValue;
+          additionalErrors.shouldLessError = !step.shouldLessValue.trim();
           break;
         case "contain_text":
-          additionalErrors.containTextError = !step.containTextValue;
+          additionalErrors.containTextError = !step.containTextValue.trim();
           break;
         case "have_attribute":
-          additionalErrors.haveAttributeError = !step.haveAttributeValue;
+          additionalErrors.haveAttributeError = !step.haveAttributeValue.trim();
           break;
         default:
           break;

@@ -44,13 +44,12 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
       },
 
       xaxis: {
-        categories: [1, 2, 3, 4, 5, 6, 7, 8],
         title: {
           text: "Duration (m)",
         },
         labels: {
           formatter: function (value) {
-            return Math.round(value); //
+            return value && Math.round(value); //
           },
           style: {
             fontSize: "14px", // Set the font size for x-axis labels
@@ -124,7 +123,7 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
         setRampUpTime(rampUpTimeInSeconds);
         // setRampUpTime(loadData[0].RampUpTimeInSeconds);
         setRampUpSteps(loadData[0].RampUpSteps);
-      }else{
+      } else {
         settotalusers(0);
         setDuration(0);
         setRampUpTime(0);
@@ -160,12 +159,14 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
         const value = (timePerStep * i).toFixed(1); // Round to 1 decimal place
         xCatagory.push(value.toString()); // Convert to string
       }
-
+      for (let i = 0; i < rampUpSteps-1; i++) {
+        xCatagory.push(""); // Convert to string
+      }
       // Convert rampUpTime and duration to strings with at most one decimal place
       const rampUpTimeString = rampUpTime.toString();
       const durationString = duration.toString();
 
-      setxaxisCategories([...xCatagory, rampUpTimeString, durationString]);
+      setxaxisCategories([...xCatagory, durationString]);
       setGraphData(data);
     }
   }, [totalusers, rampUpSteps, duration, rampUpTime]);
@@ -261,8 +262,17 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
           setDuration(value);
         }
         break;
+      // case "rampUpTime":
+      //   setRampUpTime(value);
+      // break;
       case "rampUpTime":
-        setRampUpTime(value);
+        if (value > duration) {
+          toast.error(
+            `Ramp up time cannot be more than duration.`
+          );
+        } else {
+          setRampUpTime(value);
+        }
         break;
       case "rampUpSteps":
         if (value > maxRampUpSteps) {
