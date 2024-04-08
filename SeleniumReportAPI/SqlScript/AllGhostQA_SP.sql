@@ -447,7 +447,7 @@ BEGIN TRY
 		DELETE FROM tbl_TestStepsDetails 
 		WHERE TestCaseDetailsId = JSON_VALUE(@AddStepsJson, '$.testCaseID')
 
-		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [Action], StepDescription, IsOptional, SelectorType, SelectorValue, SendKeyInput, ScrollPixel, [Url], SelectedUser, [FileName], ElementValue, CssValue, CssProperty, PageTitle, CurrentUrl, ShouldNotEqualValue, ShouldIncludeValue, ShouldEqualValue, ShouldGreaterThanValue, ShouldLessValue, ContainTextValue, HaveAttributeValue)
+		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [Action], StepDescription, IsOptional, SelectorType, SelectorValue, SendKeyInput, ScrollPixel, [Url], SelectedUser, [FileName], ElementValue, CssValue, CssProperty, PageTitle, CurrentUrl, ShouldNotEqualValue, ShouldIncludeValue, ShouldEqualValue, ShouldGreaterThanValue, ShouldLessValue, ContainTextValue, HaveAttributeValue, TextValue)
 		SELECT 
 			JSON_VALUE(@AddStepsJson, '$.testCaseID'),
 			act.[action],
@@ -471,7 +471,8 @@ BEGIN TRY
 			act.[shouldGreaterThanValue],
 			act.[shouldLessValue],
 			act.[containTextValue],
-			act.[haveAttributeValue]
+			act.[haveAttributeValue],
+			act.[textValue]
 		FROM 
 			OPENJSON(@AddStepsJson, '$.actions') 
 			WITH (
@@ -496,7 +497,8 @@ BEGIN TRY
 				[shouldGreaterThanValue] NVARCHAR(50) '$.shouldGreaterThanValue',
 				[shouldLessValue] NVARCHAR(50) '$.shouldLessValue',
 				[containTextValue] NVARCHAR(50) '$.containTextValue',
-				[haveAttributeValue] NVARCHAR(50) '$.haveAttributeValue'
+				[haveAttributeValue] NVARCHAR(50) '$.haveAttributeValue',
+				[textValue] NVARCHAR(50) '$.textValue'
 			) AS act;
 		IF @@ERROR = 0
 		BEGIN
@@ -911,7 +913,6 @@ BEGIN TRY
 		INSERT INTO [dbo].[AspNetUsers] (Id, UserName, Email, EmailConfirmed, PasswordHash, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, 
 		AccessFailedCount, NormalizedEmail,NormalizedUserName,SecurityStamp) 
 		VALUES (@Id, @Email, @Email, 1, @Password, 0, 0, 0 ,0,@normalizeEmail, @normalizeEmail,@securityStamp)
-
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -1930,6 +1931,8 @@ END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [Excute]
 END CATCH
+
+
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetExecutedPerformanceByClientId]
 @ClientId          VARCHAR(100)
@@ -2039,7 +2042,7 @@ CREATED DATE	:	27th March 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
 PROC EXEC		:
-				EXEC stp_GetExecutePerformanceData 2
+				EXEC stp_GetExecutePerformanceData 1064
 **************************************************************************************/
 BEGIN TRY
     IF EXISTS (SELECT 1 FROM tbl_PerformanceFile WHERE [RootId] = @RootId)
@@ -2049,11 +2052,11 @@ BEGIN TRY
 				   pf.[TestCaseName],
 				   pf.[FilePath],
 				   pf.[FileName],
-				   l.PerformanceFileId,
-				   l.TotalUsers,
-				   l.DurationInMinutes,
-				   l.RampUpSteps,
-				   l.RampUpTimeInSeconds
+				   ISNULL(l.PerformanceFileId, 0) AS PerformanceFileId,
+				   ISNULL(l.TotalUsers, 0) AS TotalUsers,
+				   ISNULL(l.DurationInMinutes, 0) AS DurationInMinutes,
+				   ISNULL(l.RampUpSteps, 0) AS RampUpSteps,
+				   ISNULL(l.RampUpTimeInSeconds, 0) AS RampUpTimeInSeconds
             FROM tbl_PerformanceFile pf
 			LEFT JOIN tbl_Load l ON pf.Id = l.PerformanceFileId
             WHERE [RootId] = @RootId
@@ -2322,7 +2325,7 @@ PROC EXEC		:
 **************************************************************************************/
 BEGIN TRY
 	SELECT [RunDetailsJson] = JSON_QUERY ((
-		SELECT DISTINCT FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd') [TestRunDateYear]
+		SELECT DISTINCT CAST(FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd, yyyy') AS DATE) [TestRunDateYear]
 			   , [RunDetails] = JSON_QUERY ((
 											SELECT
 												t1.[TestSuiteName],
@@ -2345,13 +2348,13 @@ BEGIN TRY
 												tbl_TestCase t1
 											WHERE
 												t1.[TestSuiteName] = t.[TestSuiteName]
-												AND FORMAT(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd') = FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd')
+												AND FORMAT(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd yyyy') = FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd yyyy')
 											GROUP BY t1.[TestSuiteName], t1.[TestRunName]
 											ORDER BY MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET)) DESC
 											FOR JSON PATH
 											))
 		FROM tbl_TestCase t
-		WHERE [TestSuiteName] = @TestSuitName
+		WHERE t.[TestSuiteName] = @TestSuitName
 		ORDER BY [TestRunDateYear] DESC
 		FOR JSON PATH))
 END TRY
@@ -2429,7 +2432,7 @@ CREATED DATE	:	4th March 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
 PROC EXEC		:
-				EXEC stp_GetTestCaseDetailsByRootId
+				EXEC stp_GetTestCaseDetailsByRootId 1142
 **************************************************************************************/
 BEGIN TRY
     IF EXISTS (SELECT 1 FROM tbl_TestCaseDetails WHERE RootId = @RootId)
@@ -2438,8 +2441,10 @@ BEGIN TRY
             SELECT [TestCaseDetailsId], 
                    ISNULL([RootId], '') AS [RootId],
 				   ISNULL([StartUrl], '') AS [StartUrl],
-                   [TestCaseName]
-            FROM tbl_TestCaseDetails
+                   [TestCaseName],
+				   (SELECT StartDateTime FROM tbl_CypressTestExecution tcte WHERE  TestCaseDetailsId = tcd.TestCaseDetailsId AND Id = (SELECT MAX(Id) from tbl_CypressTestExecution WHERE  TestCaseDetailsId = tcd.TestCaseDetailsId)) StartDateTime,
+				   (SELECT [Status] FROM tbl_CypressTestExecution tcte WHERE  TestCaseDetailsId = tcd.TestCaseDetailsId AND Id = (SELECT MAX(Id) from tbl_CypressTestExecution WHERE  TestCaseDetailsId = tcd.TestCaseDetailsId)) [Status]
+            FROM tbl_TestCaseDetails tcd
             WHERE RootId = @RootId
             FOR JSON PATH
         ))
@@ -2627,7 +2632,7 @@ BEGIN CATCH
 END CATCH
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestDetailByTestCaseName]
-@TestName           NVARCHAR(MAX)
+@TestId           INT
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestDetailByTestCaseName
@@ -2636,10 +2641,10 @@ CREATED DATE	:	21st March 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
 PROC EXEC		:
-				EXEC stp_GetTestDetailByTestCaseName
+				EXEC stp_GetTestDetailByTestCaseName "1025"
 **************************************************************************************/
 BEGIN TRY
-    IF EXISTS (SELECT 1 FROM tbl_CypressTestExecution WHERE [TestCaseName] = @TestName)
+    IF EXISTS (SELECT 1 FROM tbl_CypressTestExecution WHERE [TestCaseDetailsId] = @TestId)
     BEGIN
         SELECT [result] = JSON_QUERY((
             SELECT [TestSuite], 
@@ -2650,7 +2655,7 @@ BEGIN TRY
 				   ISNULL([TestDuration], '') AS [TestDuration],
 				   ISNULL([TestVideoUrl], '') AS [TestVideoUrl]
             FROM tbl_CypressTestExecution
-            WHERE [TestCaseName] = @TestName
+            WHERE [TestCaseDetailsId] = @TestId
             FOR JSON PATH
         ))
     END
@@ -2721,7 +2726,7 @@ CREATED DATE	:	4th March 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
 PROC EXEC		:
-				EXEC stp_GetTestStepsDetailsByTestStepsId
+				EXEC stp_GetTestStepsDetailsByTestStepsId 1033
 **************************************************************************************/
 BEGIN TRY
     IF EXISTS (SELECT 1 FROM tbl_TestStepsDetails WHERE [TestCaseDetailsId] = @TestStepsId)
@@ -2729,28 +2734,29 @@ BEGIN TRY
         SELECT [result] = JSON_QUERY((
            SELECT  [TestStepsDetailsId],
 					[TestCaseDetailsId],
-					ISNULL([stepDescription],'') AS [stepDescription],
-					ISNULL([Action],'') AS [action],
-					ISNULL([selectorValue],'') AS [selectorValue],
-					ISNULL([selectorType],'') AS [selectorType],
-					ISNULL([SendKeyInput],'') AS [sendKeyInput],
-					ISNULL([ScrollPixel],'') AS [scrollPixel],
-					ISNULL([Url],'') AS [Url],
-					ISNULL([SelectedUser],'') AS [selectedUser],
-					ISNULL([FileName],'') AS [fileName],
-					ISNULL([ElementValue],'') AS [elementValue],
-					ISNULL([CssValue],'') AS [cssValue],
-					ISNULL([CssProperty],'') AS [cssProperty],
-					ISNULL([PageTitle],'') AS [pageTitle],
-					ISNULL([CurrentUrl],'') AS [currentUrl],
-					ISNULL([isOptional],'') AS [isOptional],
-					ISNULL([ShouldNotEqualValue],'') AS [shouldNotEqualValue],
-					ISNULL([ShouldIncludeValue],'') AS [shouldIncludeValue],
-					ISNULL([ShouldEqualValue],'') AS [shouldEqualValue],
-					ISNULL([ShouldGreaterThanValue],'') AS [shouldGreaterThanValue],
-					ISNULL([ShouldLessValue],'') AS [shouldLessValue],
-					ISNULL([ContainTextValue],'') AS [containTextValue],
-					ISNULL([HaveAttributeValue],'') AS [haveAttributeValue]
+					[stepDescription],
+					[action],
+					[selectorValue],
+					[selectorType],
+					[sendKeyInput],
+					[scrollPixel],
+					[url],
+					[selectedUser],
+					[fileName],
+					[elementValue],
+					[cssValue],
+					[cssProperty],
+					[pageTitle],
+					[currentUrl],
+					[isOptional],
+					[shouldNotEqualValue],
+					[shouldIncludeValue],
+					[shouldEqualValue],
+					[shouldGreaterThanValue],
+					[shouldLessValue],
+					[containTextValue],
+					[haveAttributeValue],
+					[textValue]
 		    FROM tbl_TestStepsDetails
             WHERE [TestCaseDetailsId] = @TestStepsId
             FOR JSON PATH
@@ -3010,13 +3016,18 @@ BEGIN TRY
 								  [TestSuiteStartDateTime], [TestSuiteEndDateTime], [TestRunStartDateTime], [TestRunEndDateTime], 
 								  [TestCaseSteps], [TesterName], [TestEnvironment])
 		SELECT
-			TestSuiteName, TestRunName, TestCaseName, TestCaseStatus, TestCaseVideoURL,	CONVERT(datetimeoffset, TestSuiteStartDateTime),
-			CONVERT(datetimeoffset, TestSuiteEndDateTime), CONVERT(datetimeoffset, TestRunStartDateTime), CONVERT(datetimeoffset, TestRunEndDateTime),
-			TestCaseSteps, TesterName, TestEnvironment
-		FROM OPENJSON(@TestSuiteJson) WITH (
-			TestSuiteName NVARCHAR(100), TestRunName NVARCHAR(100), TestCaseName NVARCHAR(100), TestCaseStatus NVARCHAR(50), TestCaseVideoURL NVARCHAR(MAX),
-			TestSuiteStartDateTime DATETIMEOFFSET, TestSuiteEndDateTime DATETIMEOFFSET, TestRunStartDateTime DATETIMEOFFSET, TestRunEndDateTime DATETIMEOFFSET,
-			TestCaseSteps NVARCHAR(MAX), TesterName NVARCHAR(100), TestEnvironment NVARCHAR(50))
+			JSON_VALUE(@TestSuiteJson, '$.TestSuiteName') AS TestSuiteName,
+			JSON_VALUE(@TestSuiteJson, '$.TestRunName') AS TestRunName,
+			JSON_VALUE(@TestSuiteJson, '$.TestCaseName') AS TestCaseName,
+			JSON_VALUE(@TestSuiteJson, '$.TestCaseStatus') AS TestCaseStatus,
+			JSON_VALUE(@TestSuiteJson, '$.TestCaseVideoURL') AS TestCaseVideoURL,
+			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestSuiteStartDateTime') AS DATETIMEOFFSET) AS TestSuiteStartDateTime,
+			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestSuiteEndDateTime') AS DATETIMEOFFSET) AS TestSuiteEndDateTime,
+			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestRunStartDateTime') AS DATETIMEOFFSET) AS TestRunStartDateTime,
+			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestRunEndDateTime') AS DATETIMEOFFSET) AS TestRunEndDateTime,
+			JSON_VALUE(@TestSuiteJson, '$.TestCaseSteps') AS TestCaseSteps,
+			JSON_VALUE(@TestSuiteJson, '$.TesterName') AS TesterName,
+			JSON_VALUE(@TestSuiteJson, '$.TestEnvironment') AS TestEnvironment
 	END
 	ELSE
 	BEGIN
@@ -3391,7 +3402,7 @@ BEGIN CATCH
 	SELECT ERROR_LINE(), ERROR_MESSAGE(), ERROR_SEVERITY()
 END CATCH
 GO
-CREATE OR ALTER  PROCEDURE [dbo].[stp_UpdateUserProfile]
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateUserProfile]
 @FullName		        VARCHAR(100),
 @OrganizationName		VARCHAR(100),
 @Email		            VARCHAR(100),
@@ -3459,7 +3470,7 @@ BEGIN TRY
 			FROM @JsonTable
 		PRINT @ColumnsWithType
 
-		SET @TableCreationQuery = CONCAT('CREATE TABLE ', @TableName, '(', @ColumnsWithType, ')')
+		SET @TableCreationQuery = CONCAT('CREATE OR ALTERTABLE ', @TableName, '(', @ColumnsWithType, ')')
 		PRINT @TableCreationQuery
 	
 		EXEC sp_executesql @TableCreationQuery
@@ -3527,4 +3538,3 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [isValidUser]
 END CATCH
 GO
-
