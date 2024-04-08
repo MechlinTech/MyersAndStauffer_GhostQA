@@ -25,9 +25,15 @@ services:
       - DB_USER=sa
       - DB_NAME=GhostQA
       - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
-      - CypressAPI__PerformanceExecutor=http://codeengine:8000/codeengine/api/performance-testsexecute2/
+      - CypressAPI__PerformanceExecutor=http://codeengine:8000/codeengine/api/performance-tests/execute2/
       - CypressAPI__ExecutorResult=http://codeengine:8000/codeengine/api/performance-container-runs/
+      - LocationFile__JMXFile=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFile
+      - LocationFile__CSVFile=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataCSVFile
+      - LocationFile__JMXFileDev=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFileDev
+      - InvitationUrl__Url=http://127.0.0.1:30001/AcceptInvitation/
     command: dotnet SeleniumReportAPI.dll
+    volumes:
+      - ./app/dotnet/wwwroot/:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/
     depends_on:
       - db
       - migrations
@@ -89,7 +95,6 @@ services:
     command:  pipenv run gunicorn ghostqa.wsgi -w 4 -b 0.0.0.0:8000 -t 1000000000
     extra_hosts:
       - host.docker.internal:host-gateway
-
     environment:
       - SHARED_PATH=/automation-tests
       - SHARED_PERFORMACE_PATH=/tests
@@ -123,11 +128,14 @@ services:
       DJANGO_SUPERUSER_USERNAME: dev
       DJANGO_SUPERUSER_EMAIL: dev@ghostqa.com
       DJANGO_SUPERUSER_PASSWORD: Admin@1234
+      DATABASE_URL=postgres: //yourusername:yourpassword@postgres:5432/yourdatabase
 
   caddy:
     image: ghostqa/caddy:latest
     ports:
       - "30001:30001"
+      - "80:80"
+      - "443:443"
     extra_hosts:
       - host.docker.internal:host-gateway
 
