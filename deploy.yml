@@ -128,6 +128,8 @@ services:
     image: ghostqa/caddy:latest
     ports:
       - "30001:30001"
+      - "80:80"
+      - "443:443"
     extra_hosts:
       - host.docker.internal:host-gateway
 
