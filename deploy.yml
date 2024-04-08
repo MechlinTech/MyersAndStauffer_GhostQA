@@ -25,7 +25,7 @@ services:
       - DB_USER=sa
       - DB_NAME=GhostQA
       - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
-      - CypressAPI__PerformanceExecutor=http://codeengine:8000/codeengine/api/performance-testsexecute2/
+      - CypressAPI__PerformanceExecutor=http://codeengine:8000/codeengine/api/performance-tests/execute2/
       - CypressAPI__ExecutorResult=http://codeengine:8000/codeengine/api/performance-container-runs/
     command: dotnet SeleniumReportAPI.dll
     depends_on:
