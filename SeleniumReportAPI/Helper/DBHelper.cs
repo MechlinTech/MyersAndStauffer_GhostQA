@@ -2577,8 +2577,20 @@ namespace SeleniumReportAPI.Helper
                     {
                         var formData = new MultipartFormDataContent();
                         formData.Headers.TryAddWithoutValidation("X-CSRFTOKEN", "xJkh4UeQtq6uvMdPjtW2TX5gLZM9VdBsNZ206NwsRTc3XoWNVy8Gk7lGIU9TzV9O");
-                        var str = $"{_configuration["LocationFile:JMXFileDev"]}\\{data.FileName}";
-                        using (var fileStream = new FileStream($"{_configuration["LocationFile:JMXFileDev"]}\\{data.FileName}", FileMode.Open))
+                        string path = $"{_configuration["LocationFile:JMXFileDev"]}";        
+                        // Get the operating system platform
+                         PlatformID platform = Environment.OSVersion.Platform;       
+                        // Check the platform and set path accordingly
+                        switch (platform)      
+                        {            
+                            case PlatformID.Win32NT:                 // For Windows
+                            path = Path.Combine(path,data.FileName);      
+                                break;             
+                            default:
+                                path = $"{path.Replace("\\","/")}/{data.FileName}";
+                                break;        
+                        }
+                        using (var fileStream = new FileStream(path, FileMode.Open))
                         {
                             var fileContent = new StreamContent(fileStream);
                             formData.Add(fileContent, "test_file", data.FileName);
