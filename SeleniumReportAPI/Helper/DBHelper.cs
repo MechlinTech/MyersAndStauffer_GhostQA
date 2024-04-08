@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ExcelDataReader;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -15,10 +18,6 @@ using System.Text.RegularExpressions;
 using TestSeleniumReport.DTO_s;
 using Environments = SeleniumReportAPI.Models.Environments;
 using SmtpClient = System.Net.Mail.SmtpClient;
-using ExcelDataReader;
-using Newtonsoft.Json.Linq;
-using System.IO.Compression;
-using System.Net.Http;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -166,7 +165,10 @@ namespace SeleniumReportAPI.Helper
 
                                     RunDetailsJson = JsonConvert.SerializeObject(jsonArray);
                                 }
-                                else RunDetailsJson = "[]";
+                                else
+                                {
+                                    RunDetailsJson = "[]";
+                                }
                             }
                         }
                     }
@@ -994,7 +996,8 @@ namespace SeleniumReportAPI.Helper
             var fromEmail = _configuration["EmailDetails:EmailUsername"];
             var hostName = _configuration["EmailDetails:EmailHost"];
             var subject = "Invitation to Join Our Platform";
-            var invitationUrl = _configuration["InvitationUrl:url"];
+            var invitationUrl = _configuration["InvitationUrl:AcceptInvite"];
+            var changePassUrl = _configuration["InvitationUrl:ChangePassword"];
             if (Mailtype.Equals("Invitation"))
             {
                 BodyString = @"<!DOCTYPE html>
@@ -1020,9 +1023,10 @@ namespace SeleniumReportAPI.Helper
                             </body>
                             </html>";
             }
-            else if (Mailtype.Equals("Accept"))
+            else
             {
-                BodyString = @"<!DOCTYPE html>
+                BodyString = Mailtype.Equals("Accept")
+                    ? @"<!DOCTYPE html>
                             <html lang=""en"">
                             <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
 
@@ -1039,16 +1043,13 @@ namespace SeleniumReportAPI.Helper
                                   <p> Thank you for accepting invitation here is your temprory password:</p>
                                   <em><b> Password: </b> Test@123 </em>
                                   <p> If you want to change your password follow below link </p>
-                                  <p><a href=""" + invitationUrl + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
+                                  <p><a href=""" + changePassUrl + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
                                 </td>
                               </tr>
                             </table>
                             </body>
-                            </html>";
-            }
-            else
-            {
-                BodyString = "";
+                            </html>"
+                    : "";
             }
             var smtpClient = new SmtpClient(hostName)
             {
@@ -1141,12 +1142,9 @@ namespace SeleniumReportAPI.Helper
 
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
-            if (changePasswordResult.Succeeded)
-            {
-                return IdentityResult.Success;
-            }
-
-            return IdentityResult.Failed(new IdentityError { Description = "Failed to change password." });
+            return changePasswordResult.Succeeded
+                ? IdentityResult.Success
+                : IdentityResult.Failed(new IdentityError { Description = "Failed to change password." });
         }
         internal async Task<string> GetUserDetails()
         {
@@ -2354,7 +2352,7 @@ namespace SeleniumReportAPI.Helper
                     command.Parameters.AddWithValue("@TestCase", model.data.container_id);
                     command.Parameters.AddWithValue("@TestCaseName", jsonData.results[0].suites[0].title);
                     command.Parameters.AddWithValue("@Status", jsonData.stats.failures > 0 ? "failed" : "passed");
-                    command.Parameters.AddWithValue("@StartDateTime",model.startDate);
+                    command.Parameters.AddWithValue("@StartDateTime", model.startDate);
                     command.Parameters.AddWithValue("@EndDateTime", model.endDate);
                     command.Parameters.AddWithValue("@TestStepJson", JsonConvert.SerializeObject(results));
                     command.Parameters.AddWithValue("@SuiteDuration", jsonData.stats.duration.ToString());
@@ -2577,19 +2575,16 @@ namespace SeleniumReportAPI.Helper
                     {
                         var formData = new MultipartFormDataContent();
                         formData.Headers.TryAddWithoutValidation("X-CSRFTOKEN", "xJkh4UeQtq6uvMdPjtW2TX5gLZM9VdBsNZ206NwsRTc3XoWNVy8Gk7lGIU9TzV9O");
-                        string path = $"{_configuration["LocationFile:JMXFileDev"]}";        
+                        string path = $"{_configuration["LocationFile:JMXFileDev"]}";
                         // Get the operating system platform
-                         PlatformID platform = Environment.OSVersion.Platform;       
+                        PlatformID platform = Environment.OSVersion.Platform;
                         // Check the platform and set path accordingly
-                        switch (platform)      
-                        {            
-                            case PlatformID.Win32NT:                 // For Windows
-                            path = Path.Combine(path,data.FileName);      
-                                break;             
-                            default:
-                                path = $"{path.Replace("\\","/")}/{data.FileName}";
-                                break;        
-                        }
+                        path = platform switch
+                        {
+                            // For Windows
+                            PlatformID.Win32NT => Path.Combine(path, data.FileName),
+                            _ => $"{path.Replace("\\", "/")}/{data.FileName}",
+                        };
                         using (var fileStream = new FileStream(path, FileMode.Open))
                         {
                             var fileContent = new StreamContent(fileStream);
