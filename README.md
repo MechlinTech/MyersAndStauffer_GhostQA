@@ -20,7 +20,7 @@
     - Run the following command in PowerShell:
      - WINDOWS 
         ```powershell
-        powershell -ExecutionPolicy Bypass -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/MechlinTech/MyersAndStauffer_GhostQA/main/deploy.ps1', '.\deploy.ps1'); .\deploy.ps1"
+        powershell -ExecutionPolicy Bypass -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/Ghost-QA/GhostQA/main/deploy.ps1', '.\deploy.ps1'); .\deploy.ps1"
         ```
         Ubuntu
         ```sh
