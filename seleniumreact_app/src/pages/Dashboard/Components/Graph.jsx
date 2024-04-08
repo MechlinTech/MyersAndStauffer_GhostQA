@@ -15,7 +15,6 @@ import clsx from "clsx";
 
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
-
 const Graph = (props) => {
   const classes = useStyles();
 
@@ -23,7 +22,7 @@ const Graph = (props) => {
     options: {
       chart: {
         id: "basic-bar",
-        type:'bar',
+        type: "bar",
         toolbar: {
           show: true,
           tools: {
@@ -32,14 +31,49 @@ const Graph = (props) => {
           },
         },
       },
-      colors: [ "#0000ff","#008000","#ff0000", ],
-
+      colors: ["#0000ff", "#008000", "#ff0000"],
       xaxis: {
         categories: [],
       },
+      // plotOptions: {
+      //   bar: {
+      //     horizontal: false,
+      //     columnWidth: "100%",
+      //     endingShape: "rounded",
+      //   },
+      // },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ["transparent"],
+      },
+  
       yaxis: {
         title: {
-          text: "Number Of Test",
+          text: "Number Of Test Cases",
+          style: {
+            fontSize: '14px',
+            fontFamily: 'Lexend Deca',
+          },
+        },
+        labels: {
+          formatter: function (val) {
+            return parseInt(val);
+          }
+        }
+      },
+      fill: {
+        opacity: 1,
+      },
+  
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return "" + val + " ";
+          },
         },
       },
     },
@@ -47,38 +81,7 @@ const Graph = (props) => {
     // chart: {
     //   type: "bar",
     // },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: "100%",
-        endingShape: "rounded",
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ["transparent"],
-    },
-
-    yaxis: {
-      title: {
-        text: "Number Of Test",
-      },
-    },
-    fill: {
-      opacity: 1,
-    },
-
-    tooltip: {
-      y: {
-        formatter: function (val) {
-          return "" + val + " ";
-        },
-      },
-    },
+   
   });
   const staticOptions = [
     { value: "7", label: "7" },
@@ -107,17 +110,17 @@ const Graph = (props) => {
           const TotalFailedTestCase = [];
           const TotalPassedTestCase = [];
           const TotalTestCase = [];
-          
+
           if (response.data.length) {
             response.data.forEach((item) => {
               const date = new Date(item.TestRunStartDate);
-              console.log("date",date)
-              const formattedDate = date.toLocaleDateString('en-US', {
-                month: 'long', // full month name
-                day: 'numeric', // day of the month
-                year: 'numeric' // full year
+              console.log("date", date);
+              const formattedDate = date.toLocaleDateString("en-US", {
+                month: "long", // full month name
+                day: "numeric", // day of the month
+                year: "numeric", // full year
               });
-              
+
               TestRunStartDate.push(formattedDate);
               TotalFailedTestCase.push(item.TotalFailedTestCase);
               TotalPassedTestCase.push(item.TotalPassedTestCase);
@@ -134,7 +137,7 @@ const Graph = (props) => {
               ...data.options,
               xaxis: {
                 categories: TestRunStartDate,
-              },
+              }
             },
             series: [
               {
@@ -149,8 +152,6 @@ const Graph = (props) => {
                 name: "Failed",
                 data: TotalFailedTestCase,
               },
-             
-              
             ],
           };
 
@@ -168,13 +169,20 @@ const Graph = (props) => {
   return (
     <>
       <div>
-        <Grid 
-        container 
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="center">
+        <Grid
+          container
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="center"
+        >
           <Grid item>
-            <Typography className={classes.customFontSize} mr={3}>Results</Typography>
+            <Typography
+              className={classes.customFontSize}
+              fontFamily="Lexend Deca"
+              mr={3}
+            >
+              Results
+            </Typography>
           </Grid>
           <Grid item>
             <FormControl component="fieldset" className={classes.radioGroup}>
@@ -192,6 +200,7 @@ const Graph = (props) => {
                     <Typography
                       variant="body1"
                       className={classes.radioButtonLabel}
+                      fontFamily="Lexend Deca"
                     >
                       Runs
                     </Typography>
@@ -205,6 +214,7 @@ const Graph = (props) => {
                     <Typography
                       variant="body1"
                       className={classes.radioButtonLabel}
+                      fontFamily="Lexend Deca"
                     >
                       Days
                     </Typography>
@@ -224,6 +234,7 @@ const Graph = (props) => {
           <Typography
             variant="subtitle1"
             className={clsx(classes.customFontSize)}
+            fontFamily="Lexend Deca"
             mr={3}
           >
             For
@@ -237,12 +248,12 @@ const Graph = (props) => {
                 ...provided,
                 backgroundColor: "rgb(242, 242, 242)",
                 zIndex: 999, // Adjust the zIndex value
-                width:'130px'
+                width: "130px",
               }),
               control: (provided, state) => ({
                 ...provided,
                 backgroundColor: "rgb(242, 242, 242)",
-                borderWidth:'2px',
+                borderWidth: "2px",
                 "&:hover": {
                   border: "2px solid #654DF7",
                 },
@@ -258,15 +269,20 @@ const Graph = (props) => {
               }),
               dropdownIndicator: (provided) => ({
                 ...provided,
-                cursor: 'pointer',
-                ':hover': {
-                  color: '#654DF7', // Change the color on hover if desired
+                cursor: "pointer",
+                ":hover": {
+                  color: "#654DF7", // Change the color on hover if desired
                 },
               }),
             }}
           />
         </Grid>
-        <Chart options={data.options} series={data.series} type="bar" height={350}/>
+        <Chart
+          options={data.options}
+          series={data.series}
+          type="bar"
+          height={350}
+        />
       </div>
     </>
   );

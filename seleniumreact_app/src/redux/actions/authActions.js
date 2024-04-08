@@ -2,6 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
 import { getBaseUrl } from "../../utils/configService";
+import { useNavigate } from "react-router-dom";
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
 
@@ -107,14 +108,16 @@ export const ChangePasswordReq = (payload)=>{
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/AddInBuildTestSuite/ChangePassword`,payload);
-      console.log('payload ' ,payload)
-      if(res.data.status === "Success"){
-        toast.info('Successfully changed', {
+      console.log('res ' ,res)
+      if(res.data.message === "Password Changed Successfully"){
+        toast.info('Password Changed Successfully', {
           style: {
             background: 'rgb(101, 77, 247)', 
             color: 'rgb(255, 255, 255)', 
           },
         });
+      }else{
+        toast.error(res.data.errors.description)
       }
     }catch (error) {
       console.log("error changing password ",error);

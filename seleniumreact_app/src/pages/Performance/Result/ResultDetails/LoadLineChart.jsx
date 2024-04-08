@@ -8,7 +8,17 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     Xaxis.filter((item) => item !== null).map((item) =>
       item ? formatTimestamp(item) : ""
     );
-
+    const timestampCount = xCategories.length;
+    const interval = Math.ceil(timestampCount / 10); 
+    const evenlySpacedCategories = [];
+    for (let i = 0; i < timestampCount; i++) {
+      if (i % interval === 0) {
+        evenlySpacedCategories.push(xCategories[i]);
+      } else {
+        evenlySpacedCategories.push("");
+      }
+    }
+    evenlySpacedCategories[timestampCount-1] = xCategories[timestampCount-1]
   // Filter out null values from Yaxis data
   const yData = Yaxis && Yaxis.filter((item) => item !== null);
 
@@ -40,7 +50,7 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     },
     colors: ["#0000ff", "#ff0000"],
     xaxis: {
-      categories: xCategories || [],
+      categories: evenlySpacedCategories || [],
       title: {
         text: "Time (hh:mm:ss)",
         style: {
