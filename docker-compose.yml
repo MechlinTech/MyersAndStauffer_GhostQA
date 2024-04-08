@@ -30,7 +30,13 @@ services:
       - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
       - CypressAPI__PerformanceExecutor=http://codeengine:8000/codeengine/api/performance-testsexecute2/
       - CypressAPI__ExecutorResult=http://codeengine:8000/codeengine/api/performance-container-runs/
+      - LocationFile__JMXFile=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFile
+      - LocationFile__CSVFile=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataCSVFile
+      - LocationFile__JMXFileDev=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFileDev
+      - InvitationUrl__Url=http://127.0.0.1:30001/AcceptInvitation/
     command: dotnet SeleniumReportAPI.dll
+    volumes:
+      - ./app/dotnet/wwwroot/:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/
     depends_on:
       - db
       - migrations
