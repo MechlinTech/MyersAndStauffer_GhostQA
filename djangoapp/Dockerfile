@@ -30,12 +30,19 @@ RUN pipenv install gunicorn
 
 # Copy project
 COPY ./djangoapp/ghostqa/ /app/
-
 CMD python manage.py collectstatic
+
+
+COPY ./djangoapp/compose/scripts/entrypoint.sh /entrypoint.sh
+
+RUN    sed -i 's/\r//' /entrypoint.sh \
+    && chmod +x /entrypoint.sh 
 
 
 # Expose port
 EXPOSE 8000
+
+ENTRYPOINT ["/entrypoint.sh"]
 
 
 
