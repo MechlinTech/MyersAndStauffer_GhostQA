@@ -24,7 +24,7 @@
         ```
         Ubuntu
         ```sh
-        wget -O - https://raw.githubusercontent.com/MechlinTech/MyersAndStauffer_GhostQA/main/deploy.sh | bash
+        wget -O - https://raw.githubusercontent.com/Ghost-QA/GhostQA/main/deploy.sh | bash
         ```
 
     This command will download the deployment script from the specified URL and execute it.
