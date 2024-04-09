@@ -1,4 +1,4 @@
-CREATE OR ALTER PROCEDURE [dbo].[stp_AddRootRelation]
+CREATE OR ALTER   PROCEDURE [dbo].[stp_AddRootRelation]
 @RootId         int = 0,
 @Node		    int,
 @Parent	        int,
@@ -8,12 +8,20 @@ AS
 PROCEDURE NAME	:	stp_AddRootRelation
 CREATED BY		:	Mohammed Yaseer
 CREATED DATE	:	1st March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
+MODIFIED BY		:	Mohammed Yaseer
+MODIFIED DATE	:	9th April 2024
 PROC EXEC		:  EXEC stp_AddRootRelation 
 				
 **************************************************************************************/
 BEGIN TRY
+ IF EXISTS( SELECT 1 FROM [dbo].[tbl_RootRelation] WHERE [Parent] = @Parent AND [Name] = @Name)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Work Space Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
 	BEGIN
 		INSERT INTO [dbo].[tbl_RootRelation] ( Node, Parent, Name) 
 		VALUES (@Node, @Parent, @Name)

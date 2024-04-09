@@ -286,7 +286,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_AddRootRelation]
+CREATE OR ALTER   PROCEDURE [dbo].[stp_AddRootRelation]
 @RootId         int = 0,
 @Node		    int,
 @Parent	        int,
@@ -296,12 +296,20 @@ AS
 PROCEDURE NAME	:	stp_AddRootRelation
 CREATED BY		:	Mohammed Yaseer
 CREATED DATE	:	1st March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
+MODIFIED BY		:	Mohammed Yaseer
+MODIFIED DATE	:	9th April 2024
 PROC EXEC		:  EXEC stp_AddRootRelation 
 				
 **************************************************************************************/
 BEGIN TRY
+ IF EXISTS( SELECT 1 FROM [dbo].[tbl_RootRelation] WHERE [Parent] = @Parent AND [Name] = @Name)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Work Space Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
 	BEGIN
 		INSERT INTO [dbo].[tbl_RootRelation] ( Node, Parent, Name) 
 		VALUES (@Node, @Parent, @Name)
@@ -3241,7 +3249,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateProjectRootRelation]
+CREATE OR ALTER   PROCEDURE [dbo].[stp_UpdateProjectRootRelation]
 @Id             int,
 @Name           NVARCHAR(MAX)
 AS
@@ -3249,18 +3257,26 @@ AS
 PROCEDURE NAME	:	stp_UpdateProjectRootRelation
 CREATED BY		:	Mohammed Yaseer
 CREATED DATE	:	8th March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
+MODIFIED BY		:	Mohammed Yaseer
+MODIFIED DATE	:	9th April 2024
 PROC EXEC		:  EXEC stp_UpdateProjectRootRelation 
 				
 **************************************************************************************/
 BEGIN TRY
+IF EXISTS( SELECT 1 FROM [dbo].[tbl_ProjectRootRelation] WHERE [Id] <> @Id AND [Name] = @Name)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Work Space Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
 	BEGIN
 		UPDATE [dbo].[tbl_ProjectRootRelation]
 		SET 
 			Name      = @Name
 			WHERE Id  = @Id
-
+   END
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -3279,7 +3295,7 @@ BEGIN TRY
 				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 			))
-		END
+		
 	END
 END TRY
 BEGIN CATCH
@@ -3289,7 +3305,7 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateRootRelation]
+CREATE OR ALTER   PROCEDURE [dbo].[stp_UpdateRootRelation]
 @RootId         int,
 @Name           NVARCHAR(MAX)
 AS
@@ -3297,18 +3313,26 @@ AS
 PROCEDURE NAME	:	stp_UpdateRootRelation
 CREATED BY		:	Mohammed Yaseer
 CREATED DATE	:	3rd March 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
+MODIFIED BY		:	Mohammed Yaseer
+MODIFIED DATE	:	9th April 2024
 PROC EXEC		:  EXEC stp_UpdateRootRelation 
 				
 **************************************************************************************/
 BEGIN TRY
+IF EXISTS( SELECT 1 FROM [dbo].[tbl_RootRelation] WHERE [RootId] <> @RootId AND [Name] = @Name)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Work Space Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
 	BEGIN
 		UPDATE [dbo].[tbl_RootRelation]
 		SET 
 			Name    = @Name
 			WHERE RootId  = @RootId
-
+    END
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -3327,7 +3351,7 @@ BEGIN TRY
 				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 			))
-		END
+		
 	END
 END TRY
 BEGIN CATCH
