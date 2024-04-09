@@ -359,8 +359,14 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
 
         header()
       );
-      setListData([...listData, response.data.Data[0]]); // need to check the response
-      setSelectedNodeId(response.data.Data[0].id);
+      if(response.data.status === "fail"){
+        toast.error("Duplicate name")
+      }else{
+        setListData([...listData, response.data.Data[0]]); // Reset form data
+        setSelectedNodeId(response.data.Data[0].id)
+      }
+      // setListData([...listData, response.data.Data[0]]); // need to check the response
+      // setSelectedNodeId(response.data.Data[0].id);
       console.log("response after creating new node", response);
     } catch (error) {
       console.error("Error fetching data:", error);
