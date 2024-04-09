@@ -8,14 +8,15 @@ import { InviteUser } from "../../redux/actions/authActions";
 import { CustomTable } from "./CustomTable";
 import SearchField from "../../comman/SearchField";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Users() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [users, setusers] = useState([])
-  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [users, setusers] = useState([]);
+  // const [isEmailValid, setIsEmailValid] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [email, setEmail] = useState("");
   const [Error, setError] = useState({
@@ -30,7 +31,7 @@ export default function Users() {
         header()
       );
       console.log("user list : ", res);
-      setusers(res.data)
+      setusers(res.data);
     };
 
     getUserList();
@@ -39,11 +40,16 @@ export default function Users() {
   const handleInvite = () => {
     let error = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsEmailValid(emailRegex.test(email));
-    if (!email.trim()) error.emailError = "email required";
-    else if (!isEmailValid) error.emailError = "Enter a valid email";
+    const isEmailValid = emailRegex.test(email.trim());
+    // setIsEmailValid(emailRegex.test(email));
+    if (!email.trim()) {
+      error.emailError = "email required";
+      toast.error("email required");
+    } else if (!isEmailValid) {
+      error.emailError = "Enter a valid email";
+      toast.error("Enter a valid email");
+    }
     setError(error);
-    console.log('errors ',Object.values(error))
     if (Object.keys(error).length === 0) {
       setEmail("");
       dispatch(InviteUser(email));
@@ -94,7 +100,7 @@ export default function Users() {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    // setError((prev) => ({ ...prev, ["emailError"]: "" }));
+                    setError((prev) => ({ ...prev, ["emailError"]: "" }));
                   }}
                 />
               </FormControl>
@@ -117,8 +123,10 @@ export default function Users() {
               </Button>
             </Grid>
           </Grid>
-          <Paper style={{ marginTop: "20px",maxHeight:'70vh',overflow:'auto', }}>
-            <Grid item style={{ margin: "8px 20px", }}>
+          <Paper
+            style={{ marginTop: "20px", maxHeight: "70vh", overflow: "auto" }}
+          >
+            <Grid item style={{ margin: "8px 20px" }}>
               <SearchField
                 placeholder="Search User..."
                 onChange={(value) => setSearchTerm(value)}

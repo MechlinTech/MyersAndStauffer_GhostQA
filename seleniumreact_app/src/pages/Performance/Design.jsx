@@ -23,6 +23,7 @@ import {
   addExecuterData,
   setExecuteJMXData,
   setRunningRootId,
+  setRunningSuiteName,
 } from "../../redux/actions/ResultAction";
 import { getBaseUrl, getCoreEngineBaseUrl } from "../../utils/configService";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +33,7 @@ const DJANGO_URL = process.env.CODE_ENGINE_BASE_URL;
 export default function Design({ rootId }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { isRunning, runningRootId } = useSelector((state) => state.result);
+  const { isRunning, runningRootId,runningTestSuite } = useSelector((state) => state.result);
   const { virtualUser, totalLocation,isTotalUserOrDurationZero } = useSelector(
     (state) => state.performance
   );
@@ -119,8 +120,13 @@ export default function Design({ rootId }) {
   // };
 
   const handleRunNow = async () => {
+    if(isRunning){
+      toast.warn(`${runningTestSuite}  - Is running and in progress`)
+      return
+    }
     dispatch(setIsRunning(true));
     dispatch(setRunningRootId(rootId));
+    dispatch(setRunningSuiteName(folderName))
     const testername = getName();
 
     const currentDate = new Date();

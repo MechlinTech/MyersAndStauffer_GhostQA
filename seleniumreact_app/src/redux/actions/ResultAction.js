@@ -7,6 +7,7 @@ export const SET_IS_RUNNING = "SET_IS_RUNNING";
 export const ADD_EXECUTER_DATA = "ADD_EXECUTER_DATA";
 export const SET_EXECUTEJMX_DATA = "SET_EXECUTEJMX_DATA";
 export const SET_RUNNING_ROOT_ID = "SET_RUNNING_ROOT_ID";
+export const SET_RUNNING_NAME = "SET_RUNNING_NAME";
 
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
@@ -23,6 +24,14 @@ export const setRunningRootId = (id) => {
   return {
     type: SET_RUNNING_ROOT_ID,
     payload: id,
+  };
+};
+
+export const setRunningSuiteName = (name) => {
+  console.log("Setting name to:", name);
+  return {
+    type: SET_RUNNING_NAME,
+    payload: name,
   };
 };
 
