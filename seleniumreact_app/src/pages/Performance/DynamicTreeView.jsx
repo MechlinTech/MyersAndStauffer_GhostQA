@@ -414,7 +414,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   };
   const handleKeyPressEdit = async (event, itemId, node) => {
     if (event.key === "Enter") {
-      setEditMode(0);
+      // setEditMode(0);
       const itemToEdit = listData.find((item) => item.id === itemId);
       try {
         if (editData.trim() === "") {
@@ -433,16 +433,31 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
 
           header()
         );
-        const newData = listData.filter((item) => {
-          if (item.id !== itemId) {
-            return item;
-          } else if (item.id === itemId) {
-            item.name = editData;
-            return item;
-          }
-        });
-        setListData(newData);
-        setEditData("");
+        if(response.data.status === 'fail'){
+          toast.error(response.data.message)
+        }else{
+          setEditMode(0);
+          const newData = listData.filter((item) => {
+            if (item.id !== itemId) {
+              return item;
+            } else if (item.id === itemId) {
+              item.name = editData;
+              return item;
+            }
+          });
+          setListData(newData);
+          setEditData("");
+        }
+        // const newData = listData.filter((item) => {
+        //   if (item.id !== itemId) {
+        //     return item;
+        //   } else if (item.id === itemId) {
+        //     item.name = editData;
+        //     return item;
+        //   }
+        // });
+        // setListData(newData);
+        // setEditData("");
       } catch (error) {
         console.error("Error fetching data:", error);
       }

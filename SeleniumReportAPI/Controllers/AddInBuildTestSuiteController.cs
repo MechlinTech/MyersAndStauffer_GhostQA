@@ -81,16 +81,23 @@ namespace SeleniumReportAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest(new
+                    // Concatenate error descriptions into a single string
+                    string errors = string.Join(", ", result.Errors.Select(e => e.Description));
+
+                    return Ok(new
                     {
-                        message = "Failed to change password",
-                        errors = result.Errors
+                        status = "Failed",
+                        message = errors
                     });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return BadRequest(new
+                {
+                    status = "Error",
+                    message = ex.Message
+                });
             }
         }
         [HttpPost("UploadFile")]

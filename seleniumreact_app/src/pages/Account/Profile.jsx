@@ -13,9 +13,7 @@ import { useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
 import { useDispatch } from "react-redux";
-import {
-  UpdateUserProfile,
-} from "../../redux/actions/authActions";
+import { UpdateUserProfile } from "../../redux/actions/authActions";
 import axios from "axios";
 import { header } from "../../utils/authheader";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
@@ -28,7 +26,7 @@ export default function Profile() {
   const [fullName, setfullName] = useState("");
   const [email, setEmail] = useState(user?.Email);
   const [organizationName, setorganizationName] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(true);
+  // const [isEmailValid, setIsEmailValid] = useState(true);
   const [isEditable, setisEditable] = useState(false);
   const [Error, setError] = useState({
     nameError: "",
@@ -81,16 +79,16 @@ export default function Profile() {
       organizationName,
     };
     let error = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!fullName.trim()) error.nameError = "Name required";
     if (!email.trim()) error.emailError = "Email required";
-    if (!organizationName.trim())
-      error.organizationNameError = "Organization name required";
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsEmailValid(emailRegex.test(email));
-    if (!isEmailValid) {
+    else if (!emailRegex.test(email)) {
       error.emailError = "Enter a valid email";
     }
+    if (!organizationName.trim())
+      error.organizationNameError = "Organization name required";
+
     //updating error state before submitting
     setError(error);
     if (Object.keys(error).length === 0) {
@@ -187,7 +185,7 @@ export default function Profile() {
                     >
                       <StyledOutlinedInput
                         id="outlined-adornment-name"
-                        type="text"
+                        type="email"
                         placeholder="Enter your email"
                         disabled={!isEditable}
                         error={Error.emailError ? true : false}

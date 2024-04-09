@@ -359,8 +359,14 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
 
         header()
       );
-      setListData([...listData, response.data.Data[0]]); // need to check the response
-      setSelectedNodeId(response.data.Data[0].id);
+      if(response.data.status === "fail"){
+        toast.error("Duplicate name")
+      }else{
+        setListData([...listData, response.data.Data[0]]); // Reset form data
+        setSelectedNodeId(response.data.Data[0].id)
+      }
+      // setListData([...listData, response.data.Data[0]]); // need to check the response
+      // setSelectedNodeId(response.data.Data[0].id);
       console.log("response after creating new node", response);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -397,7 +403,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   };
   const handleKeyPressEdit = async (event, itemId, node) => {
     if (event.key === "Enter") {
-      setEditMode(0);
+      // setEditMode(0);
       const itemToEdit = listData.find((item) => item.id === itemId);
       try {
         if (editData.trim() === "") {
@@ -417,16 +423,22 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
 
           header()
         );
-        const newData = listData.filter((item) => {
-          if (item.id !== itemId) {
-            return item;
-          } else if (item.id === itemId) {
-            item.name = editData;
-            return item;
-          }
-        });
-        setListData(newData);
-        setEditData("");
+        if(response.data.status === 'fail'){
+          toast.error(response.data.message)
+        }else{
+          setEditMode(0);
+          const newData = listData.filter((item) => {
+            if (item.id !== itemId) {
+              return item;
+            } else if (item.id === itemId) {
+              item.name = editData;
+              return item;
+            }
+          });
+          setListData(newData);
+          setEditData("");
+        }
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }

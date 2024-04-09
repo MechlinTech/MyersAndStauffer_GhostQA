@@ -984,7 +984,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        public object SendEmail(string toEmail, string Mailtype)
+        public  object SendEmail(string toEmail, string Mailtype)
         {
             if (!IsValidEmail(toEmail))
             {
@@ -998,6 +998,7 @@ namespace SeleniumReportAPI.Helper
             var subject = "Invitation to Join Our Platform";
             var invitationUrl = _configuration["InvitationUrl:AcceptInvite"];
             var changePassUrl = _configuration["InvitationUrl:ChangePassword"];
+            var user =  GetProfilByEmail(toEmail);
             if (Mailtype.Equals("Invitation"))
             {
                 BodyString = @"<!DOCTYPE html>
@@ -1051,6 +1052,14 @@ namespace SeleniumReportAPI.Helper
                             </html>"
                     : "";
             }
+            if (Mailtype.Equals("Invitation") && !string.IsNullOrEmpty(user.Result))
+            {
+                return new
+                {
+                    status = "Failed",
+                    message = "User Already Exist"
+                };
+            }
             var smtpClient = new SmtpClient(hostName)
             {
                 Port = 587,
@@ -1067,6 +1076,7 @@ namespace SeleniumReportAPI.Helper
 
             try
             {
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
                 smtpClient.Send(mailMessage);
                 result = "Email sent successfully!";
             }
@@ -1137,7 +1147,7 @@ namespace SeleniumReportAPI.Helper
 
             if (!passwordCheckResult)
             {
-                return IdentityResult.Failed(new IdentityError { Description = "Current password is incorrect." });
+                return IdentityResult.Failed(new IdentityError { Description = "Old password is incorrect." });
             }
 
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
@@ -2325,8 +2335,8 @@ namespace SeleniumReportAPI.Helper
             var jObj = (JObject)model.data.json;
             var jsonData = JsonConvert.DeserializeObject<JsonOption>(jObj.First.First.ToString());
             string fileName = jsonData.results[0].file.Replace("cypress/", "").Replace(".cy.js", "");
-            DateTime startTime = DateTime.Parse(jsonData.stats.start.ToString());
-            DateTime endTime = DateTime.Parse(jsonData.stats.end.ToString());
+            DateTime startTime = DateTime.Parse(model.startDate.ToString());
+            DateTime endTime = DateTime.Parse(model.endDate.ToString());
 
             TimeSpan duration = endTime - startTime;
 

@@ -79,9 +79,13 @@ export default function TestLab() {
       },
       header()
     );
-    setListData([...listData, response.data?.Data[0]]); // Reset form data
-    setFormData({ name: "" });
+    if(response.data.status === 'fail'){
+      toast.error(response.data.message)
+    }else{
+      setListData([...listData, response.data.Data[0]]); // Reset form data
+      setFormData({ name: "" });
     setAddNewProject(false);
+    }
   } catch (error) {
     console.error("Error fetching data:", error);
   }

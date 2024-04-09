@@ -1,23 +1,31 @@
-CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateRootRelation]
+CREATE OR ALTER   PROCEDURE [dbo].[stp_UpdateRootRelation]
 @RootId         int,
 @Name           NVARCHAR(MAX)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_UpdateRootRelation
 CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	4th March 2024
+CREATED DATE	:	3rd March 2024
 MODIFIED BY		:	
 MODIFIED DATE	:	
 PROC EXEC		:  EXEC stp_UpdateRootRelation 
 				
 **************************************************************************************/
 BEGIN TRY
+IF EXISTS( SELECT 1 FROM [dbo].[tbl_RootRelation] WHERE [RootId] <> @RootId AND [Name] = @Name)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Work Space Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
 	BEGIN
 		UPDATE [dbo].[tbl_RootRelation]
 		SET 
 			Name    = @Name
 			WHERE RootId  = @RootId
-
+    END
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -36,7 +44,7 @@ BEGIN TRY
 				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 			))
-		END
+		
 	END
 END TRY
 BEGIN CATCH
