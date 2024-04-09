@@ -12,6 +12,7 @@ import { useStyles } from "./style";
 import { StyledTypography, StyledOutlinedInput } from "./style";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { ChangePasswordReq } from "../../redux/actions/authActions";
 export default function ChangePassword() {
   const classes = useStyles();
@@ -29,6 +30,9 @@ export default function ChangePassword() {
     newPasswordError: "",
   });
 
+  const redirectToLogin=()=>{
+    navigate("/")
+  }
   const handleSave = () => {
     const payload = {
       email,
@@ -48,7 +52,9 @@ export default function ChangePassword() {
     else if(!passwordRegex.test(newPassword))
       error.newPasswordError = "at least one lowercase, one uppercase, one number, one special character is required"
     
-
+    if(oldPassword === newPassword){
+      toast.error("New password must be different from old password")
+    }
     // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     // setIsEmailValid(emailRegex.test(email));
     // if (!isEmailValid) {
@@ -56,13 +62,12 @@ export default function ChangePassword() {
     // }
     //updating error state before submitting
     setError(error);
-    if (Object.keys(error).length === 0) {
+    if (Object.keys(error).length === 0 && (oldPassword !== newPassword)) {
       setNewPassword("")
       setOldPassword("")
-    dispatch(ChangePasswordReq(payload))
-    navigate('/')
+    dispatch(ChangePasswordReq(payload,redirectToLogin))
     } else {
-      console.log("error saving");
+      console.log("some field are empty");
     }
   };
   return (

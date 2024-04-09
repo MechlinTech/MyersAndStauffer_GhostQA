@@ -70,11 +70,11 @@ export const InviteUser = (email)=>{
           },
         });
     } else{
-      toast.error('Error inviting')
+      toast.warn(res.data.message)
     }
     }catch (error) {
       console.log("error inviting ",error);
-      toast('Invitation fail')
+      toast.error('Network error')
     }
   }
 }
@@ -102,26 +102,27 @@ export const AcceptInvitation = (email,handeSetAccept)=>{
   }
 }
 
-export const ChangePasswordReq = (payload)=>{
+export const ChangePasswordReq = (payload,redirectToLogin)=>{
   return async (dispatch)=>{
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/AddInBuildTestSuite/ChangePassword`,payload);
       console.log('res ' ,res)
-      if(res.data.message === "Password Changed Successfully"){
+      if(res.data.status === "Success"){
         toast.info('Password Changed Successfully', {
           style: {
             background: 'rgb(101, 77, 247)', 
             color: 'rgb(255, 255, 255)', 
           },
         });
+        redirectToLogin()
       }else{
-        toast.error(res.data.errors.description)
+        toast.error(res.data.message)
       }
     }catch (error) {
       console.log("error changing password ",error);
-      toast('accept fail')
+      toast.error('Network error')
     }
   }
 }
@@ -134,6 +135,7 @@ export const UpdateUserProfile = (payload)=>{
         `${BASE_URL}/Selenium/UpdateUserProfile`,payload,header());
         console.log('res',res)
       if(res.data.status === "success"){
+        sessionStorage.setItem('email',payload.email,)
         toast.info('Successfully updated', {
           style: {
             background: 'rgb(101, 77, 247)', 
