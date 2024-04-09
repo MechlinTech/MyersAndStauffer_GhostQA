@@ -4,7 +4,7 @@ from ..models import PerformaceTestSuite,TestContainersRuns,TestArtifacts
 
 from django.urls import reverse
 from collections import defaultdict
-
+import json
 
 class TestArtifactsSerializer(serializers.ModelSerializer):
     files = serializers.SerializerMethodField()
@@ -22,6 +22,7 @@ class TestArtifactsSerializer(serializers.ModelSerializer):
         
 class TestContainersRunsSerializer(serializers.ModelSerializer):
     runs_artifacts = TestArtifactsSerializer(many=True)
+    raw_data = serializers.SerializerMethodField()
     class Meta:
         model = TestContainersRuns
         fields = [
@@ -39,6 +40,15 @@ class TestContainersRunsSerializer(serializers.ModelSerializer):
             'container_logs_str',
             'client_reference_id'
             ]
+    def get_raw_data(self,instance):
+        from ..utils.process_row_daata import group_and_average
+        if instance.raw_data:
+            try:
+                data  = group_and_average(instance.raw_data)
+                return data
+            except:
+                return instance.raw_data
+        return instance.raw_data
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         
