@@ -8,17 +8,17 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     Xaxis.filter((item) => item !== null).map((item) =>
       item ? formatTimestamp(item) : ""
     );
-    const timestampCount = xCategories.length;
-    const interval = Math.ceil(timestampCount / 10); 
-    const evenlySpacedCategories = [];
-    for (let i = 0; i < timestampCount; i++) {
-      if (i % interval === 0) {
-        evenlySpacedCategories.push(xCategories[i]);
-      } else {
-        evenlySpacedCategories.push("");
-      }
-    }
-    evenlySpacedCategories[timestampCount-1] = xCategories[timestampCount-1]
+    // const timestampCount = xCategories.length;
+    // const interval = Math.ceil(timestampCount / 10); 
+    // const evenlySpacedCategories = [];
+    // for (let i = 0; i < timestampCount; i++) {
+    //   if (i % interval === 0) {
+    //     evenlySpacedCategories.push(xCategories[i]);
+    //   } else {
+    //     evenlySpacedCategories.push("");
+    //   }
+    // }
+    // evenlySpacedCategories[timestampCount-1] = xCategories[timestampCount-1]
   // Filter out null values from Yaxis data
   const yData = Yaxis && Yaxis.filter((item) => item !== null);
 
@@ -50,7 +50,7 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
     },
     colors: ["#0000ff", "#ff0000"],
     xaxis: {
-      categories: evenlySpacedCategories || [],
+      categories: xCategories || [],
       title: {
         text: "Time (hh:mm:ss)",
         style: {
@@ -151,13 +151,18 @@ const LineChart = ({ height, Yaxis, Xaxis }) => {
 //   return `${hours}:${minutes}:${seconds}`;
 // };
 
+// const formatTimestamp = (timestamp) => {
+//   const date = new Date(timestamp * 1000);
+//   let hours = date.getHours();
+//   const minutes = String(date.getMinutes()).padStart(2, "0");
+//   const amPM = hours >= 12 ? "PM" : "AM";
+//   hours = hours % 12 || 12; // Convert hour to 12-hour format
+//   return `${hours}:${minutes} ${amPM}`;
+// };
+
 const formatTimestamp = (timestamp) => {
-  const date = new Date(timestamp * 1000);
-  let hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const amPM = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12; // Convert hour to 12-hour format
-  return `${hours}:${minutes} ${amPM}`;
-};
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-US',{hour24:false})
+  };
 
 export default LineChart;

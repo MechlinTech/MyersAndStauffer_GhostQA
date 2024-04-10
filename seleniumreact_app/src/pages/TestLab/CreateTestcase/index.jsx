@@ -56,6 +56,7 @@ export default function CreateTestCase() {
 
   const handleSave = () => {
     const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    // const urlPattern =/^(?!.*(?:https?:\/\/|www\.)).*$/
     console.log("final steps,", steps);
     let payload = {
       testCaseName: testCaseTitle,

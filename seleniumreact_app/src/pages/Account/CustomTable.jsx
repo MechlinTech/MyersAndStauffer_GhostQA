@@ -62,7 +62,7 @@ export function CustomTable({ users }) {
             <TableRow>
               {/* <StyledTableCell>Project Name</StyledTableCell> */}
               <StyledTableCell>User Name</StyledTableCell>
-              <StyledTableCell>Eamil</StyledTableCell>
+              <StyledTableCell>Email</StyledTableCell>
               <StyledTableCell>Enable</StyledTableCell>
             </TableRow>
           </TableHead>

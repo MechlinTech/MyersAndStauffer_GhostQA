@@ -26,6 +26,10 @@ export const login = (data, setLoading) => {
           "userData",
           JSON.stringify({ ...response.data, token: response.token })
         );
+        sessionStorage.setItem(
+          "tokenExpiry",
+          JSON.stringify({ ...response.data, expiration: response.expiration })
+        );
         sessionStorage.setItem('email', data.email.toString())
         dispatch({
           type: LOG_IN,
