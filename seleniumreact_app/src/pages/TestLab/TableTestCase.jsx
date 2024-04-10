@@ -213,6 +213,16 @@ export default function TableTestCase({ testCase, rootId }) {
     return date.toLocaleString("en-US", options);
   };
 
+  function capitalizeFirstLetter(str) {
+    // Check if the input string is not empty
+    if (str?.length > 0) {
+        // Capitalize the first letter and concatenate with the rest of the string
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    } else {
+        // Return an empty string if input is empty
+        return '';
+    }
+}
   return (
     <>
       <DeleteModal
@@ -257,7 +267,9 @@ export default function TableTestCase({ testCase, rootId }) {
                   scope="row"
                   onClick={() => {
                     navigate(
-                      `/testLab/editTestcase/${row.TestCaseName}/${row.TestCaseDetailsId}`
+                      // `/testLab/editTestcase/${row.TestCaseName}/${row.TestCaseDetailsId}`
+                      `/testLab/editTestcase/${row.TestCaseDetailsId}`
+
                     );
                   }}
                   sx={{ cursor: "pointer" }}
@@ -266,7 +278,7 @@ export default function TableTestCase({ testCase, rootId }) {
                 </TableCell>
                 <TableCell align="center">
                   <StyledTypography>
-                    {executingTest[row.TestCaseName] ? "Running" : row.Status}
+                    {executingTest[row.TestCaseName] ? "Running" : capitalizeFirstLetter(row.Status)}
                   </StyledTypography>
                 </TableCell>
                 {/* <TableCell align="center">

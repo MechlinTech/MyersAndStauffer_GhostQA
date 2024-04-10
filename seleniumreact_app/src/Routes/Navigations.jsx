@@ -73,7 +73,8 @@ export default function Navigations() {
             element={<CreateTestCase />}
           />
           <Route
-            path="testLab/editTestcase/:testCaseName/:testId"
+            // path="testLab/editTestcase/:testCaseName/:testId"
+            path="testLab/editTestcase/:testId"
             element={<EditTestCase />}
           />
         </Route>

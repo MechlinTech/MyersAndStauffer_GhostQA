@@ -182,26 +182,6 @@ export default function ExecutionHistory({executionDetail}) {
                     >
                       {formatDate(row.EndDateTime)}
                     </StyledTableCell>
-                    {/* <StyledTableCell
-                      sx={{
-                        color: selectedRunId === row.TestCase ? "white" : "black",
-                      }}
-                    >
-                      <Box
-                        className={classes.statusBox}
-                        sx={{
-                          display: "inline-block",
-                          backgroundColor:
-                            selectedRunId === row.TestCase
-                              ? ""
-                              : row.status == "failed"
-                              ? "#48fab9"
-                              : "#fa3737",
-                        }}
-                      >
-                        {row.Status}
-                      </Box>
-                    </StyledTableCell> */}
                      <CustomStatusCell status={row.Status} selected={selectedRunId === row.TestCase}/>
                     <StyledTableCell
                       sx={{
