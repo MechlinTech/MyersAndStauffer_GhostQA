@@ -35,7 +35,7 @@ export default function TableTestCase({
 }) {
   const navigate = useNavigate();
   const classes = useStyles();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const location = useLocation();
   const testNamefield = useRef();
   const [testCaseData, setTestCaseData] = useState([]);
@@ -50,7 +50,9 @@ export default function TableTestCase({
       );
       // Assuming response.data is the array of data you want to set as listData
       setTestCaseData(response.data == "" ? [] : response.data);
-      dispatch(GetLocationScenarioVUCount(response.data == "" ? [] : response.data))
+      dispatch(
+        GetLocationScenarioVUCount(response.data == "" ? [] : response.data)
+      );
 
       const searchParams = new URLSearchParams(location.search);
       const testId = parseInt(searchParams.get("testid"));
@@ -91,11 +93,11 @@ export default function TableTestCase({
     if (!selectedFile) {
       toast.error("please select file");
       return;
-    }else{
+    } else {
       const fileName = selectedFile.name;
-      const extension = fileName.split('.').pop().toLowerCase();
-      
-      if (extension !== 'jmx') {
+      const extension = fileName.split(".").pop().toLowerCase();
+
+      if (extension !== "jmx") {
         toast.error("Invalid file format. Please select a .jmx file.");
         // Optionally, clear the file input
         // selectedFile(null)
@@ -103,9 +105,9 @@ export default function TableTestCase({
       }
     }
 
-    if(testNamefield.current.value.trim() == ""){
-      toast.error("Scenario name required")
-      return
+    if (testNamefield.current.value.trim() == "") {
+      toast.error("Scenario name required");
+      return;
     }
     const formData = new FormData();
     formData.append("id", 0);
@@ -185,10 +187,17 @@ export default function TableTestCase({
                   display="felx"
                   flexDirection="row"
                   justifyContent="space-between"
+                  p={0}
                 >
-                  <StyledTypography>Scenario</StyledTypography>
-                  <StyledTypography>File Name</StyledTypography>
-                  <StyledTypography>Action</StyledTypography>
+                  <div style={{ width: "33%" }}>
+                    <StyledTypography>Scenario</StyledTypography>
+                  </div>
+                  <div style={{ width: "33%", textAlign: "center" }}>
+                    <StyledTypography>File Name</StyledTypography>
+                  </div>
+                  <div style={{ width: "33%", textAlign: "right" }}>
+                    <StyledTypography>Action</StyledTypography>
+                  </div>
                 </Stack>
               </TableCell>
             </TableRow>
@@ -210,9 +219,7 @@ export default function TableTestCase({
                   }}
                 >
                   <AccordionSummary
-                    expandIcon={
-                      <ExpandMoreIcon/>
-                    }
+                    expandIcon={<ExpandMoreIcon />}
                     style={
                       expandedAccord === item.testCaseName
                         ? selectedAccodStyle
@@ -225,22 +232,34 @@ export default function TableTestCase({
                       flexDirection="row"
                       justifyContent="space-between"
                     >
-                      <StyledTypography align="left">
-                        {item.testCaseName}
-                      </StyledTypography>
-                      <StyledTypography align="center">
+                      <div style={{ width: "33%" }}>
+                        <StyledTypography>
+                          {item.testCaseName}
+                        </StyledTypography>
+                      </div>
+                      <div style={{ width: "33%", textAlign: "center" }}>
+                      <StyledTypography>
                         {truncateFileName(item.fileName, 40)}
                       </StyledTypography>
+                      </div>
+                      <div style={{ width: "33%", textAlign: "right" }}>
                       <DeleteIcon
                         style={{
                           color: "red",
                         }}
                         onClick={(e) => handleDeleteElement(item.id, e)}
                       />
+                      </div>
+
+                      
+                      
                     </Stack>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <DesignTabs PerformanceFileId={item.id} testCaseData={testCaseData}/>
+                    <DesignTabs
+                      PerformanceFileId={item.id}
+                      testCaseData={testCaseData}
+                    />
                   </AccordionDetails>
                 </Accordion>
               </TableCell>
@@ -250,7 +269,7 @@ export default function TableTestCase({
             <TableRow
             // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell colSpan={3} padding="16px 10px">
+              <TableCell colSpan={3}>
                 <Stack
                   width="100%"
                   display="felx"
@@ -258,67 +277,62 @@ export default function TableTestCase({
                   justifyContent="space-between"
                   p={0}
                 >
-                    <div style={{width:'33%'}}>
-                  <input
-                  type="file"
-                  ref={fileInputRef}
-                  style={{ display: "none" }}
-                  accept=".jmx"
-                  onChange={handleFileChange}
-                />
+                  <div style={{ width: "33%" }}>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      style={{ display: "none" }}
+                      accept=".jmx"
+                      onChange={handleFileChange}
+                    />
 
-                <input
-                  type="text"
-                  placeholder="Enter Scenario Name"
-                  ref={testNamefield}
-                  style={{
-                    fontSize: 14,
-                    borderRadius: "4px",
-                    border: "1px solid #654df7",
-                    outline: "none",
-                    padding: "6px",
-                  }}
-                  required
-                />
+                    <input
+                      type="text"
+                      placeholder="Enter Scenario Name"
+                      ref={testNamefield}
+                      style={{
+                        fontSize: 14,
+                        borderRadius: "4px",
+                        border: "1px solid #654df7",
+                        outline: "none",
+                        padding: "6px",
+                      }}
+                      required
+                    />
                   </div>
-                  <div style={{width:'33%',textAlign:'center'}}>
-                
-                <Button
-                onClick={handleButtonClick}
-                  style={{
-                    backgroundColor: "rgb(101, 77, 247)",
-                    color: "#ffffff",
-                    cursor: "pointer",
-                    textTransform: "toLowerCase",
-                  }}
-                >
-                  <StyledTypography style={{ textTransform: "none" }}>
-                    {selectedFile ? `${selectedFile.name}` : "Choose file"}
-                  </StyledTypography>
-                </Button>
-                </div>
-                
-                  <div style={{width:'33.3%', textAlign:'right'}}>
-                  <Button
-                  style={{
-                    
-                    fontSize: 14,
-                    backgroundColor: !selectedFile
-                      ? "rgba(101, 77, 247, 0.5)"
-                      : "rgb(101, 77, 247)",
-                    color: "#ffffff",
-                    cursor: !selectedFile ? "not-allowed" : "pointer",
-                    textTransform: "none",
-                  }}
-                  disabled={!selectedFile}
-                  onClick={handleFileSaving}
-                >
-                  Save
-                </Button>
-                </div>
-                
-                
-               
+                  <div style={{ width: "33%", textAlign: "center" }}>
+                    <Button
+                      onClick={handleButtonClick}
+                      style={{
+                        backgroundColor: "rgb(101, 77, 247)",
+                        color: "#ffffff",
+                        cursor: "pointer",
+                        textTransform: "toLowerCase",
+                      }}
+                    >
+                      <StyledTypography style={{ textTransform: "none" }}>
+                        {selectedFile ? `${selectedFile.name}` : "Choose file"}
+                      </StyledTypography>
+                    </Button>
+                  </div>
+
+                  <div style={{ width: "33.3%", textAlign: "right" }}>
+                    <Button
+                      style={{
+                        fontSize: 14,
+                        backgroundColor: !selectedFile
+                          ? "rgba(101, 77, 247, 0.5)"
+                          : "rgb(101, 77, 247)",
+                        color: "#ffffff",
+                        cursor: !selectedFile ? "not-allowed" : "pointer",
+                        textTransform: "none",
+                      }}
+                      disabled={!selectedFile}
+                      onClick={handleFileSaving}
+                    >
+                      Save
+                    </Button>
+                  </div>
                 </Stack>
               </TableCell>
             </TableRow>

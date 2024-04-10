@@ -160,7 +160,7 @@ export default function Design({ rootId }) {
         dispatch(setExecuteJMXData(response.data));
         // Navigate to the desired page after API response
         navigate(`/result/${rootId}/Design/summary`);
-        getRunDetail(response.data, clientId, 2000);
+        getRunDetail(response.data, clientId, 7000);
       } else {
         toast.warn(
           "Total Users, Duration, Ramp-up Time, or Ramp-up Steps cannot be zero. Unable to proceed."

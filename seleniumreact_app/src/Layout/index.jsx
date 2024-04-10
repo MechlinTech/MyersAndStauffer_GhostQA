@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -45,9 +45,31 @@ export default function MiniDrawer() {
     const name = email.substring(0, i);
     return name.charAt(0).toUpperCase() + name.slice(1);
   };
+  // useEffect(()=>{
+  //   const expiry = JSON.parse(sessionStorage.getItem("tokenExpiry"))
+  //   const expiryTime =  new Date(expiry?.expiration).getTime();
+  //   console.log('expiry time',expiryTime)
+  //   const checkTokenExpiry = () => {
+  //     const currentTime =new Date().getTime();
+  //     console.log(currentTime)
+  //   console.log('expiry time',expiryTime)
+
+  //     if (expiryTime && currentTime > expiryTime) {
+  //       // Token has expired, initiate logout
+  //       console.log("current time",currentTime)
+  //       handleLogout()
+  //     }else{
+  //       console.log('not expired')
+  //     }
+  //   };
+
+  //   const interval = setInterval(checkTokenExpiry, 1000); // Check every second
+  //   return () => clearInterval(interval);
+  // })
   const handleLogout = () => {
     dispatch(logout());
     sessionStorage.removeItem("userData");
+    sessionStorage.removeItem("tokenExpiry");
     navigate("/");
   };
   const handleMouseOver = () => {
