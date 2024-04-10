@@ -32,7 +32,7 @@ import { getBaseUrl } from "../../../../utils/configService";
 export default function EditTestCase() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { testCaseName, testId } = useParams();
+  const { testId } = useParams();
   const [steps, setSteps] = useState([]);
   const [executionDetail, setexecutionDetail] = useState(null);
   const [testCaseTitle, settestCaseTitle] = useState("");
@@ -172,7 +172,7 @@ export default function EditTestCase() {
     setErrors(errors);
     let titleError = "";
     let urlError = "";
-    if (!testCaseTitle.trim()|| urlPattern.test(testCaseTitle.trim())) {
+    if (!testCaseTitle.trim()) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
       toast.error("Enter valid title")

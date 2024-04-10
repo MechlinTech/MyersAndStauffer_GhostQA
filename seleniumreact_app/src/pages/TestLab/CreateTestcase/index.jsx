@@ -56,7 +56,6 @@ export default function CreateTestCase() {
 
   const handleSave = () => {
     const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-    // const urlPattern =/^(?!.*(?:https?:\/\/|www\.)).*$/
     console.log("final steps,", steps);
     let payload = {
       testCaseName: testCaseTitle,
@@ -138,7 +137,7 @@ export default function CreateTestCase() {
     setErrors(errors);
     let titleError = "";
     let urlError = "";
-    if (!testCaseTitle.trim() || urlPattern.test(testCaseTitle.trim())) {
+    if (!testCaseTitle.trim()) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
       toast.error("Enter valid title")
