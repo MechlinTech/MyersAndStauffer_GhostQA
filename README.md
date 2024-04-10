@@ -22,10 +22,7 @@
         ```powershell
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ghost-QA/GhostQA/main/deploy.ps1" -OutFile "deploy.sh"; ./deploy.ps1
         ```
-        In case above does not work it seems ExecutionPolicy is restriced you can bypass the -ExecutionPolicy
-        ```powershell
-        powershell -ExecutionPolicy Bypass -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/Ghost-QA/GhostQA/main/deploy.ps1', '.\deploy.ps1'); .\deploy.ps1"
-        ```
+
         Ubuntu
         ```sh
         wget -O - https://raw.githubusercontent.com/Ghost-QA/GhostQA/main/deploy.sh | bash
@@ -59,7 +56,10 @@ system. For more information, see about_Execution_Policies at https:/go.microsof
     ```powershell
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force; Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ghost-QA/GhostQA/main/deploy.ps1" -OutFile "deploy.ps1"; .\deploy.ps1; Set-ExecutionPolicy -ExecutionPolicy Default -Scope Process -Force
     ```
-
+    In case above does not work it seems ExecutionPolicy is restriced you can bypass the -ExecutionPolicy
+    ```powershell
+    powershell -ExecutionPolicy Bypass -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/Ghost-QA/GhostQA/main/deploy.ps1', '.\deploy.ps1'); .\deploy.ps1"
+    ```
     This command sets the execution policy to `RemoteSigned`, downloads and executes the script, and then resets the execution policy back to its default value.
 
 2. **Long-Term Execution Policy Change (Optional)**: If you anticipate running scripts frequently, consider permanently changing the execution policy. However, be cautious as this may pose security risks. You can change the execution policy using the following command:
