@@ -206,7 +206,7 @@ PROC EXEC		:  EXEC stp_AddProjectRootRelation
 				
 **************************************************************************************/
 BEGIN TRY
-   IF EXISTS( SELECT 1 FROM tbl_ProjectRootRelation WHERE [Name] = @Name)
+   IF EXISTS( SELECT 1 FROM tbl_ProjectRootRelation WHERE [ParentId] = @ParentId AND [Name] = @Name)
 	BEGIN
 		SELECT [result] = JSON_QUERY((
 			SELECT 'fail' [status], 'Duplicate Work Space Name' [message]
@@ -485,28 +485,28 @@ BEGIN TRY
 			OPENJSON(@AddStepsJson, '$.actions') 
 			WITH (
 				[action] NVARCHAR(50) '$.action',
-				[stepDescription] NVARCHAR(50) '$.stepDescription',
+				[stepDescription] NVARCHAR(MAX) '$.stepDescription',
 				[isOptional] bit '$.isOptional',
-				[selectorType] NVARCHAR(50) '$.selectorType',
-				[selectorValue] NVARCHAR(50) '$.selectorValue',
-				[sendKeyInput] NVARCHAR(50) '$.sendKeyInput',
-				[scrollPixel] NVARCHAR(50) '$.scrollPixel',
-				[url] NVARCHAR(50) '$.url',
-				[selectedUser] NVARCHAR(50) '$.selectedUser',
-				[fileName] NVARCHAR(50) '$.fileName',
-				[elementValue] NVARCHAR(50) '$.elementValue',
-				[cssValue] NVARCHAR(50) '$.cssValue',
-				[cssProperty] NVARCHAR(50) '$.cssProperty',
-				[pageTitle] NVARCHAR(50) '$.pageTitle',
-				[currentUrl] NVARCHAR(50) '$.currentUrl',
-				[shouldNotEqualValue] NVARCHAR(50) '$.shouldNotEqualValue',
-				[shouldIncludeValue] NVARCHAR(50) '$.shouldIncludeValue',
-				[shouldEqualValue] NVARCHAR(50) '$.shouldEqualValue',
-				[shouldGreaterThanValue] NVARCHAR(50) '$.shouldGreaterThanValue',
-				[shouldLessValue] NVARCHAR(50) '$.shouldLessValue',
-				[containTextValue] NVARCHAR(50) '$.containTextValue',
-				[haveAttributeValue] NVARCHAR(50) '$.haveAttributeValue',
-				[textValue] NVARCHAR(50) '$.textValue'
+				[selectorType] NVARCHAR(MAX) '$.selectorType',
+				[selectorValue] NVARCHAR(MAX) '$.selectorValue',
+				[sendKeyInput] NVARCHAR(MAX) '$.sendKeyInput',
+				[scrollPixel] NVARCHAR(MAX) '$.scrollPixel',
+				[url] NVARCHAR(MAX) '$.url',
+				[selectedUser] NVARCHAR(MAX) '$.selectedUser',
+				[fileName] NVARCHAR(MAX) '$.fileName',
+				[elementValue] NVARCHAR(MAX) '$.elementValue',
+				[cssValue] NVARCHAR(MAX) '$.cssValue',
+				[cssProperty] NVARCHAR(MAX) '$.cssProperty',
+				[pageTitle] NVARCHAR(MAX) '$.pageTitle',
+				[currentUrl] NVARCHAR(MAX) '$.currentUrl',
+				[shouldNotEqualValue] NVARCHAR(MAX) '$.shouldNotEqualValue',
+				[shouldIncludeValue] NVARCHAR(MAX) '$.shouldIncludeValue',
+				[shouldEqualValue] NVARCHAR(MAX) '$.shouldEqualValue',
+				[shouldGreaterThanValue] NVARCHAR(MAX) '$.shouldGreaterThanValue',
+				[shouldLessValue] NVARCHAR(MAX) '$.shouldLessValue',
+				[containTextValue] NVARCHAR(MAX) '$.containTextValue',
+				[haveAttributeValue] NVARCHAR(MAX) '$.haveAttributeValue',
+				[textValue] NVARCHAR(MAX) '$.textValue'
 			) AS act;
 		IF @@ERROR = 0
 		BEGIN
@@ -2898,6 +2898,7 @@ BEGIN TRY
 			[Email],
 			ISNULL([IsDisabled], 'false') [IsDisabled]
 		FROM [dbo].[AspNetUsers]
+		ORDER BY [UserName]
 		FOR JSON PATH
 	))
 END TRY

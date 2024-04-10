@@ -2347,13 +2347,29 @@ namespace SeleniumReportAPI.Helper
             List<dynamic> results = new List<dynamic>();
             foreach (var t in jsonData.results[0].suites[0].tests)
             {
-                var addJsonData = new
+                results.Add(new
                 {
                     Status = t.state,
                     Duration = duration,
                     stepName = t.title
-                };
-                results.Add(addJsonData);
+                });
+
+                if (t.state == "failed")
+                {
+                    results.Add(new
+                    {
+                        Status = t.state,
+                        Duration = duration,
+                        stepName = t.err.message
+                    });
+
+                    results.Add(new
+                    {
+                        Status = t.state,
+                        Duration = duration,
+                        stepName = t.err.estack
+                    });
+                }
             }
 
             using (SqlConnection connection = new SqlConnection(GetConnectionString()))

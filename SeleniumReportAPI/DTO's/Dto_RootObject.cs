@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace SeleniumReportAPI.DTO_s
+﻿namespace SeleniumReportAPI.DTO_s
 {
     public class TestStep
     {
@@ -16,7 +13,7 @@ namespace SeleniumReportAPI.DTO_s
         public bool pending { get; set; }
         public object context { get; set; }
         public string code { get; set; }
-        public object err { get; set; }
+        public Err err { get; set; }
         public string uuid { get; set; }
         public string parentUUID { get; set; }
         public bool isHook { get; set; }
@@ -87,10 +84,12 @@ namespace SeleniumReportAPI.DTO_s
         public int suite { get; set; }
     }
 
-    //public class JsonData
-    //{
-    //    public JObject Test { get; set; }
-    //}
+    public class Err
+    {
+        public object diff { get; set; }
+        public string estack { get; set; }
+        public string message { get; set; }
+    }
     public class JsonOption
     {
         public Stats stats { get; set; }

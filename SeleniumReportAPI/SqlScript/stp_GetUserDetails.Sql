@@ -16,6 +16,7 @@ BEGIN TRY
 			[Email],
 			ISNULL([IsDisabled], 'false') [IsDisabled]
 		FROM [dbo].[AspNetUsers]
+		ORDER BY [UserName]
 		FOR JSON PATH
 	))
 END TRY

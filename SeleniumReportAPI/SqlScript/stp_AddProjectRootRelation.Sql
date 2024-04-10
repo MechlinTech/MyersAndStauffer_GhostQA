@@ -12,6 +12,14 @@ PROC EXEC		:  EXEC stp_AddProjectRootRelation
 				
 **************************************************************************************/
 BEGIN TRY
+   IF EXISTS( SELECT 1 FROM tbl_ProjectRootRelation WHERE [ParentId] = @ParentId AND [Name] = @Name)
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'Duplicate Work Space Name' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	ELSE
 	BEGIN
 		INSERT INTO [dbo].[tbl_ProjectRootRelation] ([ParentId], [Name]) 
 		VALUES (@ParentId, @Name)
