@@ -984,74 +984,74 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        public  object SendEmail(string toEmail, string Mailtype)
+        public object SendEmail(string toEmail, string Mailtype)
         {
             if (!IsValidEmail(toEmail))
             {
                 return new { message = "Invalid email address format." };
             }
+
             string result = string.Empty;
             var BodyString = string.Empty;
-            var apiKey = _configuration["EmailDetails:apiKey"];
             var fromEmail = _configuration["EmailDetails:EmailUsername"];
+            var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
             var hostName = _configuration["EmailDetails:EmailHost"];
             var subject = "Invitation to Join Our Platform";
             var invitationUrl = _configuration["InvitationUrl:AcceptInvite"];
             var changePassUrl = _configuration["InvitationUrl:ChangePassword"];
-            var user =  GetProfilByEmail(toEmail);
+            var user = GetProfilByEmail(toEmail);
+            var passWord = _configuration["EmailDetails:EmailPassword"];
+            var port = Convert.ToInt32(_configuration["EmailDetails:Port"]);
             if (Mailtype.Equals("Invitation"))
             {
                 BodyString = @"<!DOCTYPE html>
-                            <html lang=""en"">
-                            <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
-
-                            <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" width=""600"">
-                              <tr>
+                                <html lang=""en"">
+                                <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
+                                <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" width=""600"">
+                                <tr>
                                 <td style=""padding: 20px 0; text-align: center;"">
-                                  <h2 style=""color: #654DF7;"">You're Invited! Join Ghost-QA Plateform 🎉</h2>
+                                <h2 style=""color: #654DF7;"">You're Invited! Join Ghost-QA Platform 🎉</h2>
                                 </td>
-                              </tr>
-                              <tr>
+                                </tr>
+                                <tr>
                                 <td style=""padding: 20px 0;"">
-                                  <p>You're Invited! Join the GhostQA Platform 🎉<p>
-                                  <p>Dear [" + toEmail.ToUpper() + @"],</p>
-                                  <p>We are thrilled to invite you to join GhostQA Plateform! 🌟</p>
-                                  <p>To accept your invitation and immerse yourself in the QA adventure, simply click the button below:</p>
-                                  <p><a href=""" + invitationUrl + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">View Invitation</a></p>
+                                <p>You're Invited! Join the GhostQA Platform 🎉<p>
+                                <p>Dear [" + toEmail.ToUpper() + @"],</p>
+                                <p>We are thrilled to invite you to join GhostQA Platform! 🌟</p>
+                                <p>To accept your invitation and immerse yourself in the QA adventure, simply click the button below:</p>
+                                <p><a href=""" + invitationUrl + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">View Invitation</a></p>
                                 </td>
-                              </tr>
-                            </table>
-                            </body>
-                            </html>";
+                                </tr>
+                                </table>
+                                </body>
+                                </html>";
             }
             else
             {
-                BodyString = Mailtype.Equals("Accept")
-                    ? @"<!DOCTYPE html>
-                            <html lang=""en"">
-                            <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
-
-                            <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" width=""600"">
-                              <tr>
-                                <td style=""padding: 20px 0; text-align: center;"">
-                                <h2 style=""color: #654DF7;""> Welcome Ghost - QA Plateform 🎉</h2>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td style=""padding: 20px 0;"">
-                                  <p>Dear [" + toEmail.ToUpper() + @"""],</p>
-                                  <p> We are exited to serve you our Ghost - QA Plateform services! 🌟</p>
-                                  <p> Thank you for accepting invitation here is your temprory password:</p>
-                                  <em><b> Password: </b> Test@123 </em>
-                                  <p> If you want to change your password follow below link </p>
-                                  <p><a href=""" + changePassUrl + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
-                                </td>
-                              </tr>
-                            </table>
-                            </body>
-                            </html>"
-                    : "";
+                BodyString = Mailtype.Equals("Accept") ? @"<!DOCTYPE html>
+                                                            <html lang=""en"">
+                                                            <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
+                                                            <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0""    width=""600"">
+                                                            <tr>
+                                                            <td style=""padding: 20px 0; text-align: center;"">
+                                                            <h2 style=""color: #654DF7;"">Welcome to Ghost - QA Platform 🎉</h2>
+                                                            </td>
+                                                            </tr>
+                                                            <tr>
+                                                            <td style=""padding: 20px 0;"">
+                                                            <p>Dear [" + toEmail.ToUpper() + @"""],</p>
+                                                            <p>We are excited to serve you our Ghost - QA Platform services! 🌟</p>
+                                                            <p>Thank you for accepting the invitation here is your temporary password:</p>
+                                                            <em><b>Password: </b> Test@123</em>
+                                                            <p>If you want to change your password follow the link below</p>
+                                                            <p><a href=""" + changePassUrl + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
+                                                            </td>
+                                                            </tr>
+                                                            </table>
+                                                            </body>
+                                                            </html>" : "";
             }
+
             if (Mailtype.Equals("Invitation") && !string.IsNullOrEmpty(user.Result))
             {
                 return new
@@ -1060,19 +1060,23 @@ namespace SeleniumReportAPI.Helper
                     message = "User Already Exist"
                 };
             }
+
             var smtpClient = new SmtpClient(hostName)
             {
-                Port = 587,
-                Credentials = new NetworkCredential("apikey", apiKey),
+                Port = port,
+                Credentials = new NetworkCredential(fromEmail, passWord),
                 EnableSsl = true,
             };
 
-            var mailMessage = new MailMessage(fromEmail, toEmail)
+            var fromEmailAddress = new MailAddress(fromEmail, senderDisplayName);
+            var mailMessage = new MailMessage()
             {
+                From = fromEmailAddress,
                 Subject = subject,
                 IsBodyHtml = true,
                 Body = BodyString
             };
+            mailMessage.To.Add(toEmail);
 
             try
             {
@@ -1084,12 +1088,12 @@ namespace SeleniumReportAPI.Helper
             {
                 throw ex;
             }
+
             return new
             {
                 status = "Success",
                 message = result
             };
-
         }
 
         public async Task<object> AcceptInvitation(string Email)
