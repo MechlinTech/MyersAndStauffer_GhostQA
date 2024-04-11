@@ -177,7 +177,7 @@ export default function AddTestSuite() {
     setSelectedRows(checked ? testCasesList : []);
   };
 
-  const filteredTestCaseData = testCasesList.filter((data) =>
+  const filteredTestCaseData = testCasesList?.filter((data) =>
     data?.TestCaseName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
 

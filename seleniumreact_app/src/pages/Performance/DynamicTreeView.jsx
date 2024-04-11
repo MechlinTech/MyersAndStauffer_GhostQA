@@ -293,7 +293,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
     }
   }, [params]);
 
-  console.log("selectedNodeId", params);
+  // console.log("selectedNodeId", params);
   useEffect(() => {
     const fetchData = async () => {
       try {

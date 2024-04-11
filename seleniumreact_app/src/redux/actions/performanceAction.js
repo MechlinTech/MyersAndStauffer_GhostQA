@@ -8,6 +8,12 @@ export const RESET_USER_COUNT = "RESET_USER_COUNT";
 export const RESET_LOC_COUNT = "RESET_LOC_COUNT";
 export const SCENARIO_COUNT = "SCENARIO_COUNT";
 export const IS_USER_OR_DURATION_ZERO = "IS_USER_OR_DURATION_ZERO";
+
+export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST';
+export const FETCH_DATA_SUCCESS = 'FETCH_DATA_SUCCESS';
+export const FETCH_DATA_FAILURE = 'FETCH_DATA_FAILURE';
+export const SET_SCENARIO_ID = "SET_SCENARIO_ID"
+export const SET_SCENARIOS = "SET_SCENARIOS"
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
@@ -156,5 +162,64 @@ export const ResetLocationScenarioVUCount = ()=>{
       type: RESET_LOC_COUNT,
       payload: 0,
     });
+  };
+};
+
+export const GetLocationData = (PerformanceFileId) => {
+  return async (dispatch) => {
+    dispatch({ type: FETCH_DATA_REQUEST });
+
+    try {
+      const BASE_URL = await getBaseUrl(); // Assuming getBaseUrl() is a function to get the base URL
+      const response = await axios.get(
+        `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
+        header()
+      );
+      const loadRes = await axios.get(
+        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
+        header()
+      );
+      const loadData = loadRes.data;
+      const resData = response.data;
+
+      let totalUsers = 0;
+      let totalTraficPercent = 0;
+      let locationData = [];
+      
+      if (Array.isArray(loadData)) {
+        totalUsers = loadData[0].TotalUsers;
+        if (Array.isArray(resData)) {
+          console.log('inside array')
+          locationData = resData;
+          totalTraficPercent = resData.reduce((sum, data) => sum + data?.PercentageTraffic, 0);
+        }
+      }else{
+        toast.error("First add user for this scenario")
+      }
+      dispatch({
+        type: FETCH_DATA_SUCCESS,
+        payload: { totalUsers, totalTraficPercent, locationData }
+      });
+    } catch (error) {
+      dispatch({
+        type: FETCH_DATA_FAILURE,
+        payload: { error: error.message }
+      });
+    }
+  };
+};
+
+export const setScenarioId = (id) => {
+  console.log('scenario id in action',id)
+  return {
+    type: SET_SCENARIO_ID,
+    payload: id,
+  };
+};
+
+export const setScenarios = (testList) => {
+  return {
+    type: SET_SCENARIOS,
+    payload: testList,
   };
 };

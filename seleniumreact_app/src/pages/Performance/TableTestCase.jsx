@@ -24,7 +24,7 @@ import { toast } from "react-toastify";
 import { getBaseUrl } from "../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 import { useDispatch } from "react-redux";
-import { GetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
+import { GetLocationScenarioVUCount, setScenarioId, setScenarios } from "../../redux/actions/performanceAction";
 
 export default function TableTestCase({
   testCase,
@@ -39,7 +39,7 @@ export default function TableTestCase({
   const location = useLocation();
   const testNamefield = useRef();
   const [testCaseData, setTestCaseData] = useState([]);
-  console.log("testCaseData", testCaseData);
+  // console.log("testCaseData", testCaseData);
   const [expandedAccord, setExpandedAccord] = useState("");
   const fetchData = async () => {
     try {
@@ -53,6 +53,7 @@ export default function TableTestCase({
       dispatch(
         GetLocationScenarioVUCount(response.data == "" ? [] : response.data)
       );
+      dispatch(setScenarios(response.data == "" ? [] : response.data))
 
       const searchParams = new URLSearchParams(location.search);
       const testId = parseInt(searchParams.get("testid"));
@@ -207,10 +208,11 @@ export default function TableTestCase({
         <TableBody>
           {testCaseData?.map((item, index) => (
             <TableRow key={index}>
-              <TableCell colSpan={3} style={{ padding: "0px" }}>
+              <TableCell colSpan={3} style={{ padding: "0px" }} onClick={()=>dispatch(setScenarioId(item.id))}>
                 <Accordion
                   expanded={expandedAccord === item.testCaseName}
-                  onChange={handleExpandAccord(item.testCaseName)}
+                  onChange={
+                    handleExpandAccord(item.testCaseName)}
                   sx={{
                     boxShadow: "none",
                     paddingLeft: "0px",

@@ -5,6 +5,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import {CircularProgress } from "@material-ui/core";
 import Paper from "@mui/material/Paper";
 import { useStyles } from "../../styles";
 import Button from "@mui/material/Button";
@@ -15,11 +16,11 @@ import axios from "axios";
 import { header } from "../../../../utils/authheader";
 import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
-import { useDispatch } from "react-redux";
 import { GetLocationScenarioVUCount } from "../../../../redux/actions/performanceAction";
 import { getBaseUrl } from "../../../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
-
+import { useDispatch, useSelector } from "react-redux";
+import { GetLocationData } from "../../../../redux/actions/performanceAction";
 
 const data = [
   {
@@ -31,127 +32,54 @@ const data = [
     label: "Mumbai India",
   },
 ];
-export default function LocationPanel({ PerformanceFileId }) {
+export default function LocationPanel() {
   const classes = useStyles();
-  const dispatch = useDispatch()
-  const [locationData, setLocationData] = useState([]);
-  const [formData, setFormData] = useState({
-    selectedLocation: null,
-  });
+  const dispatch = useDispatch();
   const [valueLocation, setValueLocation] = useState(data);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [trafficPercentage, settrafficPercentage] = useState(0);
-  const [totalTraficPercent, settotalTraficPercent] = useState(0);
   const [noOfUser, setnoOfUser] = useState(0);
   const [addLocation, setAddLocation] = useState(false);
-  const [totalUsers, settotalUsers] = useState(0);
-  const [designTabsActive, setDesignTabsActive] = useState(false);
-  const fetchData = async () => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const response = await axios.get(
-        `${BASE_URL}/Performance/GetLocationByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
-        header()
-      );
-      const loadRes = await axios.get(
-        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
-        header()
-      );
-      const loadData = loadRes.data;
-      const resData = response.data;
-      if (Array.isArray(loadData)) {
-        settotalUsers(loadData[0].TotalUsers);
-        if (Array.isArray(resData)) {
-          settotalTraficPercent(resData.reduce((sum,data)=>{return sum+data.PercentageTraffic},0))
-          setLocationData(resData);
-        } else setLocationData([]);
-      } else settotalUsers(0);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+
+  const {
+    totalUsers,
+    totalTrafficPercent,
+    locations,
+    error,
+    isLoading,
+    scenarioId,
+    scenarios,
+  } = useSelector((state) => state.performance);
+  const [locationData, setLocationData] = useState(locations);
 
   useEffect(() => {
-    fetchData();
-  }, []);
-  const handleActiveTabs = () => {
-    setDesignTabsActive(!designTabsActive);
-  };
+    dispatch(GetLocationData(scenarioId));
+    setLocationData(locations);
+    console.log("scenarioId",scenarioId)
+    console.log("locations",locations)
+  }, [scenarioId]);
+  console.log("locations",locations)
+
+  useEffect(() => {
+    setLocationData(locations);
+  }, [locations]);
+  //this one for adding the location
   const handleFieldChange = (fieldName, fieldInput) => {
     if (fieldName === "selectedLocation") setSelectedLocation(fieldInput);
-    else if (fieldName === "noOfUser") {
-      setnoOfUser(fieldInput.target.value);
-    } else {
-      settrafficPercentage(fieldInput.target.value);
-    }
-  };
-
-  const handleLocationFieldChange = (event, id, type) => {
-    if (type === "percentage") {
-      const updateLocationData = locationData.map((data) =>
-        data.Id !== id
-          ? data
-          : { ...data, PercentageTraffic: event.target.value }
-      );
-      setLocationData(updateLocationData);
-    } else {
-      const updateLocationData = locationData.map((data) =>
-        data.Id !== id ? data : { ...data, Name: event?.value }
-      );
-      setLocationData(updateLocationData);
-    }
-  };
-
-  const handleLocationUpdate = async(event,id) => {
-    if (event.key === "Enter") {
-      let totalPercent = locationData.reduce((sum, data) => {
-        return sum + parseInt(data.PercentageTraffic, 10);
-      }, 0);
-      settotalTraficPercent(totalPercent);
-      if (totalPercent !== 100) {
-        toast.error("Total percentage should be 100");
-        return;
-      }
-
-      const locationToUpdate = locationData.find(data=>data.Id === id)
-      if(!locationToUpdate.Name)
-      {
-        toast.error('Please select location')
-        return
-      }else{
-        
-        try {
-          const BASE_URL = await getBaseUrl();
-          const res =await axios.post(
-            `${BASE_URL}/Performance/UpdateLoaction`,
-            locationToUpdate,
-            header()
-          );
-          if (res.data.status === "success") {
-            toast.info("Successfully saved", {
-              style: {
-                background: "rgb(101, 77, 247)",
-                color: "rgb(255, 255, 255)",
-              },
-            });
-    
-            // Update propertyList after successful submission
-            fetchData();
-          }
-        } catch (error) {
-          console.log("error saving ", error);
-          toast.error("Network error");
-        }
-      }
+    else {
+      const traffic = fieldInput.target.value;
+      settrafficPercentage(traffic);
+      setnoOfUser((totalUsers / 100) * traffic);
     }
   };
   const handleKeyPress = (event) => {
-    let totalPercent = locationData.reduce((sum, data) => {
-      return sum + parseInt(data.PercentageTraffic, 10);
-    }, 0);
+    let totalPercent = 0;
+    totalPercent =
+      locations &&
+      locations?.reduce((sum, data) => {
+        return sum + parseInt(data.PercentageTraffic, 10);
+      }, 0);
     totalPercent += parseInt(trafficPercentage ? trafficPercentage : 0);
-    settotalTraficPercent(totalPercent);
-    console.log("total percent", totalPercent);
     if (event.key === "Enter") {
       // Submit form or take action
       if (!selectedLocation) {
@@ -164,7 +92,7 @@ export default function LocationPanel({ PerformanceFileId }) {
       }
       let payload = {
         id: 0,
-        performanceFileId: PerformanceFileId,
+        performanceFileId: scenarioId,
         name: selectedLocation?.value,
         numberUser: noOfUser,
         percentageTraffic: trafficPercentage,
@@ -172,7 +100,7 @@ export default function LocationPanel({ PerformanceFileId }) {
       submitLocation(payload);
     }
   };
-
+  // when condition satisfy, following function will add location
   const submitLocation = async (payload) => {
     try {
       const BASE_URL = await getBaseUrl();
@@ -191,8 +119,10 @@ export default function LocationPanel({ PerformanceFileId }) {
         });
 
         // Update propertyList after successful submission
-        fetchData();
-        dispatch(GetLocationScenarioVUCount(PerformanceFileId))
+        dispatch(GetLocationData(scenarioId));
+    setLocationData(locations);
+
+        dispatch(GetLocationScenarioVUCount(scenarios));
         setSelectedLocation(null);
         setnoOfUser(0);
         settrafficPercentage(0);
@@ -202,6 +132,67 @@ export default function LocationPanel({ PerformanceFileId }) {
     } catch (error) {
       console.log("error saving ", error);
       toast.error("Network error");
+    }
+  };
+
+  // this one for updating the location
+  const handleLocationFieldChange = (event, id, type) => {
+    if (type === "percentage") {
+      const updateLocationData = locationData.map((data) =>
+        data.Id !== id
+          ? data
+          : { ...data, PercentageTraffic: event.target.value }
+      );
+      setLocationData(updateLocationData);
+    } else {
+      const updateLocationData = locationData.map((data) =>
+        data.Id !== id ? data : { ...data, Name: event?.value }
+      );
+      setLocationData(updateLocationData);
+    }
+  };
+
+  const handleLocationUpdate = async (event, id) => {
+    if (event.key === "Enter") {
+      const locationToUpdate = locationData.find((data) => data.Id === id);
+      let totalPercent = locations.reduce((sum, data) => {
+        if (data.Id === id)
+          return sum + parseInt(locationToUpdate?.PercentageTraffic, 10);
+        else return sum + parseInt(data.PercentageTraffic, 10);
+      }, 0);
+      if (totalPercent !== 100) {
+        toast.error("Total percentage should be 100");
+        return;
+      }
+
+      if (!locationToUpdate.Name) {
+        toast.error("Please select location");
+        return;
+      } else {
+        try {
+          const BASE_URL = await getBaseUrl();
+          const res = await axios.post(
+            `${BASE_URL}/Performance/UpdateLoaction`,
+            locationToUpdate,
+            header()
+          );
+          if (res.data.status === "success") {
+            toast.info("Successfully saved", {
+              style: {
+                background: "rgb(101, 77, 247)",
+                color: "rgb(255, 255, 255)",
+              },
+            });
+
+            // Update propertyList after successful submission
+            // fetchData();
+            dispatch(GetLocationData(scenarioId));
+          }
+        } catch (error) {
+          console.log("error saving ", error);
+          toast.error("Network error");
+        }
+      }
     }
   };
 
@@ -222,7 +213,8 @@ export default function LocationPanel({ PerformanceFileId }) {
         });
 
         // Update propertyList after successful deletion
-        fetchData();
+        dispatch(GetLocationData(scenarioId));
+        dispatch(GetLocationScenarioVUCount(scenarios));
       }
     } catch (error) {
       console.log("error deleting ", error);
@@ -272,8 +264,18 @@ export default function LocationPanel({ PerformanceFileId }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {locationData?.map((item) => {
-              return (
+            {isLoading ? (
+              
+              <TableRow>
+                <TableCell colSpan={3} style={{textAlign:'center'}}>
+                <CircularProgress
+                    style={{ color: "rgb(101, 77, 247)" }}
+                    size={25}
+                  />
+                </TableCell>
+              </TableRow>
+            ) : locationData && locationData.length > 0 ? (
+              locationData.map((item) => (
                 <TableRow
                   key={item.Id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -298,7 +300,7 @@ export default function LocationPanel({ PerformanceFileId }) {
                       onChange={(e) =>
                         handleLocationFieldChange(e, item.Id, "percentage")
                       }
-                      onKeyDown={(e)=>handleLocationUpdate(e,item.Id)}
+                      onKeyDown={(e) => handleLocationUpdate(e, item.Id)}
                     />
                   </TableCell>
 
@@ -316,8 +318,15 @@ export default function LocationPanel({ PerformanceFileId }) {
                     />
                   </TableCell>
                 </TableRow>
-              );
-            })}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={3} style={{textAlign:'center'}}>
+                <StyledTypography>No location</StyledTypography>
+                </TableCell>
+              </TableRow>
+            )}
+
             {addLocation && (
               <TableRow
                 key={"a"}
@@ -347,19 +356,17 @@ export default function LocationPanel({ PerformanceFileId }) {
                 </TableCell>
 
                 <TableCell align="center" style={{ width: "20%" }}>
-                  <StyledTypography>
-                    {(totalUsers / 100) * trafficPercentage}
-                  </StyledTypography>
+                  <StyledTypography>{noOfUser}</StyledTypography>
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
-        {totalTraficPercent !== 100 && (
+        {/* {totalTraficPercent !== 100 && (
           <StyledTypography color="error" textAlign="right" m={3}>
             Total traffic percentage should be 100 *
           </StyledTypography>
-        )}
+        )} */}
       </TableContainer>
     </>
   );

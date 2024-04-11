@@ -17,7 +17,7 @@ import axios from "axios";
 import { header } from "../../utils/authheader";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
-import { GetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
+import { GetLocationScenarioVUCount, setScenarios } from "../../redux/actions/performanceAction";
 import {
   setIsRunning,
   addExecuterData,
@@ -34,11 +34,11 @@ export default function Design({ rootId }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { isRunning, runningRootId,runningTestSuite } = useSelector((state) => state.result);
-  const { virtualUser, totalLocation,isTotalUserOrDurationZero } = useSelector(
+  const { virtualUser, totalLocation,isTotalUserOrDurationZero,scenarios } = useSelector(
     (state) => state.performance
   );
   const navigate = useNavigate();
-  console.log('is user ',isTotalUserOrDurationZero)
+  // console.log('is user ',isTotalUserOrDurationZero)
   // const [locationCount, setlocationCount] = useState(totalLocation);
   const [scenarioCount, setscenarioCount] = useState(0);
   const [showAddNewElement, setShowAddNewElement] = useState(true);
@@ -71,7 +71,7 @@ export default function Design({ rootId }) {
       if (Array.isArray(testList)) {
         setscenarioCount(testList.length);
         dispatch(GetLocationScenarioVUCount(testList));
-
+        dispatch(setScenarios(testList))
         // testList.map((test) => {
         //   dispatch(GetLocationScenarioVUCount(test.id));
         //   // getCounts(test.id);
@@ -79,6 +79,8 @@ export default function Design({ rootId }) {
       } else {
         // setlocationCount(0);
         setscenarioCount(0);
+        dispatch(setScenarios([]))
+
         // setuvCount(0);
       }
       setisScnerioCountRunning(false);
@@ -174,7 +176,7 @@ export default function Design({ rootId }) {
     }
   };
 
-  console.log("scenarioCount", scenarioCount);
+  // console.log("scenarioCount", scenarioCount);
   const getRunDetail = async (data, clientId, delay) => {
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
@@ -282,7 +284,8 @@ export default function Design({ rootId }) {
         padding: "10px",
       }}
     >
-      {scenarioCount > 0 && (
+      {/* {scenarioCount >0  && ( */}
+      {scenarios?.length >0  && (
         <Grid
           container
           alignItems="center"
@@ -306,7 +309,7 @@ export default function Design({ rootId }) {
               sx={{ width: "100%" }}
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
-              {/*<ListItem
+              <ListItem
               key={"LocationOnOutlinedIcon"}
               disableGutters
               style={{
@@ -331,7 +334,7 @@ export default function Design({ rootId }) {
                   </span>
                 }
               />
-            </ListItem> */}
+            </ListItem>
               <ListItem
                 key={"FeaturedPlayListOutlinedIcon"}
                 disableGutters
@@ -353,7 +356,7 @@ export default function Design({ rootId }) {
                         fontSize: "14px",
                       }}
                     >
-                      {scenarioCount} Scenarios
+                      {scenarios? scenarios.length:0} Scenarios
                     </span>
                   }
                 />
@@ -470,7 +473,7 @@ export default function Design({ rootId }) {
         container
         style={{
           justifyContent:
-            scenarioCount === 0 || isScnerioCountRunning
+          scenarios?.length === 0 || isScnerioCountRunning
               ? "center"
               : "flex-end",
         }}
@@ -492,7 +495,7 @@ export default function Design({ rootId }) {
             }}
             disabled={isRunning}
           >
-            {scenarioCount ? "Add More Test" : "Add Test"}
+            {scenarios?.length ? "Add More Test" : "Add Test"}
           </Button>
         )}
       </Grid>
