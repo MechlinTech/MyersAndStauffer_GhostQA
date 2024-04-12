@@ -1,4 +1,4 @@
-name: Django image build
+name: Django Agent image build
 on:
   push:
     branches: [ "main" ]
