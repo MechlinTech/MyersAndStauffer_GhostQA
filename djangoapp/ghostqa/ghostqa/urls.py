@@ -23,11 +23,15 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 from performace_test.viewsets.performace_tests import PerformaceViewSet
 from performace_test.viewsets.container_runs import ContainersRunsViewSet as PerformanceContainersRunsViewSet
+
+from remote_connection.viewsets.remote_connection_test import RemoteConnectionViewSet
+
 router = DefaultRouter()
 # router.register(r'testsuites', TestSuiteViewSet)
 router.register(r'test-suitesV2', TestSuiteV2ViewSet)
 router.register(r"performance-tests",PerformaceViewSet)
 router.register(r"performance-container-runs",PerformanceContainersRunsViewSet)
+router.register(r'remote-connection-check', RemoteConnectionViewSet, basename='RemoteConnectionViewSet')
 # router.register(r'container-runs', TestContainersRunsViewset)
 
 

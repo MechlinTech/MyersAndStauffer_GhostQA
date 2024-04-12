@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'drf_spectacular',   
     'cypress',
     'performace_test',
+    'remote_connection',
     'django_filters'
 ]
 

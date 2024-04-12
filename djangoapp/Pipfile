@@ -29,6 +29,7 @@ matplotlib = "*"
 dj-database-url = "*"
 django-mssql = "*"
 psycopg2-binary = "*"
+paramiko = "*"
 
 [dev-packages]
 
