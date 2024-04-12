@@ -139,8 +139,8 @@ const Card = ({
                           navigate("/performance");
                           handleTask(item.id, nodeCount);
                           setSelectedNodeId(item.id);
-                          if (item.id !== selectedNodeId)
-                            dispatch(ResetLocationScenarioVUCount());
+                          // if (item.id !== selectedNodeId)
+                            // dispatch(ResetLocationScenarioVUCount());
                         }}
                         style={{
                           cursor: "pointer",

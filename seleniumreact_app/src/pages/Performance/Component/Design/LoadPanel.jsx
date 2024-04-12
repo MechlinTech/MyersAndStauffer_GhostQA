@@ -13,15 +13,14 @@ import axios from "axios";
 import { header } from "../../../../utils/authheader";
 import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getBaseUrl } from "../../../../utils/configService";
 import {
-  ResetLocationScenarioVUCount,
   GetLocationScenarioVUCount,
 } from "../../../../redux/actions/performanceAction";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
-export default function LoadPanel({ PerformanceFileId, testCaseData }) {
+export default function LoadPanel() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -102,12 +101,15 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
   const [designTabsActive, setDesignTabsActive] = useState(false);
-
+  const {
+    scenarioId,
+    scenarios,
+  } = useSelector((state) => state.performance);
   const fetchData = async () => {
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.get(
-        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
+        `${BASE_URL}/Performance/GetLoadByPerformanceFileId?PerformanceFileId=${scenarioId}`,
         header()
       );
       const loadData = res.data;
@@ -133,7 +135,7 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
   };
   useEffect(() => {
     fetchData();
-  }, [PerformanceFileId]);
+  }, [scenarioId]);
   useEffect(() => {
     if (duration === 0) {
       setxaxisCategories([0]);
@@ -296,12 +298,16 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
       toast.error("Ramp-up time cannot exceed duration.");
       return; // Exit the function if condition is not met
     }
+    if(totalusers === "" || duration === "" || rampUpSteps === ""|| rampUpTime ===""){
+      toast.error("Cannot have null value")
+      return
+    }
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(
         `${BASE_URL}/Performance/AddUpdateLoadData`,
         {
-          performanceFileId: PerformanceFileId,
+          performanceFileId: scenarioId,
           totalUsers: totalusers,
           rampupSteps: rampUpSteps,
           durationInMinutes: duration * 60,
@@ -310,7 +316,7 @@ export default function LoadPanel({ PerformanceFileId, testCaseData }) {
         header()
       );
       console.log("res", res);
-      dispatch(GetLocationScenarioVUCount(testCaseData));
+      dispatch(GetLocationScenarioVUCount(scenarios)); 
       // if (res.data === "Success") {
       toast.info("Successfully saved", {
         style: {

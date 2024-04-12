@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { StyledFormControl, StyledOutlinedInput } from "./style";
+import {
+  StyledFormControl,
+  StyledOutlinedInput,
+  StyledTypography,
+} from "./style";
 import { Grid } from "@mui/material";
 import { Box } from "@material-ui/core";
 import Divider from "@mui/material/Divider";
@@ -8,38 +12,30 @@ import { header } from "../../../../utils/authheader";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteProperty,
+  fetchPropertyData,
+  submitProperty,
+} from "../../../../redux/actions/performanceAction";
+import { CircularProgress } from "@material-ui/core";
+
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
-
-
-export default function Properties({ PerformanceFileId }) {
-  const [propertyList, setPropertyList] = useState([]);
+export default function Properties() {
+  const dispatch = useDispatch();
   const [pName, setPname] = useState("");
   const [pValue, setPvalue] = useState("");
-  const [errors, setErrors] = useState({
+  const [Errors, setErrors] = useState({
     pNameError: "",
     pValueError: "",
   });
+  const { propertyData, propertyLoading, propertyError, scenarioId } =
+    useSelector((state) => state.performance);
 
-  const fetchData = async () => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const response = await axios.get(
-        `${BASE_URL}/Performance/GetPropertyByPerformanceFileId?PerformanceFileId=${PerformanceFileId}`,
-        header()
-      );
-      const resData = response.data
-      if(Array.isArray(resData))
-      setPropertyList(resData);
-        else
-        setPropertyList([])
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
   useEffect(() => {
-   fetchData();
-  }, [PerformanceFileId]); // Include PerformanceFileId in the dependency array to fetch data whenever it changes
+    dispatch(fetchPropertyData(scenarioId));
+  }, [scenarioId]);
 
   const handleInputChange = (event, type) => {
     if (type === "name") {
@@ -53,75 +49,40 @@ export default function Properties({ PerformanceFileId }) {
     if (event.key === "Enter") {
       let errors = {};
 
-      if (!pName) errors.pNameError = "required name";
-      if (!pValue) errors.pValueError = "required value";
+      if (!pName.trim()) {
+        errors.pNameError = "required name";
+        toast.error("Name is required");
+        setErrors(errors);
+
+        return;
+      }
+      if (!pValue.trim()) {
+        errors.pValueError = "required value";
+        toast.error("Value is required");
+        setErrors(errors);
+
+        return;
+      }
 
       setErrors(errors);
 
       if (Object.keys(errors).length === 0) {
         // Form is valid, submit or take action
-        submitProperty();
-      }
-    }
-  };
-
-  const submitProperty = async () => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.post(
-        `${BASE_URL}/Performance/AddProperty`,
-        {
+        const payload = {
           id: 0,
-          performanceFileId: PerformanceFileId,
+          performanceFileId: scenarioId,
           name: pName,
           value: pValue,
-        },
-        header()
-      );
-        console.log('res',res)
-      if (res.data === "Success") {
-        toast.info("Successfully saved", {
-          style: {
-            background: "rgb(101, 77, 247)",
-            color: "rgb(255, 255, 255)",
-          },
-        });
-        
-        // Update propertyList after successful submission
-        fetchData();
-        setPname(""); // Clear input values after submission
+        };
+        dispatch(submitProperty(payload));
+        setPname("");
         setPvalue("");
       }
-    } catch (error) {
-      console.log("error saving ", error);
-      toast.error("Network error");
     }
   };
 
   const handleDelete = async (pId) => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.post(
-        `${BASE_URL}/Performance/DeleteProperties?Id=${pId}`,
-        header()
-      );
-
-      if (res.data.status === "success") {
-        toast.info("Successfully deleted", {
-          style: {
-            background: "rgb(101, 77, 247)",
-            color: "rgb(255, 255, 255)",
-          },
-        });
-
-        // Update propertyList after successful deletion
-        fetchData();
-
-      }
-    } catch (error) {
-      console.log("error deleting ", error);
-      toast.error("Network error");
-    }
+    dispatch(deleteProperty(pId));
   };
 
   return (
@@ -134,42 +95,62 @@ export default function Properties({ PerformanceFileId }) {
     >
       <Grid container spacing={1}>
         <Grid item xs={5}>
-          Property
+          <StyledTypography>Property</StyledTypography>
         </Grid>
         <Grid item xs={5}>
-          Value
+          <StyledTypography>Value</StyledTypography>
         </Grid>
-        {propertyList?.map((property, index) => (
-          <React.Fragment key={index}>
-            <Grid item xs={5}>
-              <StyledFormControl>
-                <StyledOutlinedInput
-                  value={property.Name}
+        {propertyLoading ? (
+          <Grid
+            item
+            xs={12}
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <CircularProgress
+              style={{ color: "rgb(101, 77, 247)" }}
+              size={25}
+            />
+          </Grid>
+        ) : propertyData?.length === 0 ? (
+          // Render message when no property data is available
+          <Grid
+            item
+            xs={12}
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <StyledTypography>No property data available</StyledTypography>
+          </Grid>
+        ) : (
+          propertyData.map((property, index) => (
+            <React.Fragment key={index}>
+              <Grid item xs={5}>
+                <StyledFormControl>
+                  <StyledOutlinedInput value={property.Name} />
+                </StyledFormControl>
+              </Grid>
+              <Grid item xs={5}>
+                <StyledFormControl>
+                  <StyledOutlinedInput value={property.Value} />
+                </StyledFormControl>
+              </Grid>
+              <Grid item xs={2}>
+                <DeleteIcon
+                  onClick={() => handleDelete(property.Id)}
+                  sx={{ cursor: "pointer", color: "red" }}
                 />
-              </StyledFormControl>
-            </Grid>
-            <Grid item xs={5}>
-              <StyledFormControl>
-                <StyledOutlinedInput
-                  value={property.Value}
-                />
-              </StyledFormControl>
-            </Grid>
-            <Grid item xs={2}>
-              <DeleteIcon
-                onClick={() => handleDelete(property.Id)}
-                sx={{ cursor: "pointer", color: "red" }}
-              />
-            </Grid>
-            <Divider />
-          </React.Fragment>
-        ))}
+              </Grid>
+              <Divider />
+            </React.Fragment>
+          ))
+        )}
+
         <Divider />
         <Grid item xs={5}>
           <StyledFormControl>
             <StyledOutlinedInput
               value={pName}
               placeholder="Property"
+              error={Errors.pNameError}
               onChange={(event) => handleInputChange(event, "name")}
               onKeyDown={handleKeyPress}
             />
@@ -180,6 +161,7 @@ export default function Properties({ PerformanceFileId }) {
             <StyledOutlinedInput
               value={pValue}
               placeholder="value"
+              error={Errors.pValueError}
               onChange={(event) => handleInputChange(event, "value")}
               onKeyDown={handleKeyPress}
             />

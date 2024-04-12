@@ -5,7 +5,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import {CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 import Paper from "@mui/material/Paper";
 import { useStyles } from "../../styles";
 import Button from "@mui/material/Button";
@@ -16,7 +16,11 @@ import axios from "axios";
 import { header } from "../../../../utils/authheader";
 import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
-import { GetLocationScenarioVUCount } from "../../../../redux/actions/performanceAction";
+import {
+  GetLocationScenarioVUCount,
+  deleteLocation,
+  submitLocation,
+} from "../../../../redux/actions/performanceAction";
 import { getBaseUrl } from "../../../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,11 +58,7 @@ export default function LocationPanel() {
 
   useEffect(() => {
     dispatch(GetLocationData(scenarioId));
-    setLocationData(locations);
-    console.log("scenarioId",scenarioId)
-    console.log("locations",locations)
   }, [scenarioId]);
-  console.log("locations",locations)
 
   useEffect(() => {
     setLocationData(locations);
@@ -97,43 +97,47 @@ export default function LocationPanel() {
         numberUser: noOfUser,
         percentageTraffic: trafficPercentage,
       };
-      submitLocation(payload);
+      // submitLocation(payload);
+      dispatch(submitLocation(payload));
+      dispatch(GetLocationScenarioVUCount(scenarios));
+      setSelectedLocation(null);
+      setnoOfUser(0);
+      settrafficPercentage(0);
     }
   };
   // when condition satisfy, following function will add location
-  const submitLocation = async (payload) => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.post(
-        `${BASE_URL}/Performance/AddLocation`,
-        payload,
-        header()
-      );
-      console.log("res", res);
-      if (res.data === "Success") {
-        toast.info("Successfully saved", {
-          style: {
-            background: "rgb(101, 77, 247)",
-            color: "rgb(255, 255, 255)",
-          },
-        });
+  // const submitLocation = async (payload) => {
+  //   try {
+  //     const BASE_URL = await getBaseUrl();
+  //     const res = await axios.post(
+  //       `${BASE_URL}/Performance/AddLocation`,
+  //       payload,
+  //       header()
+  //     );
+  //     console.log("res", res);
+  //     if (res.data === "Success") {
+  //       toast.info("Successfully saved", {
+  //         style: {
+  //           background: "rgb(101, 77, 247)",
+  //           color: "rgb(255, 255, 255)",
+  //         },
+  //       });
 
-        // Update propertyList after successful submission
-        dispatch(GetLocationData(scenarioId));
-    setLocationData(locations);
-
-        dispatch(GetLocationScenarioVUCount(scenarios));
-        setSelectedLocation(null);
-        setnoOfUser(0);
-        settrafficPercentage(0);
-      } else {
-        toast.error("Submitting error");
-      }
-    } catch (error) {
-      console.log("error saving ", error);
-      toast.error("Network error");
-    }
-  };
+  //       // Update propertyList after successful submission
+  //       dispatch(GetLocationData(scenarioId));
+  //       setLocationData(locations);
+  //       dispatch(GetLocationScenarioVUCount(scenarios));
+  //       setSelectedLocation(null);
+  //       setnoOfUser(0);
+  //       settrafficPercentage(0);
+  //     } else {
+  //       toast.error("Submitting error");
+  //     }
+  //   } catch (error) {
+  //     console.log("error saving ", error);
+  //     toast.error("Network error");
+  //   }
+  // };
 
   // this one for updating the location
   const handleLocationFieldChange = (event, id, type) => {
@@ -197,36 +201,18 @@ export default function LocationPanel() {
   };
 
   const handleDelete = async (locationId) => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.post(
-        `${BASE_URL}/Performance/DeleteLocation?Id=${locationId}`,
-        header()
-      );
-
-      if (res.data.status === "success") {
-        toast.info("Successfully deleted", {
-          style: {
-            background: "rgb(101, 77, 247)",
-            color: "rgb(255, 255, 255)",
-          },
-        });
-
-        // Update propertyList after successful deletion
-        dispatch(GetLocationData(scenarioId));
-        dispatch(GetLocationScenarioVUCount(scenarios));
-      }
-    } catch (error) {
-      console.log("error deleting ", error);
-      toast.error("Network error");
-    }
+    dispatch(deleteLocation(locationId));
+    dispatch(GetLocationScenarioVUCount(scenarios));
   };
-
+  const handleAddLocationBtn = () => {
+    if (totalUsers) setAddLocation(!addLocation);
+    else toast.warn("Total user for this scenario is 0");
+  };
   return (
     <>
       <Button
         variant="contained"
-        onClick={() => setAddLocation(!addLocation)}
+        onClick={handleAddLocationBtn}
         style={{
           fontSize: 14,
           backgroundColor: "rgb(101, 77, 247)",
@@ -265,10 +251,9 @@ export default function LocationPanel() {
           </TableHead>
           <TableBody>
             {isLoading ? (
-              
               <TableRow>
-                <TableCell colSpan={3} style={{textAlign:'center'}}>
-                <CircularProgress
+                <TableCell colSpan={3} style={{ textAlign: "center" }}>
+                  <CircularProgress
                     style={{ color: "rgb(101, 77, 247)" }}
                     size={25}
                   />
@@ -321,8 +306,8 @@ export default function LocationPanel() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3} style={{textAlign:'center'}}>
-                <StyledTypography>No location</StyledTypography>
+                <TableCell colSpan={3} style={{ textAlign: "center" }}>
+                  <StyledTypography>No location</StyledTypography>
                 </TableCell>
               </TableRow>
             )}

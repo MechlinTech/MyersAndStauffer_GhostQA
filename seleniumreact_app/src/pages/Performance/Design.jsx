@@ -38,13 +38,8 @@ export default function Design({ rootId }) {
     (state) => state.performance
   );
   const navigate = useNavigate();
-  // console.log('is user ',isTotalUserOrDurationZero)
-  // const [locationCount, setlocationCount] = useState(totalLocation);
-  const [scenarioCount, setscenarioCount] = useState(0);
   const [showAddNewElement, setShowAddNewElement] = useState(true);
   const [folderName, setfolderName] = useState("");
-  // const [uvCount, setuvCount] = useState(virtualUser);
-  const [callingApi, setCallingApi] = useState(0);
   const [isScnerioCountRunning, setisScnerioCountRunning] = useState(false);
 
   useEffect(() => {
@@ -69,19 +64,10 @@ export default function Design({ rootId }) {
       // Assuming response.data is the array of data you want to set as listData
       const testList = response.data;
       if (Array.isArray(testList)) {
-        setscenarioCount(testList.length);
         dispatch(GetLocationScenarioVUCount(testList));
         dispatch(setScenarios(testList))
-        // testList.map((test) => {
-        //   dispatch(GetLocationScenarioVUCount(test.id));
-        //   // getCounts(test.id);
-        // });
       } else {
-        // setlocationCount(0);
-        setscenarioCount(0);
         dispatch(setScenarios([]))
-
-        // setuvCount(0);
       }
       setisScnerioCountRunning(false);
     } catch (error) {
@@ -176,7 +162,6 @@ export default function Design({ rootId }) {
     }
   };
 
-  // console.log("scenarioCount", scenarioCount);
   const getRunDetail = async (data, clientId, delay) => {
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
