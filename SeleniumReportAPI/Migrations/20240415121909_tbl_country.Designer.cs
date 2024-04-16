@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeleniumReportAPI.DBContext;
 
@@ -11,9 +12,10 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240415121909_tbl_country")]
+    partial class tbl_country
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,6 +270,22 @@ namespace SeleniumReportAPI.Migrations
                     b.ToTable("tbl_Browsers");
                 });
 
+            modelBuilder.Entity("SeleniumReportAPI.Models.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CountryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_Country");
+                });
+
             modelBuilder.Entity("SeleniumReportAPI.Models.CypressDetails", b =>
                 {
                     b.Property<int>("Id")
@@ -512,22 +530,6 @@ namespace SeleniumReportAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tbl_Load");
-                });
-
-            modelBuilder.Entity("SeleniumReportAPI.Models.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CountryName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tbl_Location");
                 });
 
             modelBuilder.Entity("SeleniumReportAPI.Models.PerformanceFile", b =>
