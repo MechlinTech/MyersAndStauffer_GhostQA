@@ -277,5 +277,15 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.stp_GetExecutedPerformanceByClientId(ClientId));
         }
+
+        /// <summary>
+        /// Get Location List
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetLocationList")]
+        public async Task<ActionResult> GetLocationList()
+        {
+            return Ok(await _helper.GetLocationList());
+        }
     }
 }
