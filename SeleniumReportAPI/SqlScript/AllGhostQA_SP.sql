@@ -3575,3 +3575,27 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [isValidUser]
 END CATCH
 GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetLocation]
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetLocation
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	15 March 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetLocation
+**************************************************************************************/
+BEGIN TRY
+	SELECT [result] = JSON_QUERY((
+		SELECT [Id],
+			   [CountryName] as [Name]
+			   ORDER BY CountryName
+		FROM tbl_Location
+		FOR JSON PATH
+	))
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [result]
+END CATCH
+GO

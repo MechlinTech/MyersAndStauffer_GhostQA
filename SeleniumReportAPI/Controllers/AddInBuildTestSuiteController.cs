@@ -41,7 +41,8 @@ namespace SeleniumReportAPI.Controllers
         {
             try
             {
-                var result = _helper.SendEmail(toEmail, "Invitation");
+                var Url = Request.Headers.Referer.ToString();
+                var result = _helper.SendEmail(toEmail, "Invitation", Url);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -55,7 +56,8 @@ namespace SeleniumReportAPI.Controllers
         {
             try
             {
-                var result = await _helper.AcceptInvitation(toEmail);
+                var Url = Request.Headers.Referer.ToString();
+                var result = await _helper.AcceptInvitation(toEmail, Url);
 
                 return Ok(result);
             }
