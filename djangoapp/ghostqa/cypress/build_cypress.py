@@ -18,22 +18,22 @@ def generate_test_case_code(test_case,before_each=None):
         before_each =  test_case.get('beforeEach', [])
     actions = test_case.get('actions', [])
 
-    # return f"""
-    #     describe('{case_name}', () => {{
-    #         {generate_before_each(before_each)}
-            
-    #         it('should execute test steps', () => {{
-    #             {generate_test_actions(actions)}
-    #         }});
-    #     }});
-    # """
     return f"""
-            describe('{case_name}', () => {{
-                {generate_before_each(before_each)}
-                
-                {generate_test_actions(actions,True)}
+        describe('{case_name}', () => {{
+            {generate_before_each(before_each)}
+            
+            it('should execute test steps', () => {{
+                {generate_test_actions(actions)}
             }});
+        }});
     """
+    # return f"""
+    #         describe('{case_name}', () => {{
+    #             {generate_before_each(before_each)}
+                
+    #             {generate_test_actions(actions,True)}
+    #         }});
+    # """
 def generate_test_cases(test_cases,before_each):
     # Generate Cypress test code for each test case
     cases = []
@@ -128,14 +128,14 @@ def generate_before_each(before_each_actions):
         }});
     """
 
-def generate_test_actions(actions,wrap_it=True):
+def generate_test_actions(actions,wrap_it=False):
     # Generate Cypress actions based on the YAML file
     actions_list = []
     for action in actions:
-        actions_list.append(generate_action_code(action,wrap_it) )
+        actions_list.append(generate_action_code(action,False) )
     return '\n'.join(actions_list)
 
-def generate_action_code(action,wrap_it=True):
+def generate_action_code(action,wrap_it=False):
     action_type = action.get('type', '')
     selector = action.get('selector', '')
     not_selector = action.get('not_selector', '')
