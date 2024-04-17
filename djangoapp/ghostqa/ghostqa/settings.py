@@ -157,3 +157,4 @@ REST_FRAMEWORK = {
 MIDDLEWARE += ('crum.CurrentRequestUserMiddleware',)
 
 
+DOCKER_HOST = 'tcp://15.207.97.170:2375'

@@ -8,6 +8,7 @@ from django.conf import settings
 import pandas,time
 from ..utils.jmx_reporting import get_json_metrics,csv_to_json
 import pandas as pd 
+from docker.errors import APIError
 BASE_DIR  = settings.BASE_DIR
 import logging  
 logger = logging.getLogger(__name__)
@@ -227,12 +228,19 @@ def start_jmeter_test(name, volume_path,Jthreads=10,Jrampup=10,container_run=Non
 
 
 def start_jmeter_test2(name, volume_path,Jthreads=10,Jrampup=10,container_run=None):
+    # volume_path = '/home/ubuntu/test/performance'+name
+    volume_path = '/home/ubuntu/test/performance'
+    dockerfile = '/home/ubuntu/test/performance/surendra-testing-new-connection-1f780533-36f8-48d1-9066-9a80db32ef3e/Dockerfile'
+
+    
     client = get_client()
     # print('volume_path',volume_path)
+    # volume_path = os.path.abspath(volume_path)
     print(f"{__name__}: volume_path: {volume_path}")
     
     # Build the Docker image from the Dockerfile
-    image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
+    # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
+    image, build_logs = client.images.build(path=volume_path, dockerfile=dockerfile, tag='jmeter_apline')
 
     container = client.containers.run(
         image='jmeter_apline',
