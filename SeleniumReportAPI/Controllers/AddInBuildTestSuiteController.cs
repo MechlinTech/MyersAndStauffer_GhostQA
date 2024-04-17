@@ -41,7 +41,9 @@ namespace SeleniumReportAPI.Controllers
         {
             try
             {
-                var Url = Request.Headers.Referer.ToString();
+                string originalUrl = Request.Headers.Referer.ToString();
+                int lastSlashIndex = originalUrl.LastIndexOf('/');
+                var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
                 var result = _helper.SendEmail(toEmail, "Invitation", Url);
                 return Ok(result);
             }
@@ -56,7 +58,9 @@ namespace SeleniumReportAPI.Controllers
         {
             try
             {
-                var Url = Request.Headers.Referer.ToString();
+                string originalUrl = Request.Headers.Referer.ToString();
+                int lastSlashIndex = originalUrl.LastIndexOf('/');
+                var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
                 var result = await _helper.AcceptInvitation(toEmail, Url);
 
                 return Ok(result);
