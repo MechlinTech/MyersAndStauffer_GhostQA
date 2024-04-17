@@ -542,10 +542,10 @@ def generate_action_code(action,wrap_it=True):
             name = f'Test Step: {action_type}: Validate Page Title to include {expected_title}'
             return f"""
                 it('{name}', () => {{
-                    cy.title().should('include', '{expected_title}');
+                    cy.title().should('eq', '{expected_title}');
                 }});
             """
-        return f"""cy.title().should('include', '{expected_title}');"""
+        return f"""cy.title().should('eq', '{expected_title}');"""
     elif action_type == 'validate_current_url':
         if wrap_it:
             name = f'Test Step: {action_type}: Validate Current URL to be {expected_url}'
