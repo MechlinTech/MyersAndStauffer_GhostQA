@@ -22,7 +22,7 @@ def generate_test_case_code(test_case,before_each=None):
         describe('{case_name}', () => {{
             {generate_before_each(before_each)}
             
-            it('should execute test steps', () => {{
+            it('{case_name}', () => {{
                 {generate_test_actions(actions)}
             }});
         }});
