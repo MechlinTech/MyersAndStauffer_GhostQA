@@ -17,7 +17,7 @@ import axios from "axios";
 import { header } from "../../utils/authheader";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
-import { GetLocationScenarioVUCount, setScenarios } from "../../redux/actions/performanceAction";
+import { GetLocationOptions, GetLocationScenarioVUCount, setScenarios } from "../../redux/actions/performanceAction";
 import {
   setIsRunning,
   addExecuterData,
@@ -65,6 +65,7 @@ export default function Design({ rootId }) {
       const testList = response.data;
       if (Array.isArray(testList)) {
         dispatch(GetLocationScenarioVUCount(testList));
+        dispatch(GetLocationOptions)
         dispatch(setScenarios(testList))
       } else {
         dispatch(setScenarios([]))

@@ -134,7 +134,8 @@ export default function LoadPanel() {
     } catch {}
   };
   useEffect(() => {
-    fetchData();
+    if(scenarioId)
+      fetchData();
   }, [scenarioId]);
   useEffect(() => {
     if (duration === 0) {

@@ -11,11 +11,11 @@ import axios from "axios";
 import { getBaseUrl } from "../../utils/configService";
 import { header } from "../../utils/authheader";
 import { useDispatch } from "react-redux";
-import { ResetLocationScenarioVUCount } from "../../redux/actions/performanceAction";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import DeleteModal from "./Comman/DeleteModal";
+import { GetLocationOptions, setSuiteId } from "../../redux/actions/performanceAction";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 const Card = ({
@@ -139,8 +139,8 @@ const Card = ({
                           navigate("/performance");
                           handleTask(item.id, nodeCount);
                           setSelectedNodeId(item.id);
-                          // if (item.id !== selectedNodeId)
-                            // dispatch(ResetLocationScenarioVUCount());
+                          dispatch(setSuiteId(item.id))
+                          dispatch(GetLocationOptions())
                         }}
                         style={{
                           cursor: "pointer",

@@ -20,24 +20,32 @@ import { StyledTypography } from "./style";
 import { Button, Divider } from "@mui/material";
 import { header, headerForm } from "../../../../utils/authheader";
 import axios from "axios";
-import {CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 
 import { toast } from "react-toastify";
 import { Delete, Edit } from "@material-ui/icons";
 import { getBaseUrl } from "../../../../utils/configService";
 import { useDispatch, useSelector } from "react-redux";
-import { GetTestData, deleteTestData, submitTestData } from "../../../../redux/actions/performanceAction";
+import {
+  GetTestData,
+  deleteTestData,
+  submitTestData,
+} from "../../../../redux/actions/testDataAction";
+import DeleteModal from "../../Comman/DeleteModal";
 
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function DataEntryPanel() {
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
+  const [openDelModal, setopenDelModal] = useState(false);
+  const [deleteItem, setDeleteItem] = useState(null);
   const [expandedAccord, setExpandedAccord] = useState("");
-  const { testDataList, testLoading, testError, scenarioId } = useSelector(
-    (state) => state.performance
+  const { scenarioId } = useSelector((state) => state.performance);
+  const { testDataList, testLoading, testError } = useSelector(
+    (state) => state.testData
   );
-  
+
   useEffect(() => {
     dispatch(GetTestData(scenarioId));
   }, [scenarioId]);
@@ -56,21 +64,25 @@ export default function DataEntryPanel() {
     formData.append("PerformanceFileId", scenarioId);
     formData.append("file", selectedFile);
     // submitTestData(formData);
-    dispatch(submitTestData(formData))
+    dispatch(submitTestData(formData));
     setSelectedFile(null);
   };
 
-  const handleDelete = async (testId, event) => {
-    event.stopPropagation();
-    dispatch(deleteTestData(testId))
+  const handleDelete = async (testId) => {
+    setopenDelModal(false);
+    dispatch(deleteTestData(testId));
   };
-
+  const handleDelBtn = (test, event) => {
+    event.stopPropagation();
+    setDeleteItem({ name: test.Name, id: test.Id });
+    setopenDelModal(true);
+  };
   const handleExpandAccord = (panel) => (e, isExpanded) => {
     setExpandedAccord(isExpanded ? panel : "");
   };
 
   const renderJsonData = (jsonData) => {
-    const dataObj = JSON.parse(jsonData)
+    const dataObj = JSON.parse(jsonData);
     const tableData = transformArrayToObject(dataObj);
     let columns = Object.keys(tableData);
     return columns.map((key, index) => {
@@ -83,7 +95,6 @@ export default function DataEntryPanel() {
       const remainingText = remainingCount > 0 ? `...+${remainingCount}` : "";
 
       return (
-        <TableBody>
           <TableRow>
             <TableCell>{`\${${key}}`}</TableCell>
             <TableCell>-</TableCell>
@@ -94,7 +105,6 @@ export default function DataEntryPanel() {
               </TableCell>
             </Tooltip>
           </TableRow>
-        </TableBody>
       );
     });
   };
@@ -127,24 +137,39 @@ export default function DataEntryPanel() {
         padding: "10px",
       }}
     >
+      <DeleteModal
+        open={openDelModal}
+        onClose={() => setopenDelModal(false)}
+        deleteItem={deleteItem}
+        handleDelete={handleDelete}
+      />
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <Grid container spacing={1}>
             {testLoading ? (
               // Render loading indicator
-              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
+              <Grid
+                item
+                xs={12}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
                 <CircularProgress
-                      style={{ color: "rgb(101, 77, 247)" }}
-                      size={25}
-                    />
+                  style={{ color: "rgb(101, 77, 247)" }}
+                  size={25}
+                />
               </Grid>
             ) : testDataList?.length === 0 ? (
               // Render message when no test data is available
-              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
+              <Grid
+                item
+                xs={12}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
                 <Typography>No test data available</Typography>
               </Grid>
             ) : (
-              testDataList && testDataList?.map((test, index) => {
+              testDataList &&
+              testDataList?.map((test, index) => {
                 return (
                   <React.Fragment key={index}>
                     <Grid item xs={12} md={6}>
@@ -200,7 +225,7 @@ export default function DataEntryPanel() {
                             <Box>
                               <Delete
                                 style={{ color: "red" }}
-                                onClick={(e) => handleDelete(test.Id, e)}
+                                onClick={(e) => handleDelBtn(test, e)}
                               />
                             </Box>
                           </Box>
@@ -208,13 +233,15 @@ export default function DataEntryPanel() {
                         <AccordionDetails sx={{ p: "0" }}>
                           <Divider />
                           <TableContainer
-                            // style={{
-                            //   border: "solid 2px #DADADA",
-                            //   borderRadius: "5px",
-                            // }}
+                          // style={{
+                          //   border: "solid 2px #DADADA",
+                          //   borderRadius: "5px",
+                          // }}
                           >
                             <Table aria-label="simple table">
+                              <TableBody>
                               {renderJsonData(test?.JsonData)}
+                              </TableBody>
                             </Table>
                           </TableContainer>
                         </AccordionDetails>

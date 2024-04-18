@@ -53,10 +53,6 @@ export default function DesignTabs({PerformanceFileId,testCaseData}) {
     setValue(newValue);
   };
 
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
-
   return (
     <Box style={{width:'100%' }}>
      
@@ -87,9 +83,9 @@ export default function DesignTabs({PerformanceFileId,testCaseData}) {
           }}
         >
           <Tab value="Load" label={<StyledTypography>Load</StyledTypography>} />
-          {/* <Tab value="Location" label={<StyledTypography>Location</StyledTypography>} />
+           <Tab value="Location" label={<StyledTypography>Location</StyledTypography>} />
            <Tab value="Data Entity" label={<StyledTypography>Test Data</StyledTypography>} />
-         <Tab value="Properties" label={<StyledTypography>Properties</StyledTypography>}/> */}
+        {/* <Tab value="Properties" label={<StyledTypography>Properties</StyledTypography>}/> */}
           
         </Tabs>
 

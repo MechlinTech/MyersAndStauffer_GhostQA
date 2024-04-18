@@ -17,14 +17,19 @@ import { header } from "../../../../utils/authheader";
 import { toast } from "react-toastify";
 import { StyledTypography } from "./style";
 import {
+  GetLocationOptions,
   GetLocationScenarioVUCount,
-  deleteLocation,
-  submitLocation,
+  GetUsedLocation,
 } from "../../../../redux/actions/performanceAction";
 import { getBaseUrl } from "../../../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 import { useDispatch, useSelector } from "react-redux";
-import { GetLocationData } from "../../../../redux/actions/performanceAction";
+import {
+  GetLocationData,
+  deleteLocation,
+  submitLocation,
+  updateLocation,
+} from "../../../../redux/actions/locationAction";
 
 const data = [
   {
@@ -46,24 +51,31 @@ export default function LocationPanel() {
   const [addLocation, setAddLocation] = useState(false);
 
   const {
-    totalUsers,
-    totalTrafficPercent,
-    locations,
-    error,
-    isLoading,
+    usedLocation,
+    suitId,
+    locationOptions,
     scenarioId,
     scenarios,
   } = useSelector((state) => state.performance);
+  const {
+    totalUsers,
+    totalTrafficPercent,
+    locations,
+    isLoading,
+  } = useSelector((state) => state.location);
   const [locationData, setLocationData] = useState(locations);
-
   useEffect(() => {
     dispatch(GetLocationData(scenarioId));
   }, [scenarioId]);
-
   useEffect(() => {
     setLocationData(locations);
+    dispatch(GetUsedLocation())
+    dispatch(GetLocationScenarioVUCount(scenarios))
   }, [locations]);
-  //this one for adding the location
+
+  useEffect(()=>{
+    dispatch(GetLocationOptions());
+  },[usedLocation])
   const handleFieldChange = (fieldName, fieldInput) => {
     if (fieldName === "selectedLocation") setSelectedLocation(fieldInput);
     else {
@@ -86,7 +98,11 @@ export default function LocationPanel() {
         toast.error("select location");
         return;
       }
-      if (totalPercent !== 100) {
+      if (!Number.isInteger(noOfUser)) {
+        toast.error("No of users must be integer");
+        return;
+      }
+      if (totalPercent > 100) {
         toast.error("Total percentage should be 100");
         return;
       }
@@ -142,71 +158,172 @@ export default function LocationPanel() {
   // this one for updating the location
   const handleLocationFieldChange = (event, id, type) => {
     if (type === "percentage") {
-      const updateLocationData = locationData.map((data) =>
-        data.Id !== id
-          ? data
-          : { ...data, PercentageTraffic: event.target.value }
+      
+      const updateLocationData = locationData.map((data) =>{
+        if(data.Id !== id)
+          return data
+        else{
+          settrafficPercentage(data.PercentageTraffic)
+         return { ...data, PercentageTraffic: event.target.value }}}
       );
       setLocationData(updateLocationData);
     } else {
       const updateLocationData = locationData.map((data) =>
-        data.Id !== id ? data : { ...data, Name: event?.value }
+        data.Id !== id ? data : { ...data, Name: event?.label }
       );
       setLocationData(updateLocationData);
     }
   };
 
+  // const handleLocationUpdate = async (event, id) => {
+  //   if (event.key === "Enter") {
+  //     const locationToUpdate = locationData.find((data) => data.Id === id);
+  //     let totalPercent = locations.reduce((sum, data) => {
+  //       if (data.Id === id)
+  //         return sum + parseInt(locationToUpdate?.PercentageTraffic, 10);
+  //       else return sum + parseInt(data.PercentageTraffic, 10);
+  //     }, 0);
+  //     if (totalPercent > 100) {
+  //       toast.error("Total percentage should be 100");
+  //       return;
+  //     }
+
+  //     if (!locationToUpdate.Name) {
+  //       toast.error("Please select location");
+  //       return;
+  //     } else {
+  //       try {
+  //         const BASE_URL = await getBaseUrl();
+  //         const res = await axios.post(
+  //           `${BASE_URL}/Performance/UpdateLoaction`,
+  //           locationToUpdate,
+  //           header()
+  //         );
+  //         if (res.data.status === "success") {
+  //           toast.info("Successfully saved", {
+  //             style: {
+  //               background: "rgb(101, 77, 247)",
+  //               color: "rgb(255, 255, 255)",
+  //             },
+  //           });
+
+  //           // Update propertyList after successful submission
+  //           // fetchData();
+  //           dispatch(GetLocationData(scenarioId));
+  //         }
+  //       } catch (error) {
+  //         console.log("error saving ", error);
+  //         toast.error("Network error");
+  //       }
+  //     }
+  //   }
+  // };
+
   const handleLocationUpdate = async (event, id) => {
-    if (event.key === "Enter") {
-      const locationToUpdate = locationData.find((data) => data.Id === id);
-      let totalPercent = locations.reduce((sum, data) => {
-        if (data.Id === id)
-          return sum + parseInt(locationToUpdate?.PercentageTraffic, 10);
-        else return sum + parseInt(data.PercentageTraffic, 10);
-      }, 0);
-      if (totalPercent !== 100) {
-        toast.error("Total percentage should be 100");
-        return;
-      }
+    let locationToUpdate = locationData.find((data) => data.Id === id);
+    if(locationToUpdate?.PercentageTraffic === "0" || locationToUpdate?.PercentageTraffic === ""){
+      toast.warn("Traffic can't be 0")
+      setLocationData(locationData.map((data)=>data.Id === id?{...data,PercentageTraffic:trafficPercentage}:data))
+      return
+    }
+    locationToUpdate.NumberUser = Math.ceil(
+      (totalUsers / 100) * parseInt(locationToUpdate?.PercentageTraffic, 10)
+    );
+    if (!locationToUpdate.Name) {
+      toast.error("Please select location");
+      return;
+    } else {
+      // try {
+      //   const BASE_URL = await getBaseUrl();
+      //   const res = await axios.post(
+      //     `${BASE_URL}/Performance/UpdateLoaction`,
+      //     locationToUpdate,
+      //     header()
+      //   );
+      //   if (res.data.status === "success") {
+      //     toast.info("Successfully saved", {
+      //       style: {
+      //         background: "rgb(101, 77, 247)",
+      //         color: "rgb(255, 255, 255)",
+      //       },
+      //     });
 
-      if (!locationToUpdate.Name) {
-        toast.error("Please select location");
-        return;
-      } else {
-        try {
-          const BASE_URL = await getBaseUrl();
-          const res = await axios.post(
-            `${BASE_URL}/Performance/UpdateLoaction`,
-            locationToUpdate,
-            header()
-          );
-          if (res.data.status === "success") {
-            toast.info("Successfully saved", {
-              style: {
-                background: "rgb(101, 77, 247)",
-                color: "rgb(255, 255, 255)",
-              },
-            });
-
-            // Update propertyList after successful submission
-            // fetchData();
-            dispatch(GetLocationData(scenarioId));
-          }
-        } catch (error) {
-          console.log("error saving ", error);
-          toast.error("Network error");
-        }
-      }
+      //     // Update propertyList after successful submission
+      //     // fetchData();
+      //     dispatch(GetLocationData(scenarioId));
+      //   }
+      // } catch (error) {
+      //   console.log("error saving ", error);
+      //   toast.error("Network error");
+      // }
+      dispatch(updateLocation(locationToUpdate));
     }
   };
-
   const handleDelete = async (locationId) => {
     dispatch(deleteLocation(locationId));
     dispatch(GetLocationScenarioVUCount(scenarios));
   };
   const handleAddLocationBtn = () => {
-    if (totalUsers) setAddLocation(!addLocation);
-    else toast.warn("Total user for this scenario is 0");
+    if (!totalUsers) {
+      toast.warn("Total user for this scenario is 0");
+      return;
+    }
+    if (locations.length > 10) {
+      toast.warn("Cannot add more then 10 location");
+      return;
+    }
+    if (!(locations.length < totalUsers)) {
+      toast.warn("Cannot add more than total users");
+      return;
+    }
+    //  setAddLocation(!addLocation);
+    let loadPerLocation = 100 / (locations.length + 1);
+    let accumalatedPoint = 0
+    // Calculate loadPerLocation with two decimal places if necessary
+    if (!Number.isInteger(loadPerLocation)) {
+      const decimalPart = loadPerLocation - Math.floor(loadPerLocation)
+      loadPerLocation = Math.floor(loadPerLocation);
+      accumalatedPoint = Math.round(decimalPart*(locations.length + 1))
+    }
+
+    // Calculate common numberUser for each existing location
+    const commonNumberUser = Math.ceil((totalUsers / 100) * loadPerLocation);
+
+    // Dispatch the updateLocation action for each existing location with the common numberUser
+    let remainingUser = totalUsers;
+    locationData.forEach((loc) => {
+      if (remainingUser > 0) {
+        dispatch(
+          updateLocation({
+            ...loc,
+            PercentageTraffic: loadPerLocation,
+            NumberUser: commonNumberUser,
+          })
+        );
+
+        remainingUser -= commonNumberUser;
+      } else
+        dispatch(
+          updateLocation({
+            ...loc,
+            PercentageTraffic: loadPerLocation,
+            NumberUser: 0,
+          })
+        );
+    });
+
+    // Determine the number of users for the new location
+    // const remainingUsers = totalUsers - remainingUser;
+
+    // Dispatch the submitLocation action for the new location with the remaining users
+    let payload = {
+      id: 0,
+      performanceFileId: scenarioId,
+      name: locationOptions[0]?.value,
+      numberUser: remainingUser,
+      percentageTraffic: loadPerLocation+accumalatedPoint,
+    };
+    dispatch(submitLocation(payload));
   };
   return (
     <>
@@ -267,7 +384,7 @@ export default function LocationPanel() {
                 >
                   <TableCell style={{ width: "50%" }}>
                     <Select
-                      options={valueLocation}
+                      options={locationOptions}
                       value={{ label: item.Name, value: item.Name }}
                       isClearable={true}
                       menuPosition={"fixed"}
@@ -285,13 +402,15 @@ export default function LocationPanel() {
                       onChange={(e) =>
                         handleLocationFieldChange(e, item.Id, "percentage")
                       }
-                      onKeyDown={(e) => handleLocationUpdate(e, item.Id)}
+                      // onKeyDown={(e) => handleLocationUpdate(e, item.Id)}
+                      onBlur={(e) => handleLocationUpdate(e, item.Id)}
                     />
                   </TableCell>
 
                   <TableCell align="center" style={{ width: "20%" }}>
                     <StyledTypography>
-                      {(totalUsers / 100) * item.PercentageTraffic}
+                      {/* {(totalUsers / 100) * item.PercentageTraffic} */}
+                      {item.NumberUser}
                     </StyledTypography>
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
@@ -311,8 +430,8 @@ export default function LocationPanel() {
                 </TableCell>
               </TableRow>
             )}
-
-            {addLocation && (
+            {/* 
+            {addLocation && totalTrafficPercent<100 && (
               <TableRow
                 key={"a"}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -344,14 +463,14 @@ export default function LocationPanel() {
                   <StyledTypography>{noOfUser}</StyledTypography>
                 </TableCell>
               </TableRow>
-            )}
+            )} */}
           </TableBody>
         </Table>
-        {/* {totalTraficPercent !== 100 && (
-          <StyledTypography color="error" textAlign="right" m={3}>
-            Total traffic percentage should be 100 *
+        {totalTrafficPercent !== 100 && (
+          <StyledTypography color="error" textAlign="left" m={3}>
+            Traffic Percentage always should be equal to 100%..
           </StyledTypography>
-        )} */}
+        )}
       </TableContainer>
     </>
   );
