@@ -28,6 +28,7 @@ const CustomeTableChell = ({ ScreenshotUrl }) => {
       <img
         src={ScreenshotUrl}
         alt="Screenshot"
+        onClick={handleOpenModal}
         style={{ maxWidth: "40px", maxHeight: "40px", margin: "10px",cursor:'pointer',border:'1px solid rgb(101, 77, 247)' }}
       />
 
