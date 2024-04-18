@@ -984,7 +984,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        public object SendEmail(string toEmail, string Mailtype)
+        public object SendEmail(string toEmail, string Mailtype, string Url)
         {
             if (!IsValidEmail(toEmail))
             {
@@ -997,8 +997,6 @@ namespace SeleniumReportAPI.Helper
             var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
             var hostName = _configuration["EmailDetails:EmailHost"];
             var subject = "Invitation to Join Our Platform";
-            var invitationUrl = _configuration["InvitationUrl:AcceptInvite"];
-            var changePassUrl = _configuration["InvitationUrl:ChangePassword"];
             var user = GetProfilByEmail(toEmail);
             var passWord = _configuration["EmailDetails:EmailPassword"];
             var port = Convert.ToInt32(_configuration["EmailDetails:Port"]);
@@ -1019,7 +1017,7 @@ namespace SeleniumReportAPI.Helper
                                 <p>Dear [" + toEmail.ToUpper() + @"],</p>
                                 <p>We are thrilled to invite you to join GhostQA Platform! 🌟</p>
                                 <p>To accept your invitation and immerse yourself in the QA adventure, simply click the button below:</p>
-                                <p><a href=""" + invitationUrl + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">View Invitation</a></p>
+                                <p><a href=""" + $"{Url}AcceptInvitation/{toEmail}" + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">View Invitation</a></p>
                                 </td>
                                 </tr>
                                 </table>
@@ -1044,7 +1042,7 @@ namespace SeleniumReportAPI.Helper
                                                             <p>Thank you for accepting the invitation here is your temporary password:</p>
                                                             <em><b>Password: </b> Test@123</em>
                                                             <p>If you want to change your password follow the link below</p>
-                                                            <p><a href=""" + changePassUrl + toEmail + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
+                                                            <p><a href=""" + $"{Url}ChangePassword/{toEmail}"   + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
                                                             </td>
                                                             </tr>
                                                             </table>
@@ -1096,7 +1094,7 @@ namespace SeleniumReportAPI.Helper
             };
         }
 
-        public async Task<object> AcceptInvitation(string Email)
+        public async Task<object> AcceptInvitation(string Email, string Url)
         {
             if (!IsValidEmail(Email))
             {
@@ -1122,7 +1120,7 @@ namespace SeleniumReportAPI.Helper
                 }
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 await _userManager.ConfirmEmailAsync(user, token);
-                EmailStatus = SendEmail(Email, "Accept");
+                EmailStatus = SendEmail(Email, "Accept", Url);
             }
             catch (Exception ex)
             {
@@ -2853,6 +2851,36 @@ namespace SeleniumReportAPI.Helper
             {
                 return streamReader.ReadToEnd();
             }
+        }
+
+        internal async Task<string> GetLocationList()
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetLocation", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
         }
     }
 }

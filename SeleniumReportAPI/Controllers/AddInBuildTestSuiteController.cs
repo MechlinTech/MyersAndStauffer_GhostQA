@@ -41,7 +41,10 @@ namespace SeleniumReportAPI.Controllers
         {
             try
             {
-                var result = _helper.SendEmail(toEmail, "Invitation");
+                string originalUrl = Request.Headers.Referer.ToString();
+                int lastSlashIndex = originalUrl.LastIndexOf('/');
+                var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
+                var result = _helper.SendEmail(toEmail, "Invitation", Url);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -55,7 +58,10 @@ namespace SeleniumReportAPI.Controllers
         {
             try
             {
-                var result = await _helper.AcceptInvitation(toEmail);
+                string originalUrl = Request.Headers.Referer.ToString();
+                int lastSlashIndex = originalUrl.LastIndexOf('/');
+                var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
+                var result = await _helper.AcceptInvitation(toEmail, Url);
 
                 return Ok(result);
             }
