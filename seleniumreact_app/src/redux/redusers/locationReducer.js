@@ -1,0 +1,116 @@
+import {
+  FETCH_DATA_REQUEST,
+  FETCH_DATA_SUCCESS,
+  FETCH_DATA_FAILURE,
+  ADD_LOCATION,
+  DELETE_LOCATION,
+  UPDATE_LOCATION,
+} from "../actions/locationAction";
+
+const initialState = {
+  locations: null,
+  totalUsers: 0,
+  totalTrafficPercent: 0,
+  error: null,
+  isLoading: false,
+};
+
+const locationReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_DATA_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+      };
+    case FETCH_DATA_SUCCESS:
+      const { totalUsers, totalTraficPercent, locationData } = action.payload;
+      return {
+        ...state,
+        locations: locationData,
+        totalUsers,
+        totalTrafficPercent: totalTraficPercent,
+        isLoading: false,
+        error: null,
+      };
+    case FETCH_DATA_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload.error,
+      };
+    case ADD_LOCATION: {
+      const { name, numberUser, percentageTraffic, performanceFileId } =
+        action.payload;
+      const maxId = state.locations.reduce(
+        (max, item) => Math.max(max, item.Id),
+        0
+      );
+      const newLocation = {
+        Id: maxId + 1,
+        Name: name,
+        NumberUser: numberUser,
+        PercentageTraffic: percentageTraffic,
+        PerformanceFileId: performanceFileId,
+      };
+      return {
+        ...state,
+        totalTrafficPercent:
+          state.totalTrafficPercent + parseFloat(percentageTraffic),
+        locations: [...state.locations, newLocation],
+      };
+    }
+    case DELETE_LOCATION: {
+      const locationToDel = state.locations.find(
+        (loc) => loc.Id === action.payload
+      );
+      return {
+        ...state,
+        totalTrafficPercent:
+          state.totalTrafficPercent - locationToDel.PercentageTraffic,
+        locations: state.locations.filter((item) => item.Id !== action.payload),
+      };
+    }
+    case UPDATE_LOCATION: {
+      const newTraffic =
+      state.totalTrafficPercent +
+        (parseInt(action.payload.PercentageTraffic) -
+          parseInt(
+            state.locations.find((item) => item.Id === action.payload.Id)
+              .PercentageTraffic
+          ));
+        console.log('new',newTraffic)
+      // return {
+      //   ...state,
+      //   totalTrafficPercent:state.totalTrafficPercent+parseInt(percentageTraffic),
+      //   locations: state.locations.map(
+      //     (item) => {
+      //       if(item.Id === action.payload.Id){
+      //         return action.payload
+      //       }else
+      //       return item
+      //     }
+      //   ),
+      // };
+      return {
+        ...state,
+        totalTrafficPercent:
+          state.totalTrafficPercent +
+          (parseInt(action.payload.PercentageTraffic) -
+            parseInt(
+              state.locations.find((item) => item.Id === action.payload.Id)
+                .PercentageTraffic
+            )),
+        locations: state.locations.map((item) => {
+          if (item.Id === action.payload.Id) {
+            return action.payload;
+          }
+          return item;
+        }),
+      };
+    }
+    default:
+      return state;
+  }
+};
+export default locationReducer;

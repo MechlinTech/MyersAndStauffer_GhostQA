@@ -20,15 +20,16 @@ import { toast } from "react-toastify";
 import CustomeTableChell from "./CustomeTableChell";
 import { getBaseUrl } from "../../../../utils/configService";
 import CustomStatusCell from "./CustomStatusCell";
+import { TimesOneMobiledata } from "@mui/icons-material";
+import Rundetail from "./rundetails";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
-
-export default function ExecutionHistory({executionDetail}) {
+export default function ExecutionHistory({ executionDetail }) {
   const classes = useStyles();
   const { testCaseName } = useParams();
   const [selectedRunId, setSelectedRunId] = useState(null);
-  const [videoLink, setvideoLink] = useState("")
-  const [stepDetail, setstepDetail] = useState(null);
+  const [videoLink, setvideoLink] = useState("");
+  const [runIdDetails, setrunIdDetails] = useState();
   const [openModal, setOpenModal] = useState(false);
 
   const getStpeDetail = async () => {
@@ -37,10 +38,10 @@ export default function ExecutionHistory({executionDetail}) {
       const res = await axios.get(
         `${BASE_URL}/AddTestLab/GetTestStepsDetailByTestCaseId?TestCaseId=${selectedRunId}`
       );
-      if (Array.isArray(res.data)) setstepDetail(res.data);
-      else setstepDetail(null);
+      if (Array.isArray(res.data)) setrunIdDetails(res.data);
+      else setrunIdDetails(null);
     } catch (error) {
-      toast.error("NETWORK ERROR")
+      toast.error("NETWORK ERROR");
     }
   };
   useEffect(() => {
@@ -50,11 +51,11 @@ export default function ExecutionHistory({executionDetail}) {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
-  const handleVideoPlay = (vdUrl)=>{
-    setvideoLink(vdUrl)
-    setOpenModal(true)
-  }
-  
+  const handleVideoPlay = (vdUrl) => {
+    setvideoLink(vdUrl);
+    setOpenModal(true);
+  };
+
   // function formatTime(dateTimeString) {
   //   const options = {
   //     hour: "numeric",
@@ -152,57 +153,75 @@ export default function ExecutionHistory({executionDetail}) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {executionDetail?executionDetail.map((row) => (
-                  <TableRow
-                    key={row.TestCase}
-                    className={`${classes.tableRow} ${
-                      selectedRunId === row.TestCase ? classes.activeRow : ""
-                    }`}
-                    // spacing="1"
-                    onClick={() => setSelectedRunId(row.TestCase)}
-                  >
-                    <StyledTableCell
-                      sx={{
-                        color: selectedRunId === row.TestCase ? "white" : "#654DF7",
-                      }}
+                {executionDetail ? (
+                  executionDetail.map((row) => (
+                    <TableRow
+                      key={row.TestCase}
+                      className={`${classes.tableRow} ${
+                        selectedRunId === row.TestCase ? classes.activeRow : ""
+                      }`}
+                      // spacing="1"
+                      onClick={() => setSelectedRunId(row.TestCase)}
                     >
-                      {row.TestCase}
-                    </StyledTableCell>
-                    <StyledTableCell
-                      sx={{
-                        color: selectedRunId === row.TestCase ? "white" : "black",
-                      }}
-                    >
-                      {formatDate(row.StartDateTime)}
-                    </StyledTableCell>
-                    <StyledTableCell
-                      sx={{
-                        color: selectedRunId === row.TestCase ? "white" : "black",
-                      }}
-                    >
-                      {formatDate(row.EndDateTime)}
-                    </StyledTableCell>
-                     <CustomStatusCell status={row.Status} selected={selectedRunId === row.TestCase}/>
-                    <StyledTableCell
-                      sx={{
-                        color:
-                          selectedRunId === row.TestCase ? "white" : "#654DF7",
-                      }}
-                      onClick={() => {}}
-                    >
-                      <VideocamIcon onClick={() =>handleVideoPlay(row.TestVideoUrl)} />
+                      <StyledTableCell
+                        sx={{
+                          color:
+                            selectedRunId === row.TestCase
+                              ? "white"
+                              : "#654DF7",
+                        }}
+                      >
+                        {row.TestCase}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        sx={{
+                          color:
+                            selectedRunId === row.TestCase ? "white" : "black",
+                        }}
+                      >
+                        {formatDate(row.StartDateTime)}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        sx={{
+                          color:
+                            selectedRunId === row.TestCase ? "white" : "black",
+                        }}
+                      >
+                        {formatDate(row.EndDateTime)}
+                      </StyledTableCell>
+                      <CustomStatusCell
+                        status={row.Status}
+                        selected={selectedRunId === row.TestCase}
+                      />
+                      <StyledTableCell
+                        sx={{
+                          color:
+                            selectedRunId === row.TestCase
+                              ? "white"
+                              : "#654DF7",
+                        }}
+                        onClick={() => {}}
+                      >
+                        <VideocamIcon
+                          onClick={() => handleVideoPlay(row.TestVideoUrl)}
+                        />
+                      </StyledTableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <StyledTableCell colSpan={5} align="center">
+                      No execution history
                     </StyledTableCell>
                   </TableRow>
-                )):<TableRow>
-                  <StyledTableCell colSpan={5} align="center">No execution history</StyledTableCell>
-                </TableRow>}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
         </Box>
       </Grid>
 
-      <Grid item xs={12} md={5} justifySelf="start">
+      {/* <Grid item xs={12} md={5} justifySelf="start">
         {selectedRunId && (
           <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
             <TableContainer sx={{ marginBottom: "8vh" }}>
@@ -216,43 +235,44 @@ export default function ExecutionHistory({executionDetail}) {
                     </StyledTableCell>
                   </TableRow>
                   <TableRow>
-                    <StyledTableCell>Status </StyledTableCell>
-                    <StyledTableCell>Duration</StyledTableCell>
-                    <StyledTableCell>Detail</StyledTableCell>
                     <StyledTableCell>Screenshot</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {stepDetail &&
-                    stepDetail.map((item) => {
-                      const testSteps = JSON.parse(item.TestStepJson);
-                      const ScreenshotUrl = item.TestScreenShotUrl
-                       return testSteps.map((row, index) => (
+                   JSON.parse(stepDetail[0].TestScreenShotUrl)?.map((item,index) => 
                         <TableRow
                           key={index}
                           className={`${classes.tableRow}`}
                           style={{ height: "10px" }}
                           spacing="3"
                         >
-                          <StyledTableCell>
-                            {row.Status === "failed" ? (
-                              <CancelIcon color="error" />
-                              ) : (
-                              <CheckCircleIcon color="success" />
-                            )}
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            {row.Duration}
-                          </StyledTableCell>
-                          <StyledTableCell>
-                            {row.stepName}
-                          </StyledTableCell>
-                          
-                            <CustomeTableChell ScreenshotUrl={ScreenshotUrl}/>
-                          
+                           {item.type === 'screenshot' &&<CustomeTableChell ScreenshotUrl={item.files}/>}
                         </TableRow>
-                      ));
-                    })}
+                    )
+                    }
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+        )}
+      </Grid> */}
+      <Grid item xs={12} md={5} justifySelf="start">
+        {selectedRunId && (
+          <Box sx={{ border: "1px solid rgb(219, 217, 217)" }}>
+            <TableContainer sx={{ marginBottom: "8vh" }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell colSpan={4}>
+                      <StyledTypography variant="h6" color="primary">
+                        {selectedRunId}
+                      </StyledTypography>
+                    </StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <Rundetail runIdDetails={runIdDetails}/>
                 </TableBody>
               </Table>
             </TableContainer>

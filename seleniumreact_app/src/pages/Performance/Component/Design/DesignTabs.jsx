@@ -53,10 +53,6 @@ export default function DesignTabs({PerformanceFileId,testCaseData}) {
     setValue(newValue);
   };
 
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
-
   return (
     <Box style={{width:'100%' }}>
      
@@ -87,23 +83,23 @@ export default function DesignTabs({PerformanceFileId,testCaseData}) {
           }}
         >
           <Tab value="Load" label={<StyledTypography>Load</StyledTypography>} />
-          {/*<Tab value="Location" label={<StyledTypography>Location</StyledTypography>}  disabled={true}/>
-           <Tab value="Data Entity" label={<StyledTypography>Test Data</StyledTypography>} disabled={true} />
-          <Tab value="Properties" label={<StyledTypography>Properties</StyledTypography>} disabled={true}/> */}
+           <Tab value="Location" label={<StyledTypography>Location</StyledTypography>} />
+           <Tab value="Data Entity" label={<StyledTypography>Test Data</StyledTypography>} />
+        {/* <Tab value="Properties" label={<StyledTypography>Properties</StyledTypography>}/> */}
           
         </Tabs>
 
         <TabPanel value={value} index={'Load'} dir={theme.direction}>
-       <LoadPanel PerformanceFileId={PerformanceFileId} testCaseData={testCaseData}/>
+       <LoadPanel/>
         </TabPanel>
         <TabPanel value={value} index={"Location"} dir={theme.direction}>
-        <LocationPanel PerformanceFileId={PerformanceFileId}/>
+        <LocationPanel/>
         </TabPanel>
         <TabPanel value={value} index={"Data Entity"} dir={theme.direction}>
-        <DataEntryPanel PerformanceFileId={PerformanceFileId}/>
+        <DataEntryPanel />
         </TabPanel>
         <TabPanel value={value} index={"Properties"} dir={theme.direction}>
-        <Properties PerformanceFileId={PerformanceFileId}/>
+        <Properties/>
         </TabPanel>
         
     </Box>
