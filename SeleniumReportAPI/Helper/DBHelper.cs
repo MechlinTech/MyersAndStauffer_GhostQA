@@ -1942,11 +1942,16 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@Name", model.Name);
                         command.Parameters.AddWithValue("@NumberUser", model.NumberUser);
                         command.Parameters.AddWithValue("@PercentageTraffic", model.PercentageTraffic);
-                        await command.ExecuteNonQueryAsync();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
                     }
                 }
-
-                result = "Success";
             }
             catch (Exception ex)
             {
@@ -2339,7 +2344,6 @@ namespace SeleniumReportAPI.Helper
             string fileName = jsonData.results[0].file.Replace("cypress/", "").Replace(".cy.js", "");
             DateTime startTime = DateTime.Parse(model.startDate.ToString());
             DateTime endTime = DateTime.Parse(model.endDate.ToString());
-
             TimeSpan duration = endTime - startTime;
 
             List<dynamic> results = new List<dynamic>();
@@ -2385,7 +2389,7 @@ namespace SeleniumReportAPI.Helper
                     command.Parameters.AddWithValue("@TestStepJson", JsonConvert.SerializeObject(results));
                     command.Parameters.AddWithValue("@SuiteDuration", jsonData.stats.duration.ToString());
                     command.Parameters.AddWithValue("@TestDuration", jsonData.results[0].suites[0].duration.ToString());
-                    command.Parameters.AddWithValue("@TestScreenShot", GetArtifactUrl(model.data, "screenshot"));
+                    command.Parameters.AddWithValue("@TestScreenShot", JsonConvert.SerializeObject(model.data.runs_artifacts));
                     command.Parameters.AddWithValue("@TesterName", string.Empty);
                     command.Parameters.AddWithValue("@TestVideoUrl", GetArtifactUrl(model.data, "video"));
                     command.Parameters.AddWithValue("@TestCaseDetailsId", model.testCaseDetailId);
@@ -2864,6 +2868,70 @@ namespace SeleniumReportAPI.Helper
                     using (SqlCommand command = new SqlCommand("stp_GetLocation", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> GetFunctionalTest()
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetFunctionalTest", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> AddFunctionalTest(FuncationalTest model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddFunctionalTest", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@Node", model.Node);
+                        command.Parameters.AddWithValue("@Parent", model.Parent);
+                        command.Parameters.AddWithValue("@Name", model.Name);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)

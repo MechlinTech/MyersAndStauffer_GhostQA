@@ -130,7 +130,13 @@ BEGIN TRY
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [Result] = JSON_QUERY((
-				SELECT 'success' [status], 'Added Successfully' [message]
+				SELECT 'success' [status], 'Added Successfully' [message],
+				[Data] = JSON_QUERY((
+						SELECT Id [id], [PerformanceFileId] [performanceFileId], [Name] [name],[NumberUser] [numberUser],[PercentageTraffic]
+						[percentageTraffic]
+						FROM tbl_PerformanceLocation where [Id] = SCOPE_IDENTITY()
+						FOR JSON PATH
+					))
 			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
 			))
 		END
@@ -2712,8 +2718,7 @@ BEGIN TRY
     IF EXISTS (SELECT 1 FROM tbl_CypressTestExecution WHERE [TestCaseId] = @TestCaseId)
     BEGIN
         SELECT [result] = JSON_QUERY((
-            SELECT ISNULL([TestStepJson], '') AS [TestStepJson],
-					ISNULL([TestScreenShotUrl], '') AS [TestScreenShotUrl]
+            SELECT ISNULL([TestScreenShotUrl], '') AS [TestScreenShotUrl]
             FROM tbl_CypressTestExecution
             WHERE [TestCaseId] = @TestCaseId
             FOR JSON PATH
@@ -3590,12 +3595,147 @@ BEGIN TRY
 	SELECT [result] = JSON_QUERY((
 		SELECT [Id],
 			   [CountryName] as [Name]
-			   ORDER BY CountryName
 		FROM tbl_Location
+		ORDER BY CountryName
 		FOR JSON PATH
 	))
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [result]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetFunctionalTest]
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetFunctionalTest
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	18th April 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetFunctionalTest
+**************************************************************************************/
+BEGIN TRY
+	SELECT [result] = JSON_QUERY((
+		SELECT [RootId] AS [id], 
+		       ISNULL([Node], '') AS [node],
+               ISNULL([Parent], '') AS [parentId],
+               ISNULL([Name], '') AS [name]
+		FROM tbl_FuncationalTest
+	FOR JSON PATH))
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [FuncationalTest]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddFunctionalTest]
+@RootId         int = 0,
+@Node		    int,
+@Parent	        int,
+@Name           NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_AddFunctionalTest
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	18th April 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_AddFunctionalTest 0,0,0,'Test Nitin Workspace'
+				
+**************************************************************************************/
+BEGIN TRY
+ IF EXISTS( SELECT 1 FROM [dbo].[tbl_FuncationalTest] WHERE [Parent] = @Parent AND [Name] = @Name)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Work Space Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
+	BEGIN
+		INSERT INTO [dbo].[tbl_FuncationalTest] ([Node], [Parent], [Name]) 
+		VALUES (@Node, @Parent, @Name)
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [Result] = JSON_QUERY((
+				SELECT 'success' [status], 'successfully Added' [message],
+					[Data] = JSON_QUERY((
+						SELECT RootId [id], Parent [parentId], [Name] [name]
+						FROM tbl_FuncationalTest where RootId = SCOPE_IDENTITY()
+						FOR JSON PATH
+					))
+			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateFunctionalTest]
+@RootId         INT,
+@Name           NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_UpdateFunctionalTest
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	18th April 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_UpdateFunctionalTest 
+				
+**************************************************************************************/
+BEGIN TRY
+IF EXISTS( SELECT 1 FROM [dbo].[tbl_FuncationalTest] WHERE [RootId] <> @RootId AND [Name] = @Name)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Work Space Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
+	BEGIN
+		UPDATE [dbo].[tbl_FuncationalTest]
+		SET 
+			Name    = @Name
+			WHERE RootId  = @RootId
+    END
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'success' [status], 'Updated Successfully' [message],
+				[Data] = JSON_QUERY((
+						SELECT RootId [id], Parent [parentId], [Name] [name]
+						FROM tbl_FuncationalTest where RootId  = @RootId
+						FOR JSON PATH
+					))
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
 END CATCH
 GO

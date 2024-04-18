@@ -20,7 +20,13 @@ BEGIN TRY
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [Result] = JSON_QUERY((
-				SELECT 'success' [status], 'Added Successfully' [message]
+				SELECT 'success' [status], 'Added Successfully' [message],
+				[Data] = JSON_QUERY((
+						SELECT Id [id], [PerformanceFileId] [performanceFileId], [Name] [name],[NumberUser] [numberUser],[PercentageTraffic]
+						[percentageTraffic]
+						FROM tbl_PerformanceLocation where [Id] = SCOPE_IDENTITY()
+						FOR JSON PATH
+					))
 			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
 			))
 		END
