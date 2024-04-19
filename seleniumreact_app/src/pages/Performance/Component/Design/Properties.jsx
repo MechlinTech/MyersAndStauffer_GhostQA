@@ -17,7 +17,7 @@ import {
   deleteProperty,
   fetchPropertyData,
   submitProperty,
-} from "../../../../redux/actions/performanceAction";
+} from "../../../../redux/actions/propertyAction";
 import { CircularProgress } from "@material-ui/core";
 
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
@@ -30,8 +30,10 @@ export default function Properties() {
     pNameError: "",
     pValueError: "",
   });
-  const { propertyData, propertyLoading, propertyError, scenarioId } =
+  const { scenarioId } =
     useSelector((state) => state.performance);
+  const { propertyData, propertyLoading, propertyError } =
+    useSelector((state) => state.property);
 
   useEffect(() => {
     dispatch(fetchPropertyData(scenarioId));

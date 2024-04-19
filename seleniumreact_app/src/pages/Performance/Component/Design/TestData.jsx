@@ -237,6 +237,7 @@ export default function DataEntryPanel() {
                           //   border: "solid 2px #DADADA",
                           //   borderRadius: "5px",
                           // }}
+                          style={{maxHeight:'200px'}}
                           >
                             <Table aria-label="simple table">
                               <TableBody>
