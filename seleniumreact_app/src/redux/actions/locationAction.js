@@ -100,7 +100,7 @@ export const submitLocation = (payload) => {
         header()
       );
       console.log("res", res);
-      if (res.data === "Success") {
+      if (res.data.status === "success") {
         toast.info("Successfully saved", {
           style: {
             background: "rgb(101, 77, 247)",
@@ -109,7 +109,7 @@ export const submitLocation = (payload) => {
         });
 
         // Update LOCATIONDATA after successful submission
-        dispatch({ type: ADD_LOCATION, payload: payload });
+        dispatch({ type: ADD_LOCATION, payload: res.data.Data });
       } else {
         toast.error("Submitting error");
       }

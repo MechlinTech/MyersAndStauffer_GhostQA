@@ -40,14 +40,12 @@ const locationReducer = (state = initialState, action) => {
         error: action.payload.error,
       };
     case ADD_LOCATION: {
-      const { name, numberUser, percentageTraffic, performanceFileId } =
-        action.payload;
-      const maxId = state.locations.reduce(
-        (max, item) => Math.max(max, item.Id),
-        0
-      );
+      const loc = action.payload[0]
+      console.log("loc",loc)
+      const { id,name, numberUser, percentageTraffic, performanceFileId } =
+        loc;
       const newLocation = {
-        Id: maxId + 1,
+        Id: id,
         Name: name,
         NumberUser: numberUser,
         PercentageTraffic: percentageTraffic,
