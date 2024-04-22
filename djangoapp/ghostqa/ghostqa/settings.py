@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'drf_spectacular',   
     'cypress',
     'performace_test',
+    'agent_dynamic_location',
     'django_filters'
 ]
 
