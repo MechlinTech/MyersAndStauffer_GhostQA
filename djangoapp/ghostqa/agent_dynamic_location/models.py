@@ -1,5 +1,7 @@
 from django.db import models
 import uuid
+from cypress.models import TestSuite
+from performace_test.models import PerformaceTestSuite
 
 # Create your models here.
 
@@ -30,10 +32,13 @@ class Job(models.Model):
         ('completed', 'Completed')
     ]
     agent = models.ForeignKey(AgentDetails, on_delete=models.CASCADE, related_name='agent_details')
+    performance_test_suite = models.ForeignKey(PerformaceTestSuite, on_delete=models.CASCADE, blank=True, null=True)
+    test_suite = models.ForeignKey(TestSuite, on_delete=models.CASCADE, blank=True, null=True)
     job_id = models.CharField(max_length=36, unique=True, default=uuid.uuid4, editable=False)
-    field_type = models.CharField(max_length=20, choices=field_type_choices, default=None)
-    file = models.FileField(upload_to='uploads/performace_testing/', blank=True, null=True)
-    request_json = models.JSONField(null=True, blank=True)
+    # job_id = models.CharField(max_length=36, unique=True, default=uuid.uuid4, editable=False)
+    field_type = models.CharField(max_length=20, choices=field_type_choices)
+    # file = models.FileField(upload_to='uploads/performace_testing/', blank=True, null=True)
+    # request_json = models.JSONField(null=True, blank=True)
     job_status = models.CharField(max_length=10, choices=job_status_choices, default='queued', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
