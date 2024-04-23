@@ -98,6 +98,7 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     environment:
+      - DOCKER_HOST=unix://var/run/docker.sock
       - SHARED_PATH=/automation-tests
       - SHARED_PERFORMACE_PATH=/tests
       - DATABASE_URL=postgres://yourusername:yourpassword@postgres:5432/yourdatabase 
