@@ -8,12 +8,6 @@
     <LangVersion>preview</LangVersion>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
-	<ItemGroup>
-		<Content Include="Arum\Mississippi\appsettings.Release.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<DependentUpon>appsettings.json</DependentUpon>
-		</Content>
-	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DotNetSeleniumExtras.PageObjects" Version="3.11.0" />
@@ -37,15 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MyersAndStaufferFramework\MyersAndStaufferFramework.csproj" />
   </ItemGroup>
-	<ItemGroup>
-		<None Update="Arum\Mississippi\appsettings.Debug.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<DependentUpon>appsettings.json</DependentUpon>
-		</None>
-		<None Update="Arum\Mississippi\appsettings.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<WriteLinesToFile File="$(TargetDir)/env.config" Lines="$(Configuration)" Overwrite="true">
 		</WriteLinesToFile>
