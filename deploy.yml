@@ -100,6 +100,7 @@ services:
     environment:
       - SHARED_PATH=/automation-tests
       - SHARED_PERFORMACE_PATH=/tests
+      - DOCKER_HOST='tcp://15.207.97.170:2375'
       - DATABASE_URL=postgres://yourusername:yourpassword@postgres:5432/yourdatabase 
     volumes:
       - ./app/media:/app/media

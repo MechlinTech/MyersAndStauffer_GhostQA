@@ -157,3 +157,4 @@ REST_FRAMEWORK = {
 MIDDLEWARE += ('crum.CurrentRequestUserMiddleware',)
 
 
+DOCKER_HOST = os.environ.get('DOCKER_HOST', None)

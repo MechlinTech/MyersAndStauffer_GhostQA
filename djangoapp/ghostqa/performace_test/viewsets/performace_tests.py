@@ -177,7 +177,7 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             copy_files_and_folders(JMETER_CONFIG_PATH,volume_path)                   
             create_directory(f"{volume_path}/html-results")
             
-            with open(f"{volume_path}/test.jmx", "w") as file:
+            with open(f"{volume_path}/test.jmx", "w") as file: # here we can use the agent file upload api.
                 jmx_text_content = replace_thread_group(instance.test_file.read(), jmx_properties=request.data)
                 file.write(jmx_text_content)
             with open(f"{volume_path}/test.jmx", "rb") as file:
