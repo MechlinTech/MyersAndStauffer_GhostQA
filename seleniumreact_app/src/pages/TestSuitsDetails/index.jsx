@@ -67,17 +67,14 @@ export default function TestSuitsDetails() {
   };
  
   function formatDateStringWithTime(dateString) {
+    let dd=new Date(dateString);
     const options = {
         year: "numeric",
         month: "short",
         day: "2-digit",
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true // Display time in 12-hour format with AM/PM
     };
  
-    const formattedDate = new Date(dateString).toLocaleString("en-US", options);
+    const formattedDate = dd.toLocaleString("en-US", options);
     return formattedDate;
 }
  
@@ -132,7 +129,7 @@ export default function TestSuitsDetails() {
   }
  
   return (
-    <> {!loading?(   
+    <> {!loading?(
       <Grid className={classess.mainContainer}>
         {/* header button */}
         <Grid
@@ -259,9 +256,8 @@ export default function TestSuitsDetails() {
                         <Typography
                           variant="body1"
                           className={classess.tbodyFont}
-                        >{`${formatDateStringWithTime(
-                          testCaseDetils.TestRunStartDateTime
-                        )}`}</Typography>
+                        >{formatDateStringWithTime(testCaseDetils.TestRunStartDate)} {testCaseDetils.TestRunStartTime}
+                        </Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -323,9 +319,9 @@ export default function TestSuitsDetails() {
                           className={classess.tbodyFont}
                         >
                           {formatTimeDifference(
-                            new Date(testCaseDetils.TestRunEndDateTime) -
-                              new Date(testCaseDetils.TestRunStartDateTime)
-                          )}
+                            new Date(`${testCaseDetils.TestRunEndDate}T${testCaseDetils.TestRunEndTime }`) -
+                            new Date( `${testCaseDetils.TestRunStartDate}T${testCaseDetils.TestRunStartTime}`)
+                          )}  
                         </Typography>
                       </CardContent>
                     </Card>
@@ -487,10 +483,10 @@ export default function TestSuitsDetails() {
                         <Box textAlign='center'>
                           <Typography variant="subtitle1">Duration</Typography>
                           <Chip
-                            label={`${formatTimeDifference(
-                              new Date(testCaseSteps.TestCaseEndDate) -
-                                new Date(testCaseSteps.TestCaseStartDate)
-                            )}`}
+                            label={formatTimeDifference(
+                              new Date(`${testCaseSteps.TestCaseEndDate}T${testCaseSteps.TestCaseEndTime }`) -
+                              new Date( `${testCaseSteps.TestCaseStartDate}T${testCaseSteps.TestCaseStartTime}`)
+                            )}  
                             color="default"
                             variant="outlined"
                             style={{ marginBottom: 8 }}
