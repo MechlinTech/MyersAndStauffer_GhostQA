@@ -2,6 +2,7 @@ from rest_framework import serializers
 # from .models import Agent
 from .models import AgentDetails, Job
 from cypress.serializers.request import TestSuiteSerializer
+from cypress.models import TestSuite
 from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer
 
 class AgentSerializer(serializers.ModelSerializer):
@@ -12,6 +13,18 @@ class AgentSerializer(serializers.ModelSerializer):
 
 from django.forms.models import model_to_dict
 from cypress.build_cypress import generate_test_cases
+
+
+class TestSuiteSerializer(serializers.ModelSerializer):
+    scenarios_file = serializers.FileField(required=False)  
+    name = serializers.CharField(max_length=1000)
+    client_reference_id = serializers.CharField(required=False)
+    # container_runs = TestContainersRunsSerializer(many=True,read_only=True)
+    # request_json = RequestTestSuiteSerializer(many=True)
+    
+    class Meta:
+        model = TestSuite
+        fields = ["id", "client_reference_id", "name","container_runs","cypress_code","scenarios_file", "request_json"]
 
 class JobSerializer(serializers.ModelSerializer):
     # agent = serializers.PrimaryKeyRelatedField(queryset=AgentDetails.objects.all())
@@ -45,7 +58,12 @@ class JobSerializer(serializers.ModelSerializer):
 
             job = Job.objects.create(performance_test_suite=performance_test_suite_data, **validated_data)
         elif field_type == 'testlab':
-            job = Job.objects.create(test_suite=test_suite_data, **validated_data)
+            test_suite = TestSuite.objects.get(pk=test_suite_data.pk)
+            job = Job.objects.create(test_suite=test_suite, **validated_data)
+            
+            
+            
+            
         # elif field_type == 'testlab':
         #     # test_suite_data = validated_data.pop('test_suite', None)
         #     job = Job.objects.create(**validated_data)
