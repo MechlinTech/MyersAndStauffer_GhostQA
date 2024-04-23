@@ -19,5 +19,6 @@ namespace SeleniumReportAPI.Models
         public string TestScreenShotUrl { get; set; }
         public string TesterName { get; set; }
         public string TestVideoUrl { get; set; }
+        public byte[] ContainerLog { get; set; }
     }
 }
