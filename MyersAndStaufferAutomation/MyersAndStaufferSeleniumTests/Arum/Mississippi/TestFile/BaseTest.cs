@@ -12,21 +12,30 @@ using System.Text;
 namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
 {
     [TestFixture]
+
     public class BaseTest
     {
         public static string basePath = TestExecutor.Basepath;
         public static string EnvironmentName = TestExecutor.environmentName;
-        public Authentication Credentials = new Authentication();
+        public static bool isRunHeadless = TestExecutor.IsRunHeadless;
         public IWebDriver driver;
         private static string LoggingPath { get; set; }
         public static TestData _testData = TestDataSharedInstance.testData;
         public static List<TestStepColumns> _testSteps = TestCaseStepsInstance.TestSteps;
+        public static string status { get; set; }
+        public static string message { get; set; }
+        public static string stackTrace { get; set; }
+
+
 
         public BaseTest()
         {
             _testData.TestSuiteStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestEnvironment = EnvironmentName;
+            _testData.TestRunName = TestExecutor.TestRunName;
+            _testData.TesterName = "QA";
         }
+
 
         [SetUp]
         public void SetUp()
@@ -34,14 +43,16 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             try
             {
                 StringBuilder logMessage = new StringBuilder();
-                _testData.TestCaseName = TestContext.CurrentContext.Test.Name;
+                // _testData.TestCaseName = TestContext.CurrentContext.Test.Name;
                 //Get Browser settings
                 string baseURL = TestExecutor.Baseurl;
                 WindowSize browserWindowSize = new WindowSize(1280, 720);
                 LogMessage(logMessage.ToString());
-                Browser.Start(BrowserDriver.Chrome, windowSize: browserWindowSize, isRunHeadless: true);
+                Browser.Start(BrowserDriver.Chrome);
                 driver = Browser.Driver;
                 driver.Manage().Window.Maximize();
+
+
             }
             catch (Exception)
             {
@@ -50,42 +61,64 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         }
 
         [TearDown]
-        public virtual void TearDown()
+        public virtual async Task TearDownAsync()
         {
-            var status = LoginTest.Status;
-            var message = LoginTest.Message;
-            var stackTrace = LoginTest.StackTrace;
+            //var status = CheckoutOrder.Status;
+            //var message = CheckoutOrder.Message;
+            //var stackTrace = CheckoutOrder.StackTrace;
 
             DateTime time = DateTime.Now;
             string fileName2 = "Screenshot_" + time.ToString("h_mm_ss") + ".png";
 
             if (status == TestStatus.Failed.ToString())
             {
-                _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), FailureException = "Test failed with logTrace " + stackTrace.ToString() });
+                _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test failed with logTrace " + stackTrace.ToString() });
+                //   _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test failed with exception " + Exception.ToString() });
+                ScreenShot(message.ToString(), "Failure", true);
             }
-            else if (status == TestStatus.Passed.ToString())
+            else
             {
-                _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Passed" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Passed" });
             }
 
-            if (status == TestStatus.Failed.ToString())
-            {
-                ScreenShot(message.ToString(), "Failure", true);
-                AttatchLogToTest();
-            }
+
 
             _testData.TestRunEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestCaseSteps = "-";
-            //VideoRecorder.EndRecording();
 
+            VideoRecorder.CreateRecordingfromSC();
+            if (VideoRecorder.basePath.Contains("images"))
+                VideoRecorder.basePath = VideoRecorder.basePath.Substring(0, VideoRecorder.basePath.IndexOf("\\images"));
+            _testData.TestCaseVideoURL = @"\" + (VideoRecorder.outputFile.StartsWith(VideoRecorder.basePath) ? VideoRecorder.outputFile.Substring(VideoRecorder.basePath.Length).ToString().TrimStart('\\') : VideoRecorder.outputFile.ToString());
             Browser.Driver.Dispose();
             _testData.TestSuiteEndDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
             _testData.TestCaseSteps = JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty)));
             TestExecutor.JsonData = JsonConvert.SerializeObject(_testData);
-            // This is required to execute test cases very first time
-            //DBConfiguration.SaveTestCaseData(JsonConvert.SerializeObject(_testData));
-            //DBConfiguration.UpdateTestStepsJson(JsonConvert.SerializeObject(_testSteps.Where(x => x.Timestamp is not null && (x.Status is not null || x.Status != string.Empty))), _testData.TestSuiteName, _testData.TestRunName, _testData.TestCaseName);
+            if (TestExecutor.IsInbuilt)
+            {
+                string apiUrl = TestExecutor.APIpath;
+
+                // Replace this with your JSON payload
+                string jsonPayload = JsonConvert.SerializeObject(_testData);
+
+                APIClient apiClient = new APIClient(apiUrl);
+                try
+                {
+                    string response = await apiClient.MakeApiRequest(jsonPayload);
+                    Console.WriteLine(response);
+                }
+                catch (HttpRequestException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+            }
+            _testSteps.Clear();
+            stackTrace = null;
+            message = null;
+            status = null;
         }
+
 
         public static void ScreenShot(string FailureMessage, string fileName = null, bool hasTimeStamp = false)
         {
@@ -105,7 +138,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             }
             var FailureSSImagePath = Path.Combine(FailureSSPath, fileName + (hasTimeStamp ? timestamp : null) + ".png");
             ss.SaveAsFile(FailureSSImagePath);
-            _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Failed and here is the screenshot on which test failed", FailureMessage = "Test failed with message " + FailureMessage.ToString().Replace("'", "''"), FailureScreenShots = FailureSSImagePath.StartsWith(basePath) ? @"\" + FailureSSImagePath.Substring(basePath.Length).ToString() : FailureSSImagePath.ToString() });
+            if (VideoRecorder.basePath.Contains("images"))
+                VideoRecorder.basePath = VideoRecorder.basePath.Substring(0, VideoRecorder.basePath.IndexOf("\\images"));
+            _testSteps.Add(new TestStepColumns { Status = "Failed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Test Failed and here is the screenshot on which test failed", FailureMessage = "Test failed with message " + FailureMessage.ToString().Replace("'", "''"), FailureScreenShots = FailureSSImagePath.StartsWith(VideoRecorder.basePath) ? FailureSSImagePath.Substring(VideoRecorder.basePath.Length).ToString() : FailureSSImagePath.ToString() });
         }
 
         // Helper Methods
@@ -115,11 +150,11 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         /// </summary>
         /// <param name="partialUrl"></param>
         /// <returns></returns>
-        public bool IsPathInCurrentUrl(string partialUrl)
-        {
-            return Browser.Driver.Url.ToLower()
-                .Contains(partialUrl.ToLower());
-        }
+        //public bool IsPathInCurrentUrl(string partialUrl)
+        //{
+        //    return Browser.Driver.Url.ToLower()
+        //        .Contains(partialUrl.ToLower());
+        //}
 
         public MediaEntityModelProvider captureScreenShot(IWebDriver driver, string screenShotName)
         {

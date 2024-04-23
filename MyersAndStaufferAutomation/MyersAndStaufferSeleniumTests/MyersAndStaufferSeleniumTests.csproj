@@ -8,12 +8,6 @@
     <LangVersion>preview</LangVersion>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
-	<ItemGroup>
-		<Content Include="Arum\Mississippi\appsettings.Release.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<DependentUpon>appsettings.json</DependentUpon>
-		</Content>
-	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DotNetSeleniumExtras.PageObjects" Version="3.11.0" />
@@ -30,22 +24,13 @@
     <PackageReference Include="NunitXml.TestLogger" Version="3.0.131" />
     <PackageReference Include="Selenium.Support" Version="4.8.2" />
     <PackageReference Include="Selenium.WebDriver" Version="4.18.1" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="121.0.6167.18400" />
-    <PackageReference Include="Selenium.WebDriver.MSEdgeDriver" Version="120.0.2210.144" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="124.0.6367.6000" />
+    <PackageReference Include="Selenium.WebDriver.MSEdgeDriver" Version="124.0.2478.10-pre" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MyersAndStaufferFramework\MyersAndStaufferFramework.csproj" />
   </ItemGroup>
-	<ItemGroup>
-		<None Update="Arum\Mississippi\appsettings.Debug.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<DependentUpon>appsettings.json</DependentUpon>
-		</None>
-		<None Update="Arum\Mississippi\appsettings.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<WriteLinesToFile File="$(TargetDir)/env.config" Lines="$(Configuration)" Overwrite="true">
 		</WriteLinesToFile>
