@@ -72,13 +72,27 @@ export default function TestSuitsDetails() {
         year: "numeric",
         month: "short",
         day: "2-digit",
+        hour: "numeric",
+        minute:"numeric",
+        seconds:"numeric",
+        hour12: true
     };
  
     const formattedDate = dd.toLocaleString("en-US", options);
     return formattedDate;
 }
  
- 
+function formatDateString(dateString) {
+  let dd=new Date(dateString);
+  const options = {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+  };
+
+  const formattedDate = dd.toLocaleString("en-US", options);
+  return formattedDate;
+}
  
   const calculateDonutHeight = () => {
     const parentContainer = document.getElementById("donut-container");
@@ -256,7 +270,7 @@ export default function TestSuitsDetails() {
                         <Typography
                           variant="body1"
                           className={classess.tbodyFont}
-                        >{formatDateStringWithTime(testCaseDetils.TestRunStartDate)} {testCaseDetils.TestRunStartTime}
+                        >{formatDateString(testCaseDetils.TestRunStartDate)} {testCaseDetils.TestRunStartTime}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -459,9 +473,7 @@ export default function TestSuitsDetails() {
                             Start DateTime
                           </Typography>
                           <Chip
-                            label={`${formatDateStringWithTime(
-                              testCaseSteps.TestCaseStartDate
-                            )}`}
+                            label={formatDateStringWithTime(`${testCaseSteps.TestCaseStartDate}T${testCaseSteps.TestCaseStartTime}`)}
                             color="primary"
                             variant="outlined"
                             style={{ marginRight: 8, marginBottom: 8 }}
@@ -472,9 +484,7 @@ export default function TestSuitsDetails() {
                             End DateTime
                           </Typography>
                           <Chip
-                            label={`${formatDateStringWithTime(
-                              testCaseSteps.TestCaseEndDate
-                            )}`}
+                            label={formatDateStringWithTime(testCaseSteps.TestCaseEndDate)} {...testCaseSteps.TestCaseEndTime}
                             color="secondary"
                             variant="outlined"
                             style={{ marginRight: 8, marginBottom: 8 }}
