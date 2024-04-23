@@ -484,7 +484,7 @@ function formatDateString(dateString) {
                             End DateTime
                           </Typography>
                           <Chip
-                            label={formatDateStringWithTime(testCaseSteps.TestCaseEndDate)} {...testCaseSteps.TestCaseEndTime}
+                            label={formatDateStringWithTime(`${testCaseSteps.TestCaseEndDate}T${testCaseSteps.TestCaseEndTime}`)}
                             color="secondary"
                             variant="outlined"
                             style={{ marginRight: 8, marginBottom: 8 }}
