@@ -73,6 +73,7 @@
         public string container_id { get; set; }
         public List<RunArtifactOption> runs_artifacts { get; set; }
         public object json { get; set; }
+        public string container_logs_str { get; set; }
     }
 
     public class RunArtifactOption
