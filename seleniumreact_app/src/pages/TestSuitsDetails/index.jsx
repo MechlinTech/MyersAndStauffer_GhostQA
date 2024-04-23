@@ -30,7 +30,8 @@ import CustomVideoChell from "./CustomVideoChell";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import { CircularProgress } from "@material-ui/core";
+ 
 export default function TestSuitsDetails() {
   const { testSuiteName, testRunName } = useParams();
   const classess = useStyles();
@@ -38,21 +39,22 @@ export default function TestSuitsDetails() {
   const [isButtonClicked, setButtonClicked] = useState(false);
   const [activeRow, setActiveRow] = useState(null);
   const navigate = useNavigate();
+  const [loading ,setLoading] = useState(false);
   const { testCaseDetils, testCaseSteps } = useSelector(
     (state) => state.selenium
   );
-
+ 
   useEffect(() => {
     if (testSuiteName !== undefined && testRunName !== undefined) {
       let data = {
         testSuitName: testSuiteName,
         runId: testRunName,
       };
-
-      dispatch(GetTestCaseDetails(data));
+ 
+      dispatch(GetTestCaseDetails(data,setLoading));
     }
   }, [dispatch, testSuiteName, testRunName]);
-
+ 
   const handleRowClick = (payload) => {
     let data = {
       testSuitName: payload.TestSuiteName,
@@ -63,21 +65,24 @@ export default function TestSuitsDetails() {
     setButtonClicked(true);
     setActiveRow((prevSuite) => (prevSuite === payload ? null : payload));
   };
-
+ 
   function formatDateStringWithTime(dateString) {
     const options = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true // Display time in 12-hour format with AM/PM
     };
-
+ 
     const formattedDate = new Date(dateString).toLocaleString("en-US", options);
     return formattedDate;
-  }
-
+}
+ 
+ 
+ 
   const calculateDonutHeight = () => {
     const parentContainer = document.getElementById("donut-container");
     const parentContainerHeight = parentContainer
@@ -87,26 +92,26 @@ export default function TestSuitsDetails() {
     const calculatedHeight = `${
       (parentContainerHeight * desiredPercentage) / 100
     }px`;
-
+ 
     return calculatedHeight;
   };
-
+ 
   function formatTimeDifference(timeDifference) {
     const seconds = Math.floor(timeDifference / 1000);
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-
+ 
     const padWithZero = (num) => (num < 10 ? `0${num}` : num);
-
+ 
     // Format the time components with leading zeros
     const formattedHours = padWithZero(hours);
     const formattedMinutes = padWithZero(minutes);
     const formattedSeconds = padWithZero(remainingSeconds);
-
+ 
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   }
-
+ 
   const testData = [
     { name: "Tester Name", value: testCaseDetils.TesterName },
     { name: "Test Environment", value: testCaseDetils.TestEnvironment },
@@ -125,9 +130,9 @@ export default function TestSuitsDetails() {
     );
     return formattedTime;
   }
-
+ 
   return (
-    <>
+    <> {!loading?(   
       <Grid className={classess.mainContainer}>
         {/* header button */}
         <Grid
@@ -165,7 +170,7 @@ export default function TestSuitsDetails() {
             </Stack>
           </Grid>
         </Grid>
-
+ 
         {/* main compoent */}
         <Grid container spacing={2}>
           {/* Left side content */}
@@ -199,7 +204,7 @@ export default function TestSuitsDetails() {
                   )}
                 </Card>
               </Grid>
-
+ 
               {/* Right part of the card */}
               <Grid item xs={12} sm={6}>
                 <Grid container spacing={2}>
@@ -216,7 +221,7 @@ export default function TestSuitsDetails() {
                           Tests
                         </Typography>
                       </CardContent>
-
+ 
                       <CardContent>
                         {" "}
                         <Typography
@@ -234,7 +239,7 @@ export default function TestSuitsDetails() {
                       </CardContent>
                     </Card>
                   </Grid>
-
+ 
                   {/* Top-right part */}
                   <Grid item xs={12} sm={6}>
                     <Card
@@ -248,7 +253,7 @@ export default function TestSuitsDetails() {
                           Start Date, Time
                         </Typography>
                       </CardContent>
-
+ 
                       <CardContent>
                         {" "}
                         <Typography
@@ -260,7 +265,7 @@ export default function TestSuitsDetails() {
                       </CardContent>
                     </Card>
                   </Grid>
-
+ 
                   {/* Bottom-left part */}
                   <Grid item xs={12} sm={6}>
                     <Card
@@ -274,7 +279,7 @@ export default function TestSuitsDetails() {
                           Tests
                         </Typography>
                       </CardContent>
-
+ 
                       <CardContent>
                         {" "}
                         <Typography
@@ -296,7 +301,7 @@ export default function TestSuitsDetails() {
                       </CardContent>
                     </Card>
                   </Grid>
-
+ 
                   {/* Bottom-right part */}
                   <Grid item xs={12} sm={6}>
                     <Card
@@ -310,7 +315,7 @@ export default function TestSuitsDetails() {
                           Duration
                         </Typography>
                       </CardContent>
-
+ 
                       <CardContent>
                         {" "}
                         <Typography
@@ -328,7 +333,7 @@ export default function TestSuitsDetails() {
                 </Grid>
               </Grid>
             </Grid>
-
+ 
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Card style={{ height: "60vh", overflow: "auto" }}>
@@ -378,9 +383,9 @@ export default function TestSuitsDetails() {
               </Grid>
             </Grid>
           </Grid>
-
+ 
           {/* Right side */}
-
+ 
           <Grid item xs={12} sm={5}>
             <Grid container spacing={2}>
               {/* Top part of the card */}
@@ -395,7 +400,7 @@ export default function TestSuitsDetails() {
                       Environment
                     </Typography>
                   </CardContent>
-
+ 
                   <Table>
                     <TableHead>
                       <TableRow>
@@ -423,7 +428,7 @@ export default function TestSuitsDetails() {
                 </Card>
               </Grid>
             </Grid>
-
+ 
             <Grid container spacing={2}>
               {/* Left part of the card */}
               {isButtonClicked &&
@@ -540,7 +545,7 @@ export default function TestSuitsDetails() {
                                       : row.Details}
                                   </TableCell>
                                 )}
-
+ 
                                 {row.FailureScreenShots ? (
                                   <CustomeTableChell row={row} />
                                 ) : (
@@ -558,6 +563,10 @@ export default function TestSuitsDetails() {
           </Grid>
         </Grid>
       </Grid>
+      ):(
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+      <CircularProgress size={25} />
+    </div>)}
     </>
   );
 }

@@ -9,7 +9,8 @@ import { Link } from "react-router-dom";
 import { useStyles, StyledTableCell } from "./style";
 import { GetTestCaseDetails } from "../../redux/actions/seleniumAction";
 import { useDispatch } from "react-redux";
-
+import { useState } from "react";
+ 
 function formatTime(dateTimeString) {
   const options = {
     hour: "numeric",
@@ -27,13 +28,14 @@ export function TableData({ rows }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [activeRow, setActiveRow] = React.useState(null);
-
+  const [loading ,setLoading] = useState(false);
+ 
   const handleRowClick = (payload) => {
     let data = {
       testSuitName: payload.TestSuiteName,
       runId: payload.TestRunName,
     };
-    dispatch(GetTestCaseDetails(data));
+    dispatch(GetTestCaseDetails(data,setLoading));
     setActiveRow((prevSuite) => (prevSuite === payload ? null : payload));
   };
   return (
@@ -58,10 +60,10 @@ export function TableData({ rows }) {
                 row === activeRow ? classes.activeRow : ""
               }`}
             >
-              <StyledTableCell component="th" scope="row">
+              <StyledTableCell component="th" scope="row" >
                 <Link
                   to={`/test/${row?.TestSuiteName}/${row.TestRunName}`}
-                  style={{ textDecoration: "none" }}
+                  style={{ textDecoration: "none",cursor:"pointer" }}
                   onClick={() => handleRowClick(row)}
                 >
                   {row.TestRunName}
