@@ -156,4 +156,4 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE += ('crum.CurrentRequestUserMiddleware',)
 
-
+DOCKER_HOST =  os.environ.get('DOCKER_HOST', 'unix://var/run/docker.sock')
