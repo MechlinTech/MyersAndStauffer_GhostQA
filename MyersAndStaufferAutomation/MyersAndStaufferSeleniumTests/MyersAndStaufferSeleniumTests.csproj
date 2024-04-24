@@ -27,10 +27,6 @@
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="121.0.6167.18400" />
     <PackageReference Include="Selenium.WebDriver.MSEdgeDriver" Version="120.0.2210.144" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MyersAndStaufferFramework\MyersAndStaufferFramework.csproj" />
-  </ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<WriteLinesToFile File="$(TargetDir)/env.config" Lines="$(Configuration)" Overwrite="true">
 		</WriteLinesToFile>

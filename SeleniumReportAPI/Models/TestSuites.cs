@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SeleniumReportAPI.Models
+namespace GhostQA_API.Models
 {
     public class TestSuites
     {

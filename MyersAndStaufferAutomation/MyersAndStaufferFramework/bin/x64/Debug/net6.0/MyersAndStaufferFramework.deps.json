@@ -21,12 +21,10 @@
           "NLogger": "1.1.0",
           "Newtonsoft.Json": "13.0.3",
           "NunitXml.TestLogger": "3.0.131",
-          "ScreenRecorderLib": "5.4.0",
           "System.Data.DataSetExtensions": "4.5.0",
           "System.Runtime.Caching": "7.0.0",
           "System.ServiceModel.Primitives": "4.10.2",
-          "Scientist": "2.0.0",
-          "ScreenRecorderLib.Reference": "1.0.8721.22390"
+          "Scientist": "2.0.0"
         },
         "runtime": {
           "MyersAndStaufferFramework.dll": {}
@@ -413,7 +411,6 @@
           }
         }
       },
-      "ScreenRecorderLib/5.4.0": {},
       "System.AppContext/4.3.0": {
         "dependencies": {
           "System.Runtime": "4.3.0"
@@ -1247,14 +1244,6 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0"
         }
-      },
-      "ScreenRecorderLib.Reference/1.0.8721.22390": {
-        "runtime": {
-          "ScreenRecorderLib.dll": {
-            "assemblyVersion": "1.0.8721.22390",
-            "fileVersion": "5.4.0.0"
-          }
-        }
       }
     }
   },
@@ -1599,13 +1588,6 @@
       "sha512": "sha512-OQxX3F5YQtohkEmMKeKE09avif6I4VQDP/Tmte8deESATqQE+u/yVx7FOjPAyyu8u5FlwZkdEkft89Gg6pnbAg==",
       "path": "scientist/2.0.0",
       "hashPath": "scientist.2.0.0.nupkg.sha512"
-    },
-    "ScreenRecorderLib/5.4.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-gvVaDWgaA0dIou7ORBuFevAma1Bnk/V2l2fp1zkQS2LgNhGdK4jWlP3CI05rjWSKFVPVImtvKfFn+qNJzem6uA==",
-      "path": "screenrecorderlib/5.4.0",
-      "hashPath": "screenrecorderlib.5.4.0.nupkg.sha512"
     },
     "System.AppContext/4.3.0": {
       "type": "package",
@@ -2131,11 +2113,6 @@
       "sha512": "sha512-5zJ0XDxAIg8iy+t4aMnQAu0MqVbqyvfoUVl1yDV61xdo3Vth45oA2FoY4pPkxYAH5f8ixpmTqXeEIya95x0aCQ==",
       "path": "system.xml.xdocument/4.3.0",
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
-    },
-    "ScreenRecorderLib.Reference/1.0.8721.22390": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
     }
   }
 }

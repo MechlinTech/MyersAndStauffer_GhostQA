@@ -1,28 +1,28 @@
 {
   "Version": 1,
-  "Hash": "bhzQbURnnk3ofqep3E+czhyoZEt7uq9gjF4wdcBqSPA=",
-  "Source": "SeleniumReportAPI",
-  "BasePath": "_content/SeleniumReportAPI",
+  "Hash": "NM8t8s1EfS2tS5AGtqnKTdzecOTcmOodurBlKPzJjeY=",
+  "Source": "GhostQA_API",
+  "BasePath": "_content/GhostQA_API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [
     {
-      "Name": "SeleniumReportAPI\\wwwroot",
-      "Source": "SeleniumReportAPI",
-      "ContentRoot": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\",
-      "BasePath": "_content/SeleniumReportAPI",
+      "Name": "GhostQA_API\\wwwroot",
+      "Source": "GhostQA_API",
+      "ContentRoot": "D:\\MechlinTech\\Ghost_QA\\MyersAndStauffer_GhostQA-main\\SeleniumReportAPI\\wwwroot\\",
+      "BasePath": "_content/GhostQA_API",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\Driver\\chromedriver.exe",
-      "SourceId": "SeleniumReportAPI",
+      "Identity": "D:\\MechlinTech\\Ghost_QA\\MyersAndStauffer_GhostQA-main\\SeleniumReportAPI\\wwwroot\\TestDataFile\\fontawesome-webfont.bin",
+      "SourceId": "GhostQA_API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\GhostQA\\SeleniumReportAPI\\wwwroot\\",
-      "BasePath": "_content/SeleniumReportAPI",
-      "RelativePath": "Driver/chromedriver.exe",
+      "ContentRoot": "D:\\MechlinTech\\Ghost_QA\\MyersAndStauffer_GhostQA-main\\SeleniumReportAPI\\wwwroot\\",
+      "BasePath": "_content/GhostQA_API",
+      "RelativePath": "TestDataFile/fontawesome-webfont.bin",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -33,7 +33,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Driver\\chromedriver.exe"
+      "OriginalItemSpec": "wwwroot\\TestDataFile\\fontawesome-webfont.bin"
     }
   ]
 }

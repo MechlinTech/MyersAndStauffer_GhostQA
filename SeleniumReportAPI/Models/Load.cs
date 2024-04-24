@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SeleniumReportAPI.Models
+namespace GhostQA_API.Models
 {
     public class Load
     {

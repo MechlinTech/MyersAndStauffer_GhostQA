@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SeleniumReportAPI.DTO_s
+namespace GhostQA_API.DTO_s
 {
     public class Dto_AddExecutePerformanceData
     {
@@ -26,8 +26,8 @@ namespace SeleniumReportAPI.DTO_s
         public Json json { get; set; }
         public int suite { get; set; }
         public List<PerformanceData> raw_data { get; set; }
-        public string client_reference_id { get; set;}
-        public List<SuccessGroupData> success_group_data { get; set;}
+        public string client_reference_id { get; set; }
+        public List<SuccessGroupData> success_group_data { get; set; }
         public List<ErrorGroupData> error_group_data { get; set; }
     }
 

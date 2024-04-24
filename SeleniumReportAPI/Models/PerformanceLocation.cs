@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SeleniumReportAPI.Models
+namespace GhostQA_API.Models
 {
     public class PerformanceLocation
     {
@@ -9,6 +9,6 @@ namespace SeleniumReportAPI.Models
         public int PerformanceFileId { get; set; }
         public string Name { get; set; }
         public int NumberUser { get; set; }
-        public decimal PercentageTraffic { get; set;}
+        public decimal PercentageTraffic { get; set; }
     }
 }

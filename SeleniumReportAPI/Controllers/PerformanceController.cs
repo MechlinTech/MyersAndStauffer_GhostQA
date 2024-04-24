@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using GhostQA_API.DTO_s;
+using GhostQA_API.Helper;
+using GhostQA_API.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using SeleniumReportAPI.DTO_s;
-using SeleniumReportAPI.Helper;
-using SeleniumReportAPI.Models;
 
-namespace SeleniumReportAPI.Controllers
+namespace GhostQA_API.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("AllowAll")]

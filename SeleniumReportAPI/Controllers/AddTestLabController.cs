@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
+﻿using GhostQA_API.DTO_s;
+using GhostQA_API.Helper;
+using GhostQA_API.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using SeleniumReportAPI.DTO_s;
-using SeleniumReportAPI.Helper;
-using SeleniumReportAPI.Models;
 
-namespace SeleniumReportAPI.Controllers
+namespace GhostQA_API.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("AllowAll")]
@@ -115,17 +114,6 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetTestStepsDetailsByTestStepsId(TestStepsId));
         }
-
-        /// <summary>
-        ///  Update Root Relation 
-        /// </summary>
-        /// <param TestStepsDetails="TestStepsDetails"></param>
-        /// <returns></returns>
-        //[HttpPost("UpdateTestStepsDetails")]
-        //public async Task<ActionResult> UpdateTestStepsDetails(TestStepsDetails model)
-        //{
-        //    return Ok(await _helper.UpdateTestStepsDetails(model));
-        //}
 
         /// <summary>
         ///  Delete Root Relation By Root Id  and Parent Id

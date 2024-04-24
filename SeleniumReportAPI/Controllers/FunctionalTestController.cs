@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
+﻿using GhostQA_API.Helper;
+using GhostQA_API.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using SeleniumReportAPI.DTO_s;
-using SeleniumReportAPI.Helper;
-using SeleniumReportAPI.Models;
 
-namespace SeleniumReportAPI.Controllers
+namespace GhostQA_API.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("AllowAll")]
@@ -39,18 +37,5 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.AddFunctionalTest(model));
         }
-
-        /// <summary>
-        ///  Update Root Relation 
-        /// </summary>
-        /// <param RootId="RootId"></param>
-        /// <param Name="Name"></param>
-        /// <returns></returns>
-        //[HttpPost("UpdateRootRelation")]
-        //public async Task<ActionResult> UpdateRootRelation(RootRelation model)
-        //{
-        //    return Ok(await _helper.UpdateRootRelation(model));
-        //}
-
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace SeleniumReportAPI.Models
+namespace GhostQA_API.Models
 {
     public class ApplicationUser : IdentityUser
     {

@@ -1,0 +1,120 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<!--<Nullable>enable</Nullable>-->
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>0900b981-f067-41f1-9ad8-7577741b5e82</UserSecretsId>
+		<Platforms>AnyCPU;x64</Platforms>
+		<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="SqlScript\AllGhostQA_SP.sql" />
+		<None Remove="SqlScript\Insert_FirstUser.sql" />
+		<None Remove="SqlScript\stp_AddUpdateApplication.Sql" />
+		<None Remove="SqlScript\stp_AddUpdateBrowser.Sql" />
+		<None Remove="SqlScript\stp_AddUpdateEnvironment.Sql" />
+		<None Remove="SqlScript\stp_AddUpdateTestSuites.Sql" />
+		<None Remove="SqlScript\stp_DeleteApplication.Sql" />
+		<None Remove="SqlScript\stp_DeleteBrowser.Sql" />
+		<None Remove="SqlScript\stp_DeleteEnvironment.Sql" />
+		<None Remove="SqlScript\stp_DeletePerformanceFile.Sql" />
+		<None Remove="SqlScript\stp_DeleteTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetApplications.sql" />
+		<None Remove="SqlScript\stp_GetBrowsers.Sql" />
+		<None Remove="SqlScript\stp_GetCustomTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
+		<None Remove="SqlScript\stp_GetEnvironment.sql" />
+		<None Remove="SqlScript\stp_GetEnvironmentById.sql" />
+		<None Remove="SqlScript\stp_GetPerformaceFile.Sql" />
+		<None Remove="SqlScript\stp_GetRunDetails.Sql" />
+		<None Remove="SqlScript\stp_GetRunId.Sql" />
+		<None Remove="SqlScript\stp_GetTestCaseDetails.Sql" />
+		<None Remove="SqlScript\stp_GetTestCases.sql" />
+		<None Remove="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
+		<None Remove="SqlScript\stp_GetTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetTestSuitsByName.Sql" />
+		<None Remove="SqlScript\stp_GetUserDetails.Sql" />
+		<None Remove="SqlScript\stp_InsertBuiltInTestSuiteDetails.Sql" />
+		<None Remove="SqlScript\stp_SaveCustomTestSuiteExecutionData.Sql" />
+		<None Remove="SqlScript\stp_UpdateTestStepData.Sql" />
+		<None Remove="SqlScript\stp_UpdateUserProfile.Sql" />
+		<None Remove="SqlScript\stp_UpsertTableData.Sql" />
+		<None Remove="SqlScript\stp_ValidateUser.Sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="SqlScript\Insert_FirstUser.sql" />
+		<EmbeddedResource Include="SqlScript\AllGhostQA_SP.sql" />
+		<EmbeddedResource Include="SqlScript\stp_AddUpdateApplication.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_AddUpdateBrowser.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_AddUpdateEnvironment.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_AddUpdateTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeleteApplication.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeleteBrowser.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeletePerformanceFile.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeleteEnvironment.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_DeleteTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetPerformaceFile.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetBrowsers.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetEnvironmentById.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetUserDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetCustomTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_InsertBuiltInTestSuiteDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_SaveCustomTestSuiteExecutionData.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_UpdateUserProfile.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_ValidateUser.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetDashBoardDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetRunDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetRunId.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestCaseDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestCaseStepsDetails.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_UpdateTestStepData.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_UpsertTableData.Sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="SqlScript\stp_GetApplications.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetEnvironment.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestCases.sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetTestSuitsByName.Sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.25" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.25">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.1" />
+
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\linux\selenium-manager" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\macos\selenium-manager" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\Hosting\.nuget\packages\selenium.webdriver\4.8.2\buildTransitive\..\manager\windows\selenium-manager.exe" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\Driver\" />
+	</ItemGroup>
+
+</Project>

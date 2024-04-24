@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using GhostQA_API.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SeleniumReportAPI.Models;
 
-namespace SeleniumReportAPI.DBContext
+namespace GhostQA_API.DBContext
 {
     public class AppDBContext : IdentityDbContext<ApplicationUser>
     {
@@ -28,7 +27,7 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<TestData> tbl_TestData { get; set; }
         public DbSet<Load> tbl_Load { get; set; }
         public DbSet<CypressDetails> tbl_CypressTestExecution { get; set; }
-        public DbSet<CypressPerfomanceDetaills> tbl_CypressPerfomanceDetaills {  get; set; }
+        public DbSet<CypressPerfomanceDetaills> tbl_CypressPerfomanceDetaills { get; set; }
         public DbSet<Location> tbl_Location { get; set; }
         public DbSet<FuncationalTest> tbl_FuncationalTest { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SeleniumReportAPI.DTO_s
+namespace GhostQA_API.DTO_s
 {
     public class Dto_Login
     {

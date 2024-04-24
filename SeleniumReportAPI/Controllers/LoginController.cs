@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GhostQA_API.DTO_s;
+using GhostQA_API.Helper;
+using GhostQA_API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SeleniumReportAPI.DTO_s;
-using SeleniumReportAPI.Helper;
-using SeleniumReportAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace SeleniumReportAPI.Controllers
+namespace GhostQA_API.Controllers
 {
     [AllowAnonymous]
     [Route("api/[controller]")]
@@ -30,8 +30,12 @@ namespace SeleniumReportAPI.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(loginDTO.Email.ToString());
                 if (user != null)
-                    if ((bool)(user.IsDisabled ?? false))
+                {
+                    if (user.IsDisabled ?? false)
+                    {
                         return StatusCode(403, new { status = "error", message = "User account is Disable. Please contact with Administrator" });
+                    }
+                }
 
                 if (await _userManager.CheckPasswordAsync(user, loginDTO.Password))
                 {
@@ -77,7 +81,7 @@ namespace SeleniumReportAPI.Controllers
                     return Ok(new Dto_Response { status = "false", message = "User Name or Password is Wrong" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest
                 ("An error occurred in generating the token");

@@ -1,17 +1,12 @@
+using GhostQA_API.DBContext;
+using GhostQA_API.Helper;
+using GhostQA_API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
-using SeleniumReportAPI.DBContext;
-using SeleniumReportAPI.Helper;
-using SeleniumReportAPI.Models;
-using System;
+//using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,7 +93,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddTransient<TestExecutor>();
+//builder.Services.AddTransient<TestExecutor>();
 builder.Services.AddScoped<DBHelper>();
 var app = builder.Build();
 

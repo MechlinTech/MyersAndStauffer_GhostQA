@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\GhostQA_API.props" />
+</Project>

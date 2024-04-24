@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SeleniumReportAPI.Models
+namespace GhostQA_API.Models
 {
     public class TestStepsDetails
     {
@@ -30,6 +29,6 @@ namespace SeleniumReportAPI.Models
         public string ShouldLessValue { get; set; }
         public string ContainTextValue { get; set; }
         public string HaveAttributeValue { get; set; }
-        public string TextValue { get; set;}
+        public string TextValue { get; set; }
     }
 }

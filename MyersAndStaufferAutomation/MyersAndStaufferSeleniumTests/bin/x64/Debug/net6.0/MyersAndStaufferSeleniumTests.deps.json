@@ -1504,7 +1504,6 @@
           }
         }
       },
-      "ScreenRecorderLib/5.4.0": {},
       "Selenium.Support/4.8.2": {
         "dependencies": {
           "Selenium.WebDriver": "4.18.1"
@@ -2656,7 +2655,6 @@
           "NLogger": "1.1.0",
           "Newtonsoft.Json": "13.0.3",
           "NunitXml.TestLogger": "3.0.131",
-          "ScreenRecorderLib": "5.4.0",
           "System.Data.DataSetExtensions": "4.5.0",
           "System.Runtime.Caching": "7.0.0",
           "System.ServiceModel.Primitives": "4.10.2",
@@ -2664,14 +2662,6 @@
         },
         "runtime": {
           "MyersAndStaufferFramework.dll": {}
-        }
-      },
-      "ScreenRecorderLib.Reference/1.0.8721.22390": {
-        "runtime": {
-          "ScreenRecorderLib.dll": {
-            "assemblyVersion": "1.0.8721.22390",
-            "fileVersion": "5.4.0.0"
-          }
         }
       }
     }
@@ -3494,13 +3484,6 @@
       "path": "scientist/2.0.0",
       "hashPath": "scientist.2.0.0.nupkg.sha512"
     },
-    "ScreenRecorderLib/5.4.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-gvVaDWgaA0dIou7ORBuFevAma1Bnk/V2l2fp1zkQS2LgNhGdK4jWlP3CI05rjWSKFVPVImtvKfFn+qNJzem6uA==",
-      "path": "screenrecorderlib/5.4.0",
-      "hashPath": "screenrecorderlib.5.4.0.nupkg.sha512"
-    },
     "Selenium.Support/4.8.2": {
       "type": "package",
       "serviceable": true,
@@ -4259,11 +4242,6 @@
     },
     "MyersAndStaufferFramework/1.0.0": {
       "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "ScreenRecorderLib.Reference/1.0.8721.22390": {
-      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

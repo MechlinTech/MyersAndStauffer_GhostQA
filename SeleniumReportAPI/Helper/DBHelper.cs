@@ -1,11 +1,10 @@
 ﻿using ExcelDataReader;
+using GhostQA_API.DTO_s;
+using GhostQA_API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SeleniumReportAPI.DTO_s;
-using SeleniumReportAPI.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,22 +14,21 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
-using TestSeleniumReport.DTO_s;
-using Environments = SeleniumReportAPI.Models.Environments;
+using Environments = GhostQA_API.Models.Environments;
 using SmtpClient = System.Net.Mail.SmtpClient;
 
-namespace SeleniumReportAPI.Helper
+namespace GhostQA_API.Helper
 {
     public class DBHelper
     {
         private readonly IConfiguration _configuration;
-        private readonly TestExecutor _testExecutor;
+        //private readonly TestExecutor _testExecutor;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public DBHelper(IConfiguration configuration, TestExecutor testExecutor, IServiceProvider serviceProvider)
+        public DBHelper(IConfiguration configuration, IServiceProvider serviceProvider)
         {
             _configuration = configuration;
-            _testExecutor = testExecutor;
+            //_testExecutor = testExecutor;
             _userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         }
 
@@ -494,7 +492,7 @@ namespace SeleniumReportAPI.Helper
             try
             {
                 SaveExecutionProgress(testSuiteName, testCaseName, testRun, testerName, environmentName);
-                TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
+                //TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
                 UpdateExecutionProgress(testSuiteName, testCaseName, testRun, testerName, environmentName);
             }
             catch (Exception)
@@ -1000,9 +998,8 @@ namespace SeleniumReportAPI.Helper
             var user = GetProfilByEmail(toEmail);
             var passWord = _configuration["EmailDetails:EmailPassword"];
             var port = Convert.ToInt32(_configuration["EmailDetails:Port"]);
-            if (Mailtype.Equals("Invitation"))
-            {
-                BodyString = @"<!DOCTYPE html>
+            BodyString = Mailtype.Equals("Invitation")
+                ? @"<!DOCTYPE html>
                                 <html lang=""en"">
                                 <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
                                 <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" width=""600"">
@@ -1022,11 +1019,8 @@ namespace SeleniumReportAPI.Helper
                                 </tr>
                                 </table>
                                 </body>
-                                </html>";
-            }
-            else
-            {
-                BodyString = Mailtype.Equals("Accept") ? @"<!DOCTYPE html>
+                                </html>"
+                : Mailtype.Equals("Accept") ? @"<!DOCTYPE html>
                                                             <html lang=""en"">
                                                             <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
                                                             <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0""    width=""600"">
@@ -1042,13 +1036,12 @@ namespace SeleniumReportAPI.Helper
                                                             <p>Thank you for accepting the invitation here is your temporary password:</p>
                                                             <em><b>Password: </b> Test@123</em>
                                                             <p>If you want to change your password follow the link below</p>
-                                                            <p><a href=""" + $"{Url}ChangePassword/{toEmail}"   + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
+                                                            <p><a href=""" + $"{Url}ChangePassword/{toEmail}" + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
                                                             </td>
                                                             </tr>
                                                             </table>
                                                             </body>
                                                             </html>" : "";
-            }
 
             if (Mailtype.Equals("Invitation") && !string.IsNullOrEmpty(user.Result))
             {

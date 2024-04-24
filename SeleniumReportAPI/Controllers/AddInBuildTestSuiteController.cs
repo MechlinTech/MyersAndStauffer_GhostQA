@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GhostQA_API.DTO_s;
+using GhostQA_API.Helper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SeleniumReportAPI.DTO_s;
-using SeleniumReportAPI.Helper;
-using SeleniumReportAPI.Models;
 
-namespace SeleniumReportAPI.Controllers
+namespace GhostQA_API.Controllers
 {
     [AllowAnonymous]
     [Route("api/[controller]")]
@@ -29,7 +27,7 @@ namespace SeleniumReportAPI.Controllers
                 var result = await _helper.SaveInBuiltTestSuites(testDataJson);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error");
             }
@@ -112,15 +110,14 @@ namespace SeleniumReportAPI.Controllers
             try
             {
                 if (file == null || file.Length == 0)
+                {
                     return BadRequest("File not selected");
+                }
                 // string filePath = @"";
                 var result = await _helper.UploadFiles(file, fileBasePath);
                 string status = string.Empty;
                 string messages = string.Empty;
-                if (result == "Success")
-                    messages = "File Uploaded Successfully";
-                else
-                    messages = "File Uploaded Failed";
+                messages = result == "Success" ? "File Uploaded Successfully" : "File Uploaded Failed";
 
                 return Ok(new
                 {
