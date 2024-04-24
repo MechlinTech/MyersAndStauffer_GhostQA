@@ -1,11 +1,15 @@
-﻿using ExcelDataReader;
+﻿using AventStack.ExtentReports.Utils;
+using ExcelDataReader;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver.Core.Operations;
+using MyersAndStaufferFramework;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Models;
+using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
@@ -151,21 +155,7 @@ namespace SeleniumReportAPI.Helper
                                 reader.Read();
                                 RunDetailsJson = reader["RunDetailsJson"].ToString();
 
-                                if (RunDetailsJson.Length > 0)
-                                {
-                                    JArray jsonArray = JArray.Parse(RunDetailsJson);
-
-                                    foreach (JObject obj in jsonArray)
-                                    {
-                                        string dateYear = obj["TestRunDateYear"].Value<string>();
-                                        DateTime date = DateTime.Parse(dateYear);
-                                        string formattedDate = date.ToString("MMM dd");
-                                        obj["TestRunDateYear"] = formattedDate;
-                                    }
-
-                                    RunDetailsJson = JsonConvert.SerializeObject(jsonArray);
-                                }
-                                else
+                                if (string.IsNullOrEmpty(RunDetailsJson))
                                 {
                                     RunDetailsJson = "[]";
                                 }
@@ -751,6 +741,7 @@ namespace SeleniumReportAPI.Helper
                                 environment.CreatedOn = Convert.ToDateTime(reader["CreatedOn"]);
                                 environment.ModifiedOn = Convert.ToDateTime(reader["ModifiedOn"]);
                                 environment.Description = reader["Description"].ToString();
+                                environment.BrowserName = reader["BrowserName"].ToString();
                             }
                         }
                     }
@@ -1042,7 +1033,7 @@ namespace SeleniumReportAPI.Helper
                                                             <p>Thank you for accepting the invitation here is your temporary password:</p>
                                                             <em><b>Password: </b> Test@123</em>
                                                             <p>If you want to change your password follow the link below</p>
-                                                            <p><a href=""" + $"{Url}ChangePassword/{toEmail}"   + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
+                                                            <p><a href=""" + $"{Url}ChangePassword/{toEmail}" + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
                                                             </td>
                                                             </tr>
                                                             </table>
@@ -2345,7 +2336,7 @@ namespace SeleniumReportAPI.Helper
             DateTime startTime = DateTime.Parse(model.startDate.ToString());
             DateTime endTime = DateTime.Parse(model.endDate.ToString());
             TimeSpan duration = endTime - startTime;
-
+            var strLog = CompressString(model.data.container_logs_str);
             List<dynamic> results = new List<dynamic>();
             foreach (var t in jsonData.results[0].suites[0].tests)
             {
@@ -2393,6 +2384,7 @@ namespace SeleniumReportAPI.Helper
                     command.Parameters.AddWithValue("@TesterName", string.Empty);
                     command.Parameters.AddWithValue("@TestVideoUrl", GetArtifactUrl(model.data, "video"));
                     command.Parameters.AddWithValue("@TestCaseDetailsId", model.testCaseDetailId);
+                    command.Parameters.AddWithValue("@ContainerLog", strLog);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -2442,6 +2434,7 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+
         internal async Task<string> GetTestStepsDetailByTestCaseId(string TestCaseId)
         {
             string result = string.Empty;
@@ -2459,7 +2452,23 @@ namespace SeleniumReportAPI.Helper
                             if (reader.HasRows)
                             {
                                 reader.Read();
-                                result = reader["result"].ToString();
+                                var res = reader["result"].ToString();
+                                if (res.Contains("fails"))
+                                {
+                                    result = res;
+                                }
+                                else
+                                {
+                                    List<DTo_LogData> res2 = JsonConvert.DeserializeObject<List<DTo_LogData>>(res);
+                                    result = res2[0].ContainerLog == null ? res : JsonConvert.SerializeObject(new List<dynamic>()
+                                    {
+                                        new
+                                        {
+                                             TestScreenShotUrl = res2[0].TestScreenShotUrl,
+                                             ContainerLog = DecompressString(res2[0].ContainerLog)
+                                        }
+                                    });
+                                }
                             }
                         }
                     }
@@ -2938,6 +2947,195 @@ namespace SeleniumReportAPI.Helper
                             {
                                 reader.Read();
                                 result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> UpdateFunctionalTest(FuncationalTest model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateFunctionalTest", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@Name", model.Name);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> DeleteFunctionalTest(FuncationalTest model)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteFunctionalTest", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@ParentId", model.Parent);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal List<object> SendExecutionDataMail( string testSuiteName, string testRunName, string testerName, string Url)
+        {
+            List<object> result = new List<object>();
+            var testrunData = GetTestRunData(testSuiteName, testRunName);
+            var data = JsonConvert.DeserializeObject<Dto_TestRunData>(testrunData.Result);
+            if (!string.IsNullOrEmpty(testerName))
+            {
+                if (testerName.Length > 0)
+                {
+                    foreach (string toEmail in testerName.Split(","))
+                    {
+                        if (!IsValidEmail(toEmail))
+                        {
+                            result.Add(new { status = "Failed", message = "Invalid email address format.", email = toEmail });
+                        }
+                        var BodyString = string.Empty;
+                        var fromEmail = _configuration["EmailDetails:EmailUsername"];
+                        var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
+                        var hostName = _configuration["EmailDetails:EmailHost"];
+                        var subject = "Test Suite Execution Result";
+                        var user = GetProfilByEmail(toEmail);
+                        var passWord = _configuration["EmailDetails:EmailPassword"];
+                        var port = Convert.ToInt32(_configuration["EmailDetails:Port"]);
+
+                        BodyString = $@"<!DOCTYPE html>
+                                        <html lang=""en""> 
+			                            <head>         
+			                            <body style=""font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0;"">
+                                        <H2>Hi {toEmail},</H2>
+                                        <p>Below is the test execution result for Test-Suite {testSuiteName}:</p>
+                                        <table style=""width: 100%; border-collapse: collapse; margin-bottom: 20px;"">
+                                        <thead>
+                                        <tr>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Run Id</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Start Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">End Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Status</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Total</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Passed</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Failed</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #fff;"">
+                                        <a href=""{Url}test/{testSuiteName}/{data.TestRunName}"" style=""text-decoration: none; color: #654DF7;"">{data.TestRunName}</a>
+                                        </td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunStartDateTime:dd-MMM-yyyy HH:mm:ss}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunEndDateTime}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunStatus}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TotalTestCases}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.PassedTestCases}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.FailedTestCases}</td>
+                                        </tr>
+                                        </tbody>
+                                        </table>
+                                        <H2>Thank you</H2>
+                                        </body>
+			                            </html>";
+
+                        var smtpClient = new SmtpClient(hostName)
+                        {
+                            Port = port,
+                            Credentials = new NetworkCredential(fromEmail, passWord),
+                            EnableSsl = true,
+                        };
+
+                        var fromEmailAddress = new MailAddress(fromEmail, senderDisplayName);
+                        var mailMessage = new MailMessage()
+                        {
+                            From = fromEmailAddress,
+                            Subject = subject,
+                            IsBodyHtml = true,
+                            Body = BodyString
+                        };
+                        mailMessage.To.Add(toEmail);
+
+                        try
+                        {
+                            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                            smtpClient.Send(mailMessage);
+                            result.Add(new { status = "Success", message = "Mail Sent Successfully", email = toEmail });
+                        }
+                        catch (Exception ex)
+                        {
+                            result.Add(new { status = "Failed", message = ex.Message, email = toEmail });
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        internal async Task<string> GetTestRunData(string testSuiteName, string testRunName)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestRunData", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@TestSuitName", testSuiteName);
+                        command.Parameters.AddWithValue("@TestRunName", testRunName);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["RunDetailsJson"].ToString();
                             }
                         }
                     }

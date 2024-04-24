@@ -41,16 +41,27 @@ namespace SeleniumReportAPI.Controllers
         }
 
         /// <summary>
-        ///  Update Root Relation 
+        ///  Update Functional Test
         /// </summary>
         /// <param RootId="RootId"></param>
         /// <param Name="Name"></param>
         /// <returns></returns>
-        //[HttpPost("UpdateRootRelation")]
-        //public async Task<ActionResult> UpdateRootRelation(RootRelation model)
-        //{
-        //    return Ok(await _helper.UpdateRootRelation(model));
-        //}
+        [HttpPost("UpdateFunctionalTest")]
+        public async Task<ActionResult> UpdateFunctionalTest(FuncationalTest model)
+        {
+            return Ok(await _helper.UpdateFunctionalTest(model));
+        }
+
+        /// <summary>
+        ///  Delete Functional Test By Root Id  and Parent Id
+        /// </summary>
+        /// <param FuncationalTest="FuncationalTest"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteFunctionalTest")]
+        public async Task<ActionResult> DeleteFunctionalTest(FuncationalTest model)
+        {
+            return Ok(await _helper.DeleteFunctionalTest(model));
+        }
 
     }
 }
