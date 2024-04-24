@@ -23,7 +23,7 @@ export const useStyles = makeStyles({
 
 export const StyledFormControl = styled(FormControl)(({theme})=>({
     width:'100%',
-    border:'1px solid #DADADA',
+    // border:'1px solid #DADADA',
     borderRadius:'3px',
     "& .MuiOutlinedInput-root": {
       "&:hover fieldset": {
@@ -33,7 +33,8 @@ export const StyledFormControl = styled(FormControl)(({theme})=>({
         borderColor: "#654DF7",
       },
       "& fieldset": {
-        borderColor: "transparent",
+        border:'1px solid #DADADA',
+
       },
     },
 }))

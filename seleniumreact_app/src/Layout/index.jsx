@@ -18,16 +18,16 @@ import {
 } from "@material-ui/core/";
 import { Avatar } from "@mui/material";
 import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
-
+ 
 // Redux import
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/actions/authActions";
-
+ 
 import { useStyles } from "./styles";
 import Navigations from "../Routes/Navigations";
 import { LogoutIcon, UserIcon } from "../comman/icons";
 import { Box } from "@mui/material";
-
+ 
 export default function MiniDrawer() {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ export default function MiniDrawer() {
   const [menustate] = useState(true);
   const [showmodel, setshowmodel] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-
+ 
   const userData = useSelector((store) => store.auth.userData);
   const getName = () => {
     const email = sessionStorage.getItem("email");
@@ -45,27 +45,24 @@ export default function MiniDrawer() {
     const name = email.substring(0, i);
     return name.charAt(0).toUpperCase() + name.slice(1);
   };
-  // useEffect(()=>{
-  //   const expiry = JSON.parse(sessionStorage.getItem("tokenExpiry"))
-  //   const expiryTime =  new Date(expiry?.expiration).getTime();
-  //   console.log('expiry time',expiryTime)
-  //   const checkTokenExpiry = () => {
-  //     const currentTime =new Date().getTime();
-  //     console.log(currentTime)
-  //   console.log('expiry time',expiryTime)
-
-  //     if (expiryTime && currentTime > expiryTime) {
-  //       // Token has expired, initiate logout
-  //       console.log("current time",currentTime)
-  //       handleLogout()
-  //     }else{
-  //       console.log('not expired')
-  //     }
-  //   };
-
-  //   const interval = setInterval(checkTokenExpiry, 1000); // Check every second
-  //   return () => clearInterval(interval);
-  // })
+ 
+  // to logout when token expired
+  useEffect(()=>{
+    const expiry = JSON.parse(sessionStorage.getItem("tokenExpiry"))
+    const expiryTime =  new Date(expiry?.expiration).getTime();
+    const checkTokenExpiry = () => {
+      const currentTime =new Date().getTime();
+ 
+      if (expiryTime && currentTime > expiryTime) {
+        // Token has expired, initiate logout
+       alert('Login session expired')
+        handleLogout()
+      }
+    };
+ 
+    const interval = setInterval(checkTokenExpiry, 1000); // Check every second
+    return () => clearInterval(interval);
+  })
   const handleLogout = () => {
     dispatch(logout());
     sessionStorage.removeItem("userData");
@@ -75,18 +72,19 @@ export default function MiniDrawer() {
   const handleMouseOver = () => {
     setShowMenu(true);
   };
-
+ 
   const handleMouseOut = () => {
     setShowMenu(false);
   };
   const isActive =
     location.pathname === "/" ||
     location.pathname.startsWith("/settings") ||
-    location.pathname.startsWith("/testLab");
+    location.pathname.startsWith("/testLab")||
+    location.pathname.startsWith("/testcase");
   return (
     <div className={classes.root}>
       <CssBaseline />
-
+ 
       {/* Header Bar ...........  */}
       <AppBar
         position="fixed"
@@ -135,7 +133,7 @@ export default function MiniDrawer() {
               </Link>
             </Grid>
           </Grid>
-
+ 
           {/* <Grid container justifyContent="flex-end" spacing={2} style={{border:'1px solid red'}}>
             <Grid item> */}
               <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -170,7 +168,7 @@ export default function MiniDrawer() {
                   </Box>
                 </Box>
               </Box>
-
+ 
               <Popper
                 open={showMenu}
                 anchorEl={anchorRef.current}
@@ -228,14 +226,14 @@ export default function MiniDrawer() {
           </Grid> */}
         </Toolbar>
       </AppBar>
-
+ 
       {/* pages ............ */}
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {/* here comes stack  */}
         <Navigations />
       </main>
-
+ 
       {/* model */}
       <Modal
         open={showmodel}

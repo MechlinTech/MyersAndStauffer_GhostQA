@@ -14,8 +14,7 @@ BEGIN TRY
     IF EXISTS (SELECT 1 FROM tbl_CypressTestExecution WHERE [TestCaseId] = @TestCaseId)
     BEGIN
         SELECT [result] = JSON_QUERY((
-            SELECT ISNULL([TestStepJson], '') AS [TestStepJson],
-					ISNULL([TestScreenShotUrl], '') AS [TestScreenShotUrl]
+            SELECT ISNULL([TestScreenShotUrl], '') AS [TestScreenShotUrl]
             FROM tbl_CypressTestExecution
             WHERE [TestCaseId] = @TestCaseId
             FOR JSON PATH

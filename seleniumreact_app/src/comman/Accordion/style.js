@@ -1,21 +1,20 @@
 import { makeStyles } from "@material-ui/core";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
-
+ 
 export const useStyles = makeStyles((theme) => ({
     tableRow: {
-        cursor: "pointer",
         "&:hover": {
             border: "2px solid #654DF7",
             backgroundColor: theme.palette.action.hover,
-            cursor: "pointer",
+            cursor:"default"
         },
     },
     activeRow: {
         border: "2px solid #654DF7",
     },
 }));
-
+ 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: "rgb(242, 242, 242)",

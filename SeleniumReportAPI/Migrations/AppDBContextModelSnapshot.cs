@@ -439,6 +439,28 @@ namespace SeleniumReportAPI.Migrations
                     b.ToTable("tbl_Environments");
                 });
 
+            modelBuilder.Entity("SeleniumReportAPI.Models.FuncationalTest", b =>
+                {
+                    b.Property<int>("RootId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RootId"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Node")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Parent")
+                        .HasColumnType("int");
+
+                    b.HasKey("RootId");
+
+                    b.ToTable("tbl_FuncationalTest");
+                });
+
             modelBuilder.Entity("SeleniumReportAPI.Models.InternalTestExecution", b =>
                 {
                     b.Property<string>("EndDateTime")

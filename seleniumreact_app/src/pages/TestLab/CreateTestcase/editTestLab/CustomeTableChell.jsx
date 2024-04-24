@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import TableCell from '@material-ui/core/TableCell';
-import Modal from '@material-ui/core/Modal';
-import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import React, { useState } from "react";
+import TableCell from "@material-ui/core/TableCell";
+import Modal from "@material-ui/core/Modal";
+import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import { Card } from "@mui/material";
 
 const CustomeTableChell = ({ ScreenshotUrl }) => {
   const [openModal, setOpenModal] = useState(false);
-console.log("ScreenshotUrl",ScreenshotUrl)
+  console.log("ScreenshotUrl", ScreenshotUrl);
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -18,12 +19,18 @@ console.log("ScreenshotUrl",ScreenshotUrl)
 
   return (
     <>
-      <TableCell>
+      {/* <TableCell>
         <ImageOutlinedIcon
           style={{ cursor: 'pointer' }}
           onClick={handleOpenModal}
         />
-      </TableCell>
+      </TableCell> */}
+      <img
+        src={ScreenshotUrl}
+        alt="Screenshot"
+        onClick={handleOpenModal}
+        style={{ maxWidth: "40px", maxHeight: "40px", margin: "10px",cursor:'pointer',border:'1px solid rgb(101, 77, 247)' }}
+      />
 
       {/* Modal for displaying the full image */}
       <Modal
@@ -31,19 +38,35 @@ console.log("ScreenshotUrl",ScreenshotUrl)
         onClose={handleCloseModal}
         aria-labelledby="image-modal-title"
         aria-describedby="image-modal-description"
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        <div style={{ backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden' }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
+        <div
+          style={{
+            backgroundColor: "white",
+            borderRadius: "8px",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              padding: "10px",
+            }}
+          >
             {/* Close button */}
             <IconButton onClick={handleCloseModal} color="primary">
               <CloseIcon />
             </IconButton>
           </div>
           <img
-           src={ScreenshotUrl}
+            src={ScreenshotUrl}
             alt="Full Screenshot"
-            style={{ maxWidth: '80vw', maxHeight: '80vh', margin: 'auto' }}
+            style={{ maxWidth: "80vw", maxHeight: "80vh", margin: "auto" }}
           />
         </div>
       </Modal>

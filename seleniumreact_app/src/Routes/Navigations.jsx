@@ -17,6 +17,7 @@ import Error from "../pages/Performance/Result/ResultDetails/Error";
 import RequestState from "../pages/Performance/Result/ResultDetails/RequestState/RequestState";
 import CompareGraph from "../pages/Performance/Component/Compare/CompareGraph";
 import InitialSetup from "../pages/Performance/Result/ResultDetails/InitialSetup/index";
+import TestCase from "../pages/TestCase";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
@@ -77,6 +78,8 @@ export default function Navigations() {
             path="testLab/editTestcase/:testId"
             element={<EditTestCase />}
           />
+          <Route path="testcase" element={<TestCase />} />
+
         </Route>
         <Route path="performance" element={<Performance />}></Route>
         <Route path="/result" element={<Results />}>

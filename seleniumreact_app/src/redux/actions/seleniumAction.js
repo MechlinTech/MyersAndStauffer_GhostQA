@@ -14,7 +14,7 @@ export const GET_TEST_CASE_LIST = "GET_TESTCASE_LIST";
 export const ADD_UPDATE_TEST_SUITS = "ADD_UPDATE_TEST_SUITS";
 export const SUITE_TO_EDIT = "SUITE_TO_EDIT";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || 'api';
-
+ 
 export const getTestSuites = () => {
   return async (dispatch) => {
     try {
@@ -33,7 +33,7 @@ export const getTestSuites = () => {
     }
   };
 };
-
+ 
 export const getListByTestSuitsName = (data) => {
   return async (dispatch) => {
     try {
@@ -52,10 +52,10 @@ export const getListByTestSuitsName = (data) => {
     }
   };
 };
-
-export const getTestCaseRundetailsByTestName = (data) => {
-  // let data = "Mississippi";
+ 
+export const getTestCaseRundetailsByTestName = (data, setInProgress) => {
   return async (dispatch) => {
+    setInProgress(true);
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.get(
@@ -67,13 +67,15 @@ export const getTestCaseRundetailsByTestName = (data) => {
         type: GET_TEST_RUN_DETAILS_LIST,
         payload: response.data,
       });
+      setInProgress(false);
     } catch (error) {
+      setInProgress(false);
       console.error(error);
       toast.error("NETWORK ERROR");
     }
   };
-};
-
+}; 
+ 
 export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
   // let data = "Mississippi";
   return async (dispatch) => {
@@ -100,9 +102,10 @@ export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
     }
   };
 };
-
-export const GetTestCaseDetails = (data) => {
+ 
+export const GetTestCaseDetails = (data,setLoading) => {
   return async (dispatch) => {
+    setLoading(true);
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.get(
@@ -114,13 +117,15 @@ export const GetTestCaseDetails = (data) => {
         type: GET_TEST_CASE_DETAILS,
         payload: response.data,
       });
+      setLoading(false);
     } catch (error) {
       console.error(error);
       toast.error("NETWORK ERROR");
+      setLoading(false);
     }
   };
 };
-
+ 
 export const GetTestCaseStepsDetails = (data) => {
   return async (dispatch) => {
     try {
@@ -140,7 +145,7 @@ export const GetTestCaseStepsDetails = (data) => {
     }
   };
 };
-
+ 
 export const GetApplication = () => {
   return async (dispatch) => {
     try {
@@ -149,7 +154,7 @@ export const GetApplication = () => {
         `${BASE_URL}/Selenium/GetApplication`,
         header()
       );
-
+ 
       dispatch({
         type: GET_APPLICATION_LIST,
         payload: response.data,
@@ -160,7 +165,7 @@ export const GetApplication = () => {
     }
   };
 };
-
+ 
 export const GetEnvironment = () => {
   return async (dispatch) => {
     try {
@@ -179,7 +184,7 @@ export const GetEnvironment = () => {
     }
   };
 };
-
+ 
 export const GetBrowser = () => {
   return async (dispatch) => {
     try {
@@ -198,7 +203,7 @@ export const GetBrowser = () => {
     }
   };
 };
-
+ 
 export const GetTestCases = () => {
   return async (dispatch) => {
     try {
@@ -218,7 +223,7 @@ export const GetTestCases = () => {
     }
   };
 };
-
+ 
 export const AddUpdateTestSuites = (data, action, handleLoading) => {
   return async (dispatch) => {
     try {
@@ -246,7 +251,7 @@ export const AddUpdateTestSuites = (data, action, handleLoading) => {
     }
   };
 };
-
+ 
 export const Getsuitebyname = (suitName) => {
   return async (dispatch) => {
     try {
@@ -273,7 +278,7 @@ export const Getsuitebyname = (suitName) => {
     }
   };
 };
-
+ 
 export const DeleteTestSuite = (suiteName) => {
   return async (dispatch) => {
     try {

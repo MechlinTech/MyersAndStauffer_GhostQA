@@ -24,7 +24,7 @@ import DeleteSuite from "./Modal/DeleteSuite";
 import { useNavigate } from "react-router-dom";
 import Graph from "./Components/Graph";
 import { Tooltip } from "@mui/material";
-
+ 
 export default function Dashboard() {
   const classess = useStyles();
   const dispatch = useDispatch();
@@ -37,44 +37,45 @@ export default function Dashboard() {
   const [openDelModal, setopenDelModal] = useState(false);
   const [suitToDelete, setsuitToDelete] = useState("");
   const [executingSuite, setexecutingSuite] = useState({});
-  
+  const [inprogress, setInProgress] = useState(false);
+ 
   const handleAddSuite = () => {
     navigate("/add-suite");
   };
-
+ 
   const handleTabChange = (event, newValue) => {
     setTabNo(newValue);
   };
-
+ 
   const tabLableStyle = {
     fontWeight: "400",
     fontSize: "14px",
     lineHeight: "21px",
     padding: "10px 22px",
   };
-
+ 
   const tabHeaderStyle = {
     fontSize: "14px",
     fontWeight: "400",
     fontFamily: "Lexend Deca",
   };
-
+ 
   // useEffect(() => {
   //   dispatch(getTestSuites());
   // }, []);
-
+ 
   useEffect(() => {
     dispatch(getTestSuites());
   }, [dispatch,openDelModal,executingSuite]);
-
+ 
   const filteredTestSuiteData = testSuits && testSuits?.filter((suite) =>
     suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
-
+ 
   const handlePaperClick = (suite) => {
     let data = suite.TestSuiteName;
     setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
-    dispatch(getTestCaseRundetailsByTestName(data));
+    dispatch(getTestCaseRundetailsByTestName(data,setInProgress));
   };
   const handleEditClick = (suite) => {
     const suiteName = suite.TestSuiteName
@@ -82,7 +83,7 @@ export default function Dashboard() {
     // getsuitebyname api will give you detail
     navigate(`/edit/${suiteName}`);
   };
-
+ 
   const controlLoading = (suiteName) => { // function to set loading false when promise resolve or reject
   //  setOpenModal(false)
   setexecutingSuite((prevExecutingSuite)=>({
@@ -90,7 +91,7 @@ export default function Dashboard() {
     [suiteName]:false
   }))
   };
-
+ 
   const handleExecuteClick = (suite) => {
     let data = suite.TestSuiteName;
     // setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
@@ -102,12 +103,12 @@ export default function Dashboard() {
     }))
     dispatch(ExecuteTestCasesByTestSuite(data, controlLoading));
   };
-
+ 
   const handleDeleteClick = (suite) => {
     setopenDelModal(true);
     setsuitToDelete(suite.TestSuiteName);
   };
-
+ 
   return (
     <>
       <div className={classess.main}>
@@ -189,7 +190,7 @@ export default function Dashboard() {
                           >
                             {suite.TestSuiteName}
                           </Typography>
-
+ 
                           <div
                             style={{
                               display: "flex",
@@ -248,7 +249,7 @@ export default function Dashboard() {
               </Grid>
             </Card>
           </Grid>
-
+ 
           {/* Right side for Test Cases */}
           {selectedSuite !== null && (
             <Grid item xs={12} sm={8}>
@@ -286,8 +287,14 @@ export default function Dashboard() {
                         <Graph testSuitName={selectedSuite} />
                       </TabPanel>
                       <TabPanel value="2">
-                        <Box sx={{ padding: "0 !important" }}>
-                          <BasicAccordion />
+                      <Box sx={{ padding: "0 !important" }}>
+                          {inprogress ? (
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                              <CircularProgress size={25} />
+                            </div>
+                          ) : (
+                            <BasicAccordion inprogress={inprogress} />
+                          )}
                         </Box>
                       </TabPanel>
                     </TabContext>

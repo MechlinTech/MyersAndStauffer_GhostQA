@@ -7,13 +7,21 @@ import seleniumReduser from "./redusers/seleniumReduser";
 import settingsReduser from "./redusers/settingsReduser";
 import resultReduser from "./redusers/ResultReduser";
 import performanceReducer from "./redusers/performanceReducer";
+import locationReducer from "./redusers/locationReducer";
+import testdataReducer from "./redusers/testDataReducer";
+import propertyReducer from "./redusers/propertyReducer";
+import testcaseReducer from "./redusers/TestCase/testcaseReducer";
 
 const rootReducer = combineReducers({
   auth: authReduser,
   selenium: seleniumReduser,
   settings: settingsReduser,
   result: resultReduser,
-  performance:performanceReducer
+  performance:performanceReducer,
+  location:locationReducer,
+  testData:testdataReducer,
+  property:propertyReducer,
+  testcase:testcaseReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
