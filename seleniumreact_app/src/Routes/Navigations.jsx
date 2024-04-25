@@ -26,6 +26,7 @@ const Application = lazy(() =>
   import("../pages/Settings/Component/Application/index")
 );
 const Browser = lazy(() => import("../pages/Settings/Component/Browser/index"));
+const TestUser = lazy(() => import("../pages/Settings/Component/TestUser"));
 const RoleManagement = lazy(() =>
   import("../pages/Settings/Component/RoleManagement/index")
 );
@@ -66,6 +67,7 @@ export default function Navigations() {
             <Route path="Browser" element={<Browser />} />
             <Route path="Roles" element={<RoleManagement />} />
             <Route path="User" element={<UserManagement />} />
+            <Route path="test-user" element={<TestUser />} />
           </Route>
           <Route path="testLab" element={<TestLab />} />
           <Route path="testLab/:nodeId" element={<TestLab />} />
