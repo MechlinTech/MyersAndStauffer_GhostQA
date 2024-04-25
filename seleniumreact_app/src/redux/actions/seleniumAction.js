@@ -13,6 +13,7 @@ export const GET_BROWSER_LIST = "GET_BROWSER_LIST";
 export const GET_TEST_CASE_LIST = "GET_TESTCASE_LIST";
 export const ADD_UPDATE_TEST_SUITS = "ADD_UPDATE_TEST_SUITS";
 export const SUITE_TO_EDIT = "SUITE_TO_EDIT";
+export const ADD_TEST_SUITE = "ADD_TEST_SUITE"
 // const BASE_URL = process.env.REACT_APP_BASE_URL || 'api';
  
 export const getTestSuites = () => {
@@ -94,6 +95,10 @@ export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
           },
         });
       }
+      dispatch({
+        type: ADD_TEST_SUITE,
+        payload: {},
+      });
       console.log("ExecuteTestCasesByTestSuite", response);
     } catch (error) {
       controlLoading(data);
@@ -242,6 +247,19 @@ export const AddUpdateTestSuites = (data, action, handleLoading) => {
             color: "rgb(255, 255, 255)",
           },
         });
+        // if(action === 'SaveAndExecute'){
+        //   let data = "Test-Demo"
+        //   // setopenLoadingModal(true)
+        //   // setisExecuting(true)
+        //   // console.log("no error ", payload);
+        //   dispatch(ExecuteTestCasesByTestSuite(data,));
+        // }
+// console.log("res.data",res.data)
+        dispatch({
+          type: ADD_TEST_SUITE,
+          payload: res.data.data,
+        });
+      
       }
       console.log("saved ", res);
     } catch (error) {

@@ -1,4 +1,4 @@
-import {SUITE_TO_EDIT,GET_TEST_CASE_LIST, GET_APPLICATION_LIST,GET_TEST_SUITS, GET_TEST_SUITS_LIST, GET_TEST_RUN_DETAILS_LIST, GET_TEST_CASE_DETAILS, GET_TEST_CASE_STESPS, GET_ENVIRONMENT_LIST, GET_BROWSER_LIST } from "../actions/seleniumAction";
+import {SUITE_TO_EDIT,GET_TEST_CASE_LIST, GET_APPLICATION_LIST,GET_TEST_SUITS, GET_TEST_SUITS_LIST, GET_TEST_RUN_DETAILS_LIST, GET_TEST_CASE_DETAILS, GET_TEST_CASE_STESPS, GET_ENVIRONMENT_LIST, GET_BROWSER_LIST, ADD_TEST_SUITE } from "../actions/seleniumAction";
 
 const initialState = {
   testSuits: [],
@@ -10,6 +10,7 @@ const initialState = {
   browserList:[],
   testCasesList:[],
   suiteToEdit:null,
+  testSuiteAdded:{}
 };
 
 const seleniumReduser = (state = initialState, action) => {
@@ -72,6 +73,12 @@ const seleniumReduser = (state = initialState, action) => {
         return {
           ...state,
           suiteToEdit: action.payload
+        }
+      }
+      case ADD_TEST_SUITE: {
+        return {
+          ...state,
+          testSuiteAdded: action.payload
         }
       }
     default:
