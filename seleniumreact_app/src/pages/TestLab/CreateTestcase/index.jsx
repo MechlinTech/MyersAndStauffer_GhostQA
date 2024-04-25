@@ -55,7 +55,8 @@ export default function CreateTestCase() {
   };
 
   const handleSave = () => {
-    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    const urlPattern =
+      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
     console.log("final steps,", steps);
     let payload = {
       testCaseName: testCaseTitle,
@@ -75,10 +76,9 @@ export default function CreateTestCase() {
           additionalErrors.scrollPixelError = !step.scrollPixel.trim();
           break;
         case "go_to_url":
-          const isValidUrl = !step.url.trim() || !urlPattern.test(step.url)
+          const isValidUrl = !step.url.trim() || !urlPattern.test(step.url);
           additionalErrors.urlError = isValidUrl;
-          if(isValidUrl)
-          toast.error('Enter valid url')
+          if (isValidUrl) toast.error("Enter valid url");
           break;
         case "select_option":
           additionalErrors.selectedUserError = !step.selectedUser.trim();
@@ -100,7 +100,8 @@ export default function CreateTestCase() {
           additionalErrors.currentUrlError = !step.currentUrl.trim();
           break;
         case "should_not_equal":
-          additionalErrors.shouldNotEqualError = !step.shouldNotEqualValue.trim();
+          additionalErrors.shouldNotEqualError =
+            !step.shouldNotEqualValue.trim();
           break;
         case "should_include":
           additionalErrors.shouldIncludeError = !step.shouldIncludeValue.trim();
@@ -140,16 +141,16 @@ export default function CreateTestCase() {
     if (!testCaseTitle.trim()) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
-      toast.error("Enter valid title")
-      return
+      toast.error("Enter valid title");
+      return;
     } else {
       settestCaseTitleError("");
     }
     if (!startUrl.trim() || !urlPattern.test(startUrl.trim())) {
       setstartUrlError("url not valid");
       urlError = "url not valid";
-      toast.error("Enter valid start url")
-      return
+      toast.error("Enter valid start url");
+      return;
     } else {
       setstartUrlError("");
     }
@@ -162,8 +163,8 @@ export default function CreateTestCase() {
       AddTestCaseDetails(payload, steps, goBack);
       console.log("steps ", steps);
     } else {
-      if(errors[0].urlError === undefined || !errors[0].urlError )
-      toast.error("Some field are empty");
+      if (errors[0].urlError === undefined || !errors[0].urlError)
+        toast.error("Some field are empty");
     }
   };
 
@@ -426,6 +427,7 @@ export default function CreateTestCase() {
     "refresh_page",
     "validate_current_url",
     "click element using text",
+    "wait",
   ];
   const listOfSteps = steps.map((step, index) => (
     <li key={index} style={{ listStyle: "none", margin: "10px 0" }}>
@@ -672,7 +674,7 @@ export default function CreateTestCase() {
                   color="primary"
                   onClick={() => goBack()}
                   sx={{
-                    textTransform:'none',
+                    textTransform: "none",
                     backgroundColor: "rgb(108, 117, 125)",
                     color: "#f1f1f1",
                     "&:hover": {
@@ -686,7 +688,7 @@ export default function CreateTestCase() {
                 <Button
                   onClick={handleSave}
                   sx={{
-                    textTransform:'none',
+                    textTransform: "none",
                     backgroundColor: "rgb(101, 77, 247)",
                     "&:hover": {
                       backgroundColor: "rgb(101, 77, 247) !important",
@@ -747,7 +749,7 @@ export default function CreateTestCase() {
                 onClick={handleAddMoreSteps}
                 sx={{
                   margin: "0 0 30px 30px",
-                  textTransform:'none',
+                  textTransform: "none",
                   backgroundColor: "rgb(101, 77, 247)",
                   "&:hover": {
                     backgroundColor: "rgb(101, 77, 247) !important",
