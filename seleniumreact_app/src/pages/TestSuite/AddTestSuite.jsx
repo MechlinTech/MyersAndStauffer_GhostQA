@@ -155,7 +155,7 @@ export default function AddTestSuite() {
       }
       console.log("no error ", payload);
       dispatch(AddUpdateTestSuites(payload, action,handleLoading));
-    }else
+    }
     console.log("handleSubmit error", error, payload);
   };
 

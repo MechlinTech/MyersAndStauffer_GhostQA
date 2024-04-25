@@ -1958,8 +1958,6 @@ END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [Excute]
 END CATCH
-
-
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetExecutedPerformanceByClientId]
 @ClientId          VARCHAR(100)
@@ -3048,18 +3046,23 @@ BEGIN TRY
 								  [TestSuiteStartDateTime], [TestSuiteEndDateTime], [TestRunStartDateTime], [TestRunEndDateTime], 
 								  [TestCaseSteps], [TesterName], [TestEnvironment])
 		SELECT
-			JSON_VALUE(@TestSuiteJson, '$.TestSuiteName') AS TestSuiteName,
-			JSON_VALUE(@TestSuiteJson, '$.TestRunName') AS TestRunName,
-			JSON_VALUE(@TestSuiteJson, '$.TestCaseName') AS TestCaseName,
-			JSON_VALUE(@TestSuiteJson, '$.TestCaseStatus') AS TestCaseStatus,
-			JSON_VALUE(@TestSuiteJson, '$.TestCaseVideoURL') AS TestCaseVideoURL,
-			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestSuiteStartDateTime') AS DATETIMEOFFSET) AS TestSuiteStartDateTime,
-			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestSuiteEndDateTime') AS DATETIMEOFFSET) AS TestSuiteEndDateTime,
-			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestRunStartDateTime') AS DATETIMEOFFSET) AS TestRunStartDateTime,
-			TRY_CAST(JSON_VALUE(@TestSuiteJson, '$.TestRunEndDateTime') AS DATETIMEOFFSET) AS TestRunEndDateTime,
-			JSON_VALUE(@TestSuiteJson, '$.TestCaseSteps') AS TestCaseSteps,
-			JSON_VALUE(@TestSuiteJson, '$.TesterName') AS TesterName,
-			JSON_VALUE(@TestSuiteJson, '$.TestEnvironment') AS TestEnvironment
+			TestSuiteName, TestRunName, TestCaseName, TestCaseStatus, TestCaseVideoURL,
+			CONVERT(datetimeoffset, TestSuiteStartDateTime), CONVERT(datetimeoffset, TestSuiteEndDateTime),
+			CONVERT(datetimeoffset, TestRunStartDateTime), CONVERT(datetimeoffset, TestRunEndDateTime),
+			TestCaseSteps, TesterName, TestEnvironment
+		FROM OPENJSON(@DynamicObject) WITH (
+			TestSuiteName NVARCHAR(100),
+			TestRunName NVARCHAR(100),
+			TestCaseName NVARCHAR(100),
+			TestCaseStatus NVARCHAR(50),
+			TestCaseVideoURL NVARCHAR(MAX),
+			TestSuiteStartDateTime DATETIMEOFFSET,
+			TestSuiteEndDateTime DATETIMEOFFSET,
+			TestRunStartDateTime DATETIMEOFFSET,
+			TestRunEndDateTime DATETIMEOFFSET,
+			TestCaseSteps NVARCHAR(MAX),
+			TesterName NVARCHAR(100),
+			TestEnvironment NVARCHAR(50))
 	END
 	ELSE
 	BEGIN
@@ -3429,27 +3432,6 @@ BEGIN CATCH
 	))
 END CATCH
 GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateTestStepData]
-@testStepJson			NVARCHAR(MAX),
-@TableName				VARCHAR(100),
-@testSuite				VARCHAR(100),
-@testRun				VARCHAR(100),
-@testCase				VARCHAR(100)
-AS
-BEGIN TRY
-	DECLARE @SQLQuery NVARCHAR(MAX)
-	SET @SQLQuery = 'UPDATE '+ @TableName + CHAR(13)
-	SET @SQLQuery += 'SET [TestCaseSteps] = ''' + @testStepJson + '''' + CHAR(13)
-	SET @SQLQuery += 'WHERE [TestSuiteName] = ''' + @testSuite + ''' AND [TestRunName] = ''' + @testRun + ''' AND [TestCaseName] = ''' + @testCase + ''''
-
-	PRINT @SqlQuery
-	EXEC sp_executesql @SqlQuery
-END TRY
-BEGIN CATCH
-	INSERT INTO tbl_log
-	SELECT ERROR_LINE(), ERROR_MESSAGE(), ERROR_SEVERITY()
-END CATCH
-GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateUserProfile]
 @FullName		        VARCHAR(100),
 @OrganizationName		VARCHAR(100),
@@ -3494,62 +3476,6 @@ BEGIN CATCH
 		SELECT 'fail' [status], ERROR_MESSAGE() [message]
 		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 	))
-END CATCH
-GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_UpsertTableData]
-@DynamicObject			NVARCHAR(MAX),
-@TableName				NVARCHAR(100)
-AS
-BEGIN TRY
-	DECLARE @SqlQuery				NVARCHAR(MAX) = '',
-			@ColumnsWithType		NVARCHAR(MAX), 
-			@Columns				NVARCHAR(MAX), 
-			@ColumnsJson			NVARCHAR(MAX), 
-			@TableCreationQuery		NVARCHAR(MAX)
-	DECLARE @JsonTable TABLE (ColumnName NVARCHAR(MAX), ColumnValue NVARCHAR(MAX))
-	
-	INSERT INTO @JsonTable (ColumnName, ColumnValue)
-	SELECT [Key],[Value]
-		FROM OPENJSON(@DynamicObject)
-
-	IF OBJECT_ID(@TableName,'U') IS NULL
-	BEGIN
-		SELECT @ColumnsWithType = STRING_AGG('[' + [ColumnName] + '] NVARCHAR(MAX)', ', ')
-			FROM @JsonTable
-		PRINT @ColumnsWithType
-
-		SET @TableCreationQuery = CONCAT('CREATE OR ALTERTABLE ', @TableName, '(', @ColumnsWithType, ')')
-		PRINT @TableCreationQuery
-	
-		EXEC sp_executesql @TableCreationQuery
-	END
-
-	SELECT @ColumnsJson = STRING_AGG(CONCAT('[',[ColumnName],']',' NVARCHAR(MAX) ''$.' + [ColumnName]) , ''', ')
-		FROM @JsonTable
-	SET @ColumnsJson  = @ColumnsJson + ''''
-	PRINT @ColumnsJson
-
-	SELECT @Columns = STRING_AGG('[' + [ColumnName] + ']', ',')
-		FROM @JsonTable
-	PRINT @Columns
-
-	SELECT @SqlQuery = @SqlQuery + CONCAT ( 'INSERT INTO ', @TableName ,'(', @Columns ,')',CHAR(13),'SELECT * FROM OPENJSON (''', @DynamicObject , ''') WITH (', @ColumnsJson , ')')
-	PRINT @SqlQuery
-
-	EXEC sp_executesql @SqlQuery
-END TRY
-BEGIN CATCH
-	IF OBJECT_ID('tbl_Log','U') IS NULL
-	BEGIN
-		CREATE TABLE tbl_log ([ERROR_LINE] VARCHAR(1000), [ERROR_MESSAGE] VARCHAR(1000), [ERROR_SEVERITY] VARCHAR(100))
-		INSERT INTO tbl_log
-		SELECT ERROR_LINE(), ERROR_MESSAGE(), ERROR_SEVERITY()
-	END
-	ELSE
-	BEGIN
-		INSERT INTO tbl_log
-		SELECT ERROR_LINE(), ERROR_MESSAGE(), ERROR_SEVERITY()
-	END
 END CATCH
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_ValidateUser]

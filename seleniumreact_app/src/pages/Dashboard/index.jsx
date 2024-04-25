@@ -29,7 +29,7 @@ export default function Dashboard() {
   const classess = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { testSuits } = useSelector((state) => state.selenium);
+  const { testSuits, testSuiteAdded } = useSelector((state) => state.selenium);
   const [selectedSuite, setSelectedSuite] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [tabNo, setTabNo] = useState("1");
@@ -38,7 +38,21 @@ export default function Dashboard() {
   const [suitToDelete, setsuitToDelete] = useState("");
   const [executingSuite, setexecutingSuite] = useState({});
   const [inprogress, setInProgress] = useState(false);
- 
+
+  useEffect(() => {
+    // dispatch(ExecuteTestCasesByTestSuite(data, controlLoading));
+    console.log("testSuiteAdded",testSuiteAdded)
+    if(testSuiteAdded?.actionType == "SaveAndExecute") {
+      let data =  {
+        TestSuiteName: testSuiteAdded.testSuiteName,
+        TestSuiteFlag: "Custom"
+    }
+      // dispatch(ExecuteTestCasesByTestSuite(data, controlLoading));
+      // console.log("data",data)
+      handleExecuteClick(data)
+    }
+  },[testSuiteAdded])
+ console.log("executingSuite",executingSuite)
   const handleAddSuite = () => {
     navigate("/add-suite");
   };
@@ -93,7 +107,9 @@ export default function Dashboard() {
   };
  
   const handleExecuteClick = (suite) => {
+    console.log("handleExecuteClick",suite)
     let data = suite.TestSuiteName;
+    console.log("handleExecuteClick111",data)
     // setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
     // setOpenModal(true)
     // setexecutingSuite(data)
