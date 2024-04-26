@@ -111,6 +111,7 @@ export default function AddTestSuite() {
       TestSuiteName: name,
       Description: description,
       TestSuiteId: 0,
+      TestUserId:selectedTestUser.UserId,
       TestSuiteType: selectedSuiteValue,
       ApplicationId: selectedApplication?.ApplicationId,
       SendEmail: selectedRecepentValue === "only-for-me" ? true : false,

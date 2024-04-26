@@ -137,6 +137,7 @@ export default function EditTestSuite() {
       Description: description,
       TestSuiteId: suiteToEdit.TestSuiteId,
       TestSuiteType: selectedSuiteValue,
+      TestUserId: selectedTestUser.UserId,
       ApplicationId: selectedApplication?.ApplicationId,
       SendEmail: selectedRecepentValue === "only-for-me" ? true : false,
       EnvironmentId: selectedEnvironment?.EnvironmentId,
