@@ -61,7 +61,7 @@ export default function EditTestSuite() {
   const { applicationList, environementList, suiteToEdit, testCasesList } =
     useSelector((state) => state.selenium);
   const { testUserList } = useSelector((state) => state.settings);
-
+ console.log("suiteToEdit",suiteToEdit, selectedApplication)
   const [isExecuting, setisExecuting] = useState(false);
   useEffect(() => {
     dispatch(GetApplication());
@@ -74,7 +74,7 @@ export default function EditTestSuite() {
     setName(suiteToEdit?.TestSuiteName);
     setSelectedApplication(() => {
       const x = applicationList?.find(
-        (app) => app.ApplicationId === suiteToEdit?.ApplicationId
+        (app) => app.ApplicationId === suiteToEdit?.Application?.ApplicationId
       );
       return x;
     });
@@ -84,11 +84,16 @@ export default function EditTestSuite() {
     );
     setSelectedEnvironment(() => {
       return environementList?.find(
-        (env) => env.EnvironmentId === suiteToEdit?.EnvironmentId
+        (env) => env.EnvironmentId === suiteToEdit?.Environment.EnvironmentId
       );
     });
-    setSelectedEnvironment(() => {
-      return testUserList?.find((env) => env.UserId === suiteToEdit?.UserId);
+    // setSelectedEnvironment(() => {
+    //   return environementList?.find(
+    //     (env) => env.EnvironmentId === suiteToEdit?.Environment.EnvironmentId
+    //   );
+    // });
+    setSelectedTestUser(() => {
+      return testUserList?.find((env) => env.UserId === suiteToEdit?.TestUser.TestUserId);
     });
     setDescription(suiteToEdit?.Description);
     setSelectedRows(() => {
