@@ -79,11 +79,9 @@ export default function AddNewTestUser({
     if (!formData.UserName.trim()) {
       errorObj.UserNameErrMsg = "User Name is required.";
     }
-
-    // Validate password using the validatePassword function
-    const passwordError = validatePassword(formData.Password);
-    if (passwordError) {
-      errorObj.PasswordErrMsg = passwordError;
+   
+    if (!formData.Password.trim()) {
+      errorObj.PasswordErrMsg = "Password is required.";
     }
 
     // Update error state
