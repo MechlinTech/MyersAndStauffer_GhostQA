@@ -27,5 +27,6 @@ namespace SeleniumReportAPI.Models
         public string? TesterName { get; set; }
         [Column("TestEnvironment", TypeName = "VARCHAR(100)")]
         public string? TestEnvironment { get; set; }
+        public int? TestUserId { get; set; }
     }
 }

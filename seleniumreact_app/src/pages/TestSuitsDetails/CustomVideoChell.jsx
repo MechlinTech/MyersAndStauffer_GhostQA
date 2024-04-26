@@ -6,14 +6,12 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { Icon } from "@material-ui/core";
 
-const CustomVideoChell = ({ row }) => {
+const CustomVideoChell = async ({ row }) => {
   const [openModal, setOpenModal] = useState(false);
-  const baseUrl = "https://codearrest.dyndns.org:3005";
-  const getVideoUrl = (apiPath) => {
+  const baseUrl = await getVideoUrl();
+  const videoUrl = (apiPath) => {
     return `${baseUrl}${apiPath?.replace(/\\/g, '/')}`;
   };
-  console.log("row+++video", row);
-  console.log("getVideoUrl", getVideoUrl(row.TestCaseVideoURL));
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -64,7 +62,7 @@ const CustomVideoChell = ({ row }) => {
               style={{ width: "100%", height: "100%", objectFit: "contain" }}
             >
               <source
-                src={getVideoUrl(row.TestCaseVideoURL)}
+                src={videoUrl(row.TestCaseVideoURL)}
                 type="video/webm"
               />
             </video>

@@ -19,9 +19,18 @@ const fetchConfig = async () => {
     return config ? config.REACT_APP_BASE_URL || "/api" : "/api";
   };
 
+  export const getVideoUrl = async () => {
+    const config = await getConfig();
+    return config ? config.REACT_TESTSUITE_VIDEO_URL || "" : "";
+  };
+
+  export const getImageUrl = async () => {
+    const config = await getConfig();
+    return config ? config.REACT_TESTSUITE_IMAGE_URL || "" : "";
+  };
+
   export const getCoreEngineBaseUrl = async () => {
     const config = await getConfig();
-    console.log("config",config)
     return config ? config.coreEngineBaseUrl || "" : "";
   };
   
