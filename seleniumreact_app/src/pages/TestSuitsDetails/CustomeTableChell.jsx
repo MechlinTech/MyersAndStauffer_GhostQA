@@ -4,15 +4,15 @@ import Modal from '@material-ui/core/Modal';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { getImageUrl } from '../../utils/configService';
 
-const CustomeTableChell = ({ row }) => {
+const CustomeTableChell = async ({ row }) => {
   const [openModal, setOpenModal] = useState(false);
-  const baseUrl = 'https://codearrest.dyndns.org:3005';
-  const getImageUrl = (apiPath) => {
+  const baseUrl = await getImageUrl();
+  const ImageUrl = (apiPath) => {
     return `${baseUrl}${apiPath.replace(/\\/g, '/')}`;
   };
-console.log("row",row)
-console.log("getImageUrl",getImageUrl(row.FailureScreenShots))
+
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -46,7 +46,7 @@ console.log("getImageUrl",getImageUrl(row.FailureScreenShots))
             </IconButton>
           </div>
           <img
-           src={getImageUrl(row.FailureScreenShots)}
+           src={ImageUrl(row.FailureScreenShots)}
             alt="Full Screenshot"
             style={{ maxWidth: '80vw', maxHeight: '80vh', margin: 'auto' }}
           />
