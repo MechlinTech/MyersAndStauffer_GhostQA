@@ -8,7 +8,7 @@ export const GET_LOC_COUNT = "GET_LOC_COUNT";
 export const GET_USER_COUNT = "GET_USER_COUNT";
 export const RESET_USER_COUNT = "RESET_USER_COUNT";
 export const RESET_LOC_COUNT = "RESET_LOC_COUNT";
-// const BASE_URL = process.env.REACT_APP_BASE_URL || 'api';
+export const GET_USER_LIST ="GET_USER_LIST"
 
 export const getTestSuitesList = () => {
   return async (dispatch) => {
@@ -203,3 +203,84 @@ export const DeleteBrowser = (brwId) => {
   };
 };
 
+
+// for Test User
+
+export const AddUpdateTestUser = (data) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.post(
+        `${BASE_URL}/Selenium/AddTestUser`,
+        data,
+        header()
+      );
+      console.log("/Selenium/AddTestUser",res.data)
+      if (res.data.status === "success") {
+        dispatch(GetTestUserList());
+        toast.info(res.data.message, {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+      } else if (res.data.status === "fail") {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      console.log("error adding ", error);
+      toast("Posting error");
+    }
+  };
+};
+
+
+export const GetTestUserList = () => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.get(
+        `${BASE_URL}/Selenium/GetAllTestUser`,
+        header()
+      );
+      console.log("GetTestUserList",response)
+      dispatch({
+        type: GET_USER_LIST,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("NETWORK ERROR");
+    }
+  };
+};
+
+export const DeleteUser = (id) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.post(
+        `${BASE_URL}/Selenium/DeleteTestUser?Id=${id}`,
+        id,
+        header()
+      );
+
+      const response = res.data;
+
+      if (response.status === "success") {
+        dispatch(GetTestUserList());
+        toast.info(response.message, {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+      }
+      return response; // Return the response object
+    } catch (error) {
+      console.log("error deleting ", error);
+      toast.error("Error deleting application");
+      return error.response; // Return the error response
+    }
+  };
+};
