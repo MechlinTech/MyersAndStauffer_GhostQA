@@ -331,6 +331,7 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         # copy_files_and_folders(CYPRESS_CONFIG_PATH,volume_path)       
         # create_directory(f"{volume_path}/e2e/cypress/e2e/")
         cypress_code = []
+        cypress_dict = {}
    
         for suites in instance.request_json: # using converted json
             test_cases = suites.get('testCases', [])
@@ -346,6 +347,7 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             }); \n\n\n""" + f"{generate_test_cases(test_cases,before_each)}"
             # result_cypress_code = format_javascript(cypress_code)
             cypress_code.append(result_cypress_code)
+            cypress_dict[f"{suites['name']}.cy.js"] = result_cypress_code
          
             # with open(
             #         f"{volume_path}/e2e/cypress/e2e/{suites['name']}.cy.js", "w"
@@ -354,7 +356,7 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             #         cypress_test_file.write(result_cypress_code)
         
 
-        instance.cypress_code = "\n".join(cypress_code)
+        instance.cypress_code = json.dumps(cypress_dict)
         instance.save()       
         
        

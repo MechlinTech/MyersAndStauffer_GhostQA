@@ -5,7 +5,7 @@ from ..serializers.performace_tests import TestContainersRunsSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
-class ContainersRunsViewSet(viewsets.ReadOnlyModelViewSet):
+class ContainersRunsViewSet(viewsets.ModelViewSet):
     queryset = TestContainersRuns.objects.all()
     serializer_class = TestContainersRunsSerializer
     
