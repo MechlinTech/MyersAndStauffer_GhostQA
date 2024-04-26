@@ -26,8 +26,10 @@ import {
   GetTestCases,
   AddUpdateTestSuites,
   Getsuitebyname,
+  GetTestUser,
 } from "../../redux/actions/seleniumAction";
 import { useParams } from "react-router-dom";
+import { GetTestUserList } from "../../redux/actions/settingAction";
 
 export default function EditTestSuite() {
   const dispatch = useDispatch();
@@ -39,6 +41,8 @@ export default function EditTestSuite() {
   const [selectedRecepentValue, setSelectedRecepentValue] = useState("");
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [selectedEnvironment, setSelectedEnvironment] = useState(null);
+  const [selectedTestUser, setSelectedTestUser] = useState(null);
+
   const [name, setName] = useState("");
 
   const [description, setDescription] = useState("");
@@ -46,6 +50,7 @@ export default function EditTestSuite() {
     name: "",
     application: "",
     environment: "",
+    test_user: "",
     browser: "",
     description: "",
   });
@@ -55,10 +60,13 @@ export default function EditTestSuite() {
   // const [openLoadingModal, setopenLoadingModal] = useState(false);
   const { applicationList, environementList, suiteToEdit, testCasesList } =
     useSelector((state) => state.selenium);
+  const { testUserList } = useSelector((state) => state.settings);
+
   const [isExecuting, setisExecuting] = useState(false);
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
+    dispatch(GetTestUserList());
     dispatch(GetTestCases());
     if (!suiteToEdit) {
       dispatch(Getsuitebyname(suiteName));
@@ -78,6 +86,9 @@ export default function EditTestSuite() {
       return environementList?.find(
         (env) => env.EnvironmentId === suiteToEdit?.EnvironmentId
       );
+    });
+    setSelectedEnvironment(() => {
+      return testUserList?.find((env) => env.UserId === suiteToEdit?.UserId);
     });
     setDescription(suiteToEdit?.Description);
     setSelectedRows(() => {
@@ -216,7 +227,7 @@ export default function EditTestSuite() {
     container: (provided) => ({
       ...provided,
       backgroundColor: "rgb(242, 242, 242)",
-      zIndex: 999, // Adjust the zIndex value
+      // zIndex: 999, // Adjust the zIndex value
     }),
     control: (provided, state) => ({
       ...provided,
@@ -466,10 +477,10 @@ export default function EditTestSuite() {
                               value={selectedEnvironment}
                               onChange={(newValue) => {
                                 setSelectedEnvironment(newValue);
-                                setError((prev)=>({
+                                setError((prev) => ({
                                   ...prev,
-                                  ['environment']:""
-                                }))
+                                  ["environment"]: "",
+                                }));
                                 handleApplication(newValue);
                               }}
                               styles={selectStyle}
@@ -482,6 +493,7 @@ export default function EditTestSuite() {
                             )}
                           </div>
                         </Grid>
+
                         {/* Row 3: Additional Name Dropdown */}
                         <Grid item>
                           <div>
@@ -537,6 +549,40 @@ export default function EditTestSuite() {
                                 {Error.application}
                               </Typography>
                             )} */}
+                          </div>
+                        </Grid>
+
+                        {/* Row 6: Test User Dropdown */}
+                        <Grid item>
+                          <div className={classes.input}>
+                            <Typography
+                              variant="subtitle1"
+                              className={clsx(classes.customFontSize)}
+                            >
+                              Test User
+                            </Typography>
+                            <Select
+                              getOptionLabel={(option) => option.UserName}
+                              getOptionValue={(option) => option.UserId}
+                              isClearable={true}
+                              options={testUserList}
+                              value={selectedTestUser}
+                              onChange={(newValue) => {
+                                setSelectedTestUser(newValue);
+                                setError((prev) => ({
+                                  ...prev,
+                                  ["test_user"]: "",
+                                }));
+                                // handleApplication(newValue);
+                              }}
+                              styles={selectStyle}
+                              menuPosition={"fixed"} // Set menuPosition to fixed
+                            />
+                            {Error.test_user && (
+                              <Typography className={classes.inputError}>
+                                {Error.test_user}
+                              </Typography>
+                            )}
                           </div>
                         </Grid>
                         {/* Row 4: Radio Buttons */}
@@ -758,7 +804,7 @@ export default function EditTestSuite() {
                         size={25}
                         style={{
                           marginRight: "8px",
-                          color: "#fff"
+                          color: "#fff",
                         }}
                       />
                     )}
