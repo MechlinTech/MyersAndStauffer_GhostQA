@@ -23,17 +23,17 @@ import { useDispatch } from "react-redux";
 import {
   GetApplication,
   GetEnvironment,
-  GetTestUser,
   GetTestCases,
   AddUpdateTestSuites,
 } from "../../redux/actions/seleniumAction";
+import { GetTestUserList } from "../../redux/actions/settingAction";
 
 export default function AddTestSuite() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
-    dispatch(GetTestUser());
+    dispatch(GetTestUserList());
     dispatch(GetTestCases());
   }, []);
   const classes = useStyles();
@@ -42,10 +42,11 @@ export default function AddTestSuite() {
   const [selectedRecepentValue, setSelectedRecepentValue] =
     useState("only-for-me");
   const [name, setName] = useState("");
-  const { applicationList, environementList, testCasesList, testUserList } =
-    useSelector((state) => state.selenium);
+  const { applicationList, environementList, testCasesList } = useSelector(
+    (state) => state.selenium
+  );
 
-  console.log("++++++++++", testUserList);
+  const { testUserList } = useSelector((state) => state.settings);
 
   // console.log("environment",environementList)
   // console.log("browser",browserList)

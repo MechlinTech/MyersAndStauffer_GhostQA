@@ -29,6 +29,7 @@ import {
   GetTestUser,
 } from "../../redux/actions/seleniumAction";
 import { useParams } from "react-router-dom";
+import { GetTestUserList } from "../../redux/actions/settingAction";
 
 export default function EditTestSuite() {
   const dispatch = useDispatch();
@@ -57,18 +58,15 @@ export default function EditTestSuite() {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   // const [openLoadingModal, setopenLoadingModal] = useState(false);
-  const {
-    applicationList,
-    environementList,
-    suiteToEdit,
-    testCasesList,
-    testUserList,
-  } = useSelector((state) => state.selenium);
+  const { applicationList, environementList, suiteToEdit, testCasesList } =
+    useSelector((state) => state.selenium);
+  const { testUserList } = useSelector((state) => state.settings);
+
   const [isExecuting, setisExecuting] = useState(false);
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
-    dispatch(GetTestUser());
+    dispatch(GetTestUserList());
     dispatch(GetTestCases());
     if (!suiteToEdit) {
       dispatch(Getsuitebyname(suiteName));
