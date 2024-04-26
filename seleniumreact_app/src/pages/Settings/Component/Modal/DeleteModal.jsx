@@ -9,6 +9,7 @@ import {
   DeleteApplication,
   DeleteBrowser,
   DeleteEnvironment,
+  DeleteUser,
 } from "../../../../redux/actions/settingAction";
 import { useDispatch } from "react-redux";
 
@@ -16,7 +17,8 @@ function DeleteModal({ open, onClose, item, types }) {
   const dispatch = useDispatch();
   const [name, setname] = useState("");
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
-  const [linkedTestSuite, setlinkedTestSuite] = useState("")
+  const [linkedTestSuite, setlinkedTestSuite] = useState("");
+  console.log("item", item);
   useEffect(() => {
     if (item) {
       setname(
@@ -26,6 +28,8 @@ function DeleteModal({ open, onClose, item, types }) {
           ? item.EnvironmentName
           : types === "browser"
           ? item.BrowserName
+          : types === "user"
+          ? item.UserName
           : ""
       );
     }
@@ -35,7 +39,7 @@ function DeleteModal({ open, onClose, item, types }) {
     try {
       if (types === "application") {
         const response = await dispatch(DeleteApplication(item.ApplicationId));
-        setlinkedTestSuite(response.message)
+        setlinkedTestSuite(response.message);
         if (response.status === "fail") {
           setIsSecondModalOpen(true);
           onClose();
@@ -44,16 +48,27 @@ function DeleteModal({ open, onClose, item, types }) {
         }
       } else if (types === "environment") {
         const response = await dispatch(DeleteEnvironment(item.EnvironmentId));
-        setlinkedTestSuite(response.message)
+        setlinkedTestSuite(response.message);
         if (response.status === "fail") {
           setIsSecondModalOpen(true);
           onClose();
         } else {
           onClose();
         }
+      } else if (types === "user") {
+        console.log("item",item)
+        const response = await dispatch(DeleteUser(item.UserId));
+        setlinkedTestSuite(response.message);
+        if (response.status === "fail") {
+          // setIsSecondModalOpen(true);
+          onClose();
+        } else {
+          onClose();
+        }
+        onClose();
       } else {
         const response = await dispatch(DeleteBrowser(item.BrowserId));
-        setlinkedTestSuite(response.message)
+        setlinkedTestSuite(response.message);
         if (response.status === "fail") {
           setIsSecondModalOpen(true);
           onClose();
@@ -122,11 +137,11 @@ function DeleteModal({ open, onClose, item, types }) {
           <DialogTitle id="alert-dialog-title">{"Alert"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Are you sure you want to delete this {types} <b>{name}</b>? It is linked
-              to a <b> {linkedTestSuite} </b> test suite, and you will have to update the test suites before
-              deleting it.
-              </DialogContentText>
-          </DialogContent >
+              Are you sure you want to delete this {types} <b>{name}</b>? It is
+              linked to a <b> {linkedTestSuite} </b> test suite, and you will
+              have to update the test suites before deleting it.
+            </DialogContentText>
+          </DialogContent>
           <DialogActions
             style={{ justifyContent: "center", marginBottom: "20px" }}
           >
