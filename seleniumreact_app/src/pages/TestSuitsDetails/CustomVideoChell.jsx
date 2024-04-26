@@ -5,6 +5,7 @@ import Box from "@material-ui/core/Box";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { Icon } from "@material-ui/core";
+import { getVideoUrl } from "../../utils/configService";
 
 const CustomVideoChell = async ({ row }) => {
   const [openModal, setOpenModal] = useState(false);
