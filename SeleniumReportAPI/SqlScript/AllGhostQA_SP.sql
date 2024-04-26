@@ -824,7 +824,8 @@ CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateTestSuites]
 @EnvironmentId			INT,
 @SelectedTestCases		NVARCHAR(MAX),
 @Description			NVARCHAR(MAX) = '',
-@TestSuiteId			INT = 0
+@TestSuiteId			INT = 0,
+@TestUserId				INT
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_AddUpdateTestSuites
@@ -848,7 +849,7 @@ BEGIN TRY
 		IF NOT EXISTS( SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId)
 		BEGIN
 			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, Description) 
-			VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description)
+			VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description, @TestUserId)
 		END
 		ELSE
 		BEGIN
@@ -881,7 +882,8 @@ BEGIN TRY
 				[SendEmail]			= @SendEmail,
 				[EnvironmentId]		= @EnvironmentId,
 				[SelectedTestCases] = @SelectedTestCases,
-				[Description]		= @Description
+				[Description]		= @Description,
+				[TestUserId]        = @TestUserId
 		WHERE [TestSuiteId] = @TestSuiteId
 
 		IF @@ERROR = 0
@@ -2264,6 +2266,7 @@ BEGIN TRY
                ISNULL([ParentId], '') AS [parentId],
                ISNULL([Name], '') AS [name]
 		FROM tbl_ProjectRootRelation
+		ORDER BY Id DESC
 	FOR JSON PATH))
 END TRY
 BEGIN CATCH
@@ -2330,6 +2333,7 @@ BEGIN TRY
                ISNULL([Parent], '') AS [parentId],
                ISNULL([Name], '') AS [name]
 		FROM tbl_RootRelation
+		ORDER BY RootId DESC
 	FOR JSON PATH))
 END TRY
 BEGIN CATCH
@@ -2867,23 +2871,42 @@ AS
 PROCEDURE NAME	:	stp_GetTestSuitsByName
 CREATED BY		:	Mohammad Mobin
 CREATED DATE	:	18 Jan 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
+MODIFIED BY		:	25th April 2024
+MODIFIED DATE	:	Mohammad Mobin
 PROC EXEC		:
 				EXEC stp_GetTestSuitsByName
 **************************************************************************************/
 BEGIN TRY
+	SELECT [result] = JSON_QUERY((
 		SELECT
-		        [TestSuiteName],
+				[TestSuiteName],
 				[TestSuiteType],
-				[ApplicationId],
+				JSON_QUERY((
+					SELECT [ApplicationId], [ApplicationName]
+					FROM tbl_Applications
+					WHERE [ApplicationId] = t.[ApplicationId]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+				)) [Application],
 				[SendEmail],
-				[EnvironmentId],
+				JSON_QUERY((
+					SELECT [EnvironmentId], [EnvironmentName], [Baseurl], [BasePath], [DriverPath]
+					FROM tbl_Environments
+					WHERE EnvironmentId = t.[EnvironmentId]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+				)) [Environment],
+				JSON_QUERY((
+					SELECT [TestUserId], [UserName], [PassWord]
+					FROM tbl_TestUser
+					WHERE Id = t.[TestUserId]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER,INCLUDE_NULL_VALUES
+				)) [TestUser],
 				[SelectedTestCases],
-		        [TestSuiteId],
+				[TestSuiteId],
 				[Description]
-		FROM tbl_TestSuites
+		FROM tbl_TestSuites t
 		WHERE TestSuiteName = @TestSuiteName
+	FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [GetTestSuites]
@@ -3773,5 +3796,182 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuiteName]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetAllTestUser]
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetAllTestUser
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	24th April 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetAllTestUser
+**************************************************************************************/
+BEGIN TRY
+	SELECT [result] = JSON_QUERY((
+		SELECT [Id] AS [UserId], 
+		       [UserName],
+			   [Password],
+			   [IsDeleted],
+			   [CreatedBy],
+			   [CreatedOn],
+               [ModifiedBy],
+			   [ModifiedOn]
+		FROM tbl_TestUser
+		WHERE IsDeleted = 0
+	FOR JSON PATH, INCLUDE_NULL_VALUES))
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [TestUser]
+END CATCH
+Go
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestUserById]
+@Id             INT
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetTestUserById
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	24th April 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetTestUserById
+**************************************************************************************/
+BEGIN TRY
+	SELECT [result] = JSON_QUERY((
+		SELECT [Id] AS [UserId],
+		       [UserName],
+			   [Password],
+			   [IsDeleted],
+			   [CreatedBy],
+			   [CreatedOn],
+               [ModifiedBy],
+			   [ModifiedOn]
+		FROM tbl_TestUser
+		WHERE Id = @Id
+	FOR JSON PATH, INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER))
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [TestUser]
+END CATCH
+Go
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddTestUser]
+@Id                       INT,		
+@UserName                 NVARCHAR(MAX),
+@Password	              NVARCHAR(MAX),
+@CreatedBy				  NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_AddTestUser
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	25th April 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_AddTestUser 
+				
+**************************************************************************************/
+BEGIN TRY
+	IF EXISTS( SELECT 1 FROM [tbl_TestUser] WHERE [UserName] = @UserName AND [Id] <> @Id)
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'Duplicate User Name' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	ELSE IF @Id = 0
+	BEGIN
+		INSERT INTO [dbo].[tbl_TestUser] ([UserName],[Password], [IsDeleted], [CreatedBy], [CreatedOn], [ModifiedBy],[ModifiedOn]) 
+		VALUES (@UserName, @Password, 0, @CreatedBy, GETDATE(), NULL, NULL)
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'success' [status], 'User Name Saved Successfully' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+	ELSE
+	BEGIN 
+		UPDATE [dbo].[tbl_TestUser]
+			SET  [UserName]      = @UserName,
+			     [Password]      = @Password,
+				 [ModifiedBy]    = @CreatedBy,
+				 [ModifiedOn]    = GETDATE()
+		   WHERE [Id] = @Id
+
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'success' [status], 'User Name Updated Successfully' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END CATCH
+Go
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteTestUser]
+@Id			INT
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_DeleteTestUser
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	25th April 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_DeleteTestUser 
+**************************************************************************************/
+BEGIN TRY
+	IF EXISTS(SELECT 1 FROM [tbl_TestUser] WHERE [Id] = @Id)
+	BEGIN
+		DELETE FROM [tbl_TestUser] WHERE [Id] = @Id
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'Test User not available' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+
+	IF @@ERROR = 0
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'success' [status], 'Test User Deleted Successfully' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [TestUserJson]
 END CATCH
 GO

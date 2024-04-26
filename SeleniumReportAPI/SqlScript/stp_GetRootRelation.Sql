@@ -16,6 +16,7 @@ BEGIN TRY
                ISNULL([Parent], '') AS [Parent],
                ISNULL([Name], '') AS [Name]
 		FROM tbl_RootRelation
+		ORDER BY RootId DESC
 	FOR JSON PATH))
 END TRY
 BEGIN CATCH

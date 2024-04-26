@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
+using SeleniumReportAPI.Models;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json.Nodes;
 using TestSeleniumReport.DTO_s;
 
 namespace SeleniumReportAPI.Controllers
@@ -173,17 +175,18 @@ namespace SeleniumReportAPI.Controllers
             List<object> _result = new List<object>();
             string _testRunName = await _helper.GetRunId(TestSuiteName);
             string _testSuiteDetailsJson = await _helper.GetTestSuiteByName(TestSuiteName);
+            TestSuiteNameData _testSuiteNameData = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuiteNameData>(_testSuiteDetailsJson);
             string? testerName = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-            Dto_TestSuiteDetailsData _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestSuiteDetailsData>(_testSuiteDetailsJson);
+            //Dto_TestSuiteDetailsData _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestSuiteDetailsData>(_testSuiteDetailsJson);
 
-            Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteDetails.EnvironmentId));
-            if (_testSuiteDetails.SelectedTestCases != null && _testSuiteDetails.SelectedTestCases.Count > 0)
+            Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteNameData.Environment.EnvironmentId));
+            if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Count > 0)
             {
-                foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
+                foreach (var testCaseName in _testSuiteNameData.SelectedTestCases)
                 {
                     try
                     {
-                        string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
+                        string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName,_testSuiteNameData.TestUser.Password);
                         if (!string.IsNullOrEmpty(_testCaseJsonData))
                         {
                             try
@@ -204,7 +207,7 @@ namespace SeleniumReportAPI.Controllers
                                     string originalUrl = Request.Headers.Referer.ToString();
                                     int lastSlashIndex = originalUrl.LastIndexOf('/');
                                     var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
-                                    if (_testSuiteDetails.SendEmail == true)
+                                    if (_testSuiteNameData.SendEmail == true)
                                     {
                                         var obj = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url);
                                         _result.Add(obj);
@@ -450,6 +453,50 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> DisableEnableUser(Dto_DisableEnableUser model)
         {
             return Ok(await _helper.DisableEnableUser(model));
+        }
+
+        /// <summary>
+        /// Get All Test User List
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAllTestUser")]
+        public async Task<ActionResult> GetAllTestUser()
+        {
+            return Ok(await _helper.GetAllTestUser());
+        }
+
+        /// <summary>
+        /// Get Test User  By Id
+        /// </summary>
+        /// <param Id = Id></param>
+        /// <returns></returns>
+        [HttpGet("GetTestUserById")]
+        public async Task<ActionResult> GetTestUserById(int Id)
+        {
+            return Ok(await _helper.GetTestUserById(Id));
+        }
+
+        /// <summary>
+        /// Add Test User
+        /// </summary>
+        /// <param TestUser = TestUser></param>
+        /// <returns></returns>
+        [HttpPost("AddTestUser")]
+        public async Task<ActionResult> AddTestUser(TestUser model)
+        {
+            var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            return Ok(await _helper.AddTestUser(model, CreatedBy));
+        }
+
+        /// <summary>
+        /// Delete Test User By Id
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteTestUser")]
+        public async Task<ActionResult> DeleteTestUser(int Id)
+        {
+            return Ok(await _helper.DeleteTestUser(Id));
         }
     }
 }
