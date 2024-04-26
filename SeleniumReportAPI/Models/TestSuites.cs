@@ -28,5 +28,6 @@ namespace SeleniumReportAPI.Models
         public List<SelectListItem> AllTestCases { get; set; }
 
         public string? Description { get; set; }
+        public int? TestUserId { get; set; }
     }
 }
