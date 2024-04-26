@@ -1,5 +1,6 @@
 ﻿using AventStack.ExtentReports.Utils;
 using ExcelDataReader;
+using GitHub;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver.Core.Operations;
@@ -300,6 +301,7 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@TestSuiteId", model.TestSuiteId);
                         command.Parameters.AddWithValue("@SelectedTestCases", string.Join(", ", model.SelectedTestCases));
                         command.Parameters.AddWithValue("@Description", model.Description);
+                        command.Parameters.AddWithValue("@TestUserId", model.TestUserId);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -352,6 +354,7 @@ namespace SeleniumReportAPI.Helper
 
         internal async Task<string> GetTestSuiteByName(string TestSuiteName)
         {
+            string result = string.Empty;
             Dto_TestSuiteDetailsData testSuites = new Dto_TestSuiteDetailsData();
             try
             {
@@ -367,14 +370,7 @@ namespace SeleniumReportAPI.Helper
                             if (reader.HasRows)
                             {
                                 reader.Read();
-                                testSuites.TestSuiteId = Convert.ToInt32(reader["TestSuiteId"]);
-                                testSuites.TestSuiteName = reader["TestSuiteName"].ToString();
-                                testSuites.SendEmail = Convert.ToBoolean(reader["SendEmail"]);
-                                testSuites.ApplicationId = Convert.ToInt32(reader["ApplicationId"]);
-                                testSuites.EnvironmentId = Convert.ToInt32(reader["EnvironmentId"]);
-                                testSuites.TestSuiteType = reader["TestSuiteType"].ToString();
-                                testSuites.Description = reader["Description"].ToString();
-                                testSuites.SelectedTestCases = reader["SelectedTestCases"].ToString().Split(", ").Select(x => x).ToList();
+                                result = reader["result"].ToString();
                             }
                         }
                     }
@@ -385,7 +381,7 @@ namespace SeleniumReportAPI.Helper
             {
                 throw ex;
             }
-            return JsonConvert.SerializeObject(testSuites);
+            return result;
         }
 
         internal async Task<string> GetTestCasesJson()
@@ -478,7 +474,7 @@ namespace SeleniumReportAPI.Helper
             return EnvironmentListJson;
         }
 
-        internal async Task<string> RunTestCase(string testSuiteName, string testCaseName, string testRun, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath)
+        internal async Task<string> RunTestCase(string testSuiteName, string testCaseName, string testRun, string testerName, string baseURL, string basePath, string environmentName, string browserName, string driverPath, string TestUserName, string Password)
         {
             string TestCaseJsonData = string.Empty;
             try
@@ -3136,6 +3132,129 @@ namespace SeleniumReportAPI.Helper
                             {
                                 reader.Read();
                                 result = reader["RunDetailsJson"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> GetAllTestUser()
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetAllTestUser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> GetTestUserById(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetTestUserById", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> AddTestUser(TestUser model, string createdBy)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddTestUser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", model.Id);
+                        command.Parameters.AddWithValue("@UserName", model.UserName);
+                        command.Parameters.AddWithValue("@Password", model.Password);
+                        command.Parameters.AddWithValue("@CreatedBy", createdBy);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> DeleteTestUser(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteTestUser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
                             }
                         }
                     }

@@ -15,6 +15,7 @@ BEGIN TRY
                ISNULL([ParentId], '') AS [parentId],
                ISNULL([Name], '') AS [name]
 		FROM tbl_ProjectRootRelation
+		ORDER BY Id DESC
 	FOR JSON PATH))
 END TRY
 BEGIN CATCH
