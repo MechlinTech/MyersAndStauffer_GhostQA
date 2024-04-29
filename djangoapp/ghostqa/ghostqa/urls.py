@@ -17,13 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
-from cypress.viewsets.test_suite import TestSuiteViewSet,TestContainersRunsViewset
+from cypress.viewsets.test_suite import TestSuiteViewSet
 from cypress.viewsets.test_suitev2 import TestSuiteV2ViewSet
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 from performace_test.viewsets.performace_tests import PerformaceViewSet
 from performace_test.viewsets.container_runs import ContainersRunsViewSet as PerformanceContainersRunsViewSet
-from agent_dynamic_location.views import AgentViewSet, JobViewSet, JmeterTestContainersRunsViewSet
+from agent_dynamic_location.views import AgentViewSet, JobViewSet, JmeterTestContainerRunsViewSet
 
 
 router = DefaultRouter()
@@ -32,7 +32,7 @@ router.register(r'test-suitesV2', TestSuiteV2ViewSet)
 router.register(r"performance-tests",PerformaceViewSet)
 router.register(r"performance-container-runs",PerformanceContainersRunsViewSet)
 router.register(r"remote-agent-connection", AgentViewSet)
-router.register(r"remote-agent-connection-jmeter-container", JmeterTestContainersRunsViewSet)
+router.register(r"remote-agent-connection-jmeter-container", JmeterTestContainerRunsViewSet, basename="newjmeterTestContainer")
 router.register(r"remote-agent-connection-job", JobViewSet)
 # router.register(r'container-runs', TestContainersRunsViewset)
 

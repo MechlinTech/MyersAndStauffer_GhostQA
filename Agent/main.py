@@ -3,15 +3,15 @@ from time import sleep
 from code_management.jmeter_file_setup import setup_jmeter_files
 from code_management.cypress_file_setup import setup_cypress_file
 import requests
-def send_result_to_api(result):
-    api_endpoint = "http://127.0.0.1:8000/codeengine/api/remote-agent-connection-job/receive_data/"
-    print(type(result),result )
-    # response = requests.post(api_endpoint, json=result)
+# def send_result_to_api(result):
+#     api_endpoint = "http://127.0.0.1:8000/codeengine/api/remote-agent-connection-job/receive_data/"
+#     print(type(result),result )
+#     # response = requests.post(api_endpoint, json=result)
 
-    if response.status_code == 200:
-        print("Result sent successfully")
-    else:
-        print(f"Error sending result: {response}")
+#     if response.status_code == 200:
+#         print("Result sent successfully")
+#     else:
+#         print(f"Error sending result: {response}")
         
 def execute_jmeter_job(job):
     # jmeter_file_data = setup_jmeter_files(job['performance_details']['name'], job['performance_details']['test_file'], job['container_run'])
@@ -36,8 +36,8 @@ def main():
                 execute_cypress_job(job)
             else:
                 pass
-        if result:
-            send_result_to_api(result)
+        # if result:
+        #     send_result_to_api(result)
     
                 
     

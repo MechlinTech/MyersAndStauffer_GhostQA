@@ -6,16 +6,22 @@ from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.response import Response
 from .models import AgentDetails, Job
-from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer
-from performace_test.models import JmeterTestContainersRuns
+from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer, JmeterTestContainersRunsSerializerNew
+from performace_test.models import JmeterTestContainersRuns, TestContainersRuns
+from performace_test.serializers.performace_tests import TestContainersRunsSerializer
 
 class AgentViewSet(viewsets.ModelViewSet):
     queryset = AgentDetails.objects.all()
     serializer_class = AgentSerializer
     
-class JmeterTestContainersRunsViewSet(viewsets.ModelViewSet):
-    queryset = JmeterTestContainersRuns.objects.all()
-    serializer_class = JmeterTestContainersRunsSerializer
+# class JmeterTestContainersRunsViewSet(viewsets.ModelViewSet):
+#     queryset = JmeterTestContainersRuns.objects.all()
+#     serializer_class = JmeterTestContainersRunsSerializer
+#     lookup_field = 'ref'
+    
+class JmeterTestContainerRunsViewSet(viewsets.ModelViewSet):
+    queryset = TestContainersRuns.objects.all()
+    serializer_class = JmeterTestContainersRunsSerializerNew
     lookup_field = 'ref'
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()

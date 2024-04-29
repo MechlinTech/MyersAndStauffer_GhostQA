@@ -3,8 +3,8 @@ from rest_framework import serializers
 from .models import AgentDetails, Job
 from cypress.serializers.request import TestSuiteSerializer
 from cypress.models import TestSuite, TestContainersRuns as CypressContainersRun
-from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer
-from performace_test.models import JmeterTestContainersRuns, PerformaceTestSuite
+from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer, TestContainersRunsSerializer
+from performace_test.models import JmeterTestContainersRuns, PerformaceTestSuite, TestContainersRuns
 
 
 
@@ -30,6 +30,12 @@ class JmeterTestContainersRunsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         lookup_field = 'ref'
 
+class JmeterTestContainersRunsSerializerNew(serializers.ModelSerializer):
+    suite = serializers.PrimaryKeyRelatedField(queryset=PerformaceTestSuite.objects.all(), required=False)
+    class Meta:
+        model = TestContainersRuns
+        fields = '__all__'
+        lookup_field = 'ref'
 
 class TestSuiteSerializer(serializers.ModelSerializer):
     scenarios_file = serializers.FileField(required=False)  
@@ -61,7 +67,7 @@ class JobSerializer(serializers.ModelSerializer):
     
     def get_container_run(self, obj):
         try:
-            container_run = JmeterTestContainersRuns.objects.get(suite=obj.performance_test_suite)
+            container_run = TestContainersRuns.objects.get(suite=obj.performance_test_suite)
             return {
                 'container_id': container_run.container_id,
                 'container_status': container_run.container_status,
@@ -73,7 +79,7 @@ class JobSerializer(serializers.ModelSerializer):
                 'raw_data': container_run.raw_data,
                 'client_reference_id': container_run.client_reference_id
             }
-        except JmeterTestContainersRuns.DoesNotExist:
+        except TestContainersRuns.DoesNotExist:
             return None
         
     def get_cypress_container_run(self, obj):
@@ -97,7 +103,7 @@ class JobSerializer(serializers.ModelSerializer):
         test_suite_data = validated_data.pop('test_suite', None)
 
         if field_type == 'jmeter' and performance_test_suite_data:
-            container_run = JmeterTestContainersRuns.objects.create(
+            container_run = TestContainersRuns.objects.create(
             suite = performance_test_suite_data,
             container_status= f"pending"
             )

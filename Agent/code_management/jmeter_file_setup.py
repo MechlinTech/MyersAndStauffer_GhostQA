@@ -100,7 +100,7 @@ def setup_jmeter_files(job):
         container_run_ref = job['container_run']['ref']
         update_container_run(container_run_ref, f"{volume_path}/test.jmx")
             
-        container =jmeter_container(name, volume_path, [job['performance_details']['jthreads_total_user']], job['performance_details']['jrampup_time'], job['container_run'], job)
+        container =jmeter_container(name, volume_path, [job['performance_details']['jthreads_total_user']], job['performance_details']['jrampup_time'], job['container_run'])
         print("Container : ", container, container.logs())  
         # jmeter_container = jmeter_container(name, [job['performance_details']['jthreads_total_user']], job['performance_details']['jrampup_time'], job['container_run'])
     return Response({
