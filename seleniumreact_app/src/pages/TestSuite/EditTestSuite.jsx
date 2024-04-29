@@ -93,7 +93,7 @@ export default function EditTestSuite() {
     //   );
     // });
     setSelectedTestUser(() => {
-      return testUserList?.find((env) => env.UserId === suiteToEdit?.TestUser.TestUserId);
+      return testUserList?.find((env) => env.UserId === suiteToEdit?.TestUser?.TestUserId);
     });
     setDescription(suiteToEdit?.Description);
     setSelectedRows(() => {
