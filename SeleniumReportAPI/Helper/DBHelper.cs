@@ -1,16 +1,11 @@
-﻿using AventStack.ExtentReports.Utils;
-using ExcelDataReader;
-using GitHub;
+﻿using ExcelDataReader;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver.Core.Operations;
-using MyersAndStaufferFramework;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Models;
-using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
@@ -480,7 +475,7 @@ namespace SeleniumReportAPI.Helper
             try
             {
                 SaveExecutionProgress(testSuiteName, testCaseName, testRun, testerName, environmentName);
-                TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
+                TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName, TestUserName, Password);
                 UpdateExecutionProgress(testSuiteName, testCaseName, testRun, testerName, environmentName);
             }
             catch (Exception)
@@ -987,9 +982,8 @@ namespace SeleniumReportAPI.Helper
             var user = GetProfilByEmail(toEmail);
             var passWord = _configuration["EmailDetails:EmailPassword"];
             var port = Convert.ToInt32(_configuration["EmailDetails:Port"]);
-            if (Mailtype.Equals("Invitation"))
-            {
-                BodyString = @"<!DOCTYPE html>
+            BodyString = Mailtype.Equals("Invitation")
+                ? @"<!DOCTYPE html>
                                 <html lang=""en"">
                                 <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
                                 <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" width=""600"">
@@ -1009,11 +1003,8 @@ namespace SeleniumReportAPI.Helper
                                 </tr>
                                 </table>
                                 </body>
-                                </html>";
-            }
-            else
-            {
-                BodyString = Mailtype.Equals("Accept") ? @"<!DOCTYPE html>
+                                </html>"
+                : Mailtype.Equals("Accept") ? @"<!DOCTYPE html>
                                                             <html lang=""en"">
                                                             <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
                                                             <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0""    width=""600"">
@@ -1035,7 +1026,6 @@ namespace SeleniumReportAPI.Helper
                                                             </table>
                                                             </body>
                                                             </html>" : "";
-            }
 
             if (Mailtype.Equals("Invitation") && !string.IsNullOrEmpty(user.Result))
             {
@@ -3020,7 +3010,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal List<object> SendExecutionDataMail( string testSuiteName, string testRunName, string testerName, string Url)
+        internal List<object> SendExecutionDataMail(string testSuiteName, string testRunName, string testerName, string Url)
         {
             List<object> result = new List<object>();
             var testrunData = GetTestRunData(testSuiteName, testRunName);
