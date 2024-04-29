@@ -462,7 +462,7 @@ BEGIN TRY
 		DELETE FROM tbl_TestStepsDetails 
 		WHERE TestCaseDetailsId = JSON_VALUE(@AddStepsJson, '$.testCaseID')
 
-		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [Action], StepDescription, IsOptional, SelectorType, SelectorValue, SendKeyInput, ScrollPixel, [Url], SelectedUser, [FileName], ElementValue, CssValue, CssProperty, PageTitle, CurrentUrl, ShouldNotEqualValue, ShouldIncludeValue, ShouldEqualValue, ShouldGreaterThanValue, ShouldLessValue, ContainTextValue, HaveAttributeValue, TextValue)
+		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [Action], StepDescription, IsOptional, SelectorType, SelectorValue, SendKeyInput, ScrollPixel, [Url], SelectedUser, [FileName], ElementValue, CssValue, CssProperty, PageTitle, CurrentUrl, ShouldNotEqualValue, ShouldIncludeValue, ShouldEqualValue, ShouldGreaterThanValue, ShouldLessValue, ContainTextValue, HaveAttributeValue, TextValue, Wait)
 		SELECT 
 			JSON_VALUE(@AddStepsJson, '$.testCaseID'),
 			act.[action],
@@ -487,7 +487,8 @@ BEGIN TRY
 			act.[shouldLessValue],
 			act.[containTextValue],
 			act.[haveAttributeValue],
-			act.[textValue]
+			act.[textValue],
+			act.[wait]
 		FROM 
 			OPENJSON(@AddStepsJson, '$.actions') 
 			WITH (
@@ -513,7 +514,8 @@ BEGIN TRY
 				[shouldLessValue] NVARCHAR(MAX) '$.shouldLessValue',
 				[containTextValue] NVARCHAR(MAX) '$.containTextValue',
 				[haveAttributeValue] NVARCHAR(MAX) '$.haveAttributeValue',
-				[textValue] NVARCHAR(MAX) '$.textValue'
+				[textValue] NVARCHAR(MAX) '$.textValue',
+				[wait] NVARCHAR(Max) '$.wait'
 			) AS act;
 		IF @@ERROR = 0
 		BEGIN
@@ -2789,7 +2791,8 @@ BEGIN TRY
 					[shouldLessValue],
 					[containTextValue],
 					[haveAttributeValue],
-					[textValue]
+					[textValue],
+					[wait]
 		    FROM tbl_TestStepsDetails
             WHERE [TestCaseDetailsId] = @TestStepsId
             FOR JSON PATH
@@ -2900,7 +2903,7 @@ BEGIN TRY
 					WHERE Id = t.[TestUserId]
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER,INCLUDE_NULL_VALUES
 				)) [TestUser],
-				[SelectedTestCases],
+				REPLACE([SelectedTestCases],' ','') [SelectedTestCases],
 				[TestSuiteId],
 				[Description]
 		FROM tbl_TestSuites t

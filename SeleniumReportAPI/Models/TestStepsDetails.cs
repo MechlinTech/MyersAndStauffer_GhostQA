@@ -31,5 +31,6 @@ namespace SeleniumReportAPI.Models
         public string ContainTextValue { get; set; }
         public string HaveAttributeValue { get; set; }
         public string TextValue { get; set;}
+        public int? Wait { get; set; }
     }
 }

@@ -34,7 +34,7 @@ BEGIN TRY
 					WHERE Id = t.[TestUserId]
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER,INCLUDE_NULL_VALUES
 				)) [TestUser],
-				[SelectedTestCases],
+				REPLACE([SelectedTestCases],' ','') [SelectedTestCases],
 				[TestSuiteId],
 				[Description]
 		FROM tbl_TestSuites t

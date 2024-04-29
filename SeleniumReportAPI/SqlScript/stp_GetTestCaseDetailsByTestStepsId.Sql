@@ -38,7 +38,8 @@ BEGIN TRY
 					[shouldLessValue],
 					[containTextValue],
 					[haveAttributeValue],
-					[textValue]
+					[textValue],
+					[wait]
 		    FROM tbl_TestStepsDetails
             WHERE [TestCaseDetailsId] = @TestStepsId
             FOR JSON PATH

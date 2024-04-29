@@ -29,6 +29,7 @@
             public string containTextValue { get; set; }
             public string haveAttributeValue { get; set; }
             public string textValue { get; set; }
+            public int wait { get; set; }
         }
     }
 }
