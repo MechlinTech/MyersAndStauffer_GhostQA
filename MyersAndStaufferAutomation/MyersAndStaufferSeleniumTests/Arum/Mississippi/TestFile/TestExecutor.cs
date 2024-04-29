@@ -72,7 +72,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         }
         public static string Testername { get; set; }
 
-        public string ExecuteTestCases(string browsername, string EnvironmentName, string TestCaseName, string baseurl, string basePath, string driverPath, string testerName, string testUserName, string password)
+        public string ExecuteTestCases(string browsername, string EnvironmentName, string TestCaseName, string baseurl, string basePath, string driverPath, string testerName, string username, string password)
         {
             IsInbuilt = false;
             browserName = browsername;
