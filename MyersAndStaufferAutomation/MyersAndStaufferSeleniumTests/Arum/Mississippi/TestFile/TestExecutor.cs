@@ -7,11 +7,14 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         private static string _browsername = "Chrome";
         private static string _environmentname = "dev";
         private static string _baseurl = "https://clocksession.com/";
-        private static string _basepath = @"E:\GhostQACode\MyersAndStauffer_GhostQA-LatestCode\MyersAndStauffer_GhostQA-main\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\bin\";
-        private static string _driverpath = @"E:\GhostQACode\MyersAndStauffer_GhostQA-LatestCode\MyersAndStauffer_GhostQA-main\MyersAndStaufferAutomation\MyersAndStaufferSeleniumTests\bin\x64\Debug\net6.0";
-        private static string _ApiUrl = @"http://12.2/api/AddInBuildTestSuite/SaveInBuiltTestSuites";
+        private static string _basepath = @"C:\Published_Projects\React_App\images\data\";
+        private static string _driverpath = @"C:\Published_Projects\GhostQA_WebAPI\wwwroot\Driver";
+        private static string _ApiUrl = @"https://codearrest.dyndns.org:3006/api/AddInBuildTestSuite/SaveInBuiltTestSuites";
         private static bool _isRunHeadless = false;
         private static string _testrunname = Guid.NewGuid().ToString();
+        private static string _Username = "TestUser_Username@gmail.com";
+        private static string _password = "TestUser_Password";
+
         public static string JsonData { get; set; }
         public static bool IsInbuilt = true;
 
@@ -52,6 +55,16 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             get => _ApiUrl;
             set => _ApiUrl = value;
         }
+        public static string Username
+        {
+            get => _Username;
+            set => _Username = value;
+        }
+        public static string Password
+        {
+            get => _password;
+            set => _password = value;
+        }
         public static bool IsRunHeadless
         {
             get => _isRunHeadless;
@@ -69,6 +82,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
             Basepath = basePath;
             Driverpath = driverPath;
             Testername = testerName;
+            Username = username;
+            Password = password;
+
 
             var bsTest = new BaseTest(); // Instantiate BaseTest using the new keyword to perform Setup and TearDown
             bsTest.SetUp();
