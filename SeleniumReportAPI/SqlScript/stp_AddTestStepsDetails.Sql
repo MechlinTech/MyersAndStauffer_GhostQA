@@ -68,7 +68,7 @@ BEGIN TRY
 				[containTextValue] NVARCHAR(50) '$.containTextValue',
 				[haveAttributeValue] NVARCHAR(50) '$.haveAttributeValue',
 				[textValue] NVARCHAR(50) '$.textValue',
-				[wait] NVARCHAR(Max) '$.wait'
+				[wait] INT '$.wait'
 			) AS act;
 		IF @@ERROR = 0
 		BEGIN

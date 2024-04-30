@@ -515,7 +515,7 @@ BEGIN TRY
 				[containTextValue] NVARCHAR(MAX) '$.containTextValue',
 				[haveAttributeValue] NVARCHAR(MAX) '$.haveAttributeValue',
 				[textValue] NVARCHAR(MAX) '$.textValue',
-				[wait] NVARCHAR(Max) '$.wait'
+				[wait] INT '$.wait'
 			) AS act;
 		IF @@ERROR = 0
 		BEGIN
