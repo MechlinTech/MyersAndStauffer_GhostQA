@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import Modal from '@material-ui/core/Modal';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
@@ -6,11 +6,21 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { getImageUrl } from '../../utils/configService';
 
-const CustomeTableChell = async ({ row }) => {
+const CustomeTableChell = ({ row }) => {
   const [openModal, setOpenModal] = useState(false);
-  const baseUrl = await getImageUrl();
+  const [baseUrl, setBaseUrl] = useState('');
+
+  // Use useEffect hook to fetch the image URL
+  useEffect(() => {
+    const fetchBaseUrl = async () => {
+      const url = await getImageUrl();
+      setBaseUrl(url);
+    };
+    fetchBaseUrl();
+  }, []);
+
   const ImageUrl = (apiPath) => {
-    return `${baseUrl}${apiPath.replace(/\\/g, '/')}`;
+    return baseUrl ? `${baseUrl}${apiPath.replace(/\\/g, '/')}` : null;
   };
 
   const handleOpenModal = () => {
@@ -45,11 +55,13 @@ const CustomeTableChell = async ({ row }) => {
               <CloseIcon />
             </IconButton>
           </div>
-          <img
-           src={ImageUrl(row.FailureScreenShots)}
-            alt="Full Screenshot"
-            style={{ maxWidth: '80vw', maxHeight: '80vh', margin: 'auto' }}
-          />
+          {row && row.FailureScreenShots && baseUrl && (
+            <img
+              src={ImageUrl(row.FailureScreenShots)}
+              alt="Full Screenshot"
+              style={{ maxWidth: '80vw', maxHeight: '80vh', margin: 'auto' }}
+            />
+          )}
         </div>
       </Modal>
     </>
