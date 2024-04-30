@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TableCell from "@material-ui/core/TableCell";
 import Modal from "@material-ui/core/Modal";
 import Box from "@material-ui/core/Box";
@@ -7,12 +7,26 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { Icon } from "@material-ui/core";
 import { getVideoUrl } from "../../utils/configService";
 
-const CustomVideoChell = async ({ row }) => {
+const CustomVideoChell = ({ row }) => {
   const [openModal, setOpenModal] = useState(false);
-  const baseUrl = await getVideoUrl();
+  const [baseUrl, setBaseUrl] = useState(null);
+
+  
+  useEffect(() => {
+    const fetchVideoUrl = async () => {
+      const url = await getVideoUrl();
+     
+      setBaseUrl(url);
+    };
+
+    fetchVideoUrl();
+  }, []);
+
+
   const videoUrl = (apiPath) => {
-    return `${baseUrl}${apiPath?.replace(/\\/g, '/')}`;
+    return baseUrl ? `${baseUrl}${apiPath?.replace(/\\/g, '/')}` : null;
   };
+
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -31,7 +45,7 @@ const CustomVideoChell = async ({ row }) => {
         />
       </TableCell>
 
-      {/* Modal for displaying the full image */}
+      {/* Modal for displaying the full video */}
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -56,17 +70,19 @@ const CustomVideoChell = async ({ row }) => {
               position: "relative",
             }}
           >
-            <video
-              autoPlay
-              muted
-              controls
-              style={{ width: "100%", height: "100%", objectFit: "contain" }}
-            >
-              <source
-                src={videoUrl(row.TestCaseVideoURL)}
-                type="video/webm"
-              />
-            </video>
+            {row && row.TestCaseVideoURL && baseUrl && (
+              <video
+                autoPlay
+                muted
+                controls
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              >
+                <source
+                  src={videoUrl(row.TestCaseVideoURL)}
+                  type="video/webm"
+                />
+              </video>
+            )}
             <Box
               onClick={handleCloseModal}
               sx={{
