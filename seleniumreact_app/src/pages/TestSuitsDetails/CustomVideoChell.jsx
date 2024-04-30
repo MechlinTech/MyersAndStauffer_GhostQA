@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TableCell from "@material-ui/core/TableCell";
 import Modal from "@material-ui/core/Modal";
 import Box from "@material-ui/core/Box";
@@ -7,26 +7,15 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { Icon } from "@material-ui/core";
 import { getVideoUrl } from "../../utils/configService";
 
-const CustomVideoChell = ({ row }) => {
+const CustomVideoChell =  (row) => {
   const [openModal, setOpenModal] = useState(false);
-  const [baseUrl, setBaseUrl] = useState(null);
-
-  
-  useEffect(() => {
-    const fetchVideoUrl = async () => {
-      const url = await getVideoUrl();
-     
-      setBaseUrl(url);
-    };
-
-    fetchVideoUrl();
-  }, []);
-
+  const baseUrl = getVideoUrl();
 
   const videoUrl = (apiPath) => {
-    return baseUrl ? `${baseUrl}${apiPath?.replace(/\\/g, '/')}` : null;
+    console.log("baseUrl",`${baseUrl}${apiPath?.replace(/\\/g, '/')}`)
+    return `${baseUrl}${apiPath?.replace(/\\/g, '/')}`;
   };
-
+  
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -45,7 +34,7 @@ const CustomVideoChell = ({ row }) => {
         />
       </TableCell>
 
-      {/* Modal for displaying the full video */}
+      
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -70,19 +59,17 @@ const CustomVideoChell = ({ row }) => {
               position: "relative",
             }}
           >
-            {row && row.TestCaseVideoURL && baseUrl && (
-              <video
-                autoPlay
-                muted
-                controls
-                style={{ width: "100%", height: "100%", objectFit: "contain" }}
-              >
-                <source
-                  src={videoUrl(row.TestCaseVideoURL)}
-                  type="video/webm"
-                />
-              </video>
-            )}
+            <video
+              autoPlay
+              muted
+              controls
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            >
+              <source
+                src={videoUrl(row.TestCaseVideoURL)}
+                type="video/webm"
+              />
+            </video>
             <Box
               onClick={handleCloseModal}
               sx={{
