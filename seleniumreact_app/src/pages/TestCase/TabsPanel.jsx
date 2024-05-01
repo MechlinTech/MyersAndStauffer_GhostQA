@@ -1,14 +1,11 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-// import SwipeableViews from 'react-swipeable-views';
-import { useTheme } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { StyledTypography } from './styles';
-import Design from './Design';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { StyledTypography } from "./styles";
+import Design from "./Design";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -38,53 +35,78 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
   };
 }
 
 export default function TabsPanel() {
-  const [value, setValue] = useState('Design');
+  const [value, setValue] = useState("Design");
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   return (
-    <Box >
-     
+    <Box>
       <Tabs
-         value={value}
-         onChange={handleChange}
-        
-         sx={{
-           '& .MuiTabs-indicator': {
-             backgroundColor: 'rgb(101, 77, 247)'
-           },
-           '& .Mui-selected': {
-             color: 'rgb(101, 77, 247)'
-           }
-         }}
-        >
-          <Tab value="Design" label={<StyledTypography style={{ textTransform: 'capitalize' }}>Design</StyledTypography>}/>
-          <Tab value="Run" label={<StyledTypography style={{ textTransform: 'capitalize' }}>Run</StyledTypography>} />
-          <Tab value="Result" label={<StyledTypography style={{ textTransform: 'capitalize' }}>Result</StyledTypography>} />
-          <Tab value="Trends" label={<StyledTypography style={{ textTransform: 'capitalize' }}>Trends</StyledTypography>} />
-        </Tabs>
+        value={value}
+        onChange={handleChange}
+        sx={{
+          "& .MuiTabs-indicator": {
+            backgroundColor: "rgb(101, 77, 247)",
+          },
+          "& .Mui-selected": {
+            color: "rgb(101, 77, 247)",
+          },
+        }}
+      >
+        <Tab
+          value="Design"
+          label={
+            <StyledTypography style={{ textTransform: "capitalize" }}>
+              Design
+            </StyledTypography>
+          }
+        />
+        <Tab
+          value="Run"
+          label={
+            <StyledTypography style={{ textTransform: "capitalize" }}>
+              Run
+            </StyledTypography>
+          }
+        />
+        <Tab
+          value="Result"
+          label={
+            <StyledTypography style={{ textTransform: "capitalize" }}>
+              Result
+            </StyledTypography>
+          }
+        />
+        <Tab
+          value="Trends"
+          label={
+            <StyledTypography style={{ textTransform: "capitalize" }}>
+              Trends
+            </StyledTypography>
+          }
+        />
+      </Tabs>
 
-        <TabPanel value={value} index={'Design'}>
-          {/* <div>design</div>
-           */}
-           <Design/>
-        </TabPanel>
-        <TabPanel value={value} index={"Run"}>
-          <div>run</div>
-        </TabPanel>
-        <TabPanel value={value} index={"Result"}>
-          <div>result</div>
-        </TabPanel>
-        <TabPanel value={value} index={"Trends"}>
-          <div>trends</div>
-        </TabPanel> 
-        
+      <TabPanel value={value} index={"Design"}>
+        {/* <div>design</div>
+         */}
+        <Design />
+      </TabPanel>
+      <TabPanel value={value} index={"Run"}>
+        <div>Run</div>
+      </TabPanel>
+      <TabPanel value={value} index={"Result"}>
+        <div>Result</div>
+      </TabPanel>
+      <TabPanel value={value} index={"Trends"}>
+        <div>Trends</div>
+      </TabPanel>
     </Box>
   );
 }

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Card, Drawer } from "@material-ui/core";
+import { Grid, Card } from "@material-ui/core";
 import { useStyles } from "./styles";
 import Button from "@mui/material/Button";
 import TabsPanel from "./TabsPanel";
 import AddNewProject from "./AddNewProject";
-import { Remove, Add } from "@mui/icons-material/";
+import { Add } from "@mui/icons-material/";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import DynamicTreeView from "./DynamicTreeView";
@@ -12,44 +12,22 @@ import axios from "axios";
 import { header } from "../../utils/authheader";
 import { toast } from "react-toastify";
 import { Box } from "@mui/material";
-import { useLocation } from "react-router-dom";
 import { getBaseUrl } from "../../utils/configService";
 import { useDispatch, useSelector } from 'react-redux';
 import { AddWorkspace, fetchWorkSpaces, setRootId } from "../../redux/actions/TestCase/testcaseAction";
 
-// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
-
 export default function TestCase() {
   const classes = useStyles();
   const dispatch = useDispatch()
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
   const [addNewProject, setAddNewProject] = useState(false);
   const [depth, setdepth] = useState(0);
   const [formData, setFormData] = useState({ name: "" });
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [isCollapsed, setisCollapsed] = useState(false);
-//   const [listData, setListData] = useState([]);
+
   useEffect(() => {
     dispatch(fetchWorkSpaces())
   }, []);
 
-//   const fetchData = async () => {
-//     try {
-//       const BASE_URL = await getBaseUrl();
-//       const response = await axios.get(
-//         `${BASE_URL}/Performance/GetProjectData`,
-//         header()
-//       );
-//       // Assuming response.data is the array of data you want to set as listData
-//       setListData(response.data == "" ? [] : response.data);
-//       console.log(response);
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//       setListData([]);
-//     }
-//   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -60,10 +38,14 @@ export default function TestCase() {
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
-        `${BASE_URL}/Performance/AddProjectData`,
+        `${BASE_URL}/FunctionalTest/AddFunctionalTest`,
         {
-          id: 0,
-          parentId: 0,
+          // id: 0,
+          // parentId: 0,
+          // name: formData.name,
+          rootId: 0,
+          node: 0,
+          parent: formData.parentId,
           name: formData.name,
         },
 
@@ -72,22 +54,16 @@ export default function TestCase() {
       if(response.data.status === 'fail'){
         toast.error(response.data.message)
       }else{
-        // setListData([...listData, response.data.Data[0]]); // Reset form data
-        console.log('reso',response)
         dispatch(AddWorkspace(response.data.Data[0]))
         setFormData({ name: "" });
         setAddNewProject(false);
       }
-        
       
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-  const handleItemClick = (id) => {
-    setSelectedItem(id); // Update selected item state
-    // onItemClick(id); // Call the onItemClick callback function with the clicked item's id
-  };
+ 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ name: value, id: Math.random(), parentId: 0 });
@@ -193,7 +169,7 @@ export default function TestCase() {
             </Card>
           </Grid>
           <Grid item xs={12} md={drawerOpen ? 9 : 12} xl={10}>
-            {depth > 1 ? (
+            {depth >= 1 ? (
               <TabsPanel/>
             ) : (
               <Box />
