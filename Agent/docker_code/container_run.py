@@ -4,7 +4,14 @@ import time
 import pandas as pd
 import json
 import threading
-from code_management.api_call import update_container_after_run, get_container_from_codeengine
+from code_management.api_call import (
+                                    update_container_after_run,
+                                    get_container_from_codeengine,
+                                    update_container_reporting,
+                                    update_container_for_raw_data,
+                                    update_container_for_json_data,
+                                    final_update_container_after_execution
+)
 import logging  
 logger = logging.getLogger(__name__)
 
@@ -77,7 +84,7 @@ def monitor_jmx_docker_conatiner_With_live_reporting(container,container_run,vol
             
             # container_run = TestContainersRuns.objects.get(id=container_id)
             container_run = get_container_from_codeengine(container_run)
-            container =  get_container(container.id)
+            container =  get_container(container.container_id)
             
             if container:
                 # container_run.container_id = container.id
@@ -96,8 +103,8 @@ def monitor_jmx_docker_conatiner_With_live_reporting(container,container_run,vol
                 
                 if container.status == "exited":
                 
-                    container_run.container_logs_str = container.logs()
-                    container_run.save()
+                    # container_run.container_logs_str = container.logs()
+                    # container_run.save()
                     
                     result ={
                         "logs":[],
@@ -120,8 +127,8 @@ def monitor_jmx_docker_conatiner_With_live_reporting(container,container_run,vol
                         # test_artifact_instance.save()
                         print('monitor_jmx_docker_conatiner: file:' , file)
                         raw_data = csv_to_json(logs_path)
-                        container_run.raw_data = raw_data
-                        container_run.save()
+                        # container_run.raw_data = raw_data
+                        # container_run.save()
                     
                     # test_artifact_instance = TestArtifacts.objects.create(
                     #     container_runs=container_run,
@@ -134,8 +141,8 @@ def monitor_jmx_docker_conatiner_With_live_reporting(container,container_run,vol
                         # file_data = test_artifact_instance.files.read().decode('utf-8')
                         file_data = file.read().decode('utf-8')
                         data = json.loads(file_data)
-                        container_run.json = data
-                        container_run.save()
+                        # container_run.json = data
+                        # container_run.save()
                         
                     
                     # test_artifact_instance = TestArtifacts.objects.create(
@@ -193,8 +200,62 @@ def jmeter_container(name, volume_path,Jthreads=10,Jrampup=10,container_run=None
     container_status = container.status
     container_short_id = container.short_id
     update_container_after_run(container_run['ref'], container_id, container_status, container_short_id)
+    related_container_details = get_container_details(container, container_run['ref'], volume_path)
                 # Start the threaded task
     # thread = threading.Thread(target=monitor_jmx_docker_conatiner_With_live_reporting, args=(container,container_run.id,volume_path,))
-    thread = threading.Thread(target=monitor_jmx_docker_conatiner_With_live_reporting, args=(container,container_run['ref'],volume_path,))
-    thread.start()
-    return container
+    # thread = threading.Thread(target=monitor_jmx_docker_conatiner_With_live_reporting, args=(container,container_run['ref'],volume_path,))
+    # thread.start()
+    return container, related_container_details
+
+def get_container_details(container, ref, volume_path):
+    container_run = get_container_from_codeengine(ref)
+    container_details =  get_container(container_run['container_id'])
+    
+    while container_details.status != "exited":
+        time.sleep(30)  # Wait for 30 seconds
+        container_details = get_container(container_run['container_id'])
+        
+        
+    container_status = container_details.status
+    container_labels = container_details.labels
+    
+    update_container_reporting(container_run['ref'], container_status, container_labels)
+    
+    logs_path = f"{volume_path}/log.csv"
+    statistics_path = f"{volume_path}/html-results/statistics.json"
+    html_path = f"{volume_path}/html-results"
+    
+    raw_data = csv_to_json(logs_path)
+    raw_data = json.dumps(raw_data)
+    update_container_for_raw_data(container_run['ref'], raw_data)
+    
+    data = get_json_metrics(logs_path)
+    json_data = json.dumps(data)
+    update_container_for_json_data(container_run['ref'], json_data)
+    
+    
+    with open(logs_path, 'rb') as file:
+        print('monitor_jmx_docker_conatiner: file:', file.read())
+        # raw_data = csv_to_json(logs_path)
+        # container_run.raw_data = raw_data
+        # update the container for raw data
+
+    with open(statistics_path, 'rb') as file:
+        print('monitor_jmx_docker_conatiner: file:', file.read())
+        # file_data = file.read().decode('utf-8')
+        # data = json.loads(file_data)
+        # container_run.json = data
+        # update the container for json data
+        
+        
+        
+
+    # with open(html_path, 'rb') as file:
+    #     print('monitor_jmx_docker_conatiner: file:', file.read())
+    container_status = container_details.status
+    final_update_container_after_execution(container_run['ref'], container_status)  
+    container.remove()
+    print(container.status)
+    return True
+
+        
