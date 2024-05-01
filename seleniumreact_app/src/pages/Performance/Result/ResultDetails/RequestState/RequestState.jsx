@@ -69,7 +69,7 @@ export default function RequestState() {
                   color: "#646464",
                 }}
               >
-                Request State
+                Request Statistics
               </Typography>
             </Grid>
             <Grid item>

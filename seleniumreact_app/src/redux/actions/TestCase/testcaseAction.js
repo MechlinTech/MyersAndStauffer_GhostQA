@@ -14,11 +14,6 @@ export const UPDATE_WORKSPACE = "UPDATE_WORKSPACE";
 export const DELETE_WORKSPACE = "DELETE_WORKSPACE";
 export const SELECTED_SUITE = "SELECTED_SUITE";
 
-
-// const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-
-
 export const fetchDataRequest = () => ({
   type: FETCH_DATA_REQUEST
 });
@@ -39,7 +34,7 @@ export const fetchWorkSpaces = () => {
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.get(
-        `${BASE_URL}/Performance/GetProjectData`,
+        `${BASE_URL}/FunctionalTest/GetFunctionalTest`,
         header()
       );
       dispatch(fetchDataSuccess(response.data == "" ? [] : response.data));

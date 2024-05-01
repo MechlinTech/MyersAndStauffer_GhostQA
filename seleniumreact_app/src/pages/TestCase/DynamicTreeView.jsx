@@ -10,7 +10,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { getBaseUrl } from "../../utils/configService";
 import { header } from "../../utils/authheader";
-// import { useDispatch } from "react-redux";
 import { Box, CircularProgress, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -20,13 +19,11 @@ import {
   DeleteWorkspace,
   ExpandParent,
   UpdateWorkspace,
-  fetchWorkSpaces,
   setExpandedNodes,
   setRootId,
   setSelectedNode,
 } from "../../redux/actions/TestCase/testcaseAction";
 import { useDispatch, useSelector } from "react-redux";
-// const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 const Card = ({
   newElementName,
@@ -35,7 +32,6 @@ const Card = ({
   handleCRUDCancel,
   handleKeyPress,
   handleDelete,
-  // expanded = [],
   handleCRUD,
   handleEdit,
   editMode,
@@ -136,10 +132,6 @@ const Card = ({
                           }
                           maxLength={250}
                         />
-                        {/* <CancelIcon
-                        sx={{ color: "#f74d4d" }}
-                        onClick={() => handleEdit(item.id, item.name, "cancel")}
-                      /> */}
                       </div>
                     )}
                     {editMode !== item.id && (
@@ -169,7 +161,7 @@ const Card = ({
                       </span>
                     )}
                   </div>
-                  <div className={styleClass.crud} style={{}}>
+                  <div className={styleClass.crud}>
                     {editMode == 0 && (
                       <EditIcon
                         sx={{
@@ -193,7 +185,7 @@ const Card = ({
                       onClick={() => handleDelete(item)}
                       style={{ cursor: "pointer" }}
                     />
-                    {nodeCount < 2 && (
+                    {nodeCount < 1 && (
                       <AddIcon
                         sx={{
                           color:
@@ -221,13 +213,7 @@ const Card = ({
                         fontFamily: "Lexend Deca",
                         fontSize: "14px",
                       }}
-                      placeholder={
-                        nodeCount == 0
-                          ? "Add Project"
-                          : nodeCount == 1
-                          ? "Add Suite"
-                          : "Test"
-                      }
+                      placeholder={nodeCount == 0 ? "Add Project" : ""}
                       className={styleClass.addNewFolder}
                       value={newElementName}
                       key={item.id}
@@ -310,13 +296,16 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
         }
         parentids.unshift(parentid);
         const nodeCount = findDepth(expandedNode, listData);
+        console.log("nodeCount", nodeCount);
         TestCaseHandle(expandedNode.id, nodeCount - 1);
       }
     }
   }, [listData, selectedNodeId]);
-  useEffect(()=>{
-    dispatch(setSelectedNode())
-  },[selectedNodeId])
+
+  useEffect(() => {
+    dispatch(setSelectedNode());
+  }, [selectedNodeId]);
+
   const findDepth = (item, items) => {
     if (item.parentId === 0) {
       return 1; // Base case: root item
@@ -349,10 +338,11 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
       }
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
-        `${BASE_URL}/Performance/AddProjectData`,
+        `${BASE_URL}/FunctionalTest/AddFunctionalTest`,
         {
-          id: 0,
-          parentId: newItem.parentId,
+          rootId: 0,
+          node: 0,
+          parent: newItem.parentId,
           name: newItem.name,
         },
 
@@ -373,7 +363,7 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
 
   const handleCRUDNewItem = useCallback(
     (parentId, nodeData) => {
-      if (nodeCount < 3) {
+      if (nodeCount < 2) {
         setExpandedInputId(null); // Hide the input field
         if (newElementName) {
           const newId = Math.max(...listData.map((item) => item.id)) + 1;
@@ -400,7 +390,6 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
   };
   const handleKeyPressEdit = async (event, itemId, node) => {
     if (event.key === "Enter") {
-      // setEditMode(0);
       const itemToEdit = listData.find((item) => item.id === itemId);
       try {
         if (editData.trim() === "") {
@@ -410,10 +399,11 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
         }
         const BASE_URL = await getBaseUrl();
         const response = await axios.post(
-          `${BASE_URL}/Performance/UpdateProjectData`,
+          `${BASE_URL}/FunctionalTest/UpdateFunctionalTest`,
           {
-            id: itemToEdit.id,
-            parentId: itemToEdit.parentId,
+            rootId: itemToEdit.id,
+            node: 0,
+            parent: itemToEdit.parentId,
             name: editData,
           },
 
@@ -480,11 +470,15 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
-        `${BASE_URL}/Performance/DeleteProjectData`,
+        `${BASE_URL}/FunctionalTest/DeleteFunctionalTest`,
         {
-          id: itemToDelete.id,
-          parentId: itemToDelete.parentId,
+          rootId: itemToDelete.id,
+          // node: 0,
+          parent: itemToDelete.parentId,
           name: itemToDelete.name,
+          // id: itemToDelete.id,
+          // parentId: itemToDelete.parentId,
+          // name: itemToDelete.name,
         },
 
         header()
@@ -567,7 +561,6 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
             toggleExpand={toggleExpand}
             handleCRUDCancel={handleCRUDCancel}
             handleKeyPress={handleKeyPress}
-            // handleDelete={handleDelete}
             handleDelete={handleDeleTeModal}
           />
         )}

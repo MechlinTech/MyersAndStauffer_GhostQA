@@ -61,7 +61,6 @@ export default function EditTestSuite() {
   const { applicationList, environementList, suiteToEdit, testCasesList } =
     useSelector((state) => state.selenium);
   const { testUserList } = useSelector((state) => state.settings);
- console.log("suiteToEdit",suiteToEdit, selectedApplication)
   const [isExecuting, setisExecuting] = useState(false);
   useEffect(() => {
     dispatch(GetApplication());
@@ -96,11 +95,22 @@ export default function EditTestSuite() {
       return testUserList?.find((env) => env.UserId === suiteToEdit?.TestUser?.TestUserId);
     });
     setDescription(suiteToEdit?.Description);
+    // setSelectedRows(() => {
+    //   return testCasesList.filter((test) =>
+    //     suiteToEdit?.SelectedTestCases?.includes(test.TestCaseName)
+    //   );
+    // });
     setSelectedRows(() => {
+      const selectedTestCasesArray = suiteToEdit?.SelectedTestCases
+        ? suiteToEdit.SelectedTestCases.split(',')
+        : [];
+    
       return testCasesList.filter((test) =>
-        suiteToEdit?.SelectedTestCases?.includes(test.TestCaseName)
+        selectedTestCasesArray.some((selectedTestCase) => selectedTestCase.trim() === test.TestCaseName)
       );
     });
+    
+    
   }, [dispatch, suiteToEdit]);
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
