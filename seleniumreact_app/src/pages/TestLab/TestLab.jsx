@@ -54,42 +54,42 @@ export default function TestLab() {
   };
 
   const handleCancel = () => {
-    setAddNewProject(false)
-    setFormData({ name: "" });
- }
-
- const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  // Check if formData.name is empty
-  if (!formData.name.trim()) {
-    toast.error("Whitespace is not allowed.");
-    return; 
-  }
-
-  try {
-    const BASE_URL = await getBaseUrl();
-    const response = await axios.post(
-      `${BASE_URL}/AddTestLab/AddRootRelation`,
-      {
-        rootId: 0,
-        node: 0,
-        parent: 0,
-        name: formData.name,
-      },
-      header()
-    );
-    if(response.data.status === 'fail'){
-      toast.error(response.data.message)
-    }else{
-      setListData([...listData, response.data.Data[0]]); // Reset form data
-      setFormData({ name: "" });
     setAddNewProject(false);
+    setFormData({ name: "" });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Check if formData.name is empty
+    if (!formData.name.trim()) {
+      toast.error("Whitespace is not allowed.");
+      return;
     }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
+
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.post(
+        `${BASE_URL}/AddTestLab/AddRootRelation`,
+        {
+          rootId: 0,
+          node: 0,
+          parent: 0,
+          name: formData.name,
+        },
+        header()
+      );
+      if (response.data.status === "fail") {
+        toast.error(response.data.message);
+      } else {
+        setListData([response.data.Data[0], ...listData]); // Reset form data
+        setFormData({ name: "" });
+        setAddNewProject(false);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleItemClick = (id) => {
     setSelectedItem(id); // Update selected item state

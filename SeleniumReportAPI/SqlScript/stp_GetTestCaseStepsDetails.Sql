@@ -15,8 +15,10 @@ PROC EXEC		:
 BEGIN TRY
 	SELECT [TestCaseStepsJson] = JSON_QUERY((
 		SELECT [TestCaseName], [TestCaseSteps],
-			MIN(CAST([TestRunStartDateTime] AS DATETIMEOFFSET)) AS [TestCaseStartDate],
-			MAX(CAST([TestRunEndDateTime] AS DATETIMEOFFSET)) AS [TestCaseEndDate]
+			CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss')AS DATE) AS [TestCaseStartDate],
+			CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss')AS TIME) AS [TestCaseStartTime],
+			CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS DATE) AS [TestCaseEndDate],
+			CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS TIME) AS [TestCaseEndTime]
 		FROM
 			tbl_TestCase t
 		WHERE

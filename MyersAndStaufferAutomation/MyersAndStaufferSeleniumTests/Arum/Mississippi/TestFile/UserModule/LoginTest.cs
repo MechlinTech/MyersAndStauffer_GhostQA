@@ -10,6 +10,8 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
     public class LoginTest : BaseTest
     {
         public static TestData _testData = TestDataSharedInstance.testData;
+        public static string Username = TestExecutor.Username;
+        public static string Password = TestExecutor.Password;
 
         [Test, Order(0)]
         public void Verify_User_Is_Able_To_Login()
@@ -17,6 +19,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
             _testData.TestSuiteName = "ClockSession";
             _testData.TestCaseName = "Verify_User_Is_Able_To_Login";
             _testSteps = new List<TestStepColumns> { new TestStepColumns() };
+            
 
             try
             {
@@ -34,12 +37,12 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 
 
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
-                logInPage.SetEmail("Test");
+                logInPage.SetEmail(Username);
                 VideoRecorder.ScreenShot(dateTime);
 
 
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter passoword test" });
-                logInPage.SetPassword("Test");
+                logInPage.SetPassword("password");
                 VideoRecorder.ScreenShot(dateTime);
 
 
@@ -135,12 +138,12 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
 
 
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
-                logInPage.SetEmail("nitin.srivastava@mechlintech.com");
+                logInPage.SetEmail(Username);
                 VideoRecorder.ScreenShot(dateTime);
 
 
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter passoword test" });
-                logInPage.SetPassword("Nit@96553");
+                logInPage.SetPassword(Password);
                 VideoRecorder.ScreenShot(dateTime);
 
 

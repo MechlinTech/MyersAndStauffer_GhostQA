@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
+using SeleniumReportAPI.Models;
+using System.Linq;
 using System.Security.Claims;
+using System.Text.Json.Nodes;
 using TestSeleniumReport.DTO_s;
 
 namespace SeleniumReportAPI.Controllers
@@ -88,36 +92,9 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> AddTestSuite(Dto_TestSuiteDetailsData model, string action)
         {
             Dto_Response _response = new Dto_Response();
-            if (action == "Save")
-            {
-                string result = await _helper.AddUpdateTestSuitesJson(model);
-                _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
-            }
-            else if (action == "SaveAndExecute")
-            {
-                string? testerName = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-                string result = await _helper.AddUpdateTestSuitesJson(model);
-                _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
-                if (!_response.status.Contains("Fail"))
-                {
-                    string _testRunName = await _helper.GetRunId(model.TestSuiteName);
-                    Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(model.EnvironmentId));
-                    foreach (var testCaseName in model.SelectedTestCases)
-                    {
-                        string _testCaseJsonData = await _helper.RunTestCase(model.TestSuiteName.ToString(), testCaseName.ToString(), _testRunName, testerName, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
-                        if (!string.IsNullOrEmpty(_testCaseJsonData))
-                        {
-                            Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
-                            _testSuiteData.TestSuiteName = model.TestSuiteName;
-                            _testSuiteData.TesterName = testerName;
-                            _testSuiteData.TestRunName = _testRunName;
-                            _testSuiteData.TestEnvironment = _environmentDetails.BrowserName;
-                            //Save Data into table for custom test suite
-                            string _result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
-                        }
-                    }
-                }
-            }
+            string result = await _helper.AddUpdateTestSuitesJson(model);
+            _response = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_Response>(result);
+            _response.Data = new { testSuiteName = model.TestSuiteName, actionType = action };
             if (_response.status.Contains("fail"))
             {
                 return StatusCode(409, _response);
@@ -195,36 +172,69 @@ namespace SeleniumReportAPI.Controllers
         [HttpOptions("ExecuteTestSuite")]
         public async Task<ActionResult> ExecuteTestSuite(string TestSuiteName)
         {
-            string _result = string.Empty;
+            List<object> _result = new List<object>();
             string _testRunName = await _helper.GetRunId(TestSuiteName);
             string _testSuiteDetailsJson = await _helper.GetTestSuiteByName(TestSuiteName);
+            TestSuiteNameData _testSuiteNameData = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuiteNameData>(_testSuiteDetailsJson);
             string? testerName = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-            Dto_TestSuiteDetailsData _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestSuiteDetailsData>(_testSuiteDetailsJson);
+            //Dto_TestSuiteDetailsData _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestSuiteDetailsData>(_testSuiteDetailsJson);
 
-            Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteDetails.EnvironmentId));
-
-            if (_testSuiteDetails.SelectedTestCases.Count > 0)
+            Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteNameData.Environment.EnvironmentId));
+            if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Length > 0)
             {
-                foreach (var testCaseName in _testSuiteDetails.SelectedTestCases)
+                foreach (var testCaseName in _testSuiteNameData.SelectedTestCases.Split(","))
                 {
-                    string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _environmentDetails.Baseurl, _environmentDetails.BasePath, _environmentDetails.EnvironmentName, _environmentDetails.BrowserName, _environmentDetails.DriverPath);
-                    if (!string.IsNullOrEmpty(_testCaseJsonData))
+                    try
                     {
-                        try
+                        string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName,_testSuiteNameData.TestUser.Password);
+                        if (!string.IsNullOrEmpty(_testCaseJsonData))
                         {
-                            Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
-                            _testSuiteData.TestSuiteName = TestSuiteName;
-                            _testSuiteData.TesterName = testerName;
-                            _testSuiteData.TestRunName = _testRunName;
-                            _testSuiteData.TestEnvironment = _environmentDetails.BrowserName;
-                            _testSuiteData.TestCaseName = testCaseName.ToString();
-                            //Save Data into table for custom test suite
-                            _result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
+                            try
+                            {
+                                Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
+                                _testSuiteData.TestSuiteName = TestSuiteName;
+                                _testSuiteData.TesterName = testerName;
+                                _testSuiteData.TestRunName = _testRunName;
+                                _testSuiteData.TestEnvironment = _environmentDetails.EnvironmentName;
+                                _testSuiteData.TestBrowserName = _environmentDetails?.BrowserName;
+                                _testSuiteData.TestCaseName = testCaseName.ToString();
+                                //Save Data into table for custom test suite
+                                var result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
+                                _result.Add(result);
+                                //Send Email
+                                if (result.Contains("success"))
+                                {
+                                    string originalUrl = Request.Headers.Referer.ToString();
+                                    int lastSlashIndex = originalUrl.LastIndexOf('/');
+                                    var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
+                                    if (_testSuiteNameData.SendEmail == true)
+                                    {
+                                        var obj = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url);
+                                        _result.Add(obj);
+                                    }
+                                    else
+                                    {
+                                        string AllUsers = await _helper.GetUserDetails();
+                                        JArray jsonArray = JArray.Parse(AllUsers);
+                                        // Extract email addresses
+                                        List<string> emails = jsonArray.Where(j => !(bool)j["IsDisabled"]).Select(j => (string)j["Email"]).ToList();
+                                        // Convert to comma-separated string
+                                        string commaSeparatedEmails = string.Join(", ", emails);
+
+                                        var obj1 = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url);
+                                        _result.Add(obj1);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _result.Add(new { status = "Failed", message = ex.Message });
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            throw ex;
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _result.Add(new { status = "Failed", message = ex.Message });
                     }
                 }
             }
@@ -443,6 +453,50 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> DisableEnableUser(Dto_DisableEnableUser model)
         {
             return Ok(await _helper.DisableEnableUser(model));
+        }
+
+        /// <summary>
+        /// Get All Test User List
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAllTestUser")]
+        public async Task<ActionResult> GetAllTestUser()
+        {
+            return Ok(await _helper.GetAllTestUser());
+        }
+
+        /// <summary>
+        /// Get Test User  By Id
+        /// </summary>
+        /// <param Id = Id></param>
+        /// <returns></returns>
+        [HttpGet("GetTestUserById")]
+        public async Task<ActionResult> GetTestUserById(int Id)
+        {
+            return Ok(await _helper.GetTestUserById(Id));
+        }
+
+        /// <summary>
+        /// Add Test User
+        /// </summary>
+        /// <param TestUser = TestUser></param>
+        /// <returns></returns>
+        [HttpPost("AddTestUser")]
+        public async Task<ActionResult> AddTestUser(TestUser model)
+        {
+            var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            return Ok(await _helper.AddTestUser(model, CreatedBy));
+        }
+
+        /// <summary>
+        /// Delete Test User By Id
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteTestUser")]
+        public async Task<ActionResult> DeleteTestUser(int Id)
+        {
+            return Ok(await _helper.DeleteTestUser(Id));
         }
     }
 }

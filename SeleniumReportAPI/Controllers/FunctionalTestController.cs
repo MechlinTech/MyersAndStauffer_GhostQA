@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
 using SeleniumReportAPI.Models;
+using System.Security.Claims;
 
 namespace SeleniumReportAPI.Controllers
 {
@@ -41,16 +42,71 @@ namespace SeleniumReportAPI.Controllers
         }
 
         /// <summary>
-        ///  Update Root Relation 
+        ///  Update Functional Test
         /// </summary>
         /// <param RootId="RootId"></param>
         /// <param Name="Name"></param>
         /// <returns></returns>
-        //[HttpPost("UpdateRootRelation")]
-        //public async Task<ActionResult> UpdateRootRelation(RootRelation model)
-        //{
-        //    return Ok(await _helper.UpdateRootRelation(model));
-        //}
+        [HttpPost("UpdateFunctionalTest")]
+        public async Task<ActionResult> UpdateFunctionalTest(FuncationalTest model)
+        {
+            return Ok(await _helper.UpdateFunctionalTest(model));
+        }
 
+        /// <summary>
+        ///  Delete Functional Test By Root Id  and Parent Id
+        /// </summary>
+        /// <param FuncationalTest="FuncationalTest"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteFunctionalTest")]
+        public async Task<ActionResult> DeleteFunctionalTest(FuncationalTest model)
+        {
+            return Ok(await _helper.DeleteFunctionalTest(model));
+        }
+
+        /// <summary>
+        /// Get Functional Test Case By RootId
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetFunctionalTestCaseByRootId")]
+        public async Task<ActionResult> GetFunctionalTestCaseByRootId(int RootId)
+        {
+            return Ok(await _helper.GetFunctionalTestCaseByRootId(RootId));
+        }
+
+        /// <summary>
+        /// Add Functional Test Case
+        /// </summary>
+        /// <param name="FunctionalTestCase"></param>
+        /// <returns></returns>
+        [HttpPost("AddFunctionalTestCase")]
+        public async Task<ActionResult> AddFunctionalTestCase(FunctionalTestCase model)
+        {
+            var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            return Ok(await _helper.AddFunctionalTestCase(model, CreatedBy));
+        }
+
+        /// <summary>
+        ///  Update Functional Test Case
+        /// </summary>
+        /// <param name="FunctionalTestCase"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateFunctionalTestCase")]
+        public async Task<ActionResult> UpdateFunctionalTestCase(FunctionalTestCase model)
+        {
+            var UpdatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            return Ok(await _helper.UpdateFunctionalTestCase(model, UpdatedBy));
+        }
+
+        /// <summary>
+        ///  Delete Functional Test Case By Id
+        /// </summary>
+        /// <param Id="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteFuncationalTestCase")]
+        public async Task<ActionResult> DeleteFuncationalTestCase(int Id)
+        {
+            return Ok(await _helper.DeleteFuncationalTestCase(Id));
+        }
     }
 }

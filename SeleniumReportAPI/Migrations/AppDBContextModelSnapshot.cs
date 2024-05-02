@@ -276,6 +276,9 @@ namespace SeleniumReportAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<byte[]>("ContainerLog")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("EndDateTime")
                         .HasColumnType("nvarchar(max)");
 
@@ -459,6 +462,101 @@ namespace SeleniumReportAPI.Migrations
                     b.HasKey("RootId");
 
                     b.ToTable("tbl_FuncationalTest");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.FunctionalTestCase", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ActualResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpectedResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreCondition")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RootId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Steps")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestCaseName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_FunctionalTestCase");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.FunctionalTestRun", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AssignedTo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BuildVersion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Environment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Milestone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RootId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TestCases")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestRunDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestRunName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_FunctionalTestRun");
                 });
 
             modelBuilder.Entity("SeleniumReportAPI.Models.InternalTestExecution", b =>
@@ -710,6 +808,9 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("VARCHAR(50)")
                         .HasColumnName("TestSuiteStartDateTime");
 
+                    b.Property<int?>("TestUserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TesterName")
                         .HasColumnType("VARCHAR(100)")
                         .HasColumnName("TesterName");
@@ -883,6 +984,9 @@ namespace SeleniumReportAPI.Migrations
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Wait")
+                        .HasColumnType("int");
+
                     b.HasKey("TestStepsDetailsId");
 
                     b.ToTable("tbl_TestStepsDetails");
@@ -920,9 +1024,46 @@ namespace SeleniumReportAPI.Migrations
                     b.Property<string>("TestSuiteType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TestUserId")
+                        .HasColumnType("int");
+
                     b.HasKey("TestSuiteId");
 
                     b.ToTable("tbl_TestSuites");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.TestUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModifiedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_TestUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

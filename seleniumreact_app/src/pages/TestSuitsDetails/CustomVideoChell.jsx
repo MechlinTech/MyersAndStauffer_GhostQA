@@ -5,15 +5,17 @@ import Box from "@material-ui/core/Box";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { Icon } from "@material-ui/core";
+import { getVideoUrl } from "../../utils/configService";
 
-const CustomVideoChell = ({ row }) => {
+const CustomVideoChell =  (row) => {
   const [openModal, setOpenModal] = useState(false);
-  const baseUrl = "https://codearrest.dyndns.org:3005";
-  const getVideoUrl = (apiPath) => {
+  const baseUrl = getVideoUrl();
+
+  const videoUrl = (apiPath) => {
+    console.log("baseUrl",`${baseUrl}${apiPath?.replace(/\\/g, '/')}`)
     return `${baseUrl}${apiPath?.replace(/\\/g, '/')}`;
   };
-  console.log("row+++video", row);
-  console.log("getVideoUrl", getVideoUrl(row.TestCaseVideoURL));
+  
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -32,7 +34,7 @@ const CustomVideoChell = ({ row }) => {
         />
       </TableCell>
 
-      {/* Modal for displaying the full image */}
+      
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -64,7 +66,7 @@ const CustomVideoChell = ({ row }) => {
               style={{ width: "100%", height: "100%", objectFit: "contain" }}
             >
               <source
-                src={getVideoUrl(row.TestCaseVideoURL)}
+                src={videoUrl(row.TestCaseVideoURL)}
                 type="video/webm"
               />
             </video>

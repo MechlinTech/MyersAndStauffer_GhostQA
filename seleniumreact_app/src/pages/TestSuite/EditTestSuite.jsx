@@ -26,8 +26,10 @@ import {
   GetTestCases,
   AddUpdateTestSuites,
   Getsuitebyname,
+  GetTestUser,
 } from "../../redux/actions/seleniumAction";
 import { useParams } from "react-router-dom";
+import { GetTestUserList } from "../../redux/actions/settingAction";
 
 export default function EditTestSuite() {
   const dispatch = useDispatch();
@@ -39,6 +41,8 @@ export default function EditTestSuite() {
   const [selectedRecepentValue, setSelectedRecepentValue] = useState("");
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [selectedEnvironment, setSelectedEnvironment] = useState(null);
+  const [selectedTestUser, setSelectedTestUser] = useState(null);
+
   const [name, setName] = useState("");
 
   const [description, setDescription] = useState("");
@@ -46,6 +50,7 @@ export default function EditTestSuite() {
     name: "",
     application: "",
     environment: "",
+    test_user: "",
     browser: "",
     description: "",
   });
@@ -55,10 +60,12 @@ export default function EditTestSuite() {
   // const [openLoadingModal, setopenLoadingModal] = useState(false);
   const { applicationList, environementList, suiteToEdit, testCasesList } =
     useSelector((state) => state.selenium);
+  const { testUserList } = useSelector((state) => state.settings);
   const [isExecuting, setisExecuting] = useState(false);
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
+    dispatch(GetTestUserList());
     dispatch(GetTestCases());
     if (!suiteToEdit) {
       dispatch(Getsuitebyname(suiteName));
@@ -66,7 +73,7 @@ export default function EditTestSuite() {
     setName(suiteToEdit?.TestSuiteName);
     setSelectedApplication(() => {
       const x = applicationList?.find(
-        (app) => app.ApplicationId === suiteToEdit?.ApplicationId
+        (app) => app.ApplicationId === suiteToEdit?.Application?.ApplicationId
       );
       return x;
     });
@@ -76,15 +83,34 @@ export default function EditTestSuite() {
     );
     setSelectedEnvironment(() => {
       return environementList?.find(
-        (env) => env.EnvironmentId === suiteToEdit?.EnvironmentId
+        (env) => env.EnvironmentId === suiteToEdit?.Environment.EnvironmentId
       );
+    });
+    // setSelectedEnvironment(() => {
+    //   return environementList?.find(
+    //     (env) => env.EnvironmentId === suiteToEdit?.Environment.EnvironmentId
+    //   );
+    // });
+    setSelectedTestUser(() => {
+      return testUserList?.find((env) => env.UserId === suiteToEdit?.TestUser?.TestUserId);
     });
     setDescription(suiteToEdit?.Description);
+    // setSelectedRows(() => {
+    //   return testCasesList.filter((test) =>
+    //     suiteToEdit?.SelectedTestCases?.includes(test.TestCaseName)
+    //   );
+    // });
     setSelectedRows(() => {
+      const selectedTestCasesArray = suiteToEdit?.SelectedTestCases
+        ? suiteToEdit.SelectedTestCases.split(',')
+        : [];
+    
       return testCasesList.filter((test) =>
-        suiteToEdit?.SelectedTestCases?.includes(test.TestCaseName)
+        selectedTestCasesArray.some((selectedTestCase) => selectedTestCase.trim() === test.TestCaseName)
       );
     });
+    
+    
   }, [dispatch, suiteToEdit]);
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
@@ -126,6 +152,7 @@ export default function EditTestSuite() {
       Description: description,
       TestSuiteId: suiteToEdit.TestSuiteId,
       TestSuiteType: selectedSuiteValue,
+      TestUserId: selectedTestUser.UserId,
       ApplicationId: selectedApplication?.ApplicationId,
       SendEmail: selectedRecepentValue === "only-for-me" ? true : false,
       EnvironmentId: selectedEnvironment?.EnvironmentId,
@@ -216,7 +243,7 @@ export default function EditTestSuite() {
     container: (provided) => ({
       ...provided,
       backgroundColor: "rgb(242, 242, 242)",
-      zIndex: 999, // Adjust the zIndex value
+      // zIndex: 999, // Adjust the zIndex value
     }),
     control: (provided, state) => ({
       ...provided,
@@ -466,10 +493,10 @@ export default function EditTestSuite() {
                               value={selectedEnvironment}
                               onChange={(newValue) => {
                                 setSelectedEnvironment(newValue);
-                                setError((prev)=>({
+                                setError((prev) => ({
                                   ...prev,
-                                  ['environment']:""
-                                }))
+                                  ["environment"]: "",
+                                }));
                                 handleApplication(newValue);
                               }}
                               styles={selectStyle}
@@ -482,6 +509,7 @@ export default function EditTestSuite() {
                             )}
                           </div>
                         </Grid>
+
                         {/* Row 3: Additional Name Dropdown */}
                         <Grid item>
                           <div>
@@ -537,6 +565,40 @@ export default function EditTestSuite() {
                                 {Error.application}
                               </Typography>
                             )} */}
+                          </div>
+                        </Grid>
+
+                        {/* Row 6: Test User Dropdown */}
+                        <Grid item>
+                          <div className={classes.input}>
+                            <Typography
+                              variant="subtitle1"
+                              className={clsx(classes.customFontSize)}
+                            >
+                              Test User
+                            </Typography>
+                            <Select
+                              getOptionLabel={(option) => option.UserName}
+                              getOptionValue={(option) => option.UserId}
+                              isClearable={true}
+                              options={testUserList}
+                              value={selectedTestUser}
+                              onChange={(newValue) => {
+                                setSelectedTestUser(newValue);
+                                setError((prev) => ({
+                                  ...prev,
+                                  ["test_user"]: "",
+                                }));
+                                // handleApplication(newValue);
+                              }}
+                              styles={selectStyle}
+                              menuPosition={"fixed"} // Set menuPosition to fixed
+                            />
+                            {Error.test_user && (
+                              <Typography className={classes.inputError}>
+                                {Error.test_user}
+                              </Typography>
+                            )}
                           </div>
                         </Grid>
                         {/* Row 4: Radio Buttons */}
@@ -758,7 +820,7 @@ export default function EditTestSuite() {
                         size={25}
                         style={{
                           marginRight: "8px",
-                          color: "#fff"
+                          color: "#fff",
                         }}
                       />
                     )}

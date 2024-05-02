@@ -31,6 +31,9 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<CypressPerfomanceDetaills> tbl_CypressPerfomanceDetaills {  get; set; }
         public DbSet<Location> tbl_Location { get; set; }
         public DbSet<FuncationalTest> tbl_FuncationalTest { get; set; }
+        public DbSet<TestUser> tbl_TestUser { get; set; }
+        public DbSet<FunctionalTestCase> tbl_FunctionalTestCase { get; set; }
+        public DbSet<FunctionalTestRun> tbl_FunctionalTestRun { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TestSuites>()

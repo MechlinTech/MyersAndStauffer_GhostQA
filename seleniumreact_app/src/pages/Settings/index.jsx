@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { ListItemIcon } from "@material-ui/core";
 import {
     Environment,
+    RoleIcon,
     StyledDashBoardIcon,
 } from "../../comman/icons";
 import { Link, Outlet } from "react-router-dom";
@@ -70,11 +71,11 @@ export default function Settings() {
             icon: <Environment />,
             path: "/bbbbbb",
         },
-        // {
-        //     title: "Roles",
-        //     icon: <RoleIcon />,
-        //     path: "/Performance",
-        // },
+        {
+            title: "Test User",
+            icon: <RoleIcon />,
+            path: "/setting/test-user",
+        },
         // {
         //     title: "User",
         //     icon: <UserManagementIcon />,
@@ -84,7 +85,7 @@ export default function Settings() {
 
     const renderedCategories = categories.map((category, index) => (
         <Grid item key={index}>
-            <Link to={category.title} className={classess.linkStyle}>
+            <Link to={category.title == "Test User" ? "test-user": category.title } className={classess.linkStyle}>
                 <Paper
                     className={`${classess.paper} ${selectedItem && selectedItem.title === category.title
                             ? classess.paperActive

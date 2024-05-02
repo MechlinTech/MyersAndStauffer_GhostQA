@@ -28,7 +28,6 @@ import ExecutionHistory from "./ExecutionHistory";
 import { getBaseUrl } from "../../../../utils/configService";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
-
 export default function EditTestCase() {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -89,9 +88,9 @@ export default function EditTestCase() {
     navigate(-1);
   };
   const handleSave = (saveOrExecute) => {
-    if(saveOrExecute !== 'save')
-    setisExecuting(true);
-    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    if (saveOrExecute !== "save") setisExecuting(true);
+    const urlPattern =
+      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
     let payload = {
       testCaseID: testId,
       actions: steps,
@@ -110,10 +109,9 @@ export default function EditTestCase() {
           additionalErrors.scrollPixelError = !step.scrollPixel.trim();
           break;
         case "go_to_url":
-          const isValidUrl = !step.url.trim() || !urlPattern.test(step.url)
+          const isValidUrl = !step.url.trim() || !urlPattern.test(step.url);
           additionalErrors.urlError = isValidUrl;
-          if(isValidUrl)
-          toast.error('Enter valid url')
+          if (isValidUrl) toast.error("Enter valid url");
           break;
         case "select_option":
           additionalErrors.selectedUserError = !step.selectedUser.trim();
@@ -135,7 +133,8 @@ export default function EditTestCase() {
           additionalErrors.currentUrlError = !step.currentUrl.trim();
           break;
         case "should_not_equal":
-          additionalErrors.shouldNotEqualError = !step.shouldNotEqualValue.trim();
+          additionalErrors.shouldNotEqualError =
+            !step.shouldNotEqualValue.trim();
           break;
         case "should_include":
           additionalErrors.shouldIncludeError = !step.shouldIncludeValue.trim();
@@ -175,18 +174,18 @@ export default function EditTestCase() {
     if (!testCaseTitle.trim()) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
-      toast.error("Enter valid title")
-    setisExecuting(false);
-      return
+      toast.error("Enter valid title");
+      setisExecuting(false);
+      return;
     } else {
       settestCaseTitleError("");
     }
     if (!startUrl.trim() || !urlPattern.test(startUrl.trim())) {
       setstartUrlError("url not valid");
       urlError = "url not valid";
-      toast.error("Enter valid start url")
-    setisExecuting(false);
-      return
+      toast.error("Enter valid start url");
+      setisExecuting(false);
+      return;
     } else {
       setstartUrlError("");
     }
@@ -201,17 +200,14 @@ export default function EditTestCase() {
         testCaseName: testCaseTitle,
         startUrl: startUrl,
       };
-      if(saveOrExecute === 'save'){
+      if (saveOrExecute === "save") {
         UpdateTestCaseDetail(data);
         UpdateTestStepsDetails(payload, savetoEdit);
-      }else
-      SaveAndExecute(data, payload, testId, handleExecuteLoading);
-      
+      } else SaveAndExecute(data, payload, testId, handleExecuteLoading);
     } else {
-      if(errors[0].urlError === undefined || !errors[0].urlError )
-      toast.error("Some field are empty");
-      if(saveOrExecute !== 'save')
-      setisExecuting(false);
+      if (errors[0].urlError === undefined || !errors[0].urlError)
+        toast.error("Some field are empty");
+      if (saveOrExecute !== "save") setisExecuting(false);
     }
   };
 
@@ -587,6 +583,7 @@ export default function EditTestCase() {
     "go_forward",
     "refresh_page",
     "validate_current_url",
+    "wait",
   ];
   const listOfSteps =
     steps &&
@@ -847,7 +844,7 @@ export default function EditTestCase() {
                 {isEditable ? (
                   <>
                     <Button
-                      onClick={()=>handleSave("save")}
+                      onClick={() => handleSave("save")}
                       sx={{
                         backgroundColor: "rgb(101, 77, 247)",
                         "&:hover": {
@@ -866,7 +863,7 @@ export default function EditTestCase() {
                       Save
                     </Button>
                     <Button
-                      onClick={()=>handleSave("saveAndexecute")}
+                      onClick={() => handleSave("saveAndexecute")}
                       sx={{
                         backgroundColor: "rgb(101, 77, 247)",
                         "&:hover": {

@@ -9,5 +9,6 @@ namespace SeleniumReportAPI.DTO_s
 
         [JsonProperty("message")]
         public string? message { get; set; }
+        public object? Data { get; set; }
     }
 }

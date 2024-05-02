@@ -9,12 +9,14 @@ export const GET_TEST_CASE_DETAILS = "GET_TEST_CASE_DETAILS";
 export const GET_TEST_CASE_STESPS = "GET_TEST_CASE_STESPS";
 export const GET_APPLICATION_LIST = "GET_APPLICATION_LIST";
 export const GET_ENVIRONMENT_LIST = "GET_ENVIRONMENT_LIST";
+export const GET_TEST_USER_LIST = "GET_TEST_USER_LIST";
 export const GET_BROWSER_LIST = "GET_BROWSER_LIST";
 export const GET_TEST_CASE_LIST = "GET_TESTCASE_LIST";
 export const ADD_UPDATE_TEST_SUITS = "ADD_UPDATE_TEST_SUITS";
 export const SUITE_TO_EDIT = "SUITE_TO_EDIT";
+export const ADD_TEST_SUITE = "ADD_TEST_SUITE";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || 'api';
- 
+
 export const getTestSuites = () => {
   return async (dispatch) => {
     try {
@@ -33,7 +35,7 @@ export const getTestSuites = () => {
     }
   };
 };
- 
+
 export const getListByTestSuitsName = (data) => {
   return async (dispatch) => {
     try {
@@ -52,7 +54,7 @@ export const getListByTestSuitsName = (data) => {
     }
   };
 };
- 
+
 export const getTestCaseRundetailsByTestName = (data, setInProgress) => {
   return async (dispatch) => {
     setInProgress(true);
@@ -74,8 +76,8 @@ export const getTestCaseRundetailsByTestName = (data, setInProgress) => {
       toast.error("NETWORK ERROR");
     }
   };
-}; 
- 
+};
+
 export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
   // let data = "Mississippi";
   return async (dispatch) => {
@@ -94,6 +96,10 @@ export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
           },
         });
       }
+      dispatch({
+        type: ADD_TEST_SUITE,
+        payload: {},
+      });
       console.log("ExecuteTestCasesByTestSuite", response);
     } catch (error) {
       controlLoading(data);
@@ -102,8 +108,8 @@ export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
     }
   };
 };
- 
-export const GetTestCaseDetails = (data,setLoading) => {
+
+export const GetTestCaseDetails = (data, setLoading) => {
   return async (dispatch) => {
     setLoading(true);
     try {
@@ -125,7 +131,7 @@ export const GetTestCaseDetails = (data,setLoading) => {
     }
   };
 };
- 
+
 export const GetTestCaseStepsDetails = (data) => {
   return async (dispatch) => {
     try {
@@ -145,7 +151,7 @@ export const GetTestCaseStepsDetails = (data) => {
     }
   };
 };
- 
+
 export const GetApplication = () => {
   return async (dispatch) => {
     try {
@@ -154,7 +160,7 @@ export const GetApplication = () => {
         `${BASE_URL}/Selenium/GetApplication`,
         header()
       );
- 
+
       dispatch({
         type: GET_APPLICATION_LIST,
         payload: response.data,
@@ -165,7 +171,7 @@ export const GetApplication = () => {
     }
   };
 };
- 
+
 export const GetEnvironment = () => {
   return async (dispatch) => {
     try {
@@ -184,7 +190,26 @@ export const GetEnvironment = () => {
     }
   };
 };
- 
+
+export const GetTestUser = () => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.get(
+        `${BASE_URL}/Selenium/GetAllTestUser`,
+        header()
+      );
+      dispatch({
+        type: GET_TEST_USER_LIST,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("NETWORK ERROR");
+    }
+  };
+};
+
 export const GetBrowser = () => {
   return async (dispatch) => {
     try {
@@ -203,7 +228,7 @@ export const GetBrowser = () => {
     }
   };
 };
- 
+
 export const GetTestCases = () => {
   return async (dispatch) => {
     try {
@@ -223,7 +248,7 @@ export const GetTestCases = () => {
     }
   };
 };
- 
+
 export const AddUpdateTestSuites = (data, action, handleLoading) => {
   return async (dispatch) => {
     try {
@@ -242,6 +267,18 @@ export const AddUpdateTestSuites = (data, action, handleLoading) => {
             color: "rgb(255, 255, 255)",
           },
         });
+        // if(action === 'SaveAndExecute'){
+        //   let data = "Test-Demo"
+        //   // setopenLoadingModal(true)
+        //   // setisExecuting(true)
+        //   // console.log("no error ", payload);
+        //   dispatch(ExecuteTestCasesByTestSuite(data,));
+        // }
+        // console.log("res.data",res.data)
+        dispatch({
+          type: ADD_TEST_SUITE,
+          payload: res.data.data,
+        });
       }
       console.log("saved ", res);
     } catch (error) {
@@ -251,7 +288,7 @@ export const AddUpdateTestSuites = (data, action, handleLoading) => {
     }
   };
 };
- 
+
 export const Getsuitebyname = (suitName) => {
   return async (dispatch) => {
     try {
@@ -278,7 +315,7 @@ export const Getsuitebyname = (suitName) => {
     }
   };
 };
- 
+
 export const DeleteTestSuite = (suiteName) => {
   return async (dispatch) => {
     try {
@@ -290,7 +327,7 @@ export const DeleteTestSuite = (suiteName) => {
       );
       console.log("response ", res);
       if (res.status === 200) {
-        dispatch(getTestSuites())
+        dispatch(getTestSuites());
         toast.info("Successfully deleted", {
           style: {
             background: "rgb(101, 77, 247)",
