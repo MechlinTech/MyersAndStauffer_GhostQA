@@ -32,18 +32,37 @@ export default function ExecutionHistory({ executionDetail }) {
   const [runIdDetails, setrunIdDetails] = useState();
   const [openModal, setOpenModal] = useState(false);
 
+  // const getStpeDetail = async () => {
+  //   try {
+  //     const BASE_URL = await getBaseUrl();
+  //     const res = await axios.get(
+  //       `${BASE_URL}/AddTestLab/GetTestStepsDetailByTestCaseId?TestCaseId=${selectedRunId}`
+  //     );
+  //     if (Array.isArray(res.data)) setrunIdDetails(res.data);
+  //     else setrunIdDetails(null);
+  //   } catch (error) {
+  //     toast.error("NETWORK ERROR");
+  //   }
+  // };
   const getStpeDetail = async () => {
     try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.get(
-        `${BASE_URL}/AddTestLab/GetTestStepsDetailByTestCaseId?TestCaseId=${selectedRunId}`
-      );
-      if (Array.isArray(res.data)) setrunIdDetails(res.data);
-      else setrunIdDetails(null);
+        if (selectedRunId === null || selectedRunId === undefined) {
+            return;
+        }
+        const BASE_URL = await getBaseUrl();
+        const res = await axios.get(
+            `${BASE_URL}/AddTestLab/GetTestStepsDetailByTestCaseId?TestCaseId=${selectedRunId}`
+        );
+        if (Array.isArray(res.data)) {
+            setrunIdDetails(res.data);
+        } else {
+            setrunIdDetails(null);
+        }
     } catch (error) {
-      toast.error("NETWORK ERROR");
+        toast.error("NETWORK ERROR");
     }
-  };
+};
+
   useEffect(() => {
     getStpeDetail();
   }, [selectedRunId]);

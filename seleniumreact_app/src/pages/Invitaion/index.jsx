@@ -93,8 +93,7 @@ const Invitation = () => {
           <img src={"/images/Logo_GhostQA.svg"} alt="logo" />
         </Box>
         <div className={classes.text}>
-          You are invited to you join GhostQA. Please click on Accept button to
-          accept the invitation.
+        You are invited to join GhostQA. Please click the 'Accept' button to accept the invitation.
         </div>
         <Box className={classes.btnContainer}>
           <div className={classes.acceptBox}>

@@ -44,8 +44,7 @@ export default function TableTestCase({ testCase, rootId }) {
       if (response.data.status === "fail" || response.data === "") {
         setTestCaseList([]);
       } else {
-        const reversedTestCaseList = response.data.reverse(); 
-        console.log('reversed ', reversedTestCaseList);
+        const reversedTestCaseList = response.data.reverse();
         setTestCaseList(reversedTestCaseList);
       }
     } catch (error) {
@@ -59,7 +58,7 @@ export default function TableTestCase({ testCase, rootId }) {
       ...prev,
       [row.TestCaseName]: true,
     }));
-    
+
     try {
       const BASE_URL = await getBaseUrl();
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
@@ -67,7 +66,7 @@ export default function TableTestCase({ testCase, rootId }) {
         `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${row.TestCaseName}`
       );
       const currentDate = new Date();
-    const formattedStartDateTime = currentDate.toISOString();
+      const formattedStartDateTime = currentDate.toISOString();
       let payload = {
         name: "name",
         request_json: jsonData.data,
@@ -80,7 +79,7 @@ export default function TableTestCase({ testCase, rootId }) {
 
       const runId = executedDetail.data.container_runs[0].id;
       console.log("execution detail", executedDetail);
-      getRunDetail(runId, 1000, row,formattedStartDateTime);
+      getRunDetail(runId, 1000, row, formattedStartDateTime);
     } catch (error) {
       console.log("error fetching execution data", error);
       toast.error("network error");
@@ -91,7 +90,17 @@ export default function TableTestCase({ testCase, rootId }) {
     }
   };
 
-  const getRunDetail = async (runId, delay, row,formattedStartDateTime) => {
+  const getRunDetail = async (runId, delay, row, formattedStartDateTime) => {
+    function capitalizeFirstLetter(str) {
+      return str
+        .split(" ")
+        .map((word) => {
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        })
+        .join(" "); // Join the array of words back into a string
+    }
+
+    
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const res = await axios.get(
@@ -113,11 +122,9 @@ export default function TableTestCase({ testCase, rootId }) {
           [row.TestCaseName]: false,
         }));
         const rundetails = res.data;
-        console.log('rundetial ',rundetails)
         const currentDate = new Date();
         const formattedEndDateTime = currentDate.toISOString();
-        let endDate = formattedEndDateTime 
-        console.log('end date',endDate)
+        let endDate = formattedEndDateTime;
         try {
           const BASE_URL = await getBaseUrl();
           const res = await axios.post(
@@ -126,40 +133,38 @@ export default function TableTestCase({ testCase, rootId }) {
               testCaseDetailId: row.TestCaseDetailsId,
               data: rundetails,
               startDate: formattedStartDateTime,
-              endDate: endDate
+              endDate: endDate,
             },
             header()
           );
           if (res.data.status === "success") {
-            toast.info("Successfully executed", {
+            const testCaseName = capitalizeFirstLetter(row.TestCaseName);
+            toast.info(`${testCaseName} Successfully executed`, {
               style: {
                 background: "rgb(101, 77, 247)",
                 color: "rgb(255, 255, 255)",
               },
             });
           }
-        fetchData()
+          fetchData();
         } catch (error) {
           console.log("error", error);
-          toast.error("Error AddExecuteResult");
+          toast.error(`${row.TestCaseName} Error AddExecuteResult`);
         }
-        console.log("rundetails : ", rundetails);
       } else {
         setTimeout(() => {
-          getRunDetail(runId, delay, row,formattedStartDateTime);
+          getRunDetail(runId, delay, row, formattedStartDateTime);
         }, delay);
       }
     } catch (error) {
       console.error("Error getting run details:", error);
-      toast.error("Network error");
+      toast.error(`${row.TestCaseName} Failed`);
       setexecutingTest((prev) => ({
         ...prev,
         [row.TestCaseName]: false,
       }));
     }
   };
-
-  
 
   const handleDeleTeModal = (item) => {
     console.log("item", item);
@@ -172,7 +177,6 @@ export default function TableTestCase({ testCase, rootId }) {
   };
 
   const handleDelete = async (testId) => {
-    console.log("handleDelete", testId);
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(
@@ -216,13 +220,13 @@ export default function TableTestCase({ testCase, rootId }) {
   function capitalizeFirstLetter(str) {
     // Check if the input string is not empty
     if (str?.length > 0) {
-        // Capitalize the first letter and concatenate with the rest of the string
-        return str.charAt(0).toUpperCase() + str.slice(1);
+      // Capitalize the first letter and concatenate with the rest of the string
+      return str.charAt(0).toUpperCase() + str.slice(1);
     } else {
-        // Return an empty string if input is empty
-        return '';
+      // Return an empty string if input is empty
+      return "";
     }
-}
+  }
   return (
     <>
       <DeleteModal
@@ -269,7 +273,6 @@ export default function TableTestCase({ testCase, rootId }) {
                     navigate(
                       // `/testLab/editTestcase/${row.TestCaseName}/${row.TestCaseDetailsId}`
                       `/testLab/editTestcase/${row.TestCaseDetailsId}`
-
                     );
                   }}
                   sx={{ cursor: "pointer" }}
@@ -278,7 +281,9 @@ export default function TableTestCase({ testCase, rootId }) {
                 </TableCell>
                 <TableCell align="center">
                   <StyledTypography>
-                    {executingTest[row.TestCaseName] ? "Running" : capitalizeFirstLetter(row.Status)}
+                    {executingTest[row.TestCaseName]
+                      ? "Running"
+                      : capitalizeFirstLetter(row.Status)}
                   </StyledTypography>
                 </TableCell>
                 {/* <TableCell align="center">
