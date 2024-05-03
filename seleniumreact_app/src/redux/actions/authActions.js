@@ -51,6 +51,33 @@ export const login = (data, setLoading) => {
   };
 };
 
+export const forgotPassword = (data, setLoading, navigate) => {
+  return async (dispatch) => {
+    try {
+      setLoading(true);
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.post(`${BASE_URL}/AddInBuildTestSuite/SendPasswordResetMail`, data);
+      const response = res.data;
+      if (response?.status === 'Success') {
+        toast.info(`Password reset information has been sent to the ${data.email} email`, {
+          style: {
+            background: 'rgb(101, 77, 247)',
+            color: 'rgb(255, 255, 255)',
+          
+          },
+        });
+        navigate("/")
+      } else {
+       console.log("somethings wrong")
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+};
+
 
 export const logout = () => {
   return (dispatch) => {

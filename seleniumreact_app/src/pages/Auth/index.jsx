@@ -22,6 +22,7 @@ import { UserIcon, LockIcon } from "../../comman/icons";
 import { login } from "../../redux/actions/authActions";
 import { useSelector, useDispatch } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Link } from "react-router-dom";
 
 const theme = createTheme();
 
@@ -203,6 +204,12 @@ export default function SignIn() {
               {error.password && (
                 <Typography className={classes.inputError}>{error.password}</Typography>
               )}
+            </Grid>
+
+            <Grid item>
+            <Link to="/forgot-password" style={{ color: '#654DF7', textAlign: 'right', fontSize: '14px', textDecoration:'none' }}>
+                <Typography>Forgot Password?</Typography>
+            </Link>
             </Grid>
 
             <Grid item>

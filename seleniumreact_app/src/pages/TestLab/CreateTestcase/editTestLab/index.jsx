@@ -88,6 +88,11 @@ export default function EditTestCase() {
     navigate(-1);
   };
   const handleSave = (saveOrExecute) => {
+    if (isExecuting) {
+      return; // Return early if the API call is in progress
+  }
+  setisExecuting(true); 
+  
     if (saveOrExecute !== "save") setisExecuting(true);
     const urlPattern =
       /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
@@ -878,14 +883,14 @@ export default function EditTestCase() {
                         color: "#fff",
                       }}
                     >
-                      {isExecuting ? (
+                      {/* {isExecuting ? (
                         <CircularProgress
                           style={{ color: "white" }}
                           size={25}
                         />
                       ) : (
                         "Save & Execute"
-                      )}
+                      )} */}
                     </Button>
                   </>
                 ) : (
