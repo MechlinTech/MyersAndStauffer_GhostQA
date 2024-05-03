@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeleniumReportAPI.DBContext;
 
@@ -11,9 +12,10 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240429194503_changes_tbl_TestStepsDetails")]
+    partial class changes_tbl_TestStepsDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -475,12 +477,6 @@ namespace SeleniumReportAPI.Migrations
                     b.Property<string>("ActualResult")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedOn")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ExpectedResult")
                         .HasColumnType("nvarchar(max)");
 
@@ -497,12 +493,6 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestCaseName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedOn")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -524,12 +514,6 @@ namespace SeleniumReportAPI.Migrations
                     b.Property<string>("BuildVersion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedOn")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Environment")
                         .HasColumnType("nvarchar(max)");
 
@@ -546,12 +530,6 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestRunName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedOn")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

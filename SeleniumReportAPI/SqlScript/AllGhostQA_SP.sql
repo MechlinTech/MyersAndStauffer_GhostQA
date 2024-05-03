@@ -462,7 +462,7 @@ BEGIN TRY
 		DELETE FROM tbl_TestStepsDetails 
 		WHERE TestCaseDetailsId = JSON_VALUE(@AddStepsJson, '$.testCaseID')
 
-		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [Action], StepDescription, IsOptional, SelectorType, SelectorValue, SendKeyInput, ScrollPixel, [Url], SelectedUser, [FileName], ElementValue, CssValue, CssProperty, PageTitle, CurrentUrl, ShouldNotEqualValue, ShouldIncludeValue, ShouldEqualValue, ShouldGreaterThanValue, ShouldLessValue, ContainTextValue, HaveAttributeValue, TextValue)
+		INSERT INTO tbl_TestStepsDetails([TestCaseDetailsId], [Action], StepDescription, IsOptional, SelectorType, SelectorValue, SendKeyInput, ScrollPixel, [Url], SelectedUser, [FileName], ElementValue, CssValue, CssProperty, PageTitle, CurrentUrl, ShouldNotEqualValue, ShouldIncludeValue, ShouldEqualValue, ShouldGreaterThanValue, ShouldLessValue, ContainTextValue, HaveAttributeValue, TextValue, Wait)
 		SELECT 
 			JSON_VALUE(@AddStepsJson, '$.testCaseID'),
 			act.[action],
@@ -487,7 +487,8 @@ BEGIN TRY
 			act.[shouldLessValue],
 			act.[containTextValue],
 			act.[haveAttributeValue],
-			act.[textValue]
+			act.[textValue],
+			act.[wait]
 		FROM 
 			OPENJSON(@AddStepsJson, '$.actions') 
 			WITH (
@@ -513,7 +514,8 @@ BEGIN TRY
 				[shouldLessValue] NVARCHAR(MAX) '$.shouldLessValue',
 				[containTextValue] NVARCHAR(MAX) '$.containTextValue',
 				[haveAttributeValue] NVARCHAR(MAX) '$.haveAttributeValue',
-				[textValue] NVARCHAR(MAX) '$.textValue'
+				[textValue] NVARCHAR(MAX) '$.textValue',
+				[wait] INT '$.wait'
 			) AS act;
 		IF @@ERROR = 0
 		BEGIN
@@ -2789,7 +2791,8 @@ BEGIN TRY
 					[shouldLessValue],
 					[containTextValue],
 					[haveAttributeValue],
-					[textValue]
+					[textValue],
+					[wait]
 		    FROM tbl_TestStepsDetails
             WHERE [TestCaseDetailsId] = @TestStepsId
             FOR JSON PATH
@@ -2900,7 +2903,7 @@ BEGIN TRY
 					WHERE Id = t.[TestUserId]
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER,INCLUDE_NULL_VALUES
 				)) [TestUser],
-				[SelectedTestCases],
+				REPLACE([SelectedTestCases],' ','') [SelectedTestCases],
 				[TestSuiteId],
 				[Description]
 		FROM tbl_TestSuites t
@@ -3826,7 +3829,7 @@ END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestUser]
 END CATCH
-Go
+GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestUserById]
 @Id             INT
 AS
@@ -3856,7 +3859,7 @@ END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestUser]
 END CATCH
-Go
+GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_AddTestUser]
 @Id                       INT,		
 @UserName                 NVARCHAR(MAX),
@@ -3930,7 +3933,7 @@ BEGIN CATCH
 		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 	))
 END CATCH
-Go
+GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteTestUser]
 @Id			INT
 AS
@@ -3973,5 +3976,189 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestUserJson]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetFunctionalTestCaseByRootId]
+@RootId       INT
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetFunctionalTestCaseByRootId
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	1st May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetFunctionalTestCaseByRootId 1
+**************************************************************************************/
+BEGIN TRY
+    IF EXISTS (SELECT 1 FROM tbl_FunctionalTestCase WHERE RootId = @RootId)
+    BEGIN
+        SELECT [result] = JSON_QUERY((
+            SELECT [Id], 
+                   [RootId],
+                   [TestCaseName],
+				   [Status],
+				   [UpdatedOn]
+            FROM tbl_FunctionalTestCase
+            WHERE RootId = @RootId
+            FOR JSON PATH, INCLUDE_NULL_VALUES
+        ))
+    END
+    ELSE
+    BEGIN
+        SELECT [result] = JSON_QUERY((
+            SELECT 'fail' AS [status], 
+                   'RootId not found' AS [message]
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        ))
+    END
+END TRY
+BEGIN CATCH
+    SELECT [result] = JSON_QUERY((
+        SELECT 'fail' AS [status], 
+               ERROR_MESSAGE() AS [message]
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+    ))
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddFunctionalTestCase]
+@RootId                 INT,
+@TestCaseName	        INT,
+@PreCondition	        INT,
+@Steps                  NVARCHAR(MAX),
+@ExpectedResult         NVARCHAR(MAX),
+@CreatedBy              NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_AddFunctionalTestCase
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	1st May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_AddFunctionalTestCase
+				
+**************************************************************************************/
+BEGIN TRY
+	BEGIN
+		INSERT INTO [dbo].[tbl_FunctionalTestCase] ([RootId], [TestCaseName], [Status], [PreCondition], [Steps], [ExpectedResult], [ActualResult], [CreatedBy], [CreatedOn], [UpdatedBy], [UpdatedOn]) 
+		VALUES (@RootId, @TestCaseName, NULL, @PreCondition, @Steps, @ExpectedResult, NULL, @CreatedBy, GETDATE(), NULL, NULL)
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [Result] = JSON_QUERY((
+				SELECT 'success' [status], 'successfully Added' [message]
+			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateFunctionalTestCase]
+@Id                   INT,
+@Status               NVARCHAR(MAX),
+@ActualResult         NVARCHAR(MAX),
+@updatedBy             NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_UpdateFunctionalTestCase
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	1st May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_UpdateFunctionalTestCase 
+				
+**************************************************************************************/
+BEGIN TRY
+	IF EXISTS(SELECT 1 FROM tbl_FunctionalTestCase WHERE [Id] = @Id)
+	BEGIN
+		UPDATE tbl_FunctionalTestCase
+		SET [Status]              = @Status,
+			[ActualResult]        = @ActualResult,
+            [UpdatedBy]           = @updatedBy,
+			[UpdatedOn]			  = GETDATE()
+			WHERE [Id] = @Id
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'success' [status], 'Updated Successfully' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+	ELSE
+    BEGIN
+        SELECT [result] = JSON_QUERY((
+            SELECT 'fail' [status], 'Record with provided Id does not exist' [message]
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        ));
+    END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END CATCH
+GO
+CREATE OR ALTER  PROCEDURE [dbo].[stp_DeleteFuncationalTestCase]
+@Id			INT
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_DeleteFuncationalTestCase
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	1st May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_DeleteFuncationalTestCase 
+**************************************************************************************/
+BEGIN TRY
+	IF EXISTS(SELECT 1 FROM tbl_FunctionalTestCase WHERE [Id] = @Id)
+	BEGIN
+		DELETE FROM tbl_FunctionalTestCase WHERE [Id] = @Id
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'TestCase not available' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	IF @@ERROR = 0
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'success' [status], 'TestCase Deleted Successfully' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [TestListJson]
 END CATCH
 GO

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace TestSeleniumReport.DTO_s
 {
@@ -46,7 +47,7 @@ namespace TestSeleniumReport.DTO_s
         public bool SendEmail { get; set; }
         public EnvironmentData Environment { get; set; }
         public TestUserData TestUser { get; set; }
-        public List<string> SelectedTestCases { get; set; }
+        public string SelectedTestCases { get; set; }
         public int TestSuiteId { get; set; }
         public string Description { get; set; }
     }

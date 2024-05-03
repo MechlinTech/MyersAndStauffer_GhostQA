@@ -654,7 +654,7 @@ namespace SeleniumTestReport.Helper
             string TestCaseJsonData = string.Empty;
             try
             {
-                TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
+                //TestCaseJsonData = _testExecutor.ExecuteTestCases(browserName, environmentName, testCaseName, baseURL, basePath, driverPath, testerName);
             }
             catch (Exception)
             {

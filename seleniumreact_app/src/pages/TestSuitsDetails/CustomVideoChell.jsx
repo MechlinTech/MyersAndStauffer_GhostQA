@@ -7,12 +7,15 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { Icon } from "@material-ui/core";
 import { getVideoUrl } from "../../utils/configService";
 
-const CustomVideoChell = async ({ row }) => {
+const CustomVideoChell =  (row) => {
   const [openModal, setOpenModal] = useState(false);
-  const baseUrl = await getVideoUrl();
+  const baseUrl = getVideoUrl();
+
   const videoUrl = (apiPath) => {
+    console.log("baseUrl",`${baseUrl}${apiPath?.replace(/\\/g, '/')}`)
     return `${baseUrl}${apiPath?.replace(/\\/g, '/')}`;
   };
+  
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -31,7 +34,7 @@ const CustomVideoChell = async ({ row }) => {
         />
       </TableCell>
 
-      {/* Modal for displaying the full image */}
+      
       <Modal
         open={openModal}
         onClose={handleCloseModal}

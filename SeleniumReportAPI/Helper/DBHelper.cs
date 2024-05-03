@@ -966,7 +966,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        public object SendEmail(string toEmail, string Mailtype, string Url)
+        public object SendEmail(string toEmail, string Mailtype, string Url, string GenratePassword)
         {
             if (!IsValidEmail(toEmail))
             {
@@ -1005,27 +1005,27 @@ namespace SeleniumReportAPI.Helper
                                 </body>
                                 </html>"
                 : Mailtype.Equals("Accept") ? @"<!DOCTYPE html>
-                                                            <html lang=""en"">
-                                                            <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
-                                                            <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0""    width=""600"">
-                                                            <tr>
-                                                            <td style=""padding: 20px 0; text-align: center;"">
-                                                            <h2 style=""color: #654DF7;"">Welcome to Ghost - QA Platform 🎉</h2>
-                                                            </td>
-                                                            </tr>
-                                                            <tr>
-                                                            <td style=""padding: 20px 0;"">
-                                                            <p>Dear [" + toEmail.ToUpper() + @"""],</p>
-                                                            <p>We are excited to serve you our Ghost - QA Platform services! 🌟</p>
-                                                            <p>Thank you for accepting the invitation here is your temporary password:</p>
-                                                            <em><b>Password: </b> Test@123</em>
-                                                            <p>If you want to change your password follow the link below</p>
-                                                            <p><a href=""" + $"{Url}ChangePassword/{toEmail}" + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
-                                                            </td>
-                                                            </tr>
-                                                            </table>
-                                                            </body>
-                                                            </html>" : "";
+                                <html lang=""en"">
+                                <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
+                                <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0""    width=""600"">
+                                <tr>
+                                <td style=""padding: 20px 0; text-align: center;"">
+                                <h2 style=""color: #654DF7;"">Welcome to Ghost - QA Platform 🎉</h2>
+                                </td>
+                                </tr>
+                                <tr>
+                                <td style=""padding: 20px 0;"">
+                                <p>Dear [" + toEmail.ToUpper() + @"],</p>
+                                <p>We are excited to serve you our Ghost - QA Platform services! 🌟</p>
+                                <p>Thank you for accepting the invitation here is your temporary password:</p>
+                                <em><b>Password: </b> " + GenratePassword + @"</em>
+                                <p>If you want to change your password click on below 'Change Password' link or button</p>
+                                <p><a href=""" + $"{Url}ChangePassword/{toEmail}" + @""" style=""background-color: #654DF7; border: none; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 8px;"">Change Password</a></p>
+                                </td>
+                                </tr>
+                                </table>
+                                </body>
+                                </html>" : "";
 
             if (Mailtype.Equals("Invitation") && !string.IsNullOrEmpty(user.Result))
             {
@@ -1074,10 +1074,9 @@ namespace SeleniumReportAPI.Helper
         public async Task<object> AcceptInvitation(string Email, string Url)
         {
             if (!IsValidEmail(Email))
-            {
                 return new { message = "Invalid email address format." };
-            }
 
+            string GeneratorPassword = GenerateRandomPassword(8);
 
             ApplicationUser user = new()
             {
@@ -1089,7 +1088,7 @@ namespace SeleniumReportAPI.Helper
             var EmailStatus = (dynamic)null;
             try
             {
-                result = await _userManager.CreateAsync(user, "Test@123");
+                result = await _userManager.CreateAsync(user, GeneratorPassword);
 
                 if (!result.Succeeded)
                 {
@@ -1097,7 +1096,7 @@ namespace SeleniumReportAPI.Helper
                 }
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 await _userManager.ConfirmEmailAsync(user, token);
-                EmailStatus = SendEmail(Email, "Accept", Url);
+                EmailStatus = SendEmail(Email, "Accept", Url, GeneratorPassword);
             }
             catch (Exception ex)
             {
@@ -3256,6 +3255,212 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
             return result;
+        }
+
+        internal async Task<string> GetFunctionalTestCaseByRootId(int RootId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetFunctionalTestCaseByRootId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", RootId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> AddFunctionalTestCase(FunctionalTestCase model, string createdBy)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddFunctionalTestCase", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@TestCaseName", model.TestCaseName);
+                        command.Parameters.AddWithValue("@PreCondition", model.PreCondition);
+                        command.Parameters.AddWithValue("@Steps", model.Steps);
+                        command.Parameters.AddWithValue("@ExpectedResult", model.ExpectedResult);
+                        command.Parameters.AddWithValue("@CreatedBy", createdBy);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> UpdateFunctionalTestCase(FunctionalTestCase model, string updatedBy)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateFunctionalTestCase", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", model.Id);
+                        command.Parameters.AddWithValue("@Status", model.Status);
+                        command.Parameters.AddWithValue("@ActualResult", model.ActualResult);
+                        command.Parameters.AddWithValue("@updatedBy", updatedBy);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> DeleteFuncationalTestCase(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteFuncationalTestCase", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal string GenerateRandomPassword(int length)
+        {
+            const string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%&*?"; // Include all the characters you want in your password        
+            Random rng = new Random();
+            StringBuilder password = new StringBuilder();
+            for (int i = 0; i < length; i++)
+            {
+                int index = rng.Next(allowedChars.Length);
+                password.Append(allowedChars[index]);
+            }
+            return password.ToString();
+        }
+
+        public async Task<Dto_Response> SendPasswordResetMailAsync(string Email)
+        {
+            var user = await _userManager.FindByEmailAsync(Email);
+
+            if (user == null)
+                return new Dto_Response() { status = "NotFound", message = "User not found!" };
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = SendEmail("Ghost-QA - Password Reset Request", $"Please click the following button to reset your password: <br><br> <a href={_configuration["EmailDetails:ResetPasswordLink"]}?token={token}><button>Reset Password</button></a>", true, Email);
+
+            return new Dto_Response() { status = result.status, message = result.message };
+        }
+
+        public async Task<Dto_Response> ResetPasswordAsync(string Email, string Token, string NewPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(Email);
+
+            if (user == null)
+                return new Dto_Response() { status = "NotFound", message = "User not found!" };
+
+            var resetPassResult = await _userManager.ResetPasswordAsync(user, Token, NewPassword);
+
+            if (!resetPassResult.Succeeded)
+                return new Dto_Response() { status = "ResetFailed", message = string.Join(" ", resetPassResult.Errors.Select(x => x.Description)) };
+
+            return new Dto_Response() { status = "Success", message = "Password has been reset successfully!" };
+        }
+
+        public Dto_Response SendEmail(string subject, string body, bool isBodyHtml, string toEmail)
+        {
+            var smtpClient = new SmtpClient(_configuration["EmailDetails:EmailHost"])
+            {
+                Port = Convert.ToInt32(_configuration["EmailDetails:Port"]),
+                Credentials = new NetworkCredential(_configuration["EmailDetails:EmailUsername"], _configuration["EmailDetails:EmailPassword"]),
+                EnableSsl = true,
+            };
+
+            var fromEmailAddress = new MailAddress(_configuration["EmailDetails:EmailUsername"], _configuration["EmailDetails:SenderDisplayName"]);
+
+            var mailMessage = new MailMessage()
+            {
+                From = fromEmailAddress,
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = isBodyHtml
+            };
+
+            mailMessage.To.Add(toEmail);
+
+            try
+            {
+                smtpClient.Send(mailMessage);
+                return new Dto_Response() { status = "Success", message = "Email sent successfully!" };
+            }
+            catch (Exception ex)
+            {
+                return new Dto_Response { status = "EmailFailed", message = ex.Message };
+            }
         }
     }
 }

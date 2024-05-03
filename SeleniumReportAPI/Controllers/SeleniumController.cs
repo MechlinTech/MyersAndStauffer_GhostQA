@@ -180,9 +180,9 @@ namespace SeleniumReportAPI.Controllers
             //Dto_TestSuiteDetailsData _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestSuiteDetailsData>(_testSuiteDetailsJson);
 
             Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteNameData.Environment.EnvironmentId));
-            if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Count > 0)
+            if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Length > 0)
             {
-                foreach (var testCaseName in _testSuiteNameData.SelectedTestCases)
+                foreach (var testCaseName in _testSuiteNameData.SelectedTestCases.Split(","))
                 {
                     try
                     {
