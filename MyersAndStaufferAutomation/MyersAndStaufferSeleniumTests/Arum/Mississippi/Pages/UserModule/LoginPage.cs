@@ -11,24 +11,24 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule
 
         // Page Elements
 
-        public IWebElement Login => driver.FindElementWhenVisible(() => By.XPath("//a[contains(text(),'Login')]"));
-        public IWebElement EmailInput => driver.FindElementWhenVisible(() => By.Id("email"));
-        public IWebElement PasswordInput => driver.FindElement(By.Id("password"));
+        //public IWebElement Login => driver.FindElementWhenVisible(() => By.XPath("//a[contains(text(),'Login')]"));
+        public IWebElement EmailInput => driver.FindElementWhenVisible(() => By.XPath("//input[@name=\"email\"]"));
+        public IWebElement PasswordInput => driver.FindElement(By.XPath("//input[@name=\"password\"]"));
 
-        public IWebElement LogInButton => driver.FindElement(By.XPath("//span[contains(text(),'Login')]"));
+        public IWebElement LogInButton => driver.FindElement(By.XPath("//button[contains(text(), \"LOGIN\")]"));
         public IWebElement MechlinHeader => driver.FindElementWhenVisible(() => By.XPath("//div//h1[contains(text(), 'Mechlin Software Technology Pvt. Ltd.')]"));
 
         // Methods
         public void WaitForPageLoad()
         {
-            driver.WaitUntilElementIsDisplayed(() => Login, timeoutInSeconds: 120);
+            driver.WaitUntilElementIsDisplayed(() => EmailInput, timeoutInSeconds: 120);
 
         }
 
-        public void ClickonLogin()
-        {
-            Login.Click();
-        }
+        //public void ClickonLogin()
+        //{
+        //    Login.Click();
+        //}
 
         public void SetEmail(string username)
         {
@@ -61,12 +61,9 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.Pages.UserModule
         {
             LogMessage("Calling WaitForPageLoad");
             WaitForPageLoad();
-            ClickonLogin();
-
             LogMessage($"Setting login info and submitting: {loginInfo.Email}");
             SetEmail(loginInfo.Email);
             SetPassword(loginInfo.Password);
-
             SubmitLogIn();
         }
 
