@@ -12,6 +12,10 @@ namespace SeleniumReportAPI.Models
         public string Steps { get; set; }
         public string ExpectedResult { get; set; }
         public string ActualResult { get; set; }
+        public string CreatedBy { get; set; }
+        public string CreatedOn { get; set; }
+        public string UpdatedBy { get; set;}
+        public string UpdatedOn { get; set;}
 
     }
 }

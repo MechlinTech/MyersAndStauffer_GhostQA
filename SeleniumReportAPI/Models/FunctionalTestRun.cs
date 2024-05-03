@@ -14,5 +14,9 @@ namespace SeleniumReportAPI.Models
         public string Milestone { get; set; }
         public string AssignedTo { get; set; }
         public string TestCases { get; set; }
+        public string CreatedBy { get; set; }
+        public string CreatedOn { get; set; }
+        public string UpdatedBy { get; set; }
+        public string UpdatedOn { get; set; }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
-using SeleniumReportAPI.Models;
 
 namespace SeleniumReportAPI.Controllers
 {
@@ -41,10 +39,11 @@ namespace SeleniumReportAPI.Controllers
         {
             try
             {
+                string GeneratorPassword = string.Empty;
                 string originalUrl = Request.Headers.Referer.ToString();
                 int lastSlashIndex = originalUrl.LastIndexOf('/');
                 var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
-                var result = _helper.SendEmail(toEmail, "Invitation", Url);
+                var result = _helper.SendEmail(toEmail, "Invitation", Url, GeneratorPassword);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -70,6 +69,7 @@ namespace SeleniumReportAPI.Controllers
                 return StatusCode(500, ex);
             }
         }
+
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePasswordAsync([FromBody] Dto_ChangePassword model)
         {
@@ -106,6 +106,7 @@ namespace SeleniumReportAPI.Controllers
                 });
             }
         }
+
         [HttpPost("UploadFile")]
         public async Task<IActionResult> Upload(string fileBasePath, IFormFile file)
         {
@@ -132,6 +133,22 @@ namespace SeleniumReportAPI.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpPost("SendPasswordResetMail")]
+        public async Task<IActionResult> SendPasswordResetMail(Dto_ForgotPassword model)
+        {
+            var result = await _helper.SendPasswordResetMailAsync(model.Email);
+
+            return result.status == "Success" ? Ok(new { status = result.status, message = "Password reset information has been sent to the user's email." }) : result.status == "NotFound" ? StatusCode(404, new { status = "Failed", message = result.message }) : StatusCode(550, new { status = "Failed", message = result.message });
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(Dto_ResetPassword model)
+        {
+            var result = await _helper.ResetPasswordAsync(model.Email, model.Token, model.NewPassword);
+
+            return result.status == "Success" ? Ok(new { status = result.status, message = result.message }) : result.status == "NotFound" ? StatusCode(404, new { status = "Failed", message = result.message }) : StatusCode(400, new { status = "Failed", message = result.message });
         }
     }
 }

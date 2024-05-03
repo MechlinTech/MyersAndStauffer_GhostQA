@@ -31,10 +31,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 logInPage.WaitForPageLoad();
                 VideoRecorder.ScreenShot(dateTime);
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Login Button" });
-                logInPage.ClickonLogin();
-                VideoRecorder.ScreenShot(dateTime);
-
+                
 
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
                 logInPage.SetEmail(Username);
@@ -79,14 +76,10 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 VideoRecorder.ScreenShot(dateTime);
 
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for plage to loader" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for page to load" });
                 logInPage.WaitForPageLoad();
                 VideoRecorder.ScreenShot(dateTime);
-
-
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Login Button" });
-                logInPage.ClickonLogin();
-                VideoRecorder.ScreenShot(dateTime);
+              
 
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
                 logInPage.SetEmail("Test");
@@ -131,11 +124,6 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for plage to loader" });
                 logInPage.WaitForPageLoad();
                 VideoRecorder.ScreenShot(dateTime);
-
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Click on Login Button" });
-                logInPage.ClickonLogin();
-                VideoRecorder.ScreenShot(dateTime);
-
 
                 _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
                 logInPage.SetEmail(Username);
