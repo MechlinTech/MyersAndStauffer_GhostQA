@@ -9,111 +9,111 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = TestSeleniumReport
 build_property.RootNamespace = TestSeleniumReport
-build_property.ProjectDir = C:\GhostQA\TestSeleniumReport\
+build_property.ProjectDir = C:\Users\Soniya Kashyap\Desktop\GhostQA\TestSeleniumReport\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\GhostQA\TestSeleniumReport
+build_property.MSBuildProjectDirectory = C:\Users\Soniya Kashyap\Desktop\GhostQA\TestSeleniumReport
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/GhostQA/TestSeleniumReport/Areas/Identity/Pages/Account/Login.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Areas/Identity/Pages/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Areas/Identity/Pages/Account/Logout.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Areas/Identity/Pages/Account/Logout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Areas/Identity/Pages/Account/Register.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Areas/Identity/Pages/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Areas/Identity/Pages/Account/_ViewImports.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Areas/Identity/Pages/Account/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxfVmlld0ltcG9ydHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Areas/Identity/Pages/_ViewImports.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Areas/Identity/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Areas/Identity/Pages/_ViewStart.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Areas/Identity/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Application/Index.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Application/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwbGljYXRpb25cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Browser/Index.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Browser/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnJvd3NlclxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Environment/AddEditEnvironment.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Environment/AddEditEnvironment.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW52aXJvbm1lbnRcQWRkRWRpdEVudmlyb25tZW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Environment/Index.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Environment/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW52aXJvbm1lbnRcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Home/AddTestSuite.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Home/AddTestSuite.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBZGRUZXN0U3VpdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Home/EditTestSuite.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Home/EditTestSuite.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFZGl0VGVzdFN1aXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Home/Index.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Home/Privacy.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Home/_Dashboard.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Home/_Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Home/_RunDetails.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Home/_RunDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUnVuRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Home/_TestCaseStepsDetails.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Home/_TestCaseStepsDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfVGVzdENhc2VTdGVwc0RldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Home/_TestDetails.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Home/_TestDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfVGVzdERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Shared/Error.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Shared/_LoginPartial.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/_ViewImports.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/_ViewStart.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GhostQA/TestSeleniumReport/Views/Shared/_Layout.cshtml]
+[C:/Users/Soniya Kashyap/Desktop/GhostQA/TestSeleniumReport/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-6ags4r2mxl
