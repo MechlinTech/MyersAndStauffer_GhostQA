@@ -6,7 +6,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
     {
         private static string _browsername = "Chrome";
         private static string _environmentname = "dev";
-        private static string _baseurl = "https://clocksession.com/";
+        private static string _baseurl = "https://mechlintech.stage.clocksession.com/app";
         private static string _basepath = @"C:\Published_Projects\React_App\images\data\";
         private static string _driverpath = @"C:\Published_Projects\GhostQA_WebAPI\wwwroot\Driver";
         private static string _ApiUrl = @"https://codearrest.dyndns.org:3006/api/AddInBuildTestSuite/SaveInBuiltTestSuites";

@@ -3411,7 +3411,7 @@ namespace SeleniumReportAPI.Helper
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var result = SendEmail("Ghost-QA - Password Reset Request", $"Please click the following button to reset your password: <br><br> <a href={_configuration["EmailDetails:ResetPasswordLink"]}?token={token}><button>Reset Password</button></a>", true, Email);
+            var result = SendEmail("Ghost-QA - Password Reset Request", $"Please click the following button to reset your password: <br><br> <a href={_configuration["EmailDetails:ResetPasswordLink"]}?token={token}&email={Email}><button>Reset Password</button></a>", true, Email);
 
             return new Dto_Response() { status = result.status, message = result.message };
         }

@@ -27,6 +27,7 @@
 		<None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
 		<None Remove="SqlScript\stp_GetEnvironment.sql" />
 		<None Remove="SqlScript\stp_GetEnvironmentById.sql" />
+		<None Remove="SqlScript\stp_GetFunctionalTestCaseByRootId.Sql" />
 		<None Remove="SqlScript\stp_GetPerformaceFile.Sql" />
 		<None Remove="SqlScript\stp_GetRunDetails.Sql" />
 		<None Remove="SqlScript\stp_GetRunId.Sql" />
@@ -56,6 +57,7 @@
 		<EmbeddedResource Include="SqlScript\stp_DeletePerformanceFile.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_DeleteEnvironment.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_DeleteTestSuites.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetFunctionalTestCaseByRootId.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetPerformaceFile.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetBrowsers.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetEnvironmentById.sql" />
