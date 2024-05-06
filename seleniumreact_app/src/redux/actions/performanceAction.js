@@ -10,7 +10,8 @@ export const USED_LOCATION = "USED_LOCATION";
 export const SET_SUITE_ID = "SET_SUITE_ID";
 export const SET_SCENARIO_ID = "SET_SCENARIO_ID";
 export const SET_SCENARIOS = "SET_SCENARIOS";
-
+export const SET_EXPANDED_NODE = "SET_EXPANDED_NODE";
+export const EXPAND_PARENT = "EXPAND_PARENT";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const setSuiteId = (suitId)=>{
@@ -18,6 +19,19 @@ export const setSuiteId = (suitId)=>{
   return {
     type: SET_SUITE_ID,
     payload: suitId,
+  };
+}
+export const setExpandedNodes = (id)=>{
+  return {
+    type: SET_EXPANDED_NODE,
+    payload: id,
+  };
+}
+
+export const ExpandParent = (id)=>{
+  return {
+    type: EXPAND_PARENT,
+    payload: id,
   };
 }
 export const GetLocationScenarioVUCount = (testList) => {

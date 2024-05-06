@@ -11,6 +11,7 @@ import {
   GET_BROWSER_LIST,
   ADD_TEST_SUITE,
   GET_TEST_USER_LIST,
+  EXECUTING_SUITE
 } from "../actions/seleniumAction";
 
 const initialState = {
@@ -25,6 +26,7 @@ const initialState = {
   testCasesList: [],
   suiteToEdit: null,
   testSuiteAdded: {},
+  executingSuite:null
 };
 
 const seleniumReduser = (state = initialState, action) => {
@@ -99,6 +101,12 @@ const seleniumReduser = (state = initialState, action) => {
       return {
         ...state,
         testSuiteAdded: action.payload,
+      };
+    }
+    case EXECUTING_SUITE: {
+      return {
+        ...state,
+        executingSuite: action.payload,
       };
     }
     default:

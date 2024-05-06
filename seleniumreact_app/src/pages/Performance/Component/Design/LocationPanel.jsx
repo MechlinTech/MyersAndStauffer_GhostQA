@@ -52,7 +52,6 @@ export default function LocationPanel() {
 
   const {
     usedLocation,
-    suitId,
     locationOptions,
     scenarioId,
     scenarios,

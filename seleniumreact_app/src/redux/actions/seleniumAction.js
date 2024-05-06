@@ -15,6 +15,7 @@ export const GET_TEST_CASE_LIST = "GET_TESTCASE_LIST";
 export const ADD_UPDATE_TEST_SUITS = "ADD_UPDATE_TEST_SUITS";
 export const SUITE_TO_EDIT = "SUITE_TO_EDIT";
 export const ADD_TEST_SUITE = "ADD_TEST_SUITE";
+export const EXECUTING_SUITE= "EXECUTING_SUITE"
 // const BASE_URL = process.env.REACT_APP_BASE_URL || 'api';
 
 export const getTestSuites = () => {
@@ -80,6 +81,7 @@ export const getTestCaseRundetailsByTestName = (data, setInProgress) => {
 
 export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
   // let data = "Mississippi";
+  console.log("executing")
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
@@ -87,7 +89,7 @@ export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
         `${BASE_URL}/Selenium/ExecuteTestSuite?TestSuiteName=${data}`,
         header()
       );
-      controlLoading(data);
+      // controlLoading(data);
       if (response.data.status === "success") {
         toast.info("Successfully executed", {
           style: {
@@ -97,12 +99,16 @@ export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
         });
       }
       dispatch({
+        type:EXECUTING_SUITE,
+        payload:null
+      })
+      dispatch({
         type: ADD_TEST_SUITE,
         payload: {},
       });
       console.log("ExecuteTestCasesByTestSuite", response);
     } catch (error) {
-      controlLoading(data);
+      // controlLoading(data);
       console.error(error);
       toast.error("NETWORK ERROR");
     }
@@ -288,6 +294,12 @@ export const AddUpdateTestSuites = (data, action, handleLoading) => {
   };
 };
 
+export const setExecutingSuite = (suiteName)=>{
+  return {
+    type:EXECUTING_SUITE,
+    payload:suiteName
+  }
+}
 export const Getsuitebyname = (suitName) => {
   return async (dispatch) => {
     try {

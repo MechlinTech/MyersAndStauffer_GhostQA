@@ -92,7 +92,7 @@ export default function EditTestCase() {
     if (isExecuting) {
       return; // Return early if the API call is in progress
   }
-  setisExecuting(true); 
+  // setisExecuting(true); 
   
     if (saveOrExecute !== "save") setisExecuting(true);
     const urlPattern =
@@ -893,14 +893,14 @@ export default function EditTestCase() {
                         color: "#fff",
                       }}
                     >
-                      {/* {isExecuting ? (
+                      {isExecuting ? (
                         <CircularProgress
                           style={{ color: "white" }}
                           size={25}
                         />
                       ) : (
                         "Save & Execute"
-                      )} */}
+                      )}
                     </Button>
                   </>
                 ) : (

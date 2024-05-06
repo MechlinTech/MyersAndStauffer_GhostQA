@@ -8,6 +8,7 @@ import {
   getTestSuites,
   ExecuteTestCasesByTestSuite,
   Getsuitebyname,
+  setExecutingSuite,
 } from "../../redux/actions/seleniumAction";
 import { useDispatch, useSelector } from "react-redux";
 import Tab from "@mui/material/Tab";
@@ -29,14 +30,14 @@ export default function Dashboard() {
   const classess = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { testSuits, testSuiteAdded } = useSelector((state) => state.selenium);
+  const { testSuits, testSuiteAdded,executingSuite } = useSelector((state) => state.selenium);
   const [selectedSuite, setSelectedSuite] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [tabNo, setTabNo] = useState("1");
   const [openModal, setOpenModal] = useState(false);
   const [openDelModal, setopenDelModal] = useState(false);
   const [suitToDelete, setsuitToDelete] = useState("");
-  const [executingSuite, setexecutingSuite] = useState({});
+  // const [executingSuite, setexecutingSuite] = useState({});
   const [inprogress, setInProgress] = useState(false);
 
   useEffect(() => {
@@ -52,7 +53,6 @@ export default function Dashboard() {
       handleExecuteClick(data)
     }
   },[testSuiteAdded])
- console.log("executingSuite",executingSuite)
   const handleAddSuite = () => {
     navigate("/add-suite");
   };
@@ -98,13 +98,14 @@ export default function Dashboard() {
     navigate(`/edit/${suiteName}`);
   };
  
-  const controlLoading = (suiteName) => { // function to set loading false when promise resolve or reject
-  //  setOpenModal(false)
-  setexecutingSuite((prevExecutingSuite)=>({
-    ...prevExecutingSuite,
-    [suiteName]:false
-  }))
-  };
+  // const controlLoading = (suiteName) => { // function to set loading false when promise resolve or reject
+  // //  setOpenModal(false)
+  // setexecutingSuite((prevExecutingSuite)=>({
+  //   ...prevExecutingSuite,
+  //   [suiteName]:false
+  // }))
+  // dis
+  // };
  
   const handleExecuteClick = (suite) => {
     console.log("handleExecuteClick",suite)
@@ -113,11 +114,12 @@ export default function Dashboard() {
     // setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
     // setOpenModal(true)
     // setexecutingSuite(data)
-    setexecutingSuite((prevExecutingSuite)=>({
-      ...prevExecutingSuite,
-      [data]:true
-    }))
-    dispatch(ExecuteTestCasesByTestSuite(data, controlLoading));
+    // setexecutingSuite((prevExecutingSuite)=>({
+    //   ...prevExecutingSuite,
+    //   [data]:true
+    // }))
+    dispatch(setExecutingSuite(suite.TestSuiteName))
+    dispatch(ExecuteTestCasesByTestSuite(data));
   };
  
   const handleDeleteClick = (suite) => {
@@ -215,25 +217,24 @@ export default function Dashboard() {
                           >
                             {suite.TestSuiteFlag == "Custom" && (
                               <>
-                                 {!executingSuite[suite.TestSuiteName]?<PlayCircleIcon
-                                      style={{
-                                        marginRight: "8px",
-                                        color:
-                                          selectedSuite === suite
-                                            ? "#fff"
-                                            : "rgb(101, 77, 247)",
-                                      }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleExecuteClick(suite);
-                                      }}
-                                    />:<CircularProgress size={25} style={{
+                                 {executingSuite && executingSuite === suite.TestSuiteName?<CircularProgress size={25} style={{
                                       marginRight: "8px",
                                       color:
                                         selectedSuite === suite
                                           ? "#fff"
                                           : "rgb(101, 77, 247)",
-                                    }}/>}
+                                    }}/>
+                                    :<PlayCircleIcon
+                                    style={{
+                                      marginRight: "8px",
+                                      color: selectedSuite === suite ? "#fff" : "rgb(101, 77, 247)",
+                                      cursor: executingSuite ? "not-allowed" : "pointer",
+                                    }}
+                                    onClick={executingSuite ? null : (e) => {
+                                      e.stopPropagation();
+                                      handleExecuteClick(suite);
+                                    }}
+                                  />}
                                 <EditIcon
                                   style={{
                                     marginRight: "8px",
