@@ -36,6 +36,20 @@ class TestContainersRuns(models.Model):
     test_file = models.FileField(upload_to='uploads/performace_tests/TestContainersRuns/',null=True)  # You may want to specify a custom upload_to path
     client_reference_id = models.CharField(max_length=250, null=True, blank=True)
 
+
+class JmeterTestContainersRuns(models.Model):
+    suite = models.ForeignKey(PerformaceTestSuite,on_delete=models.CASCADE,related_name='jmeter_container_runs')
+    container_id  = models.CharField(max_length=255, null=True)
+    container_status  = models.CharField(max_length=255, null=True)
+    container_labels  = models.CharField(max_length=255, null=True)
+    container_name  = models.CharField(max_length=255, null=True)
+    container_short_id  = models.CharField(max_length=255, null=True)
+    container_logs_str = models.TextField(null=True)
+    ref = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    json = models.JSONField(null = True)
+    raw_data = models.JSONField(null = True)
+    test_file = models.FileField(upload_to='uploads/performace_tests/JmeterTestContainersRuns/',null=True)  # You may want to specify a custom upload_to path
+    client_reference_id = models.CharField(max_length=250, null=True, blank=True)
    
 class TestArtifacts(models.Model):
     container_runs = models.ForeignKey(TestContainersRuns,on_delete=models.CASCADE,related_name='runs_artifacts')
@@ -43,3 +57,8 @@ class TestArtifacts(models.Model):
     type =models.CharField(max_length=255, null=True)
     files = models.FileField(upload_to='uploads/performace_tests/')
     
+class JmeterTestArtifacts(models.Model):
+    container_runs = models.ForeignKey(JmeterTestContainersRuns,on_delete=models.CASCADE,related_name='jmeter_runs_artifacts')
+    suite = models.ForeignKey(PerformaceTestSuite,on_delete=models.CASCADE,related_name='jmeter_suite_artifacts')
+    type =models.CharField(max_length=255, null=True)
+    files = models.FileField(upload_to='uploads/performace_tests/jmeter/')
