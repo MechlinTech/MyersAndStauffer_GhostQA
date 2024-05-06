@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from .models import Agent
-from .models import AgentDetails, Job
+from .models import AgentDetails, Job, PrivateLocation, Agent
 from cypress.serializers.request import TestSuiteSerializer
 from cypress.models import TestSuite, TestContainersRuns as CypressContainersRun
 from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer, TestContainersRunsSerializer
@@ -12,6 +12,38 @@ from performace_test.models import JmeterTestContainersRuns, PerformaceTestSuite
 
 
 
+class PrivateLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrivateLocation
+        fields = [
+            'id',
+            'ref',
+            'location_name',
+            'parallel_engine_runs',
+            'functionality',
+            'location_type',
+            'max_threads_per_engine',
+            'console_xms_mb',
+            'console_xmx_mb',
+            'created_at',
+            'updated_at',
+        ]
+        
+class NewAgentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Agent
+        fields = [
+            'id',
+            'ref',
+            'name',
+            'agent_address',
+            'status',
+            'description',
+            'last_heartbeat',
+            'agent_status',
+            'created_at',
+            'updated_at',
+        ]
 
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:
