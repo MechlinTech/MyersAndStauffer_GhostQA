@@ -27,7 +27,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 var dateTime = DateTime.Now.ToString("dd-MMM-yyyy_HH-mm-ss");
                 _testData.TestRunStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for plage to loader" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "wait for page to loader" });
                 logInPage.WaitForPageLoad();
                 VideoRecorder.ScreenShot(dateTime);
 
@@ -76,7 +76,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 VideoRecorder.ScreenShot(dateTime);
 
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for page to load" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "wait for page to load" });
                 logInPage.WaitForPageLoad();
                 VideoRecorder.ScreenShot(dateTime);
               
@@ -121,7 +121,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 var dateTime = DateTime.Now.ToString("dd-MMM-yyyy_HH-mm-ss");
                 _testData.TestRunStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for plage to loader" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "wait for page to loader" });
                 logInPage.WaitForPageLoad();
                 VideoRecorder.ScreenShot(dateTime);
 
