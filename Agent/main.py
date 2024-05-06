@@ -24,6 +24,10 @@ def execute_jmeter_job(job):
     return jmeter_file_data
 def execute_cypress_job(job):
     setup_cypress_files = setup_cypress_file(job)
+    if setup_cypress_files.status_code == 200:
+        job_id = job['id']
+        status = "completed"
+        update_job_status(job_id, status)
     return setup_cypress_files
 
 def main():

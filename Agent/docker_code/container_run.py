@@ -10,8 +10,17 @@ from code_management.api_call import (
                                     update_container_reporting,
                                     update_container_for_raw_data,
                                     update_container_for_json_data,
-                                    final_update_container_after_execution
+                                    final_update_container_after_execution,
+                                    update_container_after_container_run,
+                                    get_container_from_codeengine_cypress,
+                                    update_container_reporting_cypress,
+                                    artificat_creation_cypress,
+                                    update_artifact_file,
+                                    update_container_json_result_data_cypress,
+                                    final_update_container_after_execution_cypress,
+                                    upload_cypress_artifact_video
 )
+from code_management.utils import directory_exists, list_files_in_directory, list_recurssive_files_in_directory
 import logging  
 logger = logging.getLogger(__name__)
 
@@ -20,7 +29,7 @@ def get_container(id_or_name):
     
     return client.containers.get(id_or_name)
 
-def cypress_container(name, volume_path,container_run=None):
+def cypress_container(name, volume_path,job,container_run=None):
     client = get_client()
     # print('volume_path',volume_path)
     print(f"{__name__}: volume_path: {volume_path}")
@@ -48,17 +57,13 @@ def cypress_container(name, volume_path,container_run=None):
         detach=True,
     )
     
-    if container_run:
-        container_run.container_id = container.id
-        container_run.container_status = container.status
-        container_run.container_labels = ""
-        container_run.container_short_id = container.short_id
-        container_run.save()
-        
-                # Start the threaded task
-        # thread = threading.Thread(target=monitor_docker_conatinerv2, args=(container_run.id,volume_path,))
-        # thread.start()
-    return container
+    container_id = container.id
+    container_status = container.status
+    container_labels = ""
+    container_short_id = container.short_id
+    update_container_after_container_run(container_run['ref'], container_id, container_status, container_labels, container_short_id)
+    related_container_details_cypress = get_container_details_cypress(container,container_run['ref'], volume_path, job)
+    return container, related_container_details_cypress
 
 
 from code_management.jmx_reporting import csv_to_json, get_json_metrics
@@ -259,3 +264,87 @@ def get_container_details(container, ref, volume_path):
     return True
 
         
+def get_container_details_cypress(container,ref, volume_path, job):
+    
+    container_run = get_container_from_codeengine_cypress(ref)
+    container_details =  get_container(container_run['container_id'])
+    
+    while container_details.status != "exited":
+        time.sleep(30)  # Wait for 30 seconds
+        container_details = get_container(container_run['container_id'])
+    
+    container_status = container_details.status
+    container_labels = container_details.labels
+    container_log_str = container_details.logs()
+    
+    update_container_reporting_cypress(ref, container_status, container_labels, container_log_str)
+    
+    result ={
+            "screenshots":[],
+            "videos":[],
+            "results":[],
+        }
+    
+    screenshots_path = f"{volume_path}/e2e/cypress/screenshots/"
+    videos_path = f"{volume_path}/e2e/cypress/videos"
+    results_path = f"{volume_path}/e2e/cypress/results"
+    
+    if directory_exists(screenshots_path):
+        screenshots = list_recurssive_files_in_directory(screenshots_path)
+        result["screenshots"] = screenshots
+        
+    if directory_exists(videos_path):
+        videos = list_files_in_directory(videos_path)
+        result["videos"] = videos
+    
+    if directory_exists(results_path):
+        results = list_files_in_directory(results_path)
+        result["results"] = results
+    
+    for screenshot in result["screenshots"]:
+        print(screenshot)
+        test_artifact_instance = artificat_creation_cypress(
+            container_runs=container_run,
+            suite=container_run.suite,
+            type='screenshot',  # Replace with the actual type
+        )
+        update_artifact_file(test_artifact_instance, screenshot)
+        
+    json_result_data = {}
+    for result_json in result["results"]:
+        test_artifact_instance = artificat_creation_cypress(job['cypress_container_run']['id'], job['test_suite'], 'result')
+        updated_file_data = update_artifact_file(test_artifact_instance['id'], result_json)
+        try:
+            suite_name = updated_file_data.get('results')[0]['file']
+            path_parts = suite_name.split("/")
+            file_name = path_parts[-1]
+            file_name_parts = file_name.split(".")
+            test_suite_name = file_name_parts[0]
+            json_result_data[test_suite_name] = updated_file_data
+        except Exception as e:
+            json_result_data[result_json] = updated_file_data
+        # try:
+        #     data = json.loads(updated_file_data)
+        #     suite_name = data.get('results')[0]['file']
+        #     path_parts = suite_name.split("/")
+        #     file_name = path_parts[-1]
+        #     file_name_parts = file_name.split(".")
+        #     test_suite_name = file_name_parts[0]
+        #     json_result_data[test_suite_name] = data
+        # except Exception as e:
+        #     json_result_data[result_json] = updated_file_data
+            
+    update_container_json_result_data_cypress(ref, json_result_data)
+    
+    for video in result["videos"]:
+        print(video)
+        test_artifact_instance = artificat_creation_cypress(job['cypress_container_run']['id'], job['test_suite'], 'video')
+        upload_cypress_artifact_video(test_artifact_instance['id'], video)
+    
+    container_status = container_details.status
+    final_update_container_after_execution_cypress(ref, container_status)  
+    container.remove()
+    
+    print(container.status)
+    
+    return True

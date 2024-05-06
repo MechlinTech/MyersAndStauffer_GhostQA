@@ -8,7 +8,7 @@ from cypress.docker.containers import (get_container,
                                        start_test_inside_conatiner,start_test_inside_conatinerV2)
 from cypress.models import TestSuite
 from cypress.serializers.execute import (  # Assuming you have a serializer for TestSuite
-    ExecuteSerializers, TestContainersRunsSerializer, TestSuiteSerializer)
+    ExecuteSerializers, TestContainersRunsSerializer, TestSuiteSerializer, TestArtifactsSerializer, TestArtifactsUpdateSerializer)
 from cypress.utils import (format_javascript,check_container_status, convert_to_unix_path,
                            create_directory, directory_exists, get_full_path,copy_files_and_folders,
                            list_files_in_directory)
@@ -432,3 +432,13 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
 class TestContainersRunsViewset(viewsets.ModelViewSet):
     queryset = TestContainersRuns.objects.all()
     serializer_class = TestContainersRunsSerializer
+    lookup_field = 'ref'
+    
+class TestArtifactsViewSet(viewsets.ModelViewSet):
+    queryset = TestArtifacts.objects.all()
+    serializer_class = TestArtifactsSerializer
+    
+    def get_serializer_class(self):
+        if self.action in ["update", "partial_update"]:
+            return TestArtifactsUpdateSerializer
+        return TestArtifactsSerializer

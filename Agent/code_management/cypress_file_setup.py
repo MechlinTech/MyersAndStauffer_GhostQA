@@ -2,6 +2,7 @@ from .utils import create_directory, get_full_path, convert_to_unix_path, list_f
 from django.conf import settings
 import xml.etree.ElementTree as ET
 import os
+import json
 import requests
 from rest_framework.response import Response
 from django.core.files.base import File
@@ -26,8 +27,8 @@ def setup_cypress_file(job):
     create_directory(f"{volume_path}")
     copy_files_and_folders(CYPRESS_CONFIG_PATH,volume_path)       
     create_directory(f"{volume_path}/e2e/cypress/e2e/")
-    
-    for suite_name, suite_content in job['test_suite_details']['cypress_code'].items():
+    cypress_code_json = json.loads(job['test_suite_details']['cypress_code'])
+    for suite_name, suite_content in cypress_code_json.items():
             print(suite_name)
             with open(f"{volume_path}/e2e/cypress/e2e/{suite_name}", "w") as cypress_test_file:
                 cypress_test_file.write(suite_content)
@@ -38,7 +39,7 @@ def setup_cypress_file(job):
 
     #         cypress_test_file.write(job['test_suite_details']['cypress_code'])
             
-    container = cypress_container(name, volume_path,job['cypress_container_run'])
+    container = cypress_container(name, volume_path,job,job['cypress_container_run'])
     return Response({
             "status":   "success",
             'jmeter':container

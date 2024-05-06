@@ -95,3 +95,102 @@ def update_job_status(job_id, status):
     
     response = requests.patch(job_update_url, data=payload)
     return response
+
+###################################### CYPRESS API CALLS #############################
+
+def update_container_after_container_run(ref, container_id, container_status, container_label, container_short_id):
+    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/"
+    payload = {
+        'container_id': container_id,
+        'container_status': container_status,
+        'container_short_id': container_short_id
+    }
+    if container_label:
+        payload['container_label'] = container_label
+
+    response = requests.patch(container_run_update_url, data=payload)
+    # Check response status code and handle exceptions if necessary
+    return response
+
+def get_container_from_codeengine_cypress(ref):
+    url = f'http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to get container: {response.status_code}")
+    
+def update_container_reporting_cypress(ref, container_status, container_label, container_log_str):
+    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/"
+    payload = {
+        'container_status': container_status,
+        'container_log_str': container_log_str
+    }
+
+    if container_label:
+        payload['container_label'] = container_label
+    response = requests.patch(container_run_update_url, data=payload)
+    # Check response status code and handle exceptions if necessary
+    return response
+
+def update_container_json_result_data_cypress(ref, json_data):
+    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/"
+    payload = {
+        'json': json_data
+    }
+    # json_payload = json.dumps(payload)
+    response = requests.patch(container_run_update_url, json=payload)
+    # Check response status code and handle exceptions if necessary
+    return response
+
+def artificat_creation_cypress(container_run, suite, type):
+    url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-artifacts/"
+    payload = {
+        'container_runs': container_run,
+        'suite': suite,
+        'type': type
+    }
+    
+    response = requests.post(url, json=payload)
+    if response.status_code == 201:
+        return response.json()
+    else:
+        raise Exception(f"Failed to create artifact: {response.status_code}")
+
+def update_artifact_file(id, file_path):
+    url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-artifacts/{id}/"
+    with open(file_path, 'rb') as file:
+        file_data = file.read()
+        files = {
+            'files': (file.name, file_data, 'application/json'),
+        }
+    response = requests.put(url, files=files)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to update artifact file: {response.status_code}")
+    
+
+def upload_cypress_artifact_video(id, file_path):
+    url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-artifacts/{id}/"
+    with open(file_path, 'rb') as file:
+        files = [
+            ('files', (file.name, file, 'video/mp4'))  # Provide the correct MIME type if the file is not an mp4
+        ]
+
+        response = requests.put(url, files=files)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception(f"Failed to upload file: {response.status_code}")
+
+   
+def final_update_container_after_execution_cypress(ref, container_status):
+    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/"
+    payload = {
+        'container_status': container_status
+    }
+
+    response = requests.patch(container_run_update_url, data=payload)
+    # Check response status code and handle exceptions if necessary
+    return response

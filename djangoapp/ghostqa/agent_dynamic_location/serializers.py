@@ -86,6 +86,7 @@ class JobSerializer(serializers.ModelSerializer):
         try:
             container_run = CypressContainersRun.objects.get(suite=obj.test_suite)
             return {
+                'id': container_run.id,
                 'container_id': container_run.container_id,
                 'container_status': container_run.container_status,
                 'container_name': container_run.container_name,
