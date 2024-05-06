@@ -280,11 +280,10 @@ export const AddUpdateTestSuites = (data, action, handleLoading) => {
           payload: res.data.data,
         });
       }
-      console.log("saved ", res);
     } catch (error) {
       handleLoading("error");
-      console.log("error sending ", error);
-      toast.error("NETWORK ERROR");
+      toast.error(error.response.data.message);
+      console.log({ error: error.response });
     }
   };
 };
