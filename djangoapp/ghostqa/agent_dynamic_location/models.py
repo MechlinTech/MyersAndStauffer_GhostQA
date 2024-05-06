@@ -6,6 +6,45 @@ from performace_test.models import PerformaceTestSuite
 # Create your models here.
 
 
+class PrivateLocation(models.Model):
+    TYPE_FUNCTIONALITIES = [
+        ('performance', 'Performance')
+    ]
+    TYPE_LOCATION = [
+        ('unshared', 'Unshared')
+    ]
+    ref = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    location_name = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    parallel_engine_runs = models.IntegerField(default=1, blank=True, null=True)
+    functionality = models.CharField(max_length=20, choices=TYPE_FUNCTIONALITIES, default='performance')
+    location_type = models.CharField(max_length=20, choices=TYPE_LOCATION, default='unshared')
+    max_threads_per_engine = models.IntegerField(default=50, blank=True, null=True)
+    console_xms_mb = models.IntegerField(default=1024, blank=True, null=True)
+    console_xmx_mb = models.IntegerField(default=4096, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    
+    def __str__(self):
+        return f'{self.ref} {self.location_name}'
+    
+
+class Agent(models.Model):
+    ref = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    name = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    agent_address = models.CharField(max_length=100, blank=True, null=True)
+    status = models.CharField(max_length=20, choices=[('active', 'Active'), ('inactive', 'Inactive')], default='inactive')
+    agent_status = models.CharField(max_length=20, choices=[('available', 'Available'), ('Occupied', 'Occupied')], default='available')
+    description = models.TextField(max_length=250, blank=True, null=True)
+    last_heartbeat = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f'{self.name}'
+    
+    
+
 class AgentDetails(models.Model):
     name = models.CharField(max_length=100)
     ip_address = models.GenericIPAddressField()

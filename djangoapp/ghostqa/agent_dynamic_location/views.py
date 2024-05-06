@@ -5,8 +5,8 @@ from django.shortcuts import render
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.response import Response
-from .models import AgentDetails, Job
-from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer, JmeterTestContainersRunsSerializerNew
+from .models import AgentDetails, Job, PrivateLocation, Agent
+from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer, JmeterTestContainersRunsSerializerNew, PrivateLocationSerializer, NewAgentSerializer
 from performace_test.models import JmeterTestContainersRuns, TestContainersRuns
 from performace_test.serializers.performace_tests import TestContainersRunsSerializer
 
@@ -14,6 +14,12 @@ class AgentViewSet(viewsets.ModelViewSet):
     queryset = AgentDetails.objects.all()
     serializer_class = AgentSerializer
     
+    
+class NewAgentViewSet(viewsets.ModelViewSet):
+    queryset = Agent.objects.all()
+    serializer_class = NewAgentSerializer
+    lookup_field = 'ref'
+
 # class JmeterTestContainersRunsViewSet(viewsets.ModelViewSet):
 #     queryset = JmeterTestContainersRuns.objects.all()
 #     serializer_class = JmeterTestContainersRunsSerializer
@@ -47,3 +53,9 @@ class JobViewSet(viewsets.ModelViewSet):
     def receive_data(self, request):
         data = request.data
         return Response({'message': 'Data received successfully', 'data': data}) 
+    
+    
+class PrivateLocationViewSet(viewsets.ModelViewSet):
+    queryset = PrivateLocation.objects.all()
+    serializer_class = PrivateLocationSerializer
+    lookup_field = 'ref'
