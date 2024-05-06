@@ -194,6 +194,54 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             "data":self.get_serializer(instance).data
         })
             
+    @action(detail=False,methods=['POST'])
+    def execute3(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        instance = serializer.instance
+        
+        container_run = TestContainersRuns.objects.create(
+            suite = instance,
+            container_status= f"pending"
+        )
+        container_run.container_name =  f"{instance.name}-{container_run.ref}"
+        container_run.client_reference_id = instance.client_reference_id
+        container_run.save()
+        
+        BASE_DIR  = settings.BASE_DIR
+        JMETER_CONFIG_PATH = os.path.abspath(os.path.join(BASE_DIR,"performace_test","jmeter"))
+        
+        name = container_run.container_name
+        volume_path = f"/tests/performace/{name}"
+        volume_path = get_full_path(volume_path)
+        volume_path = convert_to_unix_path(volume_path)
+        if settings.SHARED_PERFORMACE_PATH:
+                volume_path = f"{settings.SHARED_PERFORMACE_PATH}/performace/{name}"
+        
+        if instance.type == "jmeter":
+            create_directory(f"{volume_path}")
+            copy_files_and_folders(JMETER_CONFIG_PATH,volume_path)                   
+            create_directory(f"{volume_path}/html-results")
+            
+            with open(f"{volume_path}/test.jmx", "w") as file:
+                jmx_text_content = replace_thread_group(instance.test_file.read(), jmx_properties=request.data)
+                file.write(jmx_text_content)
+            with open(f"{volume_path}/test.jmx", "rb") as file:
+                
+                container_run.test_file = File(file, "test.jmx")
+                container_run.save()
+                
+                
+            print("STARTING CONTAINER")
+            start_jmeter_test2(name,volume_path,instance.jthreads_total_user,instance.jrampup_time,container_run)
+            
+        return Response({
+            "status":   "success",
+            "data":self.get_serializer(instance).data
+        })            
+
+
     @action(methods=['get'],detail=True)
     def get_file(self,request,*args, **kwargs):
         view_name = request.resolver_match.url_name

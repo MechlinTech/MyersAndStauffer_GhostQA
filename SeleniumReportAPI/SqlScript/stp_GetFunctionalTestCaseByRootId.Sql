@@ -18,6 +18,13 @@ BEGIN TRY
                    [RootId],
                    [TestCaseName],
 				   [Status],
+				   [PreCondition],
+				   [Steps],
+				   [ExpectedResult],
+				   [ActualResult],
+				   [CreatedBy],
+				   [CreatedOn],
+				   [UpdatedBy],
 				   [UpdatedOn]
             FROM tbl_FunctionalTestCase
             WHERE RootId = @RootId

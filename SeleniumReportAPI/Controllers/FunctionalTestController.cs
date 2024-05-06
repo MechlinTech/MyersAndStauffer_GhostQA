@@ -108,5 +108,15 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.DeleteFuncationalTestCase(Id));
         }
+
+        /// <summary>
+        ///  Get All Active User Details
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("GetAllActiveUserDetails")]
+        public async Task<ActionResult> GetAllActiveUserDetails()
+        {
+            return Ok(await _helper.GetAllActiveUserDetails());
+        }
     }
 }

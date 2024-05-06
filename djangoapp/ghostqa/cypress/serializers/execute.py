@@ -13,6 +13,8 @@ class ExecuteSerializers(serializers.Serializer):
     
 
 class TestArtifactsSerializer(serializers.ModelSerializer):
+    # container_runs = serializers.PrimaryKeyRelatedField()
+    # suite = serializers.PrimaryKeyRelatedField()
     files = serializers.SerializerMethodField()
     
     def get_files(self,instance):
@@ -25,6 +27,13 @@ class TestArtifactsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestArtifacts
         fields = ["id", "type", "files", "container_runs", "suite"]
+        
+class TestArtifactsUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestArtifacts
+        fields = ["id", "type", "files", "container_runs", "suite"]
+        read_only_fields = ["container_runs", "suite"]
+        
 class TestContainersRunsSerializer(serializers.ModelSerializer):
     runs_artifacts = TestArtifactsSerializer(many=True)
     class Meta:
