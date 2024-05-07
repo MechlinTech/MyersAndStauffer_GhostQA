@@ -25,6 +25,7 @@ import DeleteSuite from "./Modal/DeleteSuite";
 import { useNavigate } from "react-router-dom";
 import Graph from "./Components/Graph";
 import { Tooltip } from "@mui/material";
+import { toast } from "react-toastify";
  
 export default function Dashboard() {
   const classess = useStyles();
@@ -230,9 +231,12 @@ export default function Dashboard() {
                                       color: selectedSuite === suite ? "#fff" : "rgb(101, 77, 247)",
                                       cursor: executingSuite ? "not-allowed" : "pointer",
                                     }}
-                                    onClick={executingSuite ? null : (e) => {
+                                    onClick={ (e) => {
                                       e.stopPropagation();
-                                      handleExecuteClick(suite);
+                                      if(executingSuite)
+                                        toast.warn("Another test is already running, please wait until the test is completed.")
+                                      else
+                                        handleExecuteClick(suite);
                                     }}
                                   />}
                                 <EditIcon

@@ -79,9 +79,7 @@ export const getTestCaseRundetailsByTestName = (data, setInProgress) => {
   };
 };
 
-export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
-  // let data = "Mississippi";
-  console.log("executing")
+export const ExecuteTestCasesByTestSuite = (data) => {
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
@@ -89,15 +87,13 @@ export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
         `${BASE_URL}/Selenium/ExecuteTestSuite?TestSuiteName=${data}`,
         header()
       );
-      // controlLoading(data);
-      if (response.data.status === "success") {
-        toast.info("Successfully executed", {
+      const finishedItem = response.data.find(item => item?.status === "Finished")
+        toast.info(finishedItem.message, {
           style: {
             background: "rgb(101, 77, 247)",
             color: "rgb(255, 255, 255)",
           },
         });
-      }
       dispatch({
         type:EXECUTING_SUITE,
         payload:null
@@ -106,9 +102,7 @@ export const ExecuteTestCasesByTestSuite = (data, controlLoading) => {
         type: ADD_TEST_SUITE,
         payload: {},
       });
-      console.log("ExecuteTestCasesByTestSuite", response);
     } catch (error) {
-      // controlLoading(data);
       console.error(error);
       toast.error("NETWORK ERROR");
     }

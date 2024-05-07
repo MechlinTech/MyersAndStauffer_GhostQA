@@ -151,7 +151,7 @@ export default function EditTestSuite() {
     let payload = {
       TestSuiteName: name,
       Description: description,
-      TestSuiteId: suiteToEdit.TestSuiteId,
+      TestSuiteId: suiteToEdit?.TestSuiteId,
       TestSuiteType: selectedSuiteValue,
       TestUserId: selectedTestUser.UserId,
       ApplicationId: selectedApplication?.ApplicationId,
