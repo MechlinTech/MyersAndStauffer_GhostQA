@@ -35,8 +35,8 @@ router.register(r"performance-tests",PerformaceViewSet)
 router.register(r"performance-container-runs",PerformanceContainersRunsViewSet, basename="jmeterperformancecontainerruns")
 router.register(r"remote-agent-connection", NewAgentViewSet)
 router.register(r"remote-agent-connection-jmeter-container", JmeterTestContainerRunsViewSet, basename="newjmeterTestContainer")
-router.register(r"remote-agent-connection-job", JobViewSet)
-router.register(r"remote-agent-connection-location", PrivateLocationViewSet)
+router.register(r"agent-job", JobViewSet)
+router.register(r"private-location", PrivateLocationViewSet)
 # router.register(r'container-runs', TestContainersRunsViewset)
 
 
