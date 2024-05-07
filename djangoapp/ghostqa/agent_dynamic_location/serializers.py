@@ -30,10 +30,12 @@ class PrivateLocationSerializer(serializers.ModelSerializer):
         ]
         
 class NewAgentSerializer(serializers.ModelSerializer):
+    # location = serializers.PrimaryKeyRelatedField(queryset=PrivateLocation.objects.all())
     class Meta:
         model = Agent
         fields = [
             'id',
+            'location',
             'ref',
             'name',
             'agent_address',
@@ -44,6 +46,10 @@ class NewAgentSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['location'] = PrivateLocationSerializer(instance.location).data
+        return response
 
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:
