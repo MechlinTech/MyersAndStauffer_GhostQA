@@ -1,17 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using SeleniumReportAPI.DBContext;
 using SeleniumReportAPI.Helper;
 using SeleniumReportAPI.Models;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,15 +104,18 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
+
+// Exception handling should be very early in the pipeline
+app.UseExceptionHandler("/error");
+
 app.UseRouting();
 
-// Use CORS before any other middleware
+// CORS policy should be applied after routing but before auth
 app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseHttpsRedirection();
 
 app.UseEndpoints(endpoints =>
 {
@@ -129,3 +127,13 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
+
+// Custom middleware to handle errors
+app.Map("/error", errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        await context.Response.WriteAsync("An unexpected error occurred.");
+    });
+});

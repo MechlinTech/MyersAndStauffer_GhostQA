@@ -2,7 +2,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
 import { getBaseUrl } from "../../utils/configService";
-import { useNavigate } from "react-router-dom";
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
 
@@ -71,13 +70,40 @@ export const forgotPassword = (data, setLoading, navigate) => {
        console.log("somethings wrong")
       }
     } catch (err) {
-      console.error(err);
+      toast.error(err.response.data.message);
+      console.log({ error: err.response });
     } finally {
       setLoading(false);
     }
   };
 };
 
+export const resetPassword = (payload, navigate) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.post(`${BASE_URL}/AddInBuildTestSuite/ResetPassword`, payload);
+      const response = res.data;
+      console.log("response",response)
+      if (response?.status === 'Success') {
+        toast.info(`${response.message}`, {
+          style: {
+            background: 'rgb(101, 77, 247)',
+            color: 'rgb(255, 255, 255)',
+          
+          },
+        });
+        navigate("/")
+      } else {
+       console.log("somethings wrong")
+      }
+    } catch (err) {
+      toast.error(err.response.data.message);
+      console.log({ error: err.response });
+    } finally {
+    }
+  };
+};
 
 export const logout = () => {
   return (dispatch) => {

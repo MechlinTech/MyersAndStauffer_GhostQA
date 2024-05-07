@@ -27,19 +27,19 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 var dateTime = DateTime.Now.ToString("dd-MMM-yyyy_HH-mm-ss");
                 _testData.TestRunStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for plage to loader" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "wait for page to loader" });
                 logInPage.WaitForPageLoad();
                 VideoRecorder.ScreenShot(dateTime);
 
                 
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = $"Enter Email {Password}" });
                 logInPage.SetEmail(Username);
                 VideoRecorder.ScreenShot(dateTime);
 
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter passoword test" });
-                logInPage.SetPassword("password");
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = $"Enter passoword {Password}" });
+                logInPage.SetPassword(Password);
                 VideoRecorder.ScreenShot(dateTime);
 
 
@@ -76,17 +76,17 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 VideoRecorder.ScreenShot(dateTime);
 
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for page to load" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "wait for page to load" });
                 logInPage.WaitForPageLoad();
                 VideoRecorder.ScreenShot(dateTime);
               
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
-                logInPage.SetEmail("Test");
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = $"Enter Email {Username}" });
+                logInPage.SetEmail(Username);
                 VideoRecorder.ScreenShot(dateTime);
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter passoword test" });
-                logInPage.SetPassword("Test");
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = $"Enter passoword  {Password}" });
+                logInPage.SetPassword(Password);
                 VideoRecorder.ScreenShot(dateTime);
 
 
@@ -121,16 +121,16 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile.UserModule
                 var dateTime = DateTime.Now.ToString("dd-MMM-yyyy_HH-mm-ss");
                 _testData.TestRunStartDateTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz");
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = dateTime, Details = "wait for plage to loader" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "wait for page to loader" });
                 logInPage.WaitForPageLoad();
                 VideoRecorder.ScreenShot(dateTime);
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter Email Test" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = $"Enter Email {Username}" });
                 logInPage.SetEmail(Username);
                 VideoRecorder.ScreenShot(dateTime);
 
 
-                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = "Enter passoword test" });
+                _testSteps.Add(new TestStepColumns { Status = "Passed", Timestamp = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss.fffffffzzz"), Details = $"Enter passoword {Password}" });
                 logInPage.SetPassword(Password);
                 VideoRecorder.ScreenShot(dateTime);
 
