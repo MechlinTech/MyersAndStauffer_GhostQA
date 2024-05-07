@@ -33,13 +33,13 @@ class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
     
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        job = serializer.save()
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     job = serializer.save()
 
-        return Response(self.get_serializer(job).data)
+    #     return Response(self.get_serializer(job).data)
     
     @action(detail=False,methods=['GET'])
     def queued_job(self, request):

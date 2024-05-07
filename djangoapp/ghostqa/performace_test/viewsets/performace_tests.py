@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.utils import extend_schema
 from PIL import Image as PILImage
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
@@ -22,6 +22,8 @@ from cypress.utils import (format_javascript,check_container_status, convert_to_
                            list_files_in_directory)
 
 from ..docker.containers import start_jmeter_test2,start_jmeter_test
+from agent_dynamic_location.models import Job, Agent
+
 class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
     queryset = PerformaceTestSuite.objects.all()
     serializer_class = PerformaceTestSuiteSerializer
@@ -196,10 +198,13 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             
     @action(detail=False,methods=['POST'])
     def execute3(self, request, *args, **kwargs):
+        agent_id = request.data.pop('agent', None)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         instance = serializer.instance
+        
+        
         
         container_run = TestContainersRuns.objects.create(
             suite = instance,
@@ -209,35 +214,25 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         container_run.client_reference_id = instance.client_reference_id
         container_run.save()
         
-        BASE_DIR  = settings.BASE_DIR
-        JMETER_CONFIG_PATH = os.path.abspath(os.path.join(BASE_DIR,"performace_test","jmeter"))
-        
-        name = container_run.container_name
-        volume_path = f"/tests/performace/{name}"
-        volume_path = get_full_path(volume_path)
-        volume_path = convert_to_unix_path(volume_path)
-        if settings.SHARED_PERFORMACE_PATH:
-                volume_path = f"{settings.SHARED_PERFORMACE_PATH}/performace/{name}"
+        try:
+            agent = Agent.objects.get(id=agent_id[0])
+        except Agent.DoesNotExist:
+            return Response({
+                "status": "error",
+                "message": f"Agent with ID {agent_id} does not exist"
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         if instance.type == "jmeter":
-            create_directory(f"{volume_path}")
-            copy_files_and_folders(JMETER_CONFIG_PATH,volume_path)                   
-            create_directory(f"{volume_path}/html-results")
-            
-            with open(f"{volume_path}/test.jmx", "w") as file:
-                jmx_text_content = replace_thread_group(instance.test_file.read(), jmx_properties=request.data)
-                file.write(jmx_text_content)
-            with open(f"{volume_path}/test.jmx", "rb") as file:
-                
-                container_run.test_file = File(file, "test.jmx")
-                container_run.save()
-                
-                
-            print("STARTING CONTAINER")
-            start_jmeter_test2(name,volume_path,instance.jthreads_total_user,instance.jrampup_time,container_run)
+            job = Job.objects.create(
+                field_type = f'{instance.type}',
+                performance_test_suite = instance,
+                job_status = f"queued",
+                agent = agent
+            )
             
         return Response({
             "status":   "success",
+            "message": "queued",
             "data":self.get_serializer(instance).data
         })            
 

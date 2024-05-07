@@ -30,10 +30,12 @@ class PrivateLocationSerializer(serializers.ModelSerializer):
         ]
         
 class NewAgentSerializer(serializers.ModelSerializer):
+    # location = serializers.PrimaryKeyRelatedField(queryset=PrivateLocation.objects.all())
     class Meta:
         model = Agent
         fields = [
             'id',
+            'location',
             'ref',
             'name',
             'agent_address',
@@ -44,6 +46,10 @@ class NewAgentSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['location'] = PrivateLocationSerializer(instance.location).data
+        return response
 
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,7 +91,7 @@ class JobSerializer(serializers.ModelSerializer):
     # agent = AgentSerializer(read_only=True)
     performance_details = PerformaceTestSuiteSerializer(source='performance_test_suite',read_only=True)
     test_suite_details = TestSuiteSerializer(source='test_suite',read_only=True)
-    agent_details = AgentSerializer(source='agent', read_only=True)
+    agent_details = NewAgentSerializer(source='agent', read_only=True)
     container_run = serializers.SerializerMethodField()
     cypress_container_run = serializers.SerializerMethodField()
     class Meta:
@@ -130,27 +136,27 @@ class JobSerializer(serializers.ModelSerializer):
             }
         except CypressContainersRun.DoesNotExist:
             return None     
-    def create(self, validated_data):
-        field_type = validated_data.pop('field_type')
-        performance_test_suite_data = validated_data.pop('performance_test_suite', None)
-        test_suite_data = validated_data.pop('test_suite', None)
+    # def create(self, validated_data):
+    #     field_type = validated_data.pop('field_type')
+    #     performance_test_suite_data = validated_data.pop('performance_test_suite', None)
+    #     test_suite_data = validated_data.pop('test_suite', None)
 
-        if field_type == 'jmeter' and performance_test_suite_data:
-            container_run = TestContainersRuns.objects.create(
-            suite = performance_test_suite_data,
-            container_status= f"pending"
-            )
-            container_run.container_name =  f"{performance_test_suite_data.name}-{container_run.ref}"
-            container_run.client_reference_id = performance_test_suite_data.client_reference_id
-            container_run.save()
-            job = Job.objects.create(performance_test_suite=performance_test_suite_data, **validated_data)
-        elif field_type == 'testlab':
-            test_suite = TestSuite.objects.get(pk=test_suite_data.pk)
-            container_run = CypressContainersRun.objects.create(
-                suite = test_suite,
-                container_status = f'pending'
-            )
-            container_run.container_name = f"{test_suite_data.name}-{container_run.ref}"
-            container_run.save()
-            job = Job.objects.create(test_suite=test_suite, **validated_data)
-        return job
+    #     if field_type == 'jmeter' and performance_test_suite_data:
+    #         container_run = TestContainersRuns.objects.create(
+    #         suite = performance_test_suite_data,
+    #         container_status= f"pending"
+    #         )
+    #         container_run.container_name =  f"{performance_test_suite_data.name}-{container_run.ref}"
+    #         container_run.client_reference_id = performance_test_suite_data.client_reference_id
+    #         container_run.save()
+    #         job = Job.objects.create(performance_test_suite=performance_test_suite_data, **validated_data)
+    #     elif field_type == 'testlab':
+    #         test_suite = TestSuite.objects.get(pk=test_suite_data.pk)
+    #         container_run = CypressContainersRun.objects.create(
+    #             suite = test_suite,
+    #             container_status = f'pending'
+    #         )
+    #         container_run.container_name = f"{test_suite_data.name}-{container_run.ref}"
+    #         container_run.save()
+    #         job = Job.objects.create(test_suite=test_suite, **validated_data)
+    #     return job
