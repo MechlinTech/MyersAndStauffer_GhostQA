@@ -299,13 +299,6 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         self.perform_create(serializer)
         instance = serializer.instance
 
-        
-        # container_run = TestContainersRuns.objects.create(
-        #     suite = instance
-        # )
-        # container_run.container_name =  f"{instance.name}-{container_run.ref}"
-        # container_run.container_status =  f"pending"
-        # container_run.save()
         try: # TODO we don't need this any more. Need to confirm from Diljot regarding this.
             # Use request_json directly
             tests = instance.request_json
@@ -316,20 +309,7 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
                 "yaml": None
             }, status=400)
         
-        # BASE_DIR  = settings.BASE_DIR
-        # CYPRESS_CONFIG_PATH = os.path.abspath(os.path.join(BASE_DIR,"cypress","cypress"))
-        # name = container_run.container_name
         
-        # volume_path = f"/automation-tests/{name}/cypress"
-        # volume_path = get_full_path(volume_path)
-        # volume_path = convert_to_unix_path(volume_path)
-        # if settings.SHARED_PATH:
-        #         volume_path = f"{settings.SHARED_PATH}/{name}/cypress"
-        # print(f"{__name__}: volume_path: {volume_path}")
-        
-        # create_directory(f"{volume_path}")
-        # copy_files_and_folders(CYPRESS_CONFIG_PATH,volume_path)       
-        # create_directory(f"{volume_path}/e2e/cypress/e2e/")
         cypress_code = []
         cypress_dict = {}
    
@@ -348,12 +328,6 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             # result_cypress_code = format_javascript(cypress_code)
             cypress_code.append(result_cypress_code)
             cypress_dict[f"{suites['name']}.cy.js"] = result_cypress_code
-         
-            # with open(
-            #         f"{volume_path}/e2e/cypress/e2e/{suites['name']}.cy.js", "w"
-            #     ) as cypress_test_file:
-
-            #         cypress_test_file.write(result_cypress_code)
         
 
         instance.cypress_code = json.dumps(cypress_dict)

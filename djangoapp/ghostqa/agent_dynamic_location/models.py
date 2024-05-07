@@ -30,6 +30,7 @@ class PrivateLocation(models.Model):
     
 
 class Agent(models.Model):
+    location = models.ForeignKey(PrivateLocation, on_delete=models.CASCADE, blank=True, null=True, related_name='location')
     ref = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=100, unique=True, blank=True, null=True)
     agent_address = models.CharField(max_length=100, blank=True, null=True)
@@ -70,7 +71,7 @@ class Job(models.Model):
         ('pending', 'Pending'),
         ('completed', 'Completed')
     ]
-    agent = models.ForeignKey(AgentDetails, on_delete=models.CASCADE, related_name='agent_details')
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE, related_name='agent')
     performance_test_suite = models.ForeignKey(PerformaceTestSuite, on_delete=models.CASCADE, blank=True, null=True)
     test_suite = models.ForeignKey(TestSuite, on_delete=models.CASCADE, blank=True, null=True)
     job_id = models.CharField(max_length=36, unique=True, default=uuid.uuid4, editable=False)
