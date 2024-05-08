@@ -79,6 +79,23 @@ class ActionSerializer(serializers.Serializer):
     option = serializers.CharField(required=False, allow_null=True)
     assertType = serializers.CharField(required=False, allow_null=True)
     value = serializers.CharField(required=False, allow_null=True)
+    x_position = serializers.CharField(required=False, allow_null=True)
+    y_position = serializers.CharField(required=False, allow_null=True)
+    assertType = serializers.CharField(required=False, allow_null=True)
+    drag_selector = serializers.CharField(required=False, allow_null=True)
+    drop_selector = serializers.CharField(required=False, allow_null=True)
+    form_selector = serializers.CharField(required=False, allow_null=True)
+    file_path = serializers.CharField(required=False, allow_null=True)
+    url = serializers.CharField(required=False, allow_null=True)
+    property_name = serializers.CharField(required=False, allow_null=True)
+    attribute = serializers.CharField(required=False, allow_null=True)
+    expected_value = serializers.CharField(required=False, allow_null=True)
+    expected_title = serializers.CharField(required=False, allow_null=True)
+    expected_url = serializers.CharField(required=False, allow_null=True)
+    expected_length = serializers.CharField(required=False, allow_null=True)
+    prop_name = serializers.CharField(required=False, allow_null=True)
+    attribute_name = serializers.CharField(required=False, allow_null=True)
+    expected_text = serializers.CharField(required=False, allow_null=True)
     
     
 
