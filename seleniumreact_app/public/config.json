@@ -1,6 +1,6 @@
 {
-  "REACT_APP_BASE_URL": "/api",
+  "REACT_APP_BASE_URL": "https://codearrest.dyndns.org:3006/api",
+  "coreEngineBaseUrl": "http://65.1.188.67:8010",
   "REACT_TESTSUITE_VIDEO_URL": "",
-  "REACT_TESTSUITE_IMAGE_URL": "",
-  "coreEngineBaseUrl": ""
+  "REACT_TESTSUITE_IMAGE_URL": ""
 }
