@@ -36,8 +36,12 @@ BEGIN TRY
 														END
 													)
 												) [text],
+												
 										tsd.[StepDescription] [name],
-										tsd.[IsOptional]
+										tsd.[IsOptional],
+										CASE WHEN tsd.[Action] = 'type' OR tsd.[Action] = 'Wait' THEN tsd.[TextValue] ELSE NULL END AS [duration],
+										(CASE WHEN tsd.[Action] = 'scroll_to_window' THEN SUBSTRING(tsd.[ScrollPixel], CHARINDEX('(', tsd.[ScrollPixel]) + 1, CHARINDEX(',', tsd.[ScrollPixel]) - CHARINDEX('(', tsd.[ScrollPixel]) - 1) END) [x_position],
+                                                (CASE WHEN tsd.[Action] = 'scroll_to_window' THEN SUBSTRING(tsd.[ScrollPixel], CHARINDEX(',', tsd.[ScrollPixel]) + 1, CHARINDEX(')', tsd.[ScrollPixel]) - CHARINDEX(',', tsd.[ScrollPixel]) - 1) END) [y_position]
 					FROM tbl_TestStepsDetails tsd
 					WHERE tsd.[TestCaseDetailsId] = tcd.[TestCaseDetailsId]
 				FOR JSON PATH))
