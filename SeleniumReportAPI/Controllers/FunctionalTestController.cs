@@ -118,5 +118,17 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetAllActiveUserDetails());
         }
+
+        /// <summary>
+        /// Add Functional Test Case
+        /// </summary>
+        /// <param name="FunctionalTestRun"></param>
+        /// <returns></returns>
+        [HttpPost("AddFunctionalTestRun")]
+        public async Task<ActionResult> AddFunctionalTestRun(FunctionalTestRun model)
+        {
+            var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            return Ok(await _helper.AddFunctionalTestRun(model, CreatedBy));
+        }
     }
 }
