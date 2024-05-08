@@ -26,7 +26,7 @@ PROC EXEC		:  EXEC stp_AddExecuteData
 BEGIN TRY
 	BEGIN
 		INSERT INTO [dbo].[tbl_CypressTestExecution] ([TestSuite], [TestCaseId], [TestCaseDetailsId], [TestCaseName], [Status], [StartDateTime],
-		[EndDateTime], [TestStepJson], [SuiteDuration], [TestDuration], [TestScreenShotUrl], [TesterName], [TestVideoUrl]) 
+		[EndDateTime], [TestStepJson], [SuiteDuration], [TestDuration], [TestScreenShotUrl], [TesterName], [TestVideoUrl], [ContainerLog]) 
 		VALUES (@TestSuite, @TestCase, @TestCaseDetailsId, @TestCaseName, @Status, @StartDateTime, @EndDateTime, @TestStepJson, @SuiteDuration, @TestDuration,
 		@TestScreenShot, @TesterName, @TestVideoUrl, @ContainerLog)
 		IF @@ERROR = 0
@@ -850,7 +850,7 @@ BEGIN TRY
 	BEGIN
 		IF NOT EXISTS( SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId)
 		BEGIN
-			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, Description) 
+			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, [Description], [TestUserId]) 
 			VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description, @TestUserId)
 		END
 		ELSE
@@ -3076,7 +3076,7 @@ BEGIN TRY
 			CONVERT(datetimeoffset, TestSuiteStartDateTime), CONVERT(datetimeoffset, TestSuiteEndDateTime),
 			CONVERT(datetimeoffset, TestRunStartDateTime), CONVERT(datetimeoffset, TestRunEndDateTime),
 			TestCaseSteps, TesterName, TestEnvironment
-		FROM OPENJSON(@DynamicObject) WITH (
+		FROM OPENJSON(@TestSuiteJson) WITH (
 			TestSuiteName NVARCHAR(100),
 			TestRunName NVARCHAR(100),
 			TestCaseName NVARCHAR(100),
