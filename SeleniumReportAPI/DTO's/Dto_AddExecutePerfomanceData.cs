@@ -23,7 +23,7 @@ namespace SeleniumReportAPI.DTO_s
         [JsonProperty("ref")]
         public string reference { get; set; }
         public List<RunArtifacts> runs_artifacts { get; set; }
-        public Json json { get; set; }
+        public object json { get; set; }
         public int suite { get; set; }
         public List<PerformanceData> raw_data { get; set; }
         public string client_reference_id { get; set;}
