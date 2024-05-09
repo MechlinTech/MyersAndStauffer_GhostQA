@@ -18,6 +18,8 @@ import RequestState from "../pages/Performance/Result/ResultDetails/RequestState
 import CompareGraph from "../pages/Performance/Component/Compare/CompareGraph";
 import InitialSetup from "../pages/Performance/Result/ResultDetails/InitialSetup/index";
 import TestCase from "../pages/TestCase";
+import Location from "../pages/MainSettings/Component/Performance/Location";
+import Integration from "../pages/MainSettings/Component/Performance/Integration";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
@@ -40,6 +42,7 @@ const AddTestSuite = lazy(() => import("../pages/TestSuite/AddTestSuite"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 const TestLab = lazy(() => import("../pages/TestLab/TestLab"));
 const Performance = lazy(() => import("../pages/Performance/Performance"));
+const MainSettings = lazy(() => import("../pages/MainSettings"));
 
 export default function Navigations() {
   return (
@@ -69,6 +72,18 @@ export default function Navigations() {
             <Route path="User" element={<UserManagement />} />
             <Route path="test-user" element={<TestUser />} />
           </Route>
+          <Route path="main-settings" element={<MainSettings />}>
+            <Route path="location" element={<Location />} />
+            <Route
+              path="integration"
+              element={<Integration />}
+            />
+            <Route path="Application" element={<Application />} />
+            <Route
+              path="Application/Sub-Application"
+              element={<RoleManagement />}
+            />
+          </Route>
           <Route path="testLab" element={<TestLab />} />
           <Route path="testLab/:nodeId" element={<TestLab />} />
           <Route
@@ -81,16 +96,30 @@ export default function Navigations() {
             element={<EditTestCase />}
           />
           <Route path="testcase" element={<TestCase />} />
-
         </Route>
         <Route path="performance" element={<Performance />}></Route>
         <Route path="/result" element={<Results />}>
-          <Route path="/result/:rootId/:tab/summary/:runId?" element={<Summary />} />
-          <Route path="/result/:rootId/:tab/error/:runId?" element={<Error />} />
-          <Route path="/result/:rootId/:tab/initial-setup/:runId?" element={<InitialSetup />} />
-          <Route path="/result/:rootId/:tab/request-state/:runId?" element={<RequestState />} />
+          <Route
+            path="/result/:rootId/:tab/summary/:runId?"
+            element={<Summary />}
+          />
+          <Route
+            path="/result/:rootId/:tab/error/:runId?"
+            element={<Error />}
+          />
+          <Route
+            path="/result/:rootId/:tab/initial-setup/:runId?"
+            element={<InitialSetup />}
+          />
+          <Route
+            path="/result/:rootId/:tab/request-state/:runId?"
+            element={<RequestState />}
+          />
         </Route>
-        <Route path="performance/compare/:compareName" element={<CompareGraph/>}/>
+        <Route
+          path="performance/compare/:compareName"
+          element={<CompareGraph />}
+        />
         <Route path="api" element={<Api />}>
           <Route
             path=""

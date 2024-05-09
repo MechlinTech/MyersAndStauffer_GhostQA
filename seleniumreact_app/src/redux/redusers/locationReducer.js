@@ -5,6 +5,8 @@ import {
   ADD_LOCATION,
   DELETE_LOCATION,
   UPDATE_LOCATION,
+  GET_LOCATION_LISTS,
+  DELETE_LOCATION_SETTING
 } from "../actions/locationAction";
 
 const initialState = {
@@ -13,6 +15,7 @@ const initialState = {
   totalTrafficPercent: 0,
   error: null,
   isLoading: false,
+  locationList: []
 };
 
 const locationReducer = (state = initialState, action) => {
@@ -106,7 +109,19 @@ const locationReducer = (state = initialState, action) => {
           return item;
         }),
       };
-    }
+    };
+    case GET_LOCATION_LISTS:
+      return {
+        ...state,
+        locationList: action.payload,
+      };
+      case DELETE_LOCATION_SETTING:
+        return {
+          ...state,
+          locationList: state.locationList.filter(
+            (item) => item.ref !== action.payload
+          ),
+        };
     default:
       return state;
   }
