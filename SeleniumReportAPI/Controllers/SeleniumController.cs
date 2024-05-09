@@ -238,6 +238,7 @@ namespace SeleniumReportAPI.Controllers
                     }
                 }
             }
+            _result.Add(new { status = "Finished", message = "Test Suite execution completed!" });
             return Ok(_result);
         }
 

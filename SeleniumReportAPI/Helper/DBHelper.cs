@@ -3492,5 +3492,44 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+
+        internal async Task<string> AddFunctionalTestRun(FunctionalTestRun model, string createdBy)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddFunctionalTestRun", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@TestRunName", model.TestRunName);
+                        command.Parameters.AddWithValue("@TestRunDescription", model.TestRunDescription);
+                        command.Parameters.AddWithValue("@BuildVersion", model.BuildVersion);
+                        command.Parameters.AddWithValue("@Environment", model.Environment);
+                        command.Parameters.AddWithValue("@Milestone", model.Milestone);
+                        command.Parameters.AddWithValue("@AssignedTo", model.AssignedTo);
+                        command.Parameters.AddWithValue("@TestCases", model.TestCases);
+                        command.Parameters.AddWithValue("@CreatedBy", createdBy);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
     }
 }

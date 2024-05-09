@@ -52,12 +52,12 @@ export const UpdateTestStepsDetails = async (payload, savetoEdit) => {
             payload
         );
         if (res.data.status === "success") {
-            toast.info("Successfully updated steps", {
-                style: {
-                    background: "rgb(101, 77, 247)",
-                    color: "rgb(255, 255, 255)",
-                },
-            });
+            // toast.info("Successfully updated ", {
+            //     style: {
+            //         background: "rgb(101, 77, 247)",
+            //         color: "rgb(255, 255, 255)",
+            //     },
+            // });
             savetoEdit();
         }
     } catch (error) {
@@ -83,12 +83,52 @@ export const UpdateTestCaseDetail = async (payload) => {
                     color: "rgb(255, 255, 255)",
                 },
             });
+        }else{
+            toast.error(res.data.message)
         }
     } catch (error) {
         console.log("error saving ", error);
         toast.error("Network error");
     }
 
+};
+
+export const updateTestDetails = async (testcase,payload, savetoEdit) => {
+    try {
+        const BASE_URL = await getBaseUrl();
+        let res1, res2;
+
+        // Call to UpdateTestStepsDetails
+        res1 = await axios.post(
+            `${BASE_URL}/AddTestLab/AddTestStepsDetails`,
+            payload
+        );
+
+        // Call to UpdateTestCaseDetail
+        res2 = await axios.post(
+            `${BASE_URL}/AddTestLab/UpdateTestCaseDetails`,
+            testcase
+        );
+
+        
+
+        if (res2.data.status === "success") {
+            toast.info("Successfully updated testcase", {
+                style: {
+                    background: "rgb(101, 77, 247)",
+                    color: "rgb(255, 255, 255)",
+                },
+            });
+        } else {
+            toast.error(res2.data.message);
+        }
+        if (res1.data.status === "success" && res2.data.status === "success") {
+            savetoEdit(); 
+        }
+    } catch (error) {
+        console.log("error saving ", error);
+        toast.error("Network error");
+    }
 };
 
 export const SaveAndExecute = async (data, steps, testCaseDetailId, handleExecuteLoading) => {
@@ -102,7 +142,7 @@ export const SaveAndExecute = async (data, steps, testCaseDetailId, handleExecut
         const testCaseDetail = updateRes.data.Data[0]
         if (updateRes.data.status === "success") {
             // Toast message for saving the testcase
-            toast.info("Successfully saved testcase", {
+            toast.info("Successfully saved", {
                 style: {
                     background: "rgb(101, 77, 247)",
                     color: "rgb(255, 255, 255)",
@@ -112,17 +152,17 @@ export const SaveAndExecute = async (data, steps, testCaseDetailId, handleExecut
             toast.error("Failed to save testcase");
         }
 
-        if (addStepsRes.data.status === "success") {
-            // Toast message for saving the steps
-            toast.info("Successfully saved steps", {
-                style: {
-                    background: "rgb(101, 77, 247)",
-                    color: "rgb(255, 255, 255)",
-                },
-            });
-        } else {
-            toast.error("Failed to save steps");
-        }
+        // if (addStepsRes.data.status === "success") {
+        //     // Toast message for saving the steps
+        //     toast.info("Successfully saved steps", {
+        //         style: {
+        //             background: "rgb(101, 77, 247)",
+        //             color: "rgb(255, 255, 255)",
+        //         },
+        //     });
+        // } else {
+        //     toast.error("Failed to save steps");
+        // }
 
         const jsonData = await axios.get(`${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${testCaseDetail.rootId}&TestName=${testCaseDetail.testCaseName}`);
         const payload = { name: "name", request_json: jsonData.data };

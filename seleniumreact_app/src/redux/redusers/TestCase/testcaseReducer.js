@@ -121,6 +121,7 @@ const testcaseReducer = (state = initialState, action) => {
           expanded: [...(state.expanded || []), id],
         };
       }
+      return state
     }
     default:
       return state;

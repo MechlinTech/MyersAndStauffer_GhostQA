@@ -8,7 +8,6 @@ import { useStyles, StyledTableCell } from "./styles";
 
 export function RequestStateTable({ data }) {
   const classes = useStyles();
-
   return (
     <TableContainer>
       <Table>
