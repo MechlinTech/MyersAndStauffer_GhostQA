@@ -68,7 +68,12 @@ namespace SeleniumReportAPI.DTO_s
         public int count { get; set; }
     }
 
-    public class ErrorGroupData { }
+    public class ErrorGroupData 
+    {
+        public int code { get; set; }
+        public string description { get; set; }
+        public int count { get; set; }
+    }
 
     public class Json
     {
