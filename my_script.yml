@@ -1,0 +1,11 @@
+docker run -d \
+  --name my-django-app \
+  -e DJANGO_DEBUG=True \
+  --net=host \
+  ghostqa/agent:latest \
+  python main.py
+
+
+
+docker run -d --name my-django-app -e DJANGO_DEBUG=True --net=host ghostqa/agent:latest python Agent/main.py
+docker run -d --name my-django-app -e DJANGO_DEBUG=True --net=host agent-web:latest python Agent/main.py

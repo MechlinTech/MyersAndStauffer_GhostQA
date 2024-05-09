@@ -1,7 +1,22 @@
+import os
 import requests, json
-BASE_URL = 'http://app.ghostqa.com'
-def get_job_to_execute():
-    api_url = f'{BASE_URL}/codeengine/api/remote-agent-connection-job/queued_job/'
+import logging
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Configure the logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+
+# BASE_URL = 'http://app.ghostqa.com'
+BASE_URL = os.getenv('BASE_URL')
+
+
+
+def get_job_to_execute(agent_id):
+    api_url = f'{BASE_URL}/codeengine/api/agent-job/queued_job/?agent_id={agent_id}'
 
     try:
         response = requests.get(api_url)
@@ -10,7 +25,8 @@ def get_job_to_execute():
         print(json.dumps(job_data, indent=4))
         return job_data
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching job data: {e}")
+        logger.error(f"Error fetching job data: {e}")
+        logger.info('No Agent matches the given query.')
         return None
     
 # get_job_to_execute()
@@ -88,7 +104,7 @@ def final_update_container_after_execution(container_run_ref, container_status):
     return response
 
 def update_job_status(job_id, status):
-    job_update_url = f"{BASE_URL}/codeengine/api/remote-agent-connection-job/{job_id}/"
+    job_update_url = f"{BASE_URL}/codeengine/api/agent-job/{job_id}/"
     payload = {
         'job_status': status
     }
