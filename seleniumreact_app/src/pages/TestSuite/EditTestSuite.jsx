@@ -12,7 +12,7 @@ import {
   Card,
   CircularProgress,
 } from "@mui/material";
-import useStyles from "./styles";
+import useStyles, { StyledTypography } from "./styles";
 import clsx from "clsx";
 import Select from "react-select";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -62,6 +62,8 @@ export default function EditTestSuite() {
     useSelector((state) => state.selenium);
   const { testUserList } = useSelector((state) => state.settings);
   const [isExecuting, setisExecuting] = useState(false);
+  const [nameLengthError, setnameLengthError] = useState(false);
+
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
@@ -92,7 +94,9 @@ export default function EditTestSuite() {
     //   );
     // });
     setSelectedTestUser(() => {
-      return testUserList?.find((env) => env.UserId === suiteToEdit?.TestUser?.TestUserId);
+      return testUserList?.find(
+        (env) => env.UserId === suiteToEdit?.TestUser?.TestUserId
+      );
     });
     setDescription(suiteToEdit?.Description);
     // setSelectedRows(() => {
@@ -102,15 +106,15 @@ export default function EditTestSuite() {
     // });
     setSelectedRows(() => {
       const selectedTestCasesArray = suiteToEdit?.SelectedTestCases
-        ? suiteToEdit.SelectedTestCases.split(',')
+        ? suiteToEdit.SelectedTestCases.split(",")
         : [];
-    
+
       return testCasesList.filter((test) =>
-        selectedTestCasesArray.some((selectedTestCase) => selectedTestCase.trim() === test.TestCaseName)
+        selectedTestCasesArray.some(
+          (selectedTestCase) => selectedTestCase.trim() === test.TestCaseName
+        )
       );
     });
-    
-    
   }, [dispatch, suiteToEdit]);
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
@@ -121,7 +125,15 @@ export default function EditTestSuite() {
   };
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    // setName(e.target.value);
+    const inputValue = e.target.value;
+    if (inputValue.length <= 50) {
+      setName(inputValue);
+      setnameLengthError(false);
+      setError((prev) => ({ ...prev, name: "" }));
+    } else {
+      setnameLengthError(true);
+    }
   };
   const handleApplication = (env) => {
     const app = env
@@ -356,10 +368,15 @@ export default function EditTestSuite() {
                               )}
                             />
                           </FormControl>
+                          {nameLengthError && (
+                            <StyledTypography>
+                              Suite name cannot have more than 50 char*
+                            </StyledTypography>
+                          )}
                           {Error.name && (
-                            <Typography className={classes.inputError}>
+                            <StyledTypography>
                               {Error.name}
-                            </Typography>
+                            </StyledTypography>
                           )}
                         </div>
                       </Grid>
@@ -401,7 +418,10 @@ export default function EditTestSuite() {
                               error={Error.description ? true : false}
                               placeholder="Enter description.."
                               value={description}
-                              onChange={(e) => setDescription(e.target.value)}
+                              onChange={(e) => {
+                                setDescription(e.target.value);
+                                setError((prev) => ({ ...prev, description: "" }));
+                              }}
                               InputProps={{
                                 sx: {
                                   "&:hover fieldset": {
@@ -415,9 +435,9 @@ export default function EditTestSuite() {
                             />
                           </FormControl>
                           {Error.description && (
-                            <Typography className={classes.inputError}>
+                            <StyledTypography>
                               {Error.description}
-                            </Typography>
+                            </StyledTypography>
                           )}
                         </div>
                       </Grid>
@@ -503,9 +523,9 @@ export default function EditTestSuite() {
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
                             {Error.environment && (
-                              <Typography className={classes.inputError}>
+                              <StyledTypography>
                                 {Error.environment}
-                              </Typography>
+                              </StyledTypography>
                             )}
                           </div>
                         </Grid>
@@ -595,9 +615,9 @@ export default function EditTestSuite() {
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
                             {Error.test_user && (
-                              <Typography className={classes.inputError}>
+                              <StyledTypography>
                                 {Error.test_user}
-                              </Typography>
+                              </StyledTypography>
                             )}
                           </div>
                         </Grid>

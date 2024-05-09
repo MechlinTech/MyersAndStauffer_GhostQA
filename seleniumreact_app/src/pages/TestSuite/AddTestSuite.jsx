@@ -12,7 +12,7 @@ import {
   Card,
   CircularProgress,
 } from "@mui/material";
-import useStyles from "./styles";
+import useStyles, { StyledTypography } from "./styles";
 import clsx from "clsx";
 import Select from "react-select";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -69,6 +69,7 @@ export default function AddTestSuite() {
   const [selectedRows, setSelectedRows] = useState([]);
   // const [openLoadingModal, setopenLoadingModal] = useState(false);
   const [isExecuting, setisExecuting] = useState(false);
+  const [nameLengthError, setnameLengthError] = useState(false);
 
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
@@ -79,7 +80,15 @@ export default function AddTestSuite() {
   };
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    // setName(e.target.value);
+    const inputValue = e.target.value;
+    if (inputValue.length <= 50) {
+      setName(inputValue);
+      setnameLengthError(false);
+      setError((prev) => ({ ...prev, name: "" }));
+    } else {
+      setnameLengthError(true);
+    }
   };
   const handleApplication = (env) => {
     const app = env
@@ -111,7 +120,7 @@ export default function AddTestSuite() {
       TestSuiteName: name,
       Description: description,
       TestSuiteId: 0,
-      TestUserId:selectedTestUser.UserId,
+      TestUserId: selectedTestUser?.UserId,
       TestSuiteType: selectedSuiteValue,
       ApplicationId: selectedApplication?.ApplicationId,
       SendEmail: selectedRecepentValue === "only-for-me" ? true : false,
@@ -291,10 +300,13 @@ export default function AddTestSuite() {
                               )}
                             />
                           </FormControl>
+                          {nameLengthError && (
+                            <StyledTypography>
+                              Suite name cannot have more than 50 char*
+                            </StyledTypography>
+                          )}
                           {Error.name && (
-                            <Typography className={classes.inputError}>
-                              {Error.name}
-                            </Typography>
+                            <StyledTypography>{Error.name}</StyledTypography>
                           )}
                         </div>
                       </Grid>
@@ -336,7 +348,10 @@ export default function AddTestSuite() {
                               error={Error.description ? true : false}
                               placeholder="Enter description.."
                               value={description}
-                              onChange={(e) => setDescription(e.target.value)}
+                              onChange={(e) => {
+                                setDescription(e.target.value);
+                                setError((prev) => ({ ...prev, description: "" }));
+                              }}
                               InputProps={{
                                 sx: {
                                   "&:hover fieldset": {
@@ -350,9 +365,9 @@ export default function AddTestSuite() {
                             />
                           </FormControl>
                           {Error.description && (
-                            <Typography className={classes.inputError}>
+                            <StyledTypography>
                               {Error.description}
-                            </Typography>
+                            </StyledTypography>
                           )}
                         </div>
                       </Grid>
@@ -434,9 +449,9 @@ export default function AddTestSuite() {
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
                             {Error.environment && (
-                              <Typography className={classes.inputError}>
+                              <StyledTypography>
                                 {Error.environment}
-                              </Typography>
+                              </StyledTypography>
                             )}
                           </div>
                         </Grid>
@@ -526,9 +541,9 @@ export default function AddTestSuite() {
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
                             {Error.test_user && (
-                              <Typography className={classes.inputError}>
+                              <StyledTypography>
                                 {Error.test_user}
-                              </Typography>
+                              </StyledTypography>
                             )}
                           </div>
                         </Grid>
