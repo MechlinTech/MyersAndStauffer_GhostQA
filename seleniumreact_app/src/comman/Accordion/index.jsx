@@ -6,13 +6,16 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { TableData } from "./TableData";
 import { Box, CircularProgress } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { setExpandedAccord } from "../../redux/actions/seleniumAction";
  
 export default function BasicAccordion({ inprogress }) {
-  const { testSuiteLists } = useSelector((state) => state.selenium);
-  const [expandedAccord, setExpandedAccord] = React.useState("");
+  const dispatch = useDispatch()
+  const { testSuiteLists,expandedAccord } = useSelector((state) => state.selenium);
+  // const [expandedAccord, setExpandedAccord] = React.useState("");
   const handleExpandAccord = (panel) => (e, isExpanded) => {
-    setExpandedAccord(isExpanded ? panel : "");
+    // setExpandedAccord(isExpanded ? panel : "");
+    dispatch(setExpandedAccord(isExpanded ? panel : ""))
   };
  
   function formatDateStringWithTime(dateString) {

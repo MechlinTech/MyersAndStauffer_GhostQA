@@ -57,7 +57,7 @@ export const addExecuterData = (data) => {
       receivedKBytesPerSec: 0,
       sentKBytesPerSec: 0,
     };
-
+    let transactions = []
     data.results.forEach((item) => {
       if (item.json && item.json.Total) {
         const total = item.json.Total;
@@ -67,6 +67,18 @@ export const addExecuterData = (data) => {
           }
         }
       }
+      //group by transaction name
+      if (item.json) {
+        transactions = Object.keys(item.json)
+          ?.filter((key) => key !== 'Total' && item.json[key])
+          .map((key) => {
+            const transactionResult = item.json[key];
+            return {
+              ...transactionResult,
+            };
+          });
+      }
+      
       if (item.error_group_data && item.error_group_data.length > 0) {
         errors.push(...item.error_group_data);
       }
@@ -84,6 +96,122 @@ export const addExecuterData = (data) => {
     // }
 
     // Modify the data before sending it in the payload
+    // const modifiedData = {
+    //   results: data.results.map((item) => {
+    //     // Modify the item as usual
+    //     const modifiedItem = {
+    //       ...item,
+    //       // Check if json is not null before accessing its properties
+    //       home_page:
+    //         item.json && item.json.home_page
+    //           ? {
+    //               transaction: item.json.home_page.transaction,
+    //               sample: item.json.home_page.sampleCount,
+    //               errorCount: item.json.home_page.errorCount,
+    //               errorPct: item.json.home_page.errorPct,
+    //               meanResTime:
+    //                 typeof item.json.home_page.meanResTime === "number"
+    //                   ? item.json.home_page.meanResTime.toFixed(2)
+    //                   : null,
+    //               medianResTime:
+    //                 typeof item.json.home_page.medianResTime === "number"
+    //                   ? item.json.home_page.medianResTime.toFixed(2)
+    //                   : null,
+    //               minResTime:
+    //                 typeof item.json.home_page.minResTime === "number"
+    //                   ? item.json.home_page.minResTime.toFixed(2)
+    //                   : null,
+    //               maxResTime:
+    //                 typeof item.json.home_page.maxResTime === "number"
+    //                   ? item.json.home_page.maxResTime.toFixed(2)
+    //                   : null,
+    //               pct1ResTime:
+    //                 typeof item.json.home_page.pct1ResTime === "number"
+    //                   ? item.json.home_page.pct1ResTime.toFixed(2)
+    //                   : null,
+    //               pct2ResTime:
+    //                 typeof item.json.home_page.pct2ResTime === "number"
+    //                   ? item.json.home_page.pct2ResTime.toFixed(2)
+    //                   : null,
+    //               pct3ResTime:
+    //                 typeof item.json.home_page.pct3ResTime === "number"
+    //                   ? item.json.home_page.pct3ResTime.toFixed(2)
+    //                   : null,
+    //               throughput:
+    //                 typeof item.json.home_page.throughput === "number"
+    //                   ? item.json.home_page.throughput.toFixed(2)
+    //                   : null,
+    //               receivedKBytesPerSec:
+    //                 typeof item.json.home_page.receivedKBytesPerSec === "number"
+    //                   ? item.json.home_page.receivedKBytesPerSec.toFixed(2)
+    //                   : null,
+    //               sentKBytesPerSec:
+    //                 typeof item.json.home_page.sentKBytesPerSec === "number"
+    //                   ? item.json.home_page.sentKBytesPerSec.toFixed(2)
+    //                   : null,
+    //             }
+    //           : null,
+    //       Total:
+    //         item.json && item.json.Total
+    //           ? {
+    //               transaction: item.json.Total.transaction,
+    //               sample: item.json.Total.sampleCount,
+    //               errorCount: item.json.Total.errorCount,
+    //               errorPct: item.json.Total.errorPct,
+    //               meanResTime:
+    //                 typeof item.json.Total.meanResTime === "number"
+    //                   ? item.json.Total.meanResTime.toFixed(2)
+    //                   : null,
+    //               medianResTime:
+    //                 typeof item.json.Total.medianResTime === "number"
+    //                   ? item.json.Total.medianResTime.toFixed(2)
+    //                   : null,
+    //               minResTime:
+    //                 typeof item.json.Total.minResTime === "number"
+    //                   ? item.json.Total.minResTime.toFixed(2)
+    //                   : null,
+    //               maxResTime:
+    //                 typeof item.json.Total.maxResTime === "number"
+    //                   ? item.json.Total.maxResTime.toFixed(2)
+    //                   : null,
+    //               pct1ResTime:
+    //                 typeof item.json.Total.pct1ResTime === "number"
+    //                   ? item.json.Total.pct1ResTime.toFixed(2)
+    //                   : null,
+    //               pct2ResTime:
+    //                 typeof item.json.Total.pct2ResTime === "number"
+    //                   ? item.json.Total.pct2ResTime.toFixed(2)
+    //                   : null,
+    //               pct3ResTime:
+    //                 typeof item.json.Total.pct3ResTime === "number"
+    //                   ? item.json.Total.pct3ResTime.toFixed(2)
+    //                   : null,
+    //               throughput:
+    //                 typeof item.json.Total.throughput === "number"
+    //                   ? item.json.Total.throughput.toFixed(2)
+    //                   : null,
+    //               receivedKBytesPerSec:
+    //                 typeof item.json.Total.receivedKBytesPerSec === "number"
+    //                   ? item.json.Total.receivedKBytesPerSec.toFixed(2)
+    //                   : null,
+    //               sentKBytesPerSec:
+    //                 typeof item.json.Total.sentKBytesPerSec === "number"
+    //                   ? item.json.Total.sentKBytesPerSec.toFixed(2)
+    //                   : null,
+    //             }
+    //           : null,
+    //     };
+
+    //     // Remove json key if it exists
+    //     if (modifiedItem.json) delete modifiedItem.json;
+
+    //     return modifiedItem;
+    //   }),
+    //   summary: totals,
+    //   error: errors,
+    //   success: successes,
+    // };
+
     const modifiedData = {
       results: data.results.map((item) => {
         // Modify the item as usual
@@ -198,6 +326,7 @@ export const addExecuterData = (data) => {
       summary: totals,
       error: errors,
       success: successes,
+      transactions:transactions
     };
 
     return {

@@ -16,6 +16,9 @@ export const ADD_UPDATE_TEST_SUITS = "ADD_UPDATE_TEST_SUITS";
 export const SUITE_TO_EDIT = "SUITE_TO_EDIT";
 export const ADD_TEST_SUITE = "ADD_TEST_SUITE";
 export const EXECUTING_SUITE= "EXECUTING_SUITE"
+export const SELECETED_SUITE= "SELECETED_SUITE"
+export const SELECETED_TAB= "SELECETED_TAB"
+export const EXPANDED_ACC= "EXPANDED_ACC"
 // const BASE_URL = process.env.REACT_APP_BASE_URL || 'api';
 
 export const getTestSuites = () => {
@@ -292,6 +295,26 @@ export const setExecutingSuite = (suiteName)=>{
   return {
     type:EXECUTING_SUITE,
     payload:suiteName
+  }
+}
+export const setSelectedSuite = (suiteName)=>{
+  return {
+    type:SELECETED_SUITE,
+    payload:suiteName
+  }
+}
+
+export const setSelectedTab = (tabNo)=>{
+  return {
+    type:SELECETED_TAB,
+    payload:tabNo
+  }
+}
+
+export const setExpandedAccord = (acc)=>{
+  return {
+    type: EXPANDED_ACC,
+    payload:acc
   }
 }
 export const Getsuitebyname = (suitName) => {

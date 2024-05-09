@@ -9,6 +9,8 @@ import {
   ExecuteTestCasesByTestSuite,
   Getsuitebyname,
   setExecutingSuite,
+  setSelectedSuite,
+  setSelectedTab,
 } from "../../redux/actions/seleniumAction";
 import { useDispatch, useSelector } from "react-redux";
 import Tab from "@mui/material/Tab";
@@ -31,10 +33,10 @@ export default function Dashboard() {
   const classess = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { testSuits, testSuiteAdded,executingSuite } = useSelector((state) => state.selenium);
-  const [selectedSuite, setSelectedSuite] = useState(null);
+  const { testSuits, testSuiteAdded,executingSuite,selectedSuite,selectedTab } = useSelector((state) => state.selenium);
+  // const [selectedSuite, setSelectedSuite] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [tabNo, setTabNo] = useState("1");
+  // const [tabNo, setTabNo] = useState("1");
   const [openModal, setOpenModal] = useState(false);
   const [openDelModal, setopenDelModal] = useState(false);
   const [suitToDelete, setsuitToDelete] = useState("");
@@ -59,7 +61,8 @@ export default function Dashboard() {
   };
  
   const handleTabChange = (event, newValue) => {
-    setTabNo(newValue);
+    // setTabNo(newValue);
+    dispatch(setSelectedTab(newValue))
   };
  
   const tabLableStyle = {
@@ -89,7 +92,8 @@ export default function Dashboard() {
  
   const handlePaperClick = (suite) => {
     let data = suite.TestSuiteName;
-    setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
+    // setSelectedSuite((prevSuite) => (prevSuite === suite ? null : suite));
+    dispatch(setSelectedSuite(data))
     dispatch(getTestCaseRundetailsByTestName(data,setInProgress));
   };
   const handleEditClick = (suite) => {
@@ -187,7 +191,7 @@ export default function Dashboard() {
                   <Paper
                     key={suite.TestSuiteName}
                     className={`${classess.paper} ${
-                      selectedSuite === suite ? classess.paperActive : ""
+                      selectedSuite === suite.TestSuiteName ? classess.paperActive : ""
                     }`}
                     onClick={() => handlePaperClick(suite)}
                   >
@@ -203,10 +207,10 @@ export default function Dashboard() {
                           <Tooltip title={suite.TestSuiteName?.length > 30 && suite.TestSuiteName}>
                           <Typography
                             className={`${classess.infoHeader} ${
-                              selectedSuite === suite
+                              selectedSuite === suite.TestSuiteName
                                 ? classess.activeColor
                                 : ""
-                            }`}
+                            }`} 
                           >
                             {/* {suite.TestSuiteName} */}
                             {suite.TestSuiteName?.length > 30
@@ -225,14 +229,14 @@ export default function Dashboard() {
                                  {executingSuite && executingSuite === suite.TestSuiteName?<CircularProgress size={25} style={{
                                       marginRight: "8px",
                                       color:
-                                        selectedSuite === suite
+                                        selectedSuite === suite.TestSuiteName
                                           ? "#fff"
                                           : "rgb(101, 77, 247)",
                                     }}/>
                                     :<PlayCircleIcon
                                     style={{
                                       marginRight: "8px",
-                                      color: selectedSuite === suite ? "#fff" : "rgb(101, 77, 247)",
+                                      color: selectedSuite === suite.TestSuiteName ? "#fff" : "rgb(101, 77, 247)",
                                       cursor: executingSuite ? "not-allowed" : "pointer",
                                     }}
                                     onClick={ (e) => {
@@ -247,7 +251,7 @@ export default function Dashboard() {
                                   style={{
                                     marginRight: "8px",
                                     color:
-                                      selectedSuite === suite
+                                      selectedSuite === suite.TestSuiteName
                                         ? "#fff"
                                         : "rgb(101, 77, 247)",
                                   }}
@@ -282,7 +286,7 @@ export default function Dashboard() {
                 <Box style={tabLableStyle}>Test Run</Box>
                 <Grid container>
                   <Grid item xs={12} style={{ paddingLeft: "20px" }}>
-                    <TabContext value={tabNo}>
+                    <TabContext value={selectedTab}>
                       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                         <TabList
                           onChange={handleTabChange}
