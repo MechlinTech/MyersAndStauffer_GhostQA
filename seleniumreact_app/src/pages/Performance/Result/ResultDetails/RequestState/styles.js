@@ -11,7 +11,7 @@ export const useStyles = makeStyles({
     width: "100%",
     marginTop: "20px",
     padding: "10px",
-    height: "100vh",
+    minHeight: "100vh",
   },
   RequestStateHeader: {
     display: "flex",

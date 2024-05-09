@@ -11,7 +11,10 @@ import {
   GET_BROWSER_LIST,
   ADD_TEST_SUITE,
   GET_TEST_USER_LIST,
-  EXECUTING_SUITE
+  EXECUTING_SUITE,
+  SELECETED_SUITE,
+  SELECETED_TAB,
+  EXPANDED_ACC
 } from "../actions/seleniumAction";
 
 const initialState = {
@@ -26,7 +29,10 @@ const initialState = {
   testCasesList: [],
   suiteToEdit: null,
   testSuiteAdded: {},
-  executingSuite:null
+  executingSuite:null,
+  selectedSuite:null,
+  selectedTab:"1",
+  expandedAccord:null
 };
 
 const seleniumReduser = (state = initialState, action) => {
@@ -107,6 +113,24 @@ const seleniumReduser = (state = initialState, action) => {
       return {
         ...state,
         executingSuite: action.payload,
+      };
+    }
+    case SELECETED_SUITE: {
+      return {
+        ...state,
+        selectedSuite: action.payload,
+      };
+    }
+    case SELECETED_TAB: {
+      return {
+        ...state,
+        selectedTab: action.payload,
+      };
+    } 
+    case EXPANDED_ACC: {
+      return {
+        ...state,
+        expandedAccord: action.payload,
       };
     }
     default:
