@@ -200,6 +200,7 @@ export default function Dashboard() {
                             justifyContent: "space-between",
                           }}
                         >
+                          <Tooltip title={suite.TestSuiteName?.length > 30 && suite.TestSuiteName}>
                           <Typography
                             className={`${classess.infoHeader} ${
                               selectedSuite === suite
@@ -207,9 +208,12 @@ export default function Dashboard() {
                                 : ""
                             }`}
                           >
-                            {suite.TestSuiteName}
+                            {/* {suite.TestSuiteName} */}
+                            {suite.TestSuiteName?.length > 30
+                              ? suite.TestSuiteName.slice(0, 30) + "..."
+                              : suite.TestSuiteName}
                           </Typography>
- 
+                          </Tooltip>
                           <div
                             style={{
                               display: "flex",
