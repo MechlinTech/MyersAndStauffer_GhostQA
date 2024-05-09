@@ -10,6 +10,7 @@ import {
   StyledFormControl,
   StyledOutlinedInput,
   StyledTextField,
+  useStyles
 } from "./styleTestCase";
 import { keyList, accessibilityList, users } from "../DropDownOptions";
 import Select from "react-select";
@@ -22,6 +23,7 @@ export default function RenderActionFields({
   handleInputChange,
   isEditable,
 }) {
+  const classes = useStyles()
   switch (action) {
     case "type":
       return (
@@ -32,12 +34,15 @@ export default function RenderActionFields({
                 type="text"
                 placeholder="Input value"
                 disabled={!isEditable}
-                error={Errors[index]?.sendKeyInputError}
+                // error={Errors[index]?.sendKeyInputError}
                 value={step?.sendKeyInput}
                 onChange={(e) => {
                   handleInputChange(e, index, "sendKeyInput");
                 }}
               />
+              {Errors[index]?.sendKeyInputError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
             </StyledFormControl>
           </Grid>
         </>
@@ -50,12 +55,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="Window pixel"
               disabled={!isEditable}
-              error={Errors[index]?.scrollPixelError}
+              // error={Errors[index]?.scrollPixelError}
               value={step?.scrollPixel}
               onChange={(e) => {
                 handleInputChange(e, index, "scrollPixel");
               }}
             />
+          {Errors[index]?.scrollPixelError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -67,12 +75,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="URL"
               disabled={!isEditable}
-              error={Errors[index]?.urlError}
+              // error={Errors[index]?.urlError}
               value={step?.url}
               onChange={(e) => {
                 handleInputChange(e, index, "url");
               }}
             />
+          {Errors[index]?.urlError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -84,12 +95,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="Input field"
               disabled={!isEditable}
-              error={Errors[index]?.selectedUserError}
+              // error={Errors[index]?.selectedUserError}
               value={step?.selectedUser}
               onChange={(e) => {
                 handleInputChange(e, index, "selectedUser");
               }}
             />
+          {Errors[index]?.selectedUserError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -101,12 +115,15 @@ export default function RenderActionFields({
               type="file"
               placeholder="File here"
               disabled={!isEditable}
-              error={Errors[index]?.fileNameError}
+              // error={Errors[index]?.fileNameError}
               // value={step?.fileName}  not aplicable for file
               onChange={(e) => {
                 handleInputChange(e, index, "fileName");
               }}
             />
+          {Errors[index]?.fileNameError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -119,11 +136,14 @@ export default function RenderActionFields({
               placeholder="Input value"
               disabled={!isEditable}
               value={step?.elementValue}
-              error={Errors[index]?.elementValueError}
+              // error={Errors[index]?.elementValueError}
               onChange={(e) => {
                 handleInputChange(e, index, "elementValue");
               }}
             />
+          {Errors[index]?.elementValueError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -137,11 +157,14 @@ export default function RenderActionFields({
                 placeholder="css property"
                 disabled={!isEditable}
                 value={step?.cssProperty}
-                error={Errors[index]?.cssPropertyError}
+                // error={Errors[index]?.cssPropertyError}
                 onChange={(e) => {
                   handleInputChange(e, index, "cssProperty");
                 }}
               />
+              {Errors[index]?.cssPropertyError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
             </StyledFormControl>
           </Grid>
           <Grid item xs={6}>
@@ -151,11 +174,14 @@ export default function RenderActionFields({
                 placeholder="css value"
                 disabled={!isEditable}
                 value={step?.cssValue}
-                error={Errors[index]?.cssValueError}
+                // error={Errors[index]?.cssValueError}
                 onChange={(e) => {
                   handleInputChange(e, index, "cssValue");
                 }}
               />
+            {Errors[index]?.cssValueError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
             </StyledFormControl>
           </Grid>
         </>
@@ -168,12 +194,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="Page title"
               disabled={!isEditable}
-              error={Errors[index]?.pageTitleError}
+              // error={Errors[index]?.pageTitleError}
               value={step?.pageTitle}
               onChange={(e) => {
                 handleInputChange(e, index, "pageTitle");
               }}
             />
+          {Errors[index]?.pageTitleError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -186,11 +215,14 @@ export default function RenderActionFields({
               placeholder="Current url"
               value={step?.currentUrl}
               disabled={!isEditable}
-              error={Errors[index]?.currentUrlError}
+              // error={Errors[index]?.currentUrlError}
               onChange={(e) => {
                 handleInputChange(e, index, "currentUrl");
               }}
             />
+          {Errors[index]?.currentUrlError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -202,12 +234,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="input value"
               disabled={!isEditable}
-              error={Errors[index]?.shouldNotEqualError}
+              // error={Errors[index]?.shouldNotEqualError}
               value={step?.shouldNotEqualValue}
               onChange={(e) => {
                 handleInputChange(e, index, "shouldNotEqualValue");
               }}
             />
+          {Errors[index]?.shouldNotEqualError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -219,12 +254,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="input value"
               disabled={!isEditable}
-              error={Errors[index]?.shouldIncludeError}
+              // error={Errors[index]?.shouldIncludeError}
               value={step?.shouldIncludeValue}
               onChange={(e) => {
                 handleInputChange(e, index, "shouldIncludeValue");
               }}
             />
+            {Errors[index]?.shouldIncludeError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -236,12 +274,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="input value"
               disabled={!isEditable}
-              error={Errors[index]?.shouldEqualError}
+              // error={Errors[index]?.shouldEqualError}
               value={step?.shouldEqualValue}
               onChange={(e) => {
                 handleInputChange(e, index, "shouldEqualValue");
               }}
             />
+            {Errors[index]?.shouldEqualError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -253,12 +294,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="input value"
               disabled={!isEditable}
-              error={Errors[index]?.shouldGreaterThanError}
+              // error={Errors[index]?.shouldGreaterThanError}
               value={step?.shouldGreaterThanValue}
               onChange={(e) => {
                 handleInputChange(e, index, "shouldGreaterThanValue");
               }}
             />
+            {Errors[index]?.shouldGreaterThanError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -270,12 +314,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="input value"
               disabled={!isEditable}
-              error={Errors[index]?.shouldLessError}
+              // error={Errors[index]?.shouldLessError}
               value={step?.shouldLessValue}
               onChange={(e) => {
                 handleInputChange(e, index, "shouldLessValue");
               }}
             />
+          {Errors[index]?.shouldLessError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -287,12 +334,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="input value"
               disabled={!isEditable}
-              error={Errors[index]?.containTextError}
+              // error={Errors[index]?.containTextError}
               value={step?.containTextValue}
               onChange={(e) => {
                 handleInputChange(e, index, "containTextValue");
               }}
             />
+          {Errors[index]?.containTextError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -304,12 +354,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="input value"
               disabled={!isEditable}
-              error={Errors[index]?.haveAttributeError}
+              // error={Errors[index]?.haveAttributeError}
               value={step?.haveAttributeValue}
               onChange={(e) => {
                 handleInputChange(e, index, "haveAttributeValue");
               }}
             />
+          {Errors[index]?.haveAttributeError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -321,12 +374,15 @@ export default function RenderActionFields({
               type="text"
               placeholder="Text value"
               disabled={!isEditable}
-              error={Errors[index]?.haveAttributeError}
+              // error={Errors[index]?.haveAttributeError}
               value={step?.textValue}
               onChange={(e) => {
                 handleInputChange(e, index, "textValue");
               }}
             />
+          {Errors[index]?.haveAttributeError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );
@@ -338,12 +394,15 @@ export default function RenderActionFields({
               type="number"
               placeholder="Wait Time(in ms)"
               disabled={!isEditable}
-              error={Errors[index]?.haveAttributeError}
+              // error={Errors[index]?.haveAttributeError}
               value={step?.textValue}
               onChange={(e) => {
                 handleInputChange(e, index, "textValue");
               }}
             />
+          {Errors[index]?.haveAttributeError&& (
+                <span className={classes.errorAsterisk}>*</span>
+              )}
           </StyledFormControl>
         </Grid>
       );

@@ -14,6 +14,8 @@ import { Tooltip } from "@mui/material";
 import { getBaseUrl } from "../../utils/configService";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "./Comman/DeleteModal";
+import { useSelector,useDispatch } from "react-redux";
+import { ExpandParent, setExpandedNodes, setRootId } from "../../redux/actions/testlabAction";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Card = ({
@@ -23,7 +25,7 @@ const Card = ({
   handleCRUDCancel,
   handleKeyPress,
   handleDelete,
-  expanded = [],
+  // expanded = [],
   handleCRUD,
   handleEdit,
   editMode,
@@ -43,11 +45,15 @@ const Card = ({
   setExpandedInputId,
   handleTask,
   keyData = 0,
-  selectedNodeId,
-  setSelectedNodeId,
+  // selectedNodeId,
+  // setSelectedNodeId,
 }) => {
   const styleClass = useStylesTree();
  const navigate = useNavigate()
+ const dispatch = useDispatch()
+ const { expanded,selectedNodeId } = useSelector(
+    (state) => state.testlab
+  );
   return (
     <>
       <ul
@@ -112,10 +118,11 @@ const Card = ({
                     {editMode !== item.id && (
                       <span
                         onClick={() => {
-                          console.log("item", item);
                           handleTask(item, nodeCount);
-                          setSelectedNodeId(item.id); // Update the clicked node ID
-                          navigate(`/testLab/${item.id}`)
+                          // setSelectedNodeId(item.id); // Update the clicked node ID
+                          dispatch(setRootId(item.id))
+                          // navigate(`/testLab/${item.id}`)
+                          toggleExpand(item.id)
                         }}
                         style={{
                           cursor: "pointer",
@@ -247,8 +254,8 @@ const Card = ({
                     handleCRUDCancel={handleCRUDCancel}
                     handleKeyPress={handleKeyPress}
                     handleDelete={handleDelete}
-                    selectedNodeId={selectedNodeId}
-                    setSelectedNodeId={setSelectedNodeId}
+                    // selectedNodeId={selectedNodeId}
+                    // setSelectedNodeId={setSelectedNodeId}
                   />
                 )}
               </li>
@@ -263,23 +270,27 @@ const Card = ({
 
 const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   const styleClass = useStylesTree();
-  const [selectedNodeId, setSelectedNodeId] = useState(null);
+  const dispatch = useDispatch()
+  const { expanded,selectedNodeId } = useSelector(
+    (state) => state.testlab
+  );
+  // const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
   const [editData, setEditData] = useState(""); // State to store the value of the input field
   const [editMode, setEditMode] = useState(0); // State to store the value of the input field
-  const [expanded, setExpanded] = useState([]);
+  // const [expanded, setExpanded] = useState([]);
   const [newElementName, setNewElementName] = useState("");
   const [openDelModal, setopenDelModal] = useState(false);
   const [deleteItem, setsDeleteItem] = useState("");
 
-  useEffect(() => {
-    if (params !== null && params !== undefined) {
-    const nodeId = parseInt(params)
-    setSelectedNodeId(nodeId);
-    }
+  // useEffect(() => {
+  //   if (params !== null && params !== undefined) {
+  //   const nodeId = parseInt(params)
+  //   setSelectedNodeId(nodeId);
+  //   }
     
-  }, [params]);
+  // }, [params]);
 
   useEffect(()=>{
     if (selectedNodeId) {
@@ -293,7 +304,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
           parentid = parentNode.parentId
         }
         parentids.unshift(parentid)
-        setExpanded([...parentids]);
+        // setExpanded([...parentids]);
         const nodeCount = findDepth(expandedNode,listData)
         TestCaseHandle(expandedNode,nodeCount-1)
       }
@@ -363,7 +374,8 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
         toast.error("Duplicate name")
       }else{
         setListData([...listData, response.data.Data[0]]); // Reset form data
-        setSelectedNodeId(response.data.Data[0].id)
+        // setSelectedNodeId(response.data.Data[0].id)
+        dispatch(setRootId(response.data.Data[0].id))
       }
       // setListData([...listData, response.data.Data[0]]); // need to check the response
       // setSelectedNodeId(response.data.Data[0].id);
@@ -387,7 +399,8 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
             new: "new",
           };
           handleCRUDAtParent(newItem);
-          setExpanded([...expanded, parentId]);
+          // setExpanded([...expanded, parentId]);
+          dispatch(ExpandParent(parentId))
           setNewElementName("");
         }
       } else {
@@ -459,11 +472,12 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   };
 
   const toggleExpand = (id) => {
-    if (expanded.includes(id)) {
-      setExpanded(expanded.filter((item) => item !== id));
-    } else {
-      setExpanded([...expanded, id]);
-    }
+    // if (expanded.includes(id)) {
+    //   setExpanded(expanded.filter((item) => item !== id));
+    // } else {
+    //   setExpanded([...expanded, id]);
+    // }
+    dispatch(setExpandedNodes(id));
   };
   const handleCRUDCancel = () => {
     setNewElementName("");
@@ -578,8 +592,8 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
             handleKeyPress={handleKeyPress}
             // handleDelete={handleDelete}
             handleDelete={handleDeleTeModal}
-            selectedNodeId={selectedNodeId}
-            setSelectedNodeId={setSelectedNodeId}
+            // selectedNodeId={selectedNodeId}
+            // setSelectedNodeId={setSelectedNodeId}
           />
         )}
       </div>

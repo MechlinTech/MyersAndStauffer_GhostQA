@@ -58,8 +58,9 @@ export default function EditTestSuite() {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   // const [openLoadingModal, setopenLoadingModal] = useState(false);
-  const { applicationList, environementList, suiteToEdit, testCasesList } =
+  const { applicationList, environementList, suiteToEdit, testCasesList,executingSuite} =
     useSelector((state) => state.selenium);
+
   const { testUserList } = useSelector((state) => state.settings);
   const [isExecuting, setisExecuting] = useState(false);
   const [nameLengthError, setnameLengthError] = useState(false);
@@ -162,7 +163,7 @@ export default function EditTestSuite() {
     let payload = {
       TestSuiteName: name,
       Description: description,
-      TestSuiteId: suiteToEdit.TestSuiteId,
+      TestSuiteId: suiteToEdit?.TestSuiteId,
       TestSuiteType: selectedSuiteValue,
       TestUserId: selectedTestUser.UserId,
       ApplicationId: selectedApplication?.ApplicationId,
@@ -824,7 +825,7 @@ export default function EditTestSuite() {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleSubmit("SaveAndExecute")}
-                    // disabled={isExecuting}
+                    disabled={executingSuite?true:false}
                     sx={{
                       backgroundColor: "rgb(101, 77, 247)",
                       "&:hover": {
@@ -833,7 +834,7 @@ export default function EditTestSuite() {
                       },
                     }}
                   >
-                    {!isExecuting ? (
+                    {/* {!isExecuting ? (
                       "Save & Execute"
                     ) : (
                       <CircularProgress
@@ -843,7 +844,8 @@ export default function EditTestSuite() {
                           color: "#fff",
                         }}
                       />
-                    )}
+                    )} */}
+                    Save & Execute
                   </Button>
 
                   <Button

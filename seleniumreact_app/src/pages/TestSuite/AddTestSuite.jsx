@@ -42,7 +42,7 @@ export default function AddTestSuite() {
   const [selectedRecepentValue, setSelectedRecepentValue] =
     useState("only-for-me");
   const [name, setName] = useState("");
-  const { applicationList, environementList, testCasesList } = useSelector(
+  const { applicationList, environementList, testCasesList, executingSuite } = useSelector(
     (state) => state.selenium
   );
 
@@ -120,7 +120,7 @@ export default function AddTestSuite() {
       TestSuiteName: name,
       Description: description,
       TestSuiteId: 0,
-      TestUserId: selectedTestUser?.UserId,
+      TestUserId:selectedTestUser?.UserId,
       TestSuiteType: selectedSuiteValue,
       ApplicationId: selectedApplication?.ApplicationId,
       SendEmail: selectedRecepentValue === "only-for-me" ? true : false,
@@ -756,6 +756,7 @@ export default function AddTestSuite() {
                     variant="contained"
                     color="primary"
                     className={classes.button}
+                    disabled={executingSuite?true:false}
                     onClick={() => handleSubmit("SaveAndExecute")}
                     sx={{
                       backgroundColor: "rgb(101, 77, 247)",
@@ -765,7 +766,7 @@ export default function AddTestSuite() {
                       },
                     }}
                   >
-                    {!isExecuting ? (
+                    {/* {!isExecuting ? (
                       "Save & Execute"
                     ) : (
                       <CircularProgress
@@ -775,7 +776,8 @@ export default function AddTestSuite() {
                           color: "#fff",
                         }}
                       />
-                    )}
+                    )} */}
+                    Save & Execute
                   </Button>
 
                   <Button

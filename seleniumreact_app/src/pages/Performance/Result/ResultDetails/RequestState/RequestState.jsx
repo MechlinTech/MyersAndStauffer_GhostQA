@@ -102,7 +102,7 @@ export default function RequestState() {
             {selectedTransactions.map((transaction) => (
                 <Chip
                   key={transaction.id}
-                  label={transaction.home_page.transaction}
+                  label={transaction?.home_page?.transaction}
                   onDelete={() => handleDeleteChip(transaction.id)}
                   style={{ backgroundColor: "#654df7", color: "#fff" }}
                   deleteIcon={<ClearIcon style={{ color: "#fff" }} />}
