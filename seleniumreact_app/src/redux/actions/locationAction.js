@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
-import { getBaseUrl } from "../../utils/configService";
+import { getBaseUrl, getCoreEngineBaseUrl } from "../../utils/configService";
 
 export const FETCH_DATA_REQUEST = "FETCH_DATA_REQUEST";
 export const FETCH_DATA_SUCCESS = "FETCH_DATA_SUCCESS";
@@ -9,6 +9,9 @@ export const FETCH_DATA_FAILURE = "FETCH_DATA_FAILURE";
 export const ADD_LOCATION = "ADD_LOCATION";
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
 export const DELETE_LOCATION = "DELETE_LOCATION";
+export const GET_LOCATION_LISTS = "GET_LOCATION_LISTS";
+export const DELETE_LOCATION_SETTING = "DELETE_LOCATION_SETTING";
+export const ADD_LOCATION_SETTING = "ADD_LOCATION_SETTING"
 
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -83,7 +86,6 @@ export const updateLocation = (payload) => {
       //   toast.error("Submitting error");
       // }
       dispatch({ type: UPDATE_LOCATION, payload: payload });
-
     } catch (error) {
       console.log("error saving ", error);
       toast.error("Network error");
@@ -142,6 +144,85 @@ export const deleteLocation = (locationId) => {
     } catch (error) {
       console.log("error deleting ", error);
       toast.error("Network error");
+    }
+  };
+};
+
+// coreEngineBaseUrl is used to make api call for loaction
+
+export const getLocationList = () => {
+  return async (dispatch) => {
+    try {
+      const CORE_BASE_URL = await getCoreEngineBaseUrl();
+      const response = await axios.get(
+        `${CORE_BASE_URL}/codeengine/api/private-location/`,
+        header()
+      );
+      dispatch({
+        type: GET_LOCATION_LISTS,
+        payload: response?.data?.results,
+      });
+    } catch (error) {
+      console.error("Error in getTestSuites:", error);
+    }
+  };
+};
+
+export const AddLocationSettings = (data, onClose, resetFormAndState) => {
+  return async (dispatch) => {
+    try {
+      const CORE_BASE_URL = await getCoreEngineBaseUrl();
+      const response = await axios.post(
+        `${CORE_BASE_URL}/codeengine/api/private-location/`,
+        data,
+        header()
+      );
+      console.log("res", response);
+      if (response.status === 201) {
+        toast.info("Successfully saved", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+
+        // Update LOCATIONDATA after successful submission
+        dispatch(getLocationList());
+        onClose()
+        resetFormAndState()
+      } else {
+        console.log("Submitting error");
+      }
+    } catch (error) {
+      console.log("error saving ", error);
+    }
+  };
+};
+
+export const deleteLocationOnSettings = (refId, setopenDelModal) => {
+  return async (dispatch) => {
+    try {
+      const CORE_BASE_URL = await getCoreEngineBaseUrl();
+      const response = await axios.delete(
+        `${CORE_BASE_URL}/codeengine/api/private-location/${refId}`,
+        header()
+      );
+      console.log("response", response);
+      // if (response.data.status == 301) {
+      toast.info("Successfully deleted", {
+        style: {
+          background: "rgb(101, 77, 247)",
+          color: "rgb(255, 255, 255)",
+        },
+      });
+      setopenDelModal(false);
+
+      // Update propertyList after successful deletion
+      dispatch({ type: DELETE_LOCATION_SETTING, payload: refId });
+      // }
+    } catch (error) {
+      console.log("error deleting ", error);
+      setopenDelModal(false);
     }
   };
 };
