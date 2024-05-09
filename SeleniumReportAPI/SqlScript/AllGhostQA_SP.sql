@@ -1947,8 +1947,12 @@ BEGIN TRY
 														END
 													)
 												) [text],
+												
 										tsd.[StepDescription] [name],
-										tsd.[IsOptional]
+										tsd.[IsOptional],
+										CASE WHEN tsd.[Action] = 'type' OR tsd.[Action] = 'Wait' THEN tsd.[TextValue] ELSE NULL END AS [duration],
+										(CASE WHEN tsd.[Action] = 'scroll_to_window' THEN SUBSTRING(tsd.[ScrollPixel], CHARINDEX('(', tsd.[ScrollPixel]) + 1, CHARINDEX(',', tsd.[ScrollPixel]) - CHARINDEX('(', tsd.[ScrollPixel]) - 1) END) [x_position],
+                                                (CASE WHEN tsd.[Action] = 'scroll_to_window' THEN SUBSTRING(tsd.[ScrollPixel], CHARINDEX(',', tsd.[ScrollPixel]) + 1, CHARINDEX(')', tsd.[ScrollPixel]) - CHARINDEX(',', tsd.[ScrollPixel]) - 1) END) [y_position]
 					FROM tbl_TestStepsDetails tsd
 					WHERE tsd.[TestCaseDetailsId] = tcd.[TestCaseDetailsId]
 				FOR JSON PATH))
@@ -4194,5 +4198,52 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [result]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddFunctionalTestRun]
+@RootId                   INT,
+@TestRunName	          NVARCHAR(MAX),
+@TestRunDescription	      NVARCHAR(MAX),
+@BuildVersion	          NVARCHAR(MAX),
+@Environment	          NVARCHAR(MAX),
+@Milestone	              NVARCHAR(MAX),
+@AssignedTo	              NVARCHAR(MAX),
+@TestCases	              NVARCHAR(MAX),
+@CreatedBy	              NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_AddFunctionalTestRun
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	8th May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_AddFunctionalTestRun 
+				
+**************************************************************************************/
+BEGIN TRY
+	BEGIN
+		INSERT INTO [dbo].[tbl_FunctionalTestRun] ([RootId], [TestRunName], [TestRunDescription], [BuildVersion], [Environment], [Milestone], [AssignedTo], [TestCases], [CreatedBy], [CreatedOn], [UpdatedBy], [UpdatedOn]) 
+		VALUES (@RootId, @TestRunName, @TestRunDescription, @BuildVersion, @Environment, @Milestone, @AssignedTo, @TestCases, @CreatedBy, GETDATE(), NULL, NULL)
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [Result] = JSON_QUERY((
+				SELECT 'success' [status], 'Added Successfully' [message]
+			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
 END CATCH
 GO
