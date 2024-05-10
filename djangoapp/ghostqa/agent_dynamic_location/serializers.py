@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from .models import Agent
-from .models import AgentDetails, Job, PrivateLocation, Agent
+from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution
 from cypress.serializers.request import TestSuiteSerializer
 from cypress.models import TestSuite, TestContainersRuns as CypressContainersRun
 from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer, TestContainersRunsSerializer
@@ -50,6 +50,15 @@ class NewAgentSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response['location'] = PrivateLocationSerializer(instance.location).data
         return response
+
+
+
+class LoadDistributionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LoadDistribution
+        fields = ['id', 'ref', 'private_location', 'percentage_of_traffic', 'number_od_users', 'created_at', 'updated_at']
+
+
 
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:

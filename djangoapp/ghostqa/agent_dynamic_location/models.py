@@ -44,9 +44,19 @@ class Agent(models.Model):
     def __str__(self):
         return f'{self.name}'
     
+ 
+class LoadDistribution(models.Model):
+    private_location = models.ForeignKey(PrivateLocation, on_delete=models.CASCADE, related_name='private_location')
+    percentage_of_traffic = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    number_of_users = models.IntegerField(blank=True, null=True)
+    ref = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
+    def __str__(self):
+        return f'{self.private_location} {self.percentage_of_traffic}'
 
-class AgentDetails(models.Model):
+class AgentDetails(models.Model): # INFO this model is no longer used.
     name = models.CharField(max_length=100)
     ip_address = models.GenericIPAddressField()
     port = models.IntegerField()
@@ -84,11 +94,23 @@ class Job(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     # Add other fields as needed
-    def save(self, *args, **kwargs):
-        if self.agent.agent_status == 'available':
-            self.agent.agent_status = 'Occupied'
-            self.agent.save()
-        super(Job, self).save(*args, **kwargs) 
+    # def save(self, *args, **kwargs):
+    #     if self.agent.agent_status == 'available':
+    #         self.agent.agent_status = 'Occupied'
+    #         self.agent.save()
+    #     super(Job, self).save(*args, **kwargs) 
 
-    def __str__(self):
-        return f"Job {self.job_id}"
+    # def __str__(self):
+    #     return f"Job {self.job_id}"
+    
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            orig_job = Job.objects.get(pk=self.pk)
+            if orig_job.job_status == 'completed':
+                self.agent.agent_status = 'available'
+                self.agent.save()
+            elif orig_job.job_status == 'queued':
+                self.agent.agent_status = 'occupied'
+                self.agent.save()
+        super(Job, self).save(*args, **kwargs)
