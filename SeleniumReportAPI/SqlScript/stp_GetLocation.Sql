@@ -12,7 +12,8 @@ PROC EXEC		:
 BEGIN TRY
 	SELECT [result] = JSON_QUERY((
 		SELECT [Id],
-			   [CountryName] as [Name]
+			   [CountryName] as [Name],
+			   [LocationId]
 		FROM tbl_Location
 		ORDER BY CountryName
 		FOR JSON PATH

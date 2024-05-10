@@ -287,5 +287,16 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetLocationList());
         }
+
+        /// <summary>
+        /// Delete Private Location By Id
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeletePrivateLocationById")]
+        public async Task<ActionResult> DeletePrivateLocationById(int Id)
+        {
+            return Ok(await _helper.DeletePrivateLocationById(Id));
+        }
     }
 }
