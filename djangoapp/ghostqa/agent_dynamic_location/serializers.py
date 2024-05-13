@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from .models import Agent
-from .models import AgentDetails, Job, PrivateLocation, Agent
+from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution
 from cypress.serializers.request import TestSuiteSerializer
 from cypress.models import TestSuite, TestContainersRuns as CypressContainersRun
 from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer, TestContainersRunsSerializer
@@ -11,8 +11,13 @@ from performace_test.models import JmeterTestContainersRuns, PerformaceTestSuite
 
 
 
+class AgentListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Agent
+        fields = '__all__'
 
 class PrivateLocationSerializer(serializers.ModelSerializer):
+    agents = serializers.SerializerMethodField()
     class Meta:
         model = PrivateLocation
         fields = [
@@ -27,7 +32,12 @@ class PrivateLocationSerializer(serializers.ModelSerializer):
             'console_xmx_mb',
             'created_at',
             'updated_at',
+            'agents'
         ]
+        
+    def get_agents(self, obj):
+        agents = Agent.objects.filter(location=obj)
+        return AgentListSerializer(agents, many=True).data
         
 class NewAgentSerializer(serializers.ModelSerializer):
     # location = serializers.PrimaryKeyRelatedField(queryset=PrivateLocation.objects.all())
@@ -50,6 +60,15 @@ class NewAgentSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response['location'] = PrivateLocationSerializer(instance.location).data
         return response
+
+
+
+class LoadDistributionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LoadDistribution
+        fields = ['id', 'ref', 'private_location', 'percentage_of_traffic', 'number_od_users', 'created_at', 'updated_at']
+
+
 
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:

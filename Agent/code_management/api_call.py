@@ -1,7 +1,22 @@
+import os
 import requests, json
+import logging
+from dotenv import load_dotenv
 
-def get_job_to_execute():
-    api_url = 'http://127.0.0.1:8000/codeengine/api/remote-agent-connection-job/queued_job/'
+load_dotenv()
+
+# Configure the logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+
+# BASE_URL = 'http://app.ghostqa.com'
+BASE_URL = os.getenv('BASE_URL')
+
+
+
+def get_job_to_execute(agent_id):
+    api_url = f'{BASE_URL}/codeengine/api/agent-job/queued_job/?agent_id={agent_id}'
 
     try:
         response = requests.get(api_url)
@@ -10,20 +25,21 @@ def get_job_to_execute():
         print(json.dumps(job_data, indent=4))
         return job_data
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching job data: {e}")
+        logger.error(f"Error fetching job data: {e}")
+        logger.info('No Agent matches the given query.')
         return None
     
-get_job_to_execute()
+# get_job_to_execute()
 
 def update_container_run(container_run_ref, file_path):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
     files = {'test_file': open(file_path, 'rb')}
     response = requests.put(container_run_update_url, files=files)
     # Check response status code and handle exceptions if necessary
     return response
 
 def update_container_after_run(container_run_ref, container_id, container_status, container_short_id, container_label=""):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
     payload = {
         'container_id': container_id,
         'container_status': container_status,
@@ -37,7 +53,7 @@ def update_container_after_run(container_run_ref, container_id, container_status
     return response
 
 def get_container_from_codeengine(ref):
-    url = f'http://127.0.0.1:8000/codeengine/api/remote-agent-connection-jmeter-container/{ref}/'
+    url = f'{BASE_URL}/codeengine/api/remote-agent-connection-jmeter-container/{ref}/'
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
@@ -46,7 +62,7 @@ def get_container_from_codeengine(ref):
     
 
 def update_container_reporting(container_run_ref, container_status, container_label):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
     payload = {
         'container_status': container_status
     }
@@ -58,7 +74,7 @@ def update_container_reporting(container_run_ref, container_status, container_la
     return response
 
 def update_container_for_raw_data(container_run_ref, raw_data):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
     payload = {
         'raw_data': raw_data
     }
@@ -68,7 +84,7 @@ def update_container_for_raw_data(container_run_ref, raw_data):
     return response
 
 def update_container_for_json_data(container_run_ref, json_data):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
     payload = {
         'json': json_data
     }
@@ -78,7 +94,7 @@ def update_container_for_json_data(container_run_ref, json_data):
     return response
 
 def final_update_container_after_execution(container_run_ref, container_status):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/remote-agent-connection-jmeter-container/{container_run_ref}/"
     payload = {
         'container_status': container_status
     }
@@ -88,7 +104,7 @@ def final_update_container_after_execution(container_run_ref, container_status):
     return response
 
 def update_job_status(job_id, status):
-    job_update_url = f"http://127.0.0.1:8000/codeengine/api/remote-agent-connection-job/{job_id}/"
+    job_update_url = f"{BASE_URL}/codeengine/api/agent-job/{job_id}/"
     payload = {
         'job_status': status
     }
@@ -99,7 +115,7 @@ def update_job_status(job_id, status):
 ###################################### CYPRESS API CALLS #############################
 
 def update_container_after_container_run(ref, container_id, container_status, container_label, container_short_id):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/test-suitesV2-cypress-container/{ref}/"
     payload = {
         'container_id': container_id,
         'container_status': container_status,
@@ -113,7 +129,7 @@ def update_container_after_container_run(ref, container_id, container_status, co
     return response
 
 def get_container_from_codeengine_cypress(ref):
-    url = f'http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/'
+    url = f'{BASE_URL}/codeengine/api/test-suitesV2-cypress-container/{ref}/'
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
@@ -121,7 +137,7 @@ def get_container_from_codeengine_cypress(ref):
         raise Exception(f"Failed to get container: {response.status_code}")
     
 def update_container_reporting_cypress(ref, container_status, container_label, container_log_str):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/test-suitesV2-cypress-container/{ref}/"
     payload = {
         'container_status': container_status,
         'container_log_str': container_log_str
@@ -134,7 +150,7 @@ def update_container_reporting_cypress(ref, container_status, container_label, c
     return response
 
 def update_container_json_result_data_cypress(ref, json_data):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/test-suitesV2-cypress-container/{ref}/"
     payload = {
         'json': json_data
     }
@@ -144,7 +160,7 @@ def update_container_json_result_data_cypress(ref, json_data):
     return response
 
 def artificat_creation_cypress(container_run, suite, type):
-    url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-artifacts/"
+    url = f"{BASE_URL}/codeengine/api/test-suitesV2-cypress-artifacts/"
     payload = {
         'container_runs': container_run,
         'suite': suite,
@@ -158,7 +174,7 @@ def artificat_creation_cypress(container_run, suite, type):
         raise Exception(f"Failed to create artifact: {response.status_code}")
 
 def update_artifact_file(id, file_path):
-    url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-artifacts/{id}/"
+    url = f"{BASE_URL}/codeengine/api/test-suitesV2-cypress-artifacts/{id}/"
     with open(file_path, 'rb') as file:
         file_data = file.read()
         files = {
@@ -172,7 +188,7 @@ def update_artifact_file(id, file_path):
     
 
 def upload_cypress_artifact_video(id, file_path):
-    url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-artifacts/{id}/"
+    url = f"{BASE_URL}/codeengine/api/test-suitesV2-cypress-artifacts/{id}/"
     with open(file_path, 'rb') as file:
         files = [
             ('files', (file.name, file, 'video/mp4'))  # Provide the correct MIME type if the file is not an mp4
@@ -186,7 +202,7 @@ def upload_cypress_artifact_video(id, file_path):
 
    
 def final_update_container_after_execution_cypress(ref, container_status):
-    container_run_update_url = f"http://127.0.0.1:8000/codeengine/api/test-suitesV2-cypress-container/{ref}/"
+    container_run_update_url = f"{BASE_URL}/codeengine/api/test-suitesV2-cypress-container/{ref}/"
     payload = {
         'container_status': container_status
     }

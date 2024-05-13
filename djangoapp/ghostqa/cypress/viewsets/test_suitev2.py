@@ -27,6 +27,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.conf import settings
 from ..models import TestArtifacts, TestContainersRuns, TestSuite
 import os
+from agent_dynamic_location.models import Job, Agent
 
 class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
     queryset = TestSuite.objects.all()
@@ -291,6 +292,7 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
     @extend_schema(methods=['post'], request=TestSuiteSerializer)
     @action(methods=['post'],detail=False)
     def execute4(self,request,*args, **kwargs):
+        agent_id = request.data.pop('agent', None)
         data = request.data
         request_json = data.get('request_json', None)
         print("Data from the request body : ",data)
@@ -298,6 +300,13 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         instance = serializer.instance
+        
+        container_run = TestContainersRuns.objects.create(
+            suite = instance
+        )
+        container_run.container_name =  f"{instance.name}-{container_run.ref}"
+        container_run.container_status =  f"pending"
+        container_run.save()
 
         try: # TODO we don't need this any more. Need to confirm from Diljot regarding this.
             # Use request_json directly
@@ -336,12 +345,28 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
        
         
         print("STARTING CONTAINER")
+        try:
+            agent = Agent.objects.get(id=agent_id)
+        except Agent.DoesNotExist:
+            return Response({
+                "status": "error",
+                "message": f"Agent with ID {agent_id} does not exist"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        job = Job.objects.create(
+            field_type = "testlab",
+            test_suite = instance,
+            job_status = "queued",
+            agent = agent
+        )
         # start_test_inside_conatinerV2(container_run.container_name,volume_path,container_run)
 
         # container_run_serilzer = TestContainersRunsSerializer(container_run)
         
         headers = self.get_success_headers(serializer.data)
         return Response({
+            "status":   "success",
+            "message": "queued",
            **self.get_serializer(instance).data
         })
         
