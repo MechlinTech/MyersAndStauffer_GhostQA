@@ -79,7 +79,7 @@ export default function Location() {
         <Grid item>
           <Button
             className={classes.button}
-            // onClick={handleAddApplication}
+            onClick={handleAddApplication}
             sx={{
               backgroundColor: "rgb(101, 77, 247)",
               "&:hover": {

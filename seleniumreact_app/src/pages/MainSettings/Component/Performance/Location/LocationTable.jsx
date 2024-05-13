@@ -14,6 +14,7 @@ import {
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteModal from "./DeleteModal";
 import { useDispatch } from "react-redux";
+import Tooltip from '@mui/material/Tooltip';
 import { deleteLocationOnSettings } from "../../../../../redux/actions/locationAction";
 
 export function LocationTable({ rows }) {
@@ -70,6 +71,7 @@ export function LocationTable({ rows }) {
                   {row.parallel_engine_runs}
                 </StyledTableCell>
                 <StyledTableCell>
+                <Tooltip title="Add Agent">
                   <AddCircleIcon
                     style={{
                       cursor: "pointer",
@@ -77,6 +79,8 @@ export function LocationTable({ rows }) {
                       color: "rgb(101, 77, 247)",
                     }}
                   />
+                  </Tooltip>
+                  <Tooltip title="Edit Agent">
                   <EditIcon
                     style={{
                       cursor: "pointer",
@@ -84,7 +88,8 @@ export function LocationTable({ rows }) {
                       color: "rgb(101, 77, 247)",
                     }}
                   />
-
+                  </Tooltip>
+                  <Tooltip title="View Agent">
                   <VisibilityIcon
                     style={{
                       cursor: "pointer",
@@ -92,7 +97,8 @@ export function LocationTable({ rows }) {
                       color: "rgb(101, 77, 247)",
                     }}
                   />
-
+                  </Tooltip>
+                  <Tooltip title="Delete Location">
                   <DeleteIcon
                     onClick={() => handleModalOpen(row)}
                     style={{
@@ -101,6 +107,7 @@ export function LocationTable({ rows }) {
                       color: "#F64E4E",
                     }}
                   />
+                  </Tooltip>
                 </StyledTableCell>
               </TableRow>
             ))}

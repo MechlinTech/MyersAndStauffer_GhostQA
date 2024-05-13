@@ -18,12 +18,16 @@ import { AddLocationSettings } from "../../../../../redux/actions/locationAction
 const steps = ["Setup", "Functionalities"];
 
 const AddLocation = ({ open, onClose }) => {
-  const classes = useStyles(); 
-  const dispatch = useDispatch()
+  const classes = useStyles();
+  const dispatch = useDispatch();
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
     LocationName: "",
     ParallelEngineRuns: "",
+  });
+  const [errors, setErrors] = useState({
+    locationName: false,
+    parallelEngineRuns: false,
   });
 
   const [switchState, setSwitchState] = useState({
@@ -36,6 +40,9 @@ const AddLocation = ({ open, onClose }) => {
     dataOrchestration: false,
   });
 
+  const [functionalityError, setFunctionalityError] = useState("");
+  const [timerId, setTimerId] = useState(null);
+
   const handleFieldChange = (fieldName, value) => {
     setFormData({ ...formData, [fieldName]: value });
   };
@@ -44,27 +51,41 @@ const AddLocation = ({ open, onClose }) => {
     setSwitchState((prev) => ({ ...prev, [name]: !prev[name] }));
   };
 
-  const handleNext = () => setActiveStep((prevStep) => prevStep + 1);
+  const handleNext = () => {
+    const locationNameEmpty = formData.LocationName.trim() === "";
+    const parallelEngineRunsEmpty = formData.ParallelEngineRuns.trim() === "";
+
+    setErrors({
+      locationName: locationNameEmpty,
+      parallelEngineRuns: parallelEngineRunsEmpty,
+    });
+
+    if (locationNameEmpty || parallelEngineRunsEmpty) {
+      return;
+    }
+
+    setActiveStep((prevStep) => prevStep + 1);
+  };
 
   const handleBack = () => setActiveStep((prevStep) => prevStep - 1);
 
   const resetFormAndState = () => {
     setFormData({
-        LocationName: "",
-        ParallelEngineRuns: "",
+      LocationName: "",
+      ParallelEngineRuns: "",
     });
     setSwitchState({
-        isLoading: false,
-        performance: false,
-        apiTesting: false,
-        proxyRecorder: false,
-        mockServices: false,
-        guiFunctional: false,
-        dataOrchestration: false,
+      isLoading: false,
+      performance: false,
+      apiTesting: false,
+      proxyRecorder: false,
+      mockServices: false,
+      guiFunctional: false,
+      dataOrchestration: false,
     });
     setActiveStep(0);
-};
-
+    setFunctionalityError("");
+  };
 
   const handleSave = () => {
     let functionality = "";
@@ -82,13 +103,31 @@ const AddLocation = ({ open, onClose }) => {
       functionality = "dataOrchestration";
     }
 
+    if (!functionality) {
+      // Clear the existing timer if present
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+
+      // Set the functionality error
+      setFunctionalityError("Please select one functionality option ");
+
+      // Set a timer to clear the error after 30 seconds
+      const newTimerId = setTimeout(() => {
+        setFunctionalityError("");
+      }, 3000);
+      setTimerId(newTimerId);
+      
+      return;
+    }
+
     const data = {
       location_name: formData.LocationName,
       parallel_engine_runs: parseInt(formData.ParallelEngineRuns),
       functionality: functionality,
     };
     console.log("data", data);
-    dispatch(AddLocationSettings(data, onClose, resetFormAndState))
+    dispatch(AddLocationSettings(data, onClose, resetFormAndState));
   };
 
   const renderSwitch = (name, label) => (
@@ -145,9 +184,6 @@ const AddLocation = ({ open, onClose }) => {
               "& .MuiStepIcon-root.Mui-completed": {
                 color: "#654DF7",
               },
-              // '& .MuiStepIcon-root.Mui-active': {
-              //     color: 'red',
-              // },
             }}
           >
             {steps.map((label) => (
@@ -170,12 +206,14 @@ const AddLocation = ({ open, onClose }) => {
                     className={clsx(classes.margin, classes.textField)}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        borderColor: "transparent !important",
+                        borderColor: errors.locationName
+                          ? "red"
+                          : "transparent",
                         "&:hover fieldset": {
-                          borderColor: "#654DF7",
+                          borderColor: errors.locationName ? "red" : "#654DF7",
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#654DF7",
+                          borderColor: errors.locationName ? "red" : "#654DF7",
                         },
                       },
                     }}
@@ -185,6 +223,7 @@ const AddLocation = ({ open, onClose }) => {
                       type="text"
                       placeholder="Enter location name"
                       value={formData.LocationName}
+                      error={errors.locationName}
                       onChange={(e) =>
                         handleFieldChange("LocationName", e.target.value)
                       }
@@ -201,12 +240,18 @@ const AddLocation = ({ open, onClose }) => {
                     className={clsx(classes.margin, classes.textField)}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        borderColor: "transparent !important",
+                        borderColor: errors.parallelEngineRuns
+                          ? "red"
+                          : "transparent",
                         "&:hover fieldset": {
-                          borderColor: "#654DF7",
+                          borderColor: errors.parallelEngineRuns
+                            ? "red"
+                            : "#654DF7",
                         },
                         "&.Mui-focused fieldset": {
-                          borderColor: "#654DF7",
+                          borderColor: errors.parallelEngineRuns
+                            ? "red"
+                            : "#654DF7",
                         },
                       },
                     }}
@@ -216,6 +261,7 @@ const AddLocation = ({ open, onClose }) => {
                       type="number"
                       placeholder="Enter number of parallel engine runs"
                       value={formData.ParallelEngineRuns}
+                      error={errors.parallelEngineRuns}
                       onChange={(e) =>
                         handleFieldChange("ParallelEngineRuns", e.target.value)
                       }
@@ -234,6 +280,11 @@ const AddLocation = ({ open, onClose }) => {
                 )}
               </>
             )}
+             {functionalityError && (
+            <Typography variant="body2" color="red" style={{ marginTop: '8px' }}>
+              {functionalityError}
+            </Typography>
+          )}
           </Grid>
         </div>
 
@@ -293,6 +344,7 @@ const AddLocation = ({ open, onClose }) => {
               </Button>
             </>
           )}
+         
         </div>
       </div>
     </Modal>
