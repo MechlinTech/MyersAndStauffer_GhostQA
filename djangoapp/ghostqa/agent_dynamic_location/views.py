@@ -1,12 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.response import Response
-from .models import AgentDetails, Job, PrivateLocation, Agent
-from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer, JmeterTestContainersRunsSerializerNew, PrivateLocationSerializer, NewAgentSerializer
+from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution
+from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer, JmeterTestContainersRunsSerializerNew, PrivateLocationSerializer, NewAgentSerializer, LoadDistributionSerializer
 from performace_test.models import JmeterTestContainersRuns, TestContainersRuns
 from performace_test.serializers.performace_tests import TestContainersRunsSerializer
 
@@ -24,6 +24,14 @@ class NewAgentViewSet(viewsets.ModelViewSet):
 #     queryset = JmeterTestContainersRuns.objects.all()
 #     serializer_class = JmeterTestContainersRunsSerializer
 #     lookup_field = 'ref'
+
+
+
+class LoadDistributionViewSet(viewsets.ModelViewSet):
+    queryset = LoadDistribution.objects.all()
+    serializer_class = LoadDistributionSerializer
+    lookup_field = 'ref'
+
     
 class JmeterTestContainerRunsViewSet(viewsets.ModelViewSet):
     queryset = TestContainersRuns.objects.all()
@@ -41,14 +49,29 @@ class JobViewSet(viewsets.ModelViewSet):
 
     #     return Response(self.get_serializer(job).data)
     
-    @action(detail=False,methods=['GET'])
+    # @action(detail=False,methods=['GET'])
+    # def queued_job(self, request):
+    #     queued_job = Job.objects.filter(job_status='queued').order_by('created_at').first()
+    #     if queued_job:
+    #         serializer = self.get_serializer(queued_job)
+    #         return Response(serializer.data)
+    #     else:
+    #         return Response(status=404, data={'message': 'No queued jobs found'})
+    
+    @action(detail=False, methods=['GET'])
     def queued_job(self, request):
-        queued_job = Job.objects.filter(job_status='queued').order_by('created_at').first()
+        agent_id = request.query_params.get('agent_id')
+        if not agent_id:
+            return Response(status=400, data={'message': 'Agent ID is required'})
+        
+        agent_id = get_object_or_404(Agent, ref=agent_id)
+
+        queued_job = Job.objects.filter(agent=agent_id, job_status='queued').order_by('created_at').first()
         if queued_job:
             serializer = self.get_serializer(queued_job)
             return Response(serializer.data)
         else:
-            return Response(status=404, data={'message': 'No queued jobs found'})
+            return Response(status=404, data={'message': 'No queued jobs found for this agent'})
     @action(detail=False, methods=['POST'])    
     def receive_data(self, request):
         data = request.data
