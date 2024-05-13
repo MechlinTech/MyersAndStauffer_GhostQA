@@ -168,10 +168,12 @@ const Graph = (props) => {
   const handleFilterValue = (value) => {
     setFilterValue(value);
   };
-
+  
   // following two line is to change the title of inbuilt menu title
-const menuIcon = document.querySelector('.apexcharts-menu-icon');
+useEffect(()=>{
+  const menuIcon = document.querySelector('.apexcharts-menu-icon');
 menuIcon?.setAttribute('title', 'Download');
+})
   return (
     <>
       <div>
