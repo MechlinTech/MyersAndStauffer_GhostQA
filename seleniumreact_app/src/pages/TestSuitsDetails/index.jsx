@@ -74,7 +74,7 @@ export default function TestSuitsDetails() {
         day: "2-digit",
         hour: "numeric",
         minute:"numeric",
-        seconds:"numeric",
+        second:"numeric",
         hour12: true
     };
  
@@ -270,7 +270,10 @@ function formatDateString(dateString) {
                         <Typography
                           variant="body1"
                           className={classess.tbodyFont}
-                        >{formatDateString(testCaseDetils.TestRunStartDate)} {testCaseDetils.TestRunStartTime}
+                        >
+                          {/* {formatDateString(testCaseDetils.TestRunStartDate)} {testCaseDetils.TestRunStartTime} */}
+                          {formatDateStringWithTime(`${testCaseDetils.TestRunStartDate}T${testCaseDetils.TestRunStartTime}`)}
+                        
                         </Typography>
                       </CardContent>
                     </Card>
