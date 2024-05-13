@@ -26,7 +26,7 @@ PROC EXEC		:  EXEC stp_AddExecuteData
 BEGIN TRY
 	BEGIN
 		INSERT INTO [dbo].[tbl_CypressTestExecution] ([TestSuite], [TestCaseId], [TestCaseDetailsId], [TestCaseName], [Status], [StartDateTime],
-		[EndDateTime], [TestStepJson], [SuiteDuration], [TestDuration], [TestScreenShotUrl], [TesterName], [TestVideoUrl]) 
+		[EndDateTime], [TestStepJson], [SuiteDuration], [TestDuration], [TestScreenShotUrl], [TesterName], [TestVideoUrl],[ContainerLog]) 
 		VALUES (@TestSuite, @TestCase, @TestCaseDetailsId, @TestCaseName, @Status, @StartDateTime, @EndDateTime, @TestStepJson, @SuiteDuration, @TestDuration,
 		@TestScreenShot, @TesterName, @TestVideoUrl, @ContainerLog)
 		IF @@ERROR = 0
@@ -850,7 +850,7 @@ BEGIN TRY
 	BEGIN
 		IF NOT EXISTS( SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId)
 		BEGIN
-			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, Description) 
+			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, [Description], [TestUserId]) 
 			VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description, @TestUserId)
 		END
 		ELSE
@@ -3080,7 +3080,7 @@ BEGIN TRY
 			CONVERT(datetimeoffset, TestSuiteStartDateTime), CONVERT(datetimeoffset, TestSuiteEndDateTime),
 			CONVERT(datetimeoffset, TestRunStartDateTime), CONVERT(datetimeoffset, TestRunEndDateTime),
 			TestCaseSteps, TesterName, TestEnvironment
-		FROM OPENJSON(@DynamicObject) WITH (
+		FROM OPENJSON(@TestSuiteJson) WITH (
 			TestSuiteName NVARCHAR(100),
 			TestRunName NVARCHAR(100),
 			TestCaseName NVARCHAR(100),
@@ -3556,7 +3556,8 @@ PROC EXEC		:
 BEGIN TRY
 	SELECT [result] = JSON_QUERY((
 		SELECT [Id],
-			   [CountryName] as [Name]
+			   [CountryName] as [Name],
+			   [LocationId]
 		FROM tbl_Location
 		ORDER BY CountryName
 		FOR JSON PATH
@@ -4288,5 +4289,96 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestRun]
+END CATCH
+GO
+CREATE OR  ALTER PROCEDURE [dbo].[stp_DeletePrivateLocation]
+@LocationId			INT
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_DeletePrivateLocation
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	10th May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_DeletePrivateLocation 
+**************************************************************************************/
+BEGIN TRY
+	IF EXISTS(SELECT 1 FROM tbl_Location WHERE [LocationId] = @LocationId)
+	BEGIN
+		DELETE FROM tbl_Location WHERE [LocationId] = @LocationId
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'Private Location is not available' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	IF @@ERROR = 0
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'success' [status], 'Private Location Deleted Successfully' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [TestRun]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddPrivatedLocation]
+@LocationId           INT,
+@CountryName	      NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_AddPrivatedLocation
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	10th May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_AddPrivatedLocation 
+				
+**************************************************************************************/
+BEGIN TRY
+ IF EXISTS( SELECT 1 FROM [dbo].[tbl_Location] WHERE [CountryName] = @CountryName AND [LocationId] = @LocationId)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Country Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
+	BEGIN
+		INSERT INTO [dbo].[tbl_Location] ([CountryName], [LocationId]) 
+		VALUES (@CountryName, @LocationId)
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [Result] = JSON_QUERY((
+				SELECT 'success' [status], 'successfully Added' [message]
+			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
 END CATCH
 GO

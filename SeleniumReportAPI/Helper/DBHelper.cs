@@ -2853,6 +2853,7 @@ namespace SeleniumReportAPI.Helper
 
         internal async Task<string> GetLocationList()
         {
+            var data = AddPrivateLocation();
             string result = string.Empty;
             try
             {
@@ -3544,6 +3545,82 @@ namespace SeleniumReportAPI.Helper
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@Id", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> AddPrivateLocation()
+        {
+            string result = string.Empty;
+            Dto_AddPrivateLocation data = new Dto_AddPrivateLocation();
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.GetAsync(_configuration["CypressAPI:Location"]))
+                    {
+                        var res1 = await response.Content.ReadAsStringAsync();
+                        data = JsonConvert.DeserializeObject<Dto_AddPrivateLocation>(res1);
+                    }
+
+                }
+                foreach (var item in data.results)
+                {
+
+                    using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                    {
+                        connection.Open();
+                        using (SqlCommand command = new SqlCommand("stp_AddPrivatedLocation", connection))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@LocationId", item.id);
+                            command.Parameters.AddWithValue("@CountryName", item.location_name);
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    reader.Read();
+                                    result = reader["result"].ToString();
+                                }
+                            }
+                        }
+                        connection.Close();
+                    } 
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> DeletePrivateLocationById(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeletePrivateLocation", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@LocationId", Id);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
