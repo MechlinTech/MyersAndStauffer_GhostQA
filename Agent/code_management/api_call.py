@@ -15,8 +15,8 @@ BASE_URL = os.getenv('BASE_URL')
 
 
 
-def get_job_to_execute(agent_id):
-    api_url = f'{BASE_URL}/codeengine/api/agent-job/queued_job/?agent_id={agent_id}'
+def get_job_to_execute(agent_id, token):
+    api_url = f'{BASE_URL}/codeengine/api/agent-job/queued_job/?agent_id={agent_id}&token={token}'
 
     try:
         response = requests.get(api_url)

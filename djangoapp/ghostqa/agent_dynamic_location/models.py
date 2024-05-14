@@ -2,6 +2,10 @@ from django.db import models
 import uuid
 from cypress.models import TestSuite
 from performace_test.models import PerformaceTestSuite
+# from knox.models import AuthToken, AuthTokenManager
+from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 # Create your models here.
 
@@ -114,3 +118,48 @@ class Job(models.Model):
                 self.agent.agent_status = 'occupied'
                 self.agent.save()
         super(Job, self).save(*args, **kwargs)
+
+
+
+class CustomToken(models.Model):
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE, related_name='custom_tokens')
+    token = models.CharField(max_length=255)
+    expiry = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    
+    @classmethod
+    def validate_token(cls, token):
+        try:
+            custom_token = cls.objects.get(token=token)
+            if custom_token.is_expired():
+                return None
+            return custom_token.agent
+        except cls.DoesNotExist:
+            return None
+
+    def save(self, *args, **kwargs):
+        # Generate a random token if not provided
+        if not self.token:
+            self.token = self.generate_token()
+        super(CustomToken, self).save(*args, **kwargs)
+        
+    def generate_token(self):
+        # Generate a random token of length 40
+        import secrets
+        import string
+        import uuid
+        
+        token = str(uuid.uuid4())
+        # token = '-'.join([token[:8], token[8:12], token[12:16], token[16:20], token[20:]])
+        
+        return token
+        # alphabet = string.ascii_letters + string.digits
+        # return ''.join(secrets.choice(alphabet) for _ in range(40))
+
+    def is_expired(self):
+        return timezone.now() > self.expiry
+
+    def __str__(self):
+        return self.token 
+        

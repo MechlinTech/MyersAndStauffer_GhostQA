@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.response import Response
-from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution
+from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution, CustomToken
 from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer, JmeterTestContainersRunsSerializerNew, PrivateLocationSerializer, NewAgentSerializer, LoadDistributionSerializer
 from performace_test.models import JmeterTestContainersRuns, TestContainersRuns
 from performace_test.serializers.performace_tests import TestContainersRunsSerializer
@@ -61,10 +61,18 @@ class JobViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'])
     def queued_job(self, request):
         agent_id = request.query_params.get('agent_id')
+        token = request.query_params.get('token')
         if not agent_id:
             return Response(status=400, data={'message': 'Agent ID is required'})
         
+        agent = CustomToken.validate_token(token)
+        if not agent:
+            return Response(status=401, data={'message': 'Invalid token or token expired'})
+        
         agent_id = get_object_or_404(Agent, ref=agent_id)
+
+        if agent.id != agent_id.id:
+            return Response(status=401, data={'message': 'Token does not match the agent'})
 
         queued_job = Job.objects.filter(agent=agent_id, job_status='queued').order_by('created_at').first()
         if queued_job:

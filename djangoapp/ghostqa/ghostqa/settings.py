@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,7 +44,8 @@ INSTALLED_APPS = [
     'cypress',
     'performace_test',
     'agent_dynamic_location',
-    'django_filters'
+    'django_filters',
+    'knox',
 ]
 
 MIDDLEWARE = [
@@ -151,10 +153,21 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
      'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
      'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'PAGE_SIZE': 10, 
+    'PAGE_SIZE': 10,
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    # 'knox.auth.TokenAuthentication',
+    # ),
     # other DRF settings...
 }
 
 MIDDLEWARE += ('crum.CurrentRequestUserMiddleware',)
 
 DOCKER_HOST =  os.environ.get('DOCKER_HOST', 'unix://var/run/docker.sock')
+
+from datetime import timedelta
+
+# REST_KNOX = {
+#     "SECURE_HASH_ALGORITHM": "cryptography.hazmat.primitives.hashes.SHA512",
+#     "AUTH_TOKEN_CHARACTER_LENGTH": 64,
+#     "TOKEN_TTL": datetime.timedelta(days=7),
+# }
