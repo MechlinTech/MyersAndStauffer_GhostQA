@@ -22,7 +22,8 @@ from cypress.utils import (format_javascript,check_container_status, convert_to_
                            list_files_in_directory)
 
 from ..docker.containers import start_jmeter_test2,start_jmeter_test
-from agent_dynamic_location.models import Job, Agent, PrivateLocation, LoadDistribution
+from agent_dynamic_location.models import Job, Agent, PrivateLocation, LoadDistribution, CustomToken
+from django.utils import timezone
 
 class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
     queryset = PerformaceTestSuite.objects.all()
@@ -242,7 +243,6 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
                 "status": "error",
                 "message": f"Agent with ID {agent_id} does not exist"
             }, status=status.HTTP_400_BAD_REQUEST)
-        
         if instance.type == "jmeter":
             job = Job.objects.create(
                 field_type = f'{instance.type}',
@@ -250,10 +250,15 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
                 job_status = "queued",
                 agent = agent
             )
+            expiry_date = timezone.now() + timezone.timedelta(hours=1)
+            custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
             
         return Response({
             "status":   "success",
             "message": "queued",
+            "location_id": location.ref,
+            "agent_id": agent.ref,
+            "token": custom_token.token,
             "data":self.get_serializer(instance).data
         })            
 
