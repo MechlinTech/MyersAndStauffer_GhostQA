@@ -278,7 +278,7 @@ def generate_action_code(action,wrap_it=False):
                     cy.get("{selector}").dblclick();
                 }});
             """
-        return f"""cy.dblclick("{selector}");"""
+        return f"""cy.get("{selector}").dblclick();"""
     elif action_type == 'rightclick':
         if wrap_it:
             name = f'Test Step: {action_type}: {selector}'
