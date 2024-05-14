@@ -606,7 +606,7 @@ export default function EditTestCase() {
             },
           }}
         >
-          <StyledTypography>Step {index + 1}</StyledTypography>
+          <StyledTypography>Step {index + 1} *</StyledTypography>
           {isEditable && index > 0 && (
             <DeleteIcon
               onClick={() => handleRemoveStep(step)}
@@ -930,7 +930,7 @@ export default function EditTestCase() {
             <Grid container spacing={1} mb={1} mt={1}>
               <Grid item xs={12} md={4} display="flex" alignItems="center">
                 <StyledTypography mr={1} minWidth={"120px"}>
-                  Test Case Title :
+                  Test Case Title * :
                 </StyledTypography>
                 <StyledFormControl>
                   <StyledOutlinedInput
@@ -948,7 +948,7 @@ export default function EditTestCase() {
                 </StyledFormControl>
               </Grid>
               <Grid item xs={12} md={4} display="flex" alignItems="center">
-                <StyledTypography minWidth="80px">Start Url :</StyledTypography>
+                <StyledTypography minWidth="80px">Start Url * :</StyledTypography>
                 <StyledFormControl>
                   <StyledOutlinedInput
                     id="outlined-adornment-name"
