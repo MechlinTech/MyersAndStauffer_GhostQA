@@ -27,8 +27,8 @@ from rest_framework.pagination import PageNumberPagination
 from django.conf import settings
 from ..models import TestArtifacts, TestContainersRuns, TestSuite
 import os
-from agent_dynamic_location.models import Job, Agent
-
+from agent_dynamic_location.models import Job, Agent, CustomToken, PrivateLocation
+from django.utils import timezone
 class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
     queryset = TestSuite.objects.all()
     serializer_class = TestSuiteSerializer
@@ -342,9 +342,21 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         instance.cypress_code = json.dumps(cypress_dict)
         instance.save()       
         
-       
+        # try:
+        #     location = PrivateLocation.objects.get(ref = private_location[0])
+        #     print("location :", location)
+        # except PrivateLocation.DoesNotExist:
+        #     return Response({
+        #         "status": "error",
+        #         "message": f"PrivateLocation with ID {location} does not exist"
+        #     }, status=status.HTTP_400_BAD_REQUEST)
+            
+        # load_distribution = LoadDistribution.objects.create(
+        #     private_location = location,
+        #     percentage_of_traffic =percentage_of_traffic[0],
+        #     number_of_users =number_of_users[0]
+        # )
         
-        print("STARTING CONTAINER")
         try:
             agent = Agent.objects.get(id=agent_id)
         except Agent.DoesNotExist:
@@ -359,6 +371,8 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             job_status = "queued",
             agent = agent
         )
+        expiry_date = timezone.now() + timezone.timedelta(hours=1)
+        custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
         # start_test_inside_conatinerV2(container_run.container_name,volume_path,container_run)
 
         # container_run_serilzer = TestContainersRunsSerializer(container_run)
@@ -367,6 +381,7 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         return Response({
             "status":   "success",
             "message": "queued",
+            
            **self.get_serializer(instance).data
         })
         
