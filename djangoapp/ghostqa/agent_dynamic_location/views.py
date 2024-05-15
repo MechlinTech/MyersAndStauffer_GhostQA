@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.response import Response
 from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution, CustomToken
-from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer, JmeterTestContainersRunsSerializerNew, PrivateLocationSerializer, NewAgentSerializer, LoadDistributionSerializer
+from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer, JmeterTestContainersRunsSerializerNew, PrivateLocationSerializer, NewAgentSerializer, LoadDistributionSerializer, AgentListSerializer
 from performace_test.models import JmeterTestContainersRuns, TestContainersRuns
 from performace_test.serializers.performace_tests import TestContainersRunsSerializer
 
@@ -90,3 +90,10 @@ class PrivateLocationViewSet(viewsets.ModelViewSet):
     queryset = PrivateLocation.objects.all()
     serializer_class = PrivateLocationSerializer
     lookup_field = 'ref'
+    
+    @action(detail=False, methods=['GET'])
+    def agent_details(self, request):
+        location = request.query_params.get('location')
+        agent = Agent.objects.filter(location__ref=location)
+        data = AgentListSerializer(agent, many=True).data
+        return Response({'message': data})
