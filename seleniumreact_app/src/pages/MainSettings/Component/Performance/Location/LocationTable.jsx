@@ -14,30 +14,58 @@ import {
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteModal from "./DeleteModal";
 import { useDispatch } from "react-redux";
+import Tooltip from "@mui/material/Tooltip";
 import { deleteLocationOnSettings } from "../../../../../redux/actions/locationAction";
+import AddAgent from "./AddAgent";
+import { useNavigate } from "react-router-dom";
 
 export function LocationTable({ rows }) {
   const classes = useTableStyles();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [openDelModal, setopenDelModal] = useState(false);
   const [item, setitem] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [agentLocation, setAgentLocation] = useState(null);
+  const [itemDel, setDelItem] = useState(null);
 
   const handleModalOpen = (row) => {
     setopenDelModal(true);
-    setitem(row);
+    setDelItem(row);
   };
 
   const handleDelete = (refId) => {
     dispatch(deleteLocationOnSettings(refId, setopenDelModal));
-    console.log("refId", refId);
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
+
+  const handleAddAgent = (row) => {
+    setOpenModal(true);
+    setAgentLocation(row);
+    console.log("agent row: row", row);
+  };
+
+  const handleEditAgent = (row) => {
+    console.log("handleEditAgent", row);
+    setOpenModal(true);
+    setAgentLocation(row);
+  };
+
+  const handleViewAgent = (row) => {
+    navigate(`/main-settings/view-agent/${row.ref}`);
+    console.log("row", row.agents);
   };
 
   return (
     <>
+      <AddAgent open={openModal} onClose={handleClose} row={agentLocation} />
       <DeleteModal
         open={openDelModal}
         onClose={() => setopenDelModal(false)}
-        deleteItem={item}
+        deleteItem={itemDel}
         handleDelete={handleDelete}
       />
       <TableContainer sx={{ marginBottom: "8vh" }}>
@@ -66,41 +94,61 @@ export function LocationTable({ rows }) {
                 <StyledTableCell component="th" scope="row">
                   {row.functionality}
                 </StyledTableCell>
-                <StyledTableCell component="th" scope="row">
+                <StyledTableCell
+                  component="th"
+                  scope="row"
+                  style={{ marginLeft: "25px" }}
+                >
                   {row.parallel_engine_runs}
                 </StyledTableCell>
                 <StyledTableCell>
-                  <AddCircleIcon
-                    style={{
-                      cursor: "pointer",
-                      marginRight: "10px",
-                      color: "rgb(101, 77, 247)",
-                    }}
-                  />
-                  <EditIcon
-                    style={{
-                      cursor: "pointer",
-                      marginLeft: "10px",
-                      color: "rgb(101, 77, 247)",
-                    }}
-                  />
+                  <Tooltip title="Delete Location">
+                    <DeleteIcon
+                      onClick={() => handleModalOpen(row)}
+                      style={{
+                        cursor: "pointer",
+                        // marginLeft: "10px",
+                        color: "#F64E4E",
+                      }}
+                    />
+                  </Tooltip>
+                  {row.agents.length === 0 && (
+                    <Tooltip title="Add Agent">
+                      <AddCircleIcon
+                        onClick={() => handleAddAgent(row)}
+                        style={{
+                          cursor: "pointer",
+                          marginLeft: "10px",
+                          color: "rgb(101, 77, 247)",
+                        }}
+                      />
+                    </Tooltip>
+                  )}
+                  {row.agents.length > 0 && (
+                    <Tooltip title="Edit Agent">
+                      <EditIcon
+                        onClick={() => handleEditAgent(row)}
+                        style={{
+                          cursor: "pointer",
+                          marginLeft: "10px",
+                          color: "rgb(101, 77, 247)",
+                        }}
+                      />
+                    </Tooltip>
+                  )}
 
-                  <VisibilityIcon
-                    style={{
-                      cursor: "pointer",
-                      marginLeft: "10px",
-                      color: "rgb(101, 77, 247)",
-                    }}
-                  />
-
-                  <DeleteIcon
-                    onClick={() => handleModalOpen(row)}
-                    style={{
-                      cursor: "pointer",
-                      marginLeft: "10px",
-                      color: "#F64E4E",
-                    }}
-                  />
+                  {row.agents.length > 0 && (
+                    <Tooltip title="View Agent">
+                      <VisibilityIcon
+                        onClick={() => handleViewAgent(row)}
+                        style={{
+                          cursor: "pointer",
+                          marginLeft: "10px",
+                          color: "rgb(101, 77, 247)",
+                        }}
+                      />
+                    </Tooltip>
+                  )}
                 </StyledTableCell>
               </TableRow>
             ))}

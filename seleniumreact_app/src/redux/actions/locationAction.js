@@ -11,7 +11,9 @@ export const UPDATE_LOCATION = "UPDATE_LOCATION";
 export const DELETE_LOCATION = "DELETE_LOCATION";
 export const GET_LOCATION_LISTS = "GET_LOCATION_LISTS";
 export const DELETE_LOCATION_SETTING = "DELETE_LOCATION_SETTING";
-export const ADD_LOCATION_SETTING = "ADD_LOCATION_SETTING"
+export const ADD_LOCATION_SETTING = "ADD_LOCATION_SETTING";
+export const GET_AGENTS_LISTS = "GET_AGENTS_LISTS";
+export const ADD_AGENTS = "ADD_AGENTS";
 
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -188,8 +190,8 @@ export const AddLocationSettings = (data, onClose, resetFormAndState) => {
 
         // Update LOCATIONDATA after successful submission
         dispatch(getLocationList());
-        onClose()
-        resetFormAndState()
+        onClose();
+        resetFormAndState();
       } else {
         console.log("Submitting error");
       }
@@ -223,6 +225,61 @@ export const deleteLocationOnSettings = (refId, setopenDelModal) => {
     } catch (error) {
       console.log("error deleting ", error);
       setopenDelModal(false);
+    }
+  };
+};
+
+export const AddLocationAgent = (data, setShowDockerCommand) => {
+  return async (dispatch) => {
+    try {
+      const CORE_BASE_URL = await getCoreEngineBaseUrl();
+      const response = await axios.post(
+        `${CORE_BASE_URL}/codeengine/api/remote-agent-connection/`,
+        data,
+        header()
+      );
+      console.log("resAddLocationAgent", response);
+      if (response.status === 201) {
+        toast.info("Successfully saved", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+
+        // Update LOCATIONDATA after successful submission
+        if (response.status === 201) {
+          dispatch(getLocationList());
+          dispatch({
+            type: ADD_AGENTS,
+            payload: response?.data,
+          });
+          setShowDockerCommand(true);
+        }
+      } else {
+        console.log("Submitting error");
+      }
+    } catch (error) {
+      console.log("error saving ", error);
+    }
+  };
+};
+
+export const getAgentById = (id) => {
+  return async (dispatch) => {
+    try {
+      const CORE_BASE_URL = await getCoreEngineBaseUrl(id);
+      const response = await axios.get(
+        `${CORE_BASE_URL}/codeengine/api/private-location/agent_details/?location=${id}`,
+        header()
+      );
+      console.log("response", response);
+      dispatch({
+        type: GET_AGENTS_LISTS,
+        payload: response?.data?.message,
+      });
+    } catch (error) {
+      console.error("Error in getTestSuites:", error);
     }
   };
 };

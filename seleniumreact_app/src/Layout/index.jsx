@@ -214,7 +214,7 @@ export default function MiniDrawer() {
                               navigate("/main-settings");
                             }}
                           >
-                            <SettingsIcon style={{ color: '#8a8fa7' }} />
+                            <SettingsIcon style={{ color: 'rgb(115, 115, 115' }} />
                             <span style={{ marginLeft: "10px" }}>Settings</span>
                           </MenuItem>
                           <MenuItem

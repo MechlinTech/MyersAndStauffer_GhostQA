@@ -20,6 +20,7 @@ import InitialSetup from "../pages/Performance/Result/ResultDetails/InitialSetup
 import TestCase from "../pages/TestCase";
 import Location from "../pages/MainSettings/Component/Performance/Location";
 import Integration from "../pages/MainSettings/Component/Performance/Integration";
+import ViewAgent from "../pages/MainSettings/Component/Performance/Location/ViewAgent";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
@@ -72,18 +73,7 @@ export default function Navigations() {
             <Route path="User" element={<UserManagement />} />
             <Route path="test-user" element={<TestUser />} />
           </Route>
-          <Route path="main-settings" element={<MainSettings />}>
-            <Route path="location" element={<Location />} />
-            <Route
-              path="integration"
-              element={<Integration />}
-            />
-            <Route path="Application" element={<Application />} />
-            <Route
-              path="Application/Sub-Application"
-              element={<RoleManagement />}
-            />
-          </Route>
+
           <Route path="testLab" element={<TestLab />} />
           <Route path="testLab/:nodeId" element={<TestLab />} />
           <Route
@@ -154,6 +144,13 @@ export default function Navigations() {
           path="/setting/edit-environment"
           element={<EditNewEnvironment />}
         />
+        <Route path="main-settings" element={<MainSettings />}>
+          <Route path="location" element={<Location />}>
+            <Route path=":id" element={<ViewAgent />} />
+          </Route>
+          <Route path="view-agent/:id" element={<ViewAgent />} />
+          <Route path="integration" element={<Integration />} />
+        </Route>
         <Route path="/edit/:suiteName" element={<EditTestSuite />} />
         <Route path="/AcceptInvitation/:toEmail" element={<Invitation />} />
         <Route path="*" element={<NotFound />} />

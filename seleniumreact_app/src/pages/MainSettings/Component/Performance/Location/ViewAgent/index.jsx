@@ -1,34 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Grid, Card } from "@material-ui/core";
 import { useStyles } from "./styles";
 import { Button } from "@mui/material";
+import { AgentTable } from "./AgentTable";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import AddLocation from "./AddLocation";
-import { LocationTable } from "./LocationTable";
-import { getLocationList } from "../../../../../redux/actions/locationAction";
+import { getAgentById } from "../../../../../../redux/actions/locationAction";
 
-export default function Location() {
+
+export default function ViewAgent() {
   const classes = useStyles();
   const dispatch = useDispatch()
-  const { locationList } = useSelector((state) => state.location);
-  const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
+  const { agentsData } = useSelector((state) => state.location);
+  const { id } = useParams()
 
   useEffect(() => {
-    dispatch(getLocationList())
+    dispatch(getAgentById(id))
   },[])
 
-  const handleClose = () => {
-    setOpenModal(false);
-  };
-
-  const handleAddApplication = () => {
-    setOpenModal(true);
+  const handleBack = () => {
+    navigate(-1);
   };
 
   return (
     <>
-      <AddLocation open={openModal} onClose={handleClose} />
-
       <Grid
         container
         className={classes.header}
@@ -37,12 +33,12 @@ export default function Location() {
         spacing={2}
       >
         <Grid item xs={6} className={classes.header}>
-          <div className={classes.highlight}>In Private Location</div>
+          <div className={classes.highlight}>Agent View</div>
         </Grid>
         <Grid item>
           <Button
             className={classes.button}
-            onClick={handleAddApplication}
+            onClick={handleBack}
             sx={{
               backgroundColor: "rgb(101, 77, 247)",
               "&:hover": {
@@ -57,17 +53,17 @@ export default function Location() {
               color: "#fff",
             }}
           >
-            Add New Location
+            Back
           </Button>
         </Grid>
       </Grid>
-      {/* Body */}
 
+      {/* Body */}
       <Grid container justifyContent="center" alignItems="center" spacing={2}>
         <Grid item xs={12}>
           <Card style={{ textAlign: "center", margin: "20px" }}>
             <Grid item>
-              <LocationTable rows={locationList} />
+              <AgentTable rows={agentsData} />
             </Grid>
           </Card>
         </Grid>
