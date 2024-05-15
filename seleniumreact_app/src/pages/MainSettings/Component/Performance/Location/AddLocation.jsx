@@ -23,7 +23,7 @@ const AddLocation = ({ open, onClose }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
     LocationName: "",
-    ParallelEngineRuns: "",
+    ParallelEngineRuns: "1",
   });
   const [errors, setErrors] = useState({
     locationName: false,
@@ -110,7 +110,7 @@ const AddLocation = ({ open, onClose }) => {
       }
 
       // Set the functionality error
-      setFunctionalityError("Please select one functionality option ");
+      setFunctionalityError("Please select performance ");
 
       // Set a timer to clear the error after 30 seconds
       const newTimerId = setTimeout(() => {
@@ -156,11 +156,11 @@ const AddLocation = ({ open, onClose }) => {
 
   const switchesConfig = [
     { name: "performance", label: "Performance" },
-    { name: "apiTesting", label: "API Testing" },
-    { name: "proxyRecorder", label: "Proxy Recorder" },
-    { name: "mockServices", label: "Mock Services" },
-    { name: "guiFunctional", label: "GUI Functional" },
-    { name: "dataOrchestration", label: "Data Orchestration" },
+    // { name: "apiTesting", label: "API Testing" },
+    // { name: "proxyRecorder", label: "Proxy Recorder" },
+    // { name: "mockServices", label: "Mock Services" },
+    // { name: "guiFunctional", label: "GUI Functional" },
+    // { name: "dataOrchestration", label: "Data Orchestration" },
   ];
 
   return (
@@ -261,10 +261,11 @@ const AddLocation = ({ open, onClose }) => {
                       type="number"
                       placeholder="Enter number of parallel engine runs"
                       value={formData.ParallelEngineRuns}
-                      error={errors.parallelEngineRuns}
-                      onChange={(e) =>
-                        handleFieldChange("ParallelEngineRuns", e.target.value)
-                      }
+                      // error={errors.parallelEngineRuns}
+                      // onChange={(e) =>
+                      //   handleFieldChange("ParallelEngineRuns", e.target.value)
+                      // }
+                      disabled
                     />
                   </FormControl>
                 </Grid>

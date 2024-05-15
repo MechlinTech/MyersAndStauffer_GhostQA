@@ -6,7 +6,9 @@ import {
   DELETE_LOCATION,
   UPDATE_LOCATION,
   GET_LOCATION_LISTS,
-  DELETE_LOCATION_SETTING
+  DELETE_LOCATION_SETTING,
+  GET_AGENTS_LISTS,
+  ADD_AGENTS
 } from "../actions/locationAction";
 
 const initialState = {
@@ -15,7 +17,9 @@ const initialState = {
   totalTrafficPercent: 0,
   error: null,
   isLoading: false,
-  locationList: []
+  locationList: [],
+  agentsData: [],
+  addAgents: []
 };
 
 const locationReducer = (state = initialState, action) => {
@@ -43,9 +47,9 @@ const locationReducer = (state = initialState, action) => {
         error: action.payload.error,
       };
     case ADD_LOCATION: {
-      const loc = action.payload[0]
-      console.log("loc",loc)
-      const { id,name, numberUser, percentageTraffic, performanceFileId } =
+      const loc = action.payload[0];
+      console.log("loc", loc);
+      const { id, name, numberUser, percentageTraffic, performanceFileId } =
         loc;
       const newLocation = {
         Id: id,
@@ -74,13 +78,13 @@ const locationReducer = (state = initialState, action) => {
     }
     case UPDATE_LOCATION: {
       const newTraffic =
-      state.totalTrafficPercent +
+        state.totalTrafficPercent +
         (parseInt(action.payload.PercentageTraffic) -
           parseInt(
             state.locations.find((item) => item.Id === action.payload.Id)
               .PercentageTraffic
           ));
-        console.log('new',newTraffic)
+      console.log("new", newTraffic);
       // return {
       //   ...state,
       //   totalTrafficPercent:state.totalTrafficPercent+parseInt(percentageTraffic),
@@ -109,19 +113,28 @@ const locationReducer = (state = initialState, action) => {
           return item;
         }),
       };
-    };
+    }
     case GET_LOCATION_LISTS:
       return {
         ...state,
         locationList: action.payload,
       };
-      case DELETE_LOCATION_SETTING:
-        return {
-          ...state,
-          locationList: state.locationList.filter(
-            (item) => item.ref !== action.payload
-          ),
-        };
+    case DELETE_LOCATION_SETTING:
+      return {
+        ...state,
+        locationList: state.locationList.filter(
+          (item) => item.ref !== action.payload
+        ),
+      };
+    case GET_AGENTS_LISTS:
+      return {
+        ...state,
+        agentsData: action.payload,
+      };
+      case ADD_AGENTS: return{ 
+        ...state,
+        addAgents: action.payload
+      }
     default:
       return state;
   }
