@@ -27,7 +27,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.conf import settings
 from ..models import TestArtifacts, TestContainersRuns, TestSuite
 import os
-from agent_dynamic_location.models import Job, Agent, CustomToken, PrivateLocation
+from agent_dynamic_location.models import Job, Agent, CustomToken, PrivateLocation, LoadDistribution
 from django.utils import timezone
 class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
     queryset = TestSuite.objects.all()
@@ -293,6 +293,9 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
     @action(methods=['post'],detail=False)
     def execute4(self,request,*args, **kwargs):
         agent_id = request.data.pop('agent', None)
+        private_location = request.data.pop('private_location', None)
+        percentage_of_traffic = request.data.pop('percentage_of_traffic', None)
+        number_of_users = request.data.pop('number_of_users', None)
         data = request.data
         request_json = data.get('request_json', None)
         print("Data from the request body : ",data)
@@ -342,32 +345,35 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         instance.cypress_code = json.dumps(cypress_dict)
         instance.save()       
         
-        # try:
-        #     location = PrivateLocation.objects.get(ref = private_location[0])
-        #     print("location :", location)
-        # except PrivateLocation.DoesNotExist:
-        #     return Response({
-        #         "status": "error",
-        #         "message": f"PrivateLocation with ID {location} does not exist"
-        #     }, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            location = PrivateLocation.objects.get(ref = private_location)
+            print("location :", location)
+        except PrivateLocation.DoesNotExist:
+            return Response({
+                "status": "error",
+                "message": f"PrivateLocation with ID {location} does not exist"
+            }, status=status.HTTP_400_BAD_REQUEST)
             
-        # load_distribution = LoadDistribution.objects.create(
-        #     private_location = location,
-        #     percentage_of_traffic =percentage_of_traffic[0],
-        #     number_of_users =number_of_users[0]
-        # )
+        load_distribution = LoadDistribution.objects.create(
+            private_location = location,
+            percentage_of_traffic =percentage_of_traffic,
+            number_of_users =number_of_users
+        )
+        
+        agent = self.get_available_agent(location)
+        print("Agent is :", agent)
         
         try:
-            agent = Agent.objects.get(id=agent_id)
+            agent = Agent.objects.get(id=agent.id)
         except Agent.DoesNotExist:
             return Response({
                 "status": "error",
-                "message": f"Agent with ID {agent_id} does not exist"
+                "message": f"Agent with ID {agent.id} does not exist"
             }, status=status.HTTP_400_BAD_REQUEST)
         
         job = Job.objects.create(
             field_type = "testlab",
-            test_suite = instance,
+            # test_suite = instance,
             job_status = "queued",
             agent = agent
         )
@@ -381,7 +387,9 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         return Response({
             "status":   "success",
             "message": "queued",
-            
+            "private_location": location.ref,
+            "agent_id": agent.ref,
+            "token":custom_token.token,
            **self.get_serializer(instance).data
         })
         
@@ -442,6 +450,20 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         return Response({
             **TestContainersRunsSerializer(container_run).data
         })
+        
+    def get_available_agent(self, location):
+        agent =  None
+        try:
+            available_agent = Agent.objects.filter(location=location.id, agent_status="available")
+            if available_agent.exists():
+                agent = available_agent.first()
+                print(f'Available Agent : {agent.name}')
+            else:
+                print('No available agents found')
+        except Agent.DoesNotExist:
+            print('No available agents found')
+            
+        return agent
         
 class TestContainersRunsViewset(viewsets.ModelViewSet):
     queryset = TestContainersRuns.objects.all()
