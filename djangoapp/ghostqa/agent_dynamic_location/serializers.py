@@ -41,6 +41,7 @@ class PrivateLocationSerializer(serializers.ModelSerializer):
         
 class NewAgentSerializer(serializers.ModelSerializer):
     # location = serializers.PrimaryKeyRelatedField(queryset=PrivateLocation.objects.all())
+    docker_command = serializers.SerializerMethodField()
     class Meta:
         model = Agent
         fields = [
@@ -55,11 +56,16 @@ class NewAgentSerializer(serializers.ModelSerializer):
             'agent_status',
             'created_at',
             'updated_at',
+            'docker_command',
         ]
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['location'] = PrivateLocationSerializer(instance.location).data
+        # response['docker_command'] = 'docker run -d --name my-django-app -e DJANGO_DEBUG=True --net=host ghostqa/agent:latest python Agent/main.py' 
         return response
+    
+    def get_docker_command(self, instance):
+        return 'docker run -d --name GhostQA-Codeengine -e DJANGO_DEBUG=True --net=host ghostqa/agent:latest python Agent/main.py'
 
 
 
