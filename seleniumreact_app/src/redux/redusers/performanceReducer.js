@@ -99,15 +99,20 @@ const performanceReducer = (state = initialState, action) => {
     }
     case LOCATION_OPTIONS: {
       const data = action.payload;
-      const transformedData = data
-        ?.filter((item) => !state.usedLocation?.includes(item.Name))
-        .map((item) => ({
-          label: item.Name,
-          value: item.Name,
-        }));
+      const groupedOptions = data
+        ?.filter((item) => !state.usedLocation?.includes(item.value))
+        .reduce((acc, curr) => {
+        const group = acc.find(group => group.label === curr.category);
+        if (group) {
+          group.options.push(curr);
+        } else {
+          acc.push({ label: curr.category, options: [curr] });
+        }
+        return acc;
+      }, []);
       return {
         ...state,
-        locationOptions: transformedData,
+        locationOptions: groupedOptions,
       };
     }
     case SET_SCENARIO_ID:
