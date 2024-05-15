@@ -21,10 +21,12 @@ export const login = (data, setLoading) => {
             color: 'rgb(255, 255, 255)',
           },
         });
+        const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         sessionStorage.setItem(
           "userData",
-          JSON.stringify({ ...response.data, token: response.token })
+          JSON.stringify({ ...response.data, token: response.token, TimeZone: localTimeZone })
         );
+        
         sessionStorage.setItem(
           "tokenExpiry",
           JSON.stringify({ ...response.data, expiration: response.expiration })
