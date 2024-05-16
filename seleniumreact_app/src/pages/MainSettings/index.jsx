@@ -9,6 +9,7 @@ import * as flatted from "flatted";
 import { StyledDashBoardIcon } from "../../comman/icons";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import { getUserId } from "../../redux/actions/authActions";
 
 export default function Settings() {
   const classes = useStyles();
@@ -46,11 +47,13 @@ export default function Settings() {
       sessionStorage.setItem("selectedCategory", categoryData);
       setSelectedItem(category);
 
-      
       if (activeParent === category.title) {
         setActiveParent(null);
       } else {
         setActiveParent(category.title);
+        if (category.title === "User Account") {
+          dispatch(getUserId());
+        }
       }
     } catch (error) {
       console.error("Error saving to sessionStorage:", error);
@@ -61,14 +64,15 @@ export default function Settings() {
     const childData = flatted.stringify(child);
     sessionStorage.setItem("selectedCategory", childData);
     setSelectedItem(child);
-    const parentCategory = categories.find(category =>
-        category?.children && category?.children.some(c => c.title === child.title)
+    const parentCategory = categories.find(
+      (category) =>
+        category?.children &&
+        category?.children.some((c) => c.title === child.title)
     );
     if (parentCategory) {
-        setActiveParent(parentCategory.title);
+      setActiveParent(parentCategory.title);
     }
-};
-
+  };
 
   const toggleParentExpansion = (parentTitle) => {
     setActiveParent((prev) => (prev === parentTitle ? null : parentTitle));
@@ -88,7 +92,21 @@ export default function Settings() {
           path: "/main-settings/organization",
         },
       ],
-    },,
+    },
+    {
+      title: "Organizational Setting",
+      path: "/main-settings/members",
+      children: [
+        {
+          title: "Members List",
+          path: "/main-settings/members",
+        },
+        // {
+        //   title: "Add New Members",
+        //   path: "/main-settings/add-member",
+        // },
+      ],
+    },
     {
       title: "Performance",
       path: "/main-settings/location",
@@ -121,8 +139,10 @@ export default function Settings() {
 
   // Function to render categories and their submenus
   const renderCategoriesAndSubmenus = categories.map((category, index) => {
-    const isParentActive = category.title === activeParent || category.children.some(child => child.title === selectedItem?.title);
-    
+    const isParentActive =
+      category.title === activeParent ||
+      category.children.some((child) => child.title === selectedItem?.title);
+
     return (
       <Grid item key={index} xs={12}>
         <Paper
@@ -168,7 +188,11 @@ export default function Settings() {
                   className={`
                     ${classes.paper}
                     ${classes.subPaper}
-                    ${selectedItem?.title === child.title ? classes.paperActive : ""}
+                    ${
+                      selectedItem?.title === child.title
+                        ? classes.paperActive
+                        : ""
+                    }
                   `}
                   onClick={() => handleChildClick(child)}
                 >
@@ -177,7 +201,11 @@ export default function Settings() {
                       <Typography
                         className={`
                           ${classes.infoHeader}
-                          ${selectedItem?.title === child.title ? classes.infoHeaderActive : ""}
+                          ${
+                            selectedItem?.title === child.title
+                              ? classes.infoHeaderActive
+                              : ""
+                          }
                         `}
                         style={{ marginLeft: "8px" }}
                       >
@@ -193,7 +221,6 @@ export default function Settings() {
       </Grid>
     );
   });
-  
 
   return (
     <div className={classes.main}>

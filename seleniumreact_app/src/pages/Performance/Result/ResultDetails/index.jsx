@@ -382,7 +382,7 @@ export default function Summary() {
                                 ).toFixed(2)
                               : null}
                           </span>
-                          KiB/S
+                          KB/S
                         </span>
                       </Typography>
                     </CardContent>

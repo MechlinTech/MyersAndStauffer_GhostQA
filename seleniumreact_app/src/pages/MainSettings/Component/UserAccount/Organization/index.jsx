@@ -6,59 +6,54 @@ import {
   Typography,
   FormControl,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { StyledTextBox, useStyles } from "./style";
+import { StyledFormControl, StyledTextBox, useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { UpdateUserProfile } from "../../../../../redux/actions/authActions";
-import TextField from '@mui/material/TextField';
+import {
+  UpdateUserProfile,
+  getUserId,
+} from "../../../../../redux/actions/authActions";
+import TextField from "@mui/material/TextField";
 
 import { getBaseUrl } from "../../../../../utils/configService";
 import { header } from "../../../../../utils/authheader";
+import {
+  fetchOrganizationDetail,
+  updateOrganizationDetails,
+} from "../../../../../redux/actions/userActions";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Organization() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [user, setuser] = useState(null);
+  const { userId } = useSelector((state) => state.auth);
+  const { organizationDetails, loading } = useSelector((state) => state.user);
   const [description, setDescription] = useState("");
   const [isEditable, setisEditable] = useState(false);
   const [Error, setError] = useState({
-    nameError: "",
-    emailError: "",
-    organizationNameError: "",
+    descriptionError: "",
+    imageError: "",
   });
-  const [selectedFile, setSelectedFile] = useState(null);
-
+  const [selectedImage, setSelectedImage] = useState(null);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
+    setSelectedImage(file);
   };
-//   useEffect(() => {
-//     const emailFromSession = sessionStorage.getItem("email");
-//     const updateUserByEmail = async () => {
-//       try {
-//         const BASE_URL = await getBaseUrl();
-//         const res = await axios.post(
-//           `${BASE_URL}/Selenium/GetProfilByEmail?Email=${emailFromSession}`,
-//           emailFromSession,
-//           header()
-//         );
-//         setuser(res.data);
-//         setEmail(res.data?.Email || "");
-//         setfullName(res.data?.FullName || "");
-//         setorganizationName(res.data?.OrganizationName || "");
-//       } catch (error) {
-//         console.error("Error fetching user details:", error);
-//       }
-//     };
+  useEffect(() => {
+    if (userId) dispatch(fetchOrganizationDetail(userId));
+    else dispatch(getUserId());
+  }, [userId]);
 
-//     updateUserByEmail();
-//   }, []);
+  useEffect(() => {
+    setDescription(organizationDetails?.Description);
+    console.log(organizationDetails);
+  }, [organizationDetails]);
   // Extracting the name of user
   const getName = () => {
     const email = sessionStorage.getItem("email");
@@ -68,20 +63,24 @@ export default function Organization() {
   };
 
   const handleCancel = (err) => {
-    console.log("res.data", user);
-
-    // setEmail(user?.Email || "");
+    setDescription(organizationDetails?.Description);
     setisEditable(false);
   };
   const handleSave = () => {
-    const payload = {
-      id: user?.Id,
-      description
-    };
-    let error = {};
+    const formData = new FormData();
+    formData.append("Id", 0);
+    formData.append("UserId", userId);
+    formData.append("Description", description);
+    formData.append("BinaryData", selectedImage);
+    const error = {};
+    if (!description.trim()) {
+      error.descriptionError = "Description required";
+    }
+    if (!selectedImage) error.imageError = "Required logo";
+
     setError(error);
     if (Object.keys(error).length === 0) {
-      dispatch(UpdateUserProfile(payload));
+      dispatch(updateOrganizationDetails(formData));
       setisEditable(false);
     } else {
       console.log("some field are empty or not valid");
@@ -92,7 +91,14 @@ export default function Organization() {
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={12} md={12} lg={8}>
         <Paper elevation={0} className={classes.papercontainer}>
-          {true && (
+          {loading ? (
+            <Box style={{ textAlign: "center" }}>
+              <CircularProgress
+                style={{ color: "rgb(101, 77, 247)" }}
+                size={25}
+              />
+            </Box>
+          ) : (
             <Box sx={{ width: "70%" }}>
               <Box
                 m={1}
@@ -116,41 +122,44 @@ export default function Organization() {
                 <Grid container justifyContent="center" spacing={1}>
                   <Grid item xs={12}>
                     <StyledTypography>About</StyledTypography>
-                    <FormControl
-                      fullWidth
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          "&:hover fieldset": {
-                            borderColor: "#654DF7",
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#654DF7",
-                          },
-                          "& fieldset": {
-                            borderColor: "transparent",
-                          },
-                        },
-                      }}
-                    >
+                    <StyledFormControl fullWidth>
                       <TextField
                         id="outlined-adornment-name"
                         type="text"
+                        multiline={true}
+                        rows={3}
                         placeholder="Enter description"
                         disabled={!isEditable}
-                        error={Error.nameError ? true : false}
+                        error={Error.descriptionError ? true : false}
                         value={description}
                         onChange={(e) => {
                           setDescription(e.target.value);
-                          setError((prev) => ({ ...prev, ["nameError"]: "" }));
+                          setError((prev) => ({
+                            ...prev,
+                            ["descriptionError"]: "",
+                          }));
                         }}
-
-                        // sx={{ backgroundColor: "rgb(242, 242, 242)",fontFamily:'Lexend Deca',fontWeight:'400', height:'40px'}}
                       />
-                    </FormControl>
+                    </StyledFormControl>
+                    {Error.descriptionError && (
+                      <StyledTypography
+                        style={{ color: "red", textAlign: "left" }}
+                      >
+                        Description required
+                      </StyledTypography>
+                    )}
                   </Grid>
-                  <Grid item xs={12} style={{display:'flex',alignItems:'center', justifyContent:'space-between'}}>
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <StyledTypography variant="subtitle1">
-                      {selectedFile?selectedFile.name:'Choose logo'}
+                      {selectedImage ? selectedImage.name : "Choose logo"}
                     </StyledTypography>
                     <input
                       type="file"
@@ -168,13 +177,22 @@ export default function Organization() {
                         fontSize: 25,
                         // backgroundColor: "rgb(101, 77, 247)",
                         color: "rgb(101, 77, 247)",
-                        cursor: isEditable?"pointer":"not-allowed",
+                        cursor: isEditable ? "pointer" : "not-allowed",
                         display: "inline-block",
                       }}
                     >
                       +
                     </label>
                   </Grid>
+                  {Error.imageError && (
+                    <Grid item xs={12}>
+                      <StyledTypography
+                        style={{ color: "red", textAlign: "left" }}
+                      >
+                        Please select logo
+                      </StyledTypography>
+                    </Grid>
+                  )}
                 </Grid>
                 <Box
                   mt={8}
