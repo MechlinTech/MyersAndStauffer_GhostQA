@@ -250,15 +250,15 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
                 job_status = "queued",
                 agent = agent
             )
-            expiry_date = timezone.now() + timezone.timedelta(hours=1)
-            custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
+            # expiry_date = timezone.now() + timezone.timedelta(hours=1)
+            # custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
             
         return Response({
             "status":   "success",
             "message": "queued",
             "location_id": location.ref,
             "agent_id": agent.ref,
-            "token": custom_token.token,
+            # "token": custom_token.token,
             "data":self.get_serializer(instance).data
         })            
 

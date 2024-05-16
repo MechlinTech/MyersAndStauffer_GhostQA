@@ -377,8 +377,8 @@ class TestSuiteV2ViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             job_status = "queued",
             agent = agent
         )
-        expiry_date = timezone.now() + timezone.timedelta(hours=1)
-        custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
+        # expiry_date = timezone.now() + timezone.timedelta(hours=1)
+        # custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
         # start_test_inside_conatinerV2(container_run.container_name,volume_path,container_run)
 
         # container_run_serilzer = TestContainersRunsSerializer(container_run)

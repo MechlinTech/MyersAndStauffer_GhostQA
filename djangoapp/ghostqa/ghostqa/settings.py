@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'performace_test',
     'agent_dynamic_location',
     'django_filters',
-    'knox',
+    # 'knox',
 ]
 
 MIDDLEWARE = [
