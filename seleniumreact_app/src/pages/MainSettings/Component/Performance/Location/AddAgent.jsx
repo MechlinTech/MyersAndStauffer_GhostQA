@@ -13,7 +13,7 @@ import { useStyles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { AddLocationAgent } from "../../../../../redux/actions/locationAction";
+import { AddLocationAgent, updateLocationAgent } from "../../../../../redux/actions/locationAction";
 
 const AddAgent = ({ open, onClose, row }) => {
   const classes = useStyles();
@@ -24,7 +24,7 @@ const AddAgent = ({ open, onClose, row }) => {
     Address: "",
     DockerCommand: "",
   };
-  
+
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({
     AgentName: false,
@@ -39,19 +39,23 @@ const AddAgent = ({ open, onClose, row }) => {
   }, [addAgents]);
   const [showDockerCommand, setShowDockerCommand] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); 
 
   useEffect(() => {
     if (row && row.agents && row.agents.length > 0) {
-      const { name, agent_address } = row.agents[0]; 
+      const { name, agent_address } = row.agents[0];
       setFormData({ ...formData, AgentName: name, Address: agent_address });
+      setIsEditing(true); 
     } else {
       setFormData(initialFormData);
+      setIsEditing(false);
     }
   }, [row]);
 
   const handleFieldChange = (fieldName, value) => {
     setFormData({ ...formData, [fieldName]: value });
   };
+
 
   const handleSave = () => {
     if (!formData.AgentName.trim()) {
@@ -69,9 +73,13 @@ const AddAgent = ({ open, onClose, row }) => {
       agent_address: formData.Address,
     };
 
-    dispatch(AddLocationAgent(data, setShowDockerCommand));
+    let ref = row?.agents[0]?.ref;
 
-    // setShowDockerCommand(true);
+    if (isEditing) {
+      dispatch(updateLocationAgent(data, setShowDockerCommand, ref));
+    } else {
+      dispatch(AddLocationAgent(data, setShowDockerCommand));
+    }
   };
 
   const handleCopyCommand = () => {
@@ -113,7 +121,7 @@ const AddAgent = ({ open, onClose, row }) => {
     >
       <div className={classes.modalContainer}>
         <Typography variant="h6" align="center" sx={{ fontWeight: "bold" }}>
-          {row && row.agents && row.agents.length > 0 ? "Edit Agent" : "Create Agent"}
+          {isEditing ? "Edit Agent" : "Create Agent"} {/* Step 2: Update modal title */}
         </Typography>
         {/* Body */}
         <div className={classes.modalBody}>
@@ -140,9 +148,7 @@ const AddAgent = ({ open, onClose, row }) => {
                 placeholder="Enter agent name"
                 value={formData.AgentName}
                 error={errors.AgentName}
-                onChange={(e) =>
-                  handleFieldChange("AgentName", e.target.value)
-                }
+                onChange={(e) => handleFieldChange("AgentName", e.target.value)}
               />
             </FormControl>
           </Grid>
@@ -170,9 +176,7 @@ const AddAgent = ({ open, onClose, row }) => {
                 placeholder="Enter address"
                 value={formData.Address}
                 error={errors.Address}
-                onChange={(e) =>
-                  handleFieldChange("Address", e.target.value)
-                }
+                onChange={(e) => handleFieldChange("Address", e.target.value)}
               />
             </FormControl>
           </Grid>
@@ -200,7 +204,7 @@ const AddAgent = ({ open, onClose, row }) => {
           <Button
             variant="contained"
             style={{ backgroundColor: "#6c757d" }}
-            onClick={onClose}
+            onClick={handleClose}
             className={classes.button}
             sx={{ marginRight: 1 }}
           >
@@ -214,7 +218,7 @@ const AddAgent = ({ open, onClose, row }) => {
               className={classes.button}
               style={{ background: "#654DF7" }}
             >
-              {row && row.agents && row.agents.length > 0 ? "Edit Agent" : "Create Agent"}
+              {isEditing ? "Edit Agent" : "Create Agent"} {/* Step 2: Update button label */}
             </Button>
           ) : (
             <Button

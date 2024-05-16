@@ -15,7 +15,12 @@ export const useStyles = makeStyles((theme) => ({
       borderColor: "#654DF7",
     },
   },
-
+  header: {
+    fontWeight: 400,
+    fontSize: "14px",
+    lineHeight: "21px",
+    padding: "10px 22px",
+  },
   highlight: {
     fontSize: "24px",
     fontWeight: 400,

@@ -45,18 +45,15 @@ export function LocationTable({ rows }) {
   const handleAddAgent = (row) => {
     setOpenModal(true);
     setAgentLocation(row);
-    console.log("agent row: row", row);
   };
 
   const handleEditAgent = (row) => {
-    console.log("handleEditAgent", row);
     setOpenModal(true);
     setAgentLocation(row);
   };
 
   const handleViewAgent = (row) => {
     navigate(`/main-settings/view-agent/${row.ref}`);
-    console.log("row", row.agents);
   };
 
   return (
@@ -79,7 +76,7 @@ export function LocationTable({ rows }) {
               <StyledTableCell>Actions</StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody style={{ maxHeight: '400px', overflowY: 'auto' }}>
             {rows.map((row) => (
               <TableRow
                 key={row.id}

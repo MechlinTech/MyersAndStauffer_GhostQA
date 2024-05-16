@@ -30,9 +30,8 @@ export default function ViewAgent() {
         className={classes.header}
         justifyContent="space-between"
         alignItems="center"
-        spacing={2}
       >
-        <Grid item xs={6} className={classes.header}>
+        <Grid item xs={6} >
           <div className={classes.highlight}>Agent View</div>
         </Grid>
         <Grid item>

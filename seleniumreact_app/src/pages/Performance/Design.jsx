@@ -169,7 +169,7 @@ export default function Design({ rootId }) {
       const res = await axios.get(
         `${CORE_BASE_URL}/codeengine/api/performance-container-runs/?client_reference_id=${clientId}`,
         // `http://app.ghostqa.com/codeengine/api/performance-container-runs/?client_reference_id=${clientId}`,
-        header()
+        // header()
       );
       const result = res.data.results;
       const isJsonHasNull = result.some(
