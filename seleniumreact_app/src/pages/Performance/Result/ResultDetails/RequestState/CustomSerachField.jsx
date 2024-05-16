@@ -37,7 +37,7 @@ export default function CustomSearchField({
     newCheckedItems[index] = !newCheckedItems[index];
     setCheckedItems(newCheckedItems);
 
-    const selected = data.filter((item, idx) => newCheckedItems[idx]);
+    const selected = data?.filter((item, idx) => newCheckedItems[idx]);
     onChange(selected);
   };
 

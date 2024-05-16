@@ -19,6 +19,7 @@ import {
   SaveAndExecute,
   UpdateTestCaseDetail,
   UpdateTestStepsDetails,
+  updateTestDetails,
 } from "../Api";
 import { toast } from "react-toastify";
 import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
@@ -91,7 +92,7 @@ export default function EditTestCase() {
     if (isExecuting) {
       return; // Return early if the API call is in progress
   }
-  setisExecuting(true); 
+  // setisExecuting(true); 
   
     if (saveOrExecute !== "save") setisExecuting(true);
     const urlPattern =
@@ -179,9 +180,9 @@ export default function EditTestCase() {
     if (!testCaseTitle.trim()) {
       settestCaseTitleError("test case title required");
       titleError = "test case title required";
-      toast.error("Enter valid title");
+      // toast.error("Enter valid title");
       setisExecuting(false);
-      return;
+      // return;
     } else {
       settestCaseTitleError("");
     }
@@ -206,8 +207,9 @@ export default function EditTestCase() {
         startUrl: startUrl,
       };
       if (saveOrExecute === "save") {
-        UpdateTestCaseDetail(data);
-        UpdateTestStepsDetails(payload, savetoEdit);
+        // UpdateTestCaseDetail(data);
+        // UpdateTestStepsDetails(payload, savetoEdit);
+        updateTestDetails(data,payload,savetoEdit)
       } else SaveAndExecute(data, payload, testId, handleExecuteLoading);
     } else {
       if (errors[0].urlError === undefined || !errors[0].urlError)
@@ -604,7 +606,7 @@ export default function EditTestCase() {
             },
           }}
         >
-          <StyledTypography>Step {index + 1}</StyledTypography>
+          <StyledTypography>Step {index + 1} *</StyledTypography>
           {isEditable && index > 0 && (
             <DeleteIcon
               onClick={() => handleRemoveStep(step)}
@@ -630,14 +632,17 @@ export default function EditTestCase() {
                   placeholder="Step Description"
                   value={step?.stepDescription}
                   disabled={!isEditable}
-                  error={Errors[index]?.descriptionError}
+                  // error={Errors[index]?.descriptionError}
                   onChange={(event) => {
                     handleInputChange(event, index, "stepDescription");
                   }}
                 />
+                {Errors[index]?.descriptionError && (
+                  <span className={classes.errorAsterisk}>*</span>
+                )}
               </StyledFormControl>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} style={{ position: "relative" }}>
               <Select
                 isClearable={true}
                 placeholder="Actions"
@@ -666,9 +671,7 @@ export default function EditTestCase() {
                     "&:hover": {
                       borderColor: "#654DF7",
                     },
-                    borderColor: Errors[index]?.typeError
-                      ? "red"
-                      : state.isFocused
+                    borderColor: state.isFocused
                       ? "#654DF7"
                       : "rgb(242, 242, 242)",
                   }),
@@ -695,6 +698,9 @@ export default function EditTestCase() {
                 }}
                 menuPosition={"fixed"}
               />
+              {Errors[index]?.typeError && (
+                <span className={classes.errorAsteriskSelect}>*</span>
+              )}
             </Grid>
             {/* bellow compenent will render field according to type */}
             <RenderActionFields
@@ -709,7 +715,7 @@ export default function EditTestCase() {
             {step.action && !selectorNoOptionList.includes(step.action) && (
               <Grid item xs={12}>
                 <Grid container spacing={1}>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} style={{ position: "relative" }}>
                     <Select
                       isClearable={true}
                       placeholder="Selector type"
@@ -740,9 +746,7 @@ export default function EditTestCase() {
                           "&:hover": {
                             borderColor: "#654DF7",
                           },
-                          borderColor: Errors[index]?.selectorTypeError
-                            ? "red"
-                            : state.isFocused
+                          borderColor: state.isFocused
                             ? "#654DF7"
                             : "rgb(242, 242, 242)",
                         }),
@@ -769,19 +773,25 @@ export default function EditTestCase() {
                       }}
                       menuPosition={"fixed"}
                     />
+                    {Errors[index]?.selectorTypeError && (
+                      <span className={classes.errorAsteriskSelect}>*</span>
+                    )}
                   </Grid>
                   <Grid item xs={6}>
                     <StyledFormControl>
                       <StyledOutlinedInput
                         type="text"
                         placeholder="Selector value"
-                        error={Errors[index]?.selectorValueError}
+                        // error={Errors[index]?.selectorValueError}
                         disabled={!isEditable}
                         value={step?.selectorValue}
                         onChange={(event) => {
                           handleInputChange(event, index, "selectorValue");
                         }}
                       />
+                      {Errors[index]?.selectorValueError && (
+                        <span className={classes.errorAsteriskSelect}>*</span>
+                      )}
                     </StyledFormControl>
                   </Grid>
                 </Grid>
@@ -883,14 +893,14 @@ export default function EditTestCase() {
                         color: "#fff",
                       }}
                     >
-                      {/* {isExecuting ? (
+                      {isExecuting ? (
                         <CircularProgress
                           style={{ color: "white" }}
                           size={25}
                         />
                       ) : (
                         "Save & Execute"
-                      )} */}
+                      )}
                     </Button>
                   </>
                 ) : (
@@ -920,7 +930,7 @@ export default function EditTestCase() {
             <Grid container spacing={1} mb={1} mt={1}>
               <Grid item xs={12} md={4} display="flex" alignItems="center">
                 <StyledTypography mr={1} minWidth={"120px"}>
-                  Test Case Title :
+                  Test Case Title * :
                 </StyledTypography>
                 <StyledFormControl>
                   <StyledOutlinedInput
@@ -929,13 +939,16 @@ export default function EditTestCase() {
                     placeholder="Enter title name"
                     value={testCaseTitle}
                     disabled={!isEditable}
-                    error={testCaseTitleError ? true : false}
+                    // error={testCaseTitleError ? true : false}
                     onChange={(e) => settestCaseTitle(e.target.value)}
                   />
+                  {testCaseTitleError && (
+                    <span className={classes.errorAsterisk}>*</span>
+                  )}
                 </StyledFormControl>
               </Grid>
               <Grid item xs={12} md={4} display="flex" alignItems="center">
-                <StyledTypography minWidth="80px">Start Url :</StyledTypography>
+                <StyledTypography minWidth="80px">Start Url * :</StyledTypography>
                 <StyledFormControl>
                   <StyledOutlinedInput
                     id="outlined-adornment-name"
@@ -943,9 +956,12 @@ export default function EditTestCase() {
                     placeholder="Enter URL"
                     value={startUrl}
                     disabled={!isEditable}
-                    error={startUrlError ? true : false}
+                    // error={startUrlError ? true : false}
                     onChange={(e) => setstartUrl(e.target.value)}
                   />
+                  {startUrlError && (
+                    <span className={classes.errorAsterisk}>*</span>
+                  )}
                 </StyledFormControl>
               </Grid>
             </Grid>

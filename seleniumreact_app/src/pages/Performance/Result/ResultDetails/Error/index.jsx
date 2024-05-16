@@ -174,6 +174,7 @@ export default function Error() {
               </Typography>
             </Grid>
             {/* Accordion items */}
+            {/* if we empty object then its show undefine, need optimize the response */}
             {executerData?.error && executerData.error.length > 0 ? (
               <Grid container className={classes.accordionContainer}>
                 {data?.map((item, index) => (

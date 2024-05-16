@@ -19,6 +19,20 @@ export const useStyles = makeStyles({
     display: "flex",
     justifyContent: "space-between",
   },
+  errorAsterisk: {
+    color: 'red',
+    position: 'absolute',
+    top: '0',
+    right: '4px',
+    fontSize:'20px'
+  },
+  errorAsteriskSelect: {
+    color: 'red',
+    position: 'absolute',
+    top: '5px',
+    right: '7px',
+    fontSize:'20px'
+  }
 });
 
 export const StyledFormControl = styled(FormControl)(({theme})=>({

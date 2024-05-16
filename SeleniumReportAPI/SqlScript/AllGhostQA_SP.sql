@@ -26,7 +26,7 @@ PROC EXEC		:  EXEC stp_AddExecuteData
 BEGIN TRY
 	BEGIN
 		INSERT INTO [dbo].[tbl_CypressTestExecution] ([TestSuite], [TestCaseId], [TestCaseDetailsId], [TestCaseName], [Status], [StartDateTime],
-		[EndDateTime], [TestStepJson], [SuiteDuration], [TestDuration], [TestScreenShotUrl], [TesterName], [TestVideoUrl]) 
+		[EndDateTime], [TestStepJson], [SuiteDuration], [TestDuration], [TestScreenShotUrl], [TesterName], [TestVideoUrl],[ContainerLog]) 
 		VALUES (@TestSuite, @TestCase, @TestCaseDetailsId, @TestCaseName, @Status, @StartDateTime, @EndDateTime, @TestStepJson, @SuiteDuration, @TestDuration,
 		@TestScreenShot, @TesterName, @TestVideoUrl, @ContainerLog)
 		IF @@ERROR = 0
@@ -850,7 +850,7 @@ BEGIN TRY
 	BEGIN
 		IF NOT EXISTS( SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId)
 		BEGIN
-			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, Description) 
+			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, [Description], [TestUserId]) 
 			VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description, @TestUserId)
 		END
 		ELSE
@@ -1947,8 +1947,12 @@ BEGIN TRY
 														END
 													)
 												) [text],
+												
 										tsd.[StepDescription] [name],
-										tsd.[IsOptional]
+										tsd.[IsOptional],
+										CASE WHEN tsd.[Action] = 'type' OR tsd.[Action] = 'Wait' THEN tsd.[TextValue] ELSE NULL END AS [duration],
+										(CASE WHEN tsd.[Action] = 'scroll_to_window' THEN SUBSTRING(tsd.[ScrollPixel], CHARINDEX('(', tsd.[ScrollPixel]) + 1, CHARINDEX(',', tsd.[ScrollPixel]) - CHARINDEX('(', tsd.[ScrollPixel]) - 1) END) [x_position],
+                                                (CASE WHEN tsd.[Action] = 'scroll_to_window' THEN SUBSTRING(tsd.[ScrollPixel], CHARINDEX(',', tsd.[ScrollPixel]) + 1, CHARINDEX(')', tsd.[ScrollPixel]) - CHARINDEX(',', tsd.[ScrollPixel]) - 1) END) [y_position]
 					FROM tbl_TestStepsDetails tsd
 					WHERE tsd.[TestCaseDetailsId] = tcd.[TestCaseDetailsId]
 				FOR JSON PATH))
@@ -3076,7 +3080,7 @@ BEGIN TRY
 			CONVERT(datetimeoffset, TestSuiteStartDateTime), CONVERT(datetimeoffset, TestSuiteEndDateTime),
 			CONVERT(datetimeoffset, TestRunStartDateTime), CONVERT(datetimeoffset, TestRunEndDateTime),
 			TestCaseSteps, TesterName, TestEnvironment
-		FROM OPENJSON(@DynamicObject) WITH (
+		FROM OPENJSON(@TestSuiteJson) WITH (
 			TestSuiteName NVARCHAR(100),
 			TestRunName NVARCHAR(100),
 			TestCaseName NVARCHAR(100),
@@ -3552,7 +3556,8 @@ PROC EXEC		:
 BEGIN TRY
 	SELECT [result] = JSON_QUERY((
 		SELECT [Id],
-			   [CountryName] as [Name]
+			   [CountryName] as [Name],
+			   [LocationId]
 		FROM tbl_Location
 		ORDER BY CountryName
 		FOR JSON PATH
@@ -4194,5 +4199,285 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [result]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddFunctionalTestRun]
+@RootId                   INT,
+@TestRunName	          NVARCHAR(MAX),
+@TestRunDescription	      NVARCHAR(MAX),
+@BuildVersion	          NVARCHAR(MAX),
+@Environment	          NVARCHAR(MAX),
+@Milestone	              NVARCHAR(MAX),
+@AssignedTo	              NVARCHAR(MAX),
+@TestCases	              NVARCHAR(MAX),
+@CreatedBy	              NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_AddFunctionalTestRun
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	8th May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_AddFunctionalTestRun 
+				
+**************************************************************************************/
+BEGIN TRY
+	BEGIN
+		INSERT INTO [dbo].[tbl_FunctionalTestRun] ([RootId], [TestRunName], [TestRunDescription], [BuildVersion], [Environment], [Milestone], [AssignedTo], [TestCases], [CreatedBy], [CreatedOn], [UpdatedBy], [UpdatedOn]) 
+		VALUES (@RootId, @TestRunName, @TestRunDescription, @BuildVersion, @Environment, @Milestone, @AssignedTo, @TestCases, @CreatedBy, GETDATE(), NULL, NULL)
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [Result] = JSON_QUERY((
+				SELECT 'success' [status], 'Added Successfully' [message]
+			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_DeleteFuncationalTestRun]
+@Id			INT
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_DeleteFuncationalTestRun
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	9th May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_DeleteFuncationalTestRun 
+**************************************************************************************/
+BEGIN TRY
+	IF EXISTS(SELECT 1 FROM tbl_FunctionalTestRun WHERE [Id] = @Id)
+	BEGIN
+		DELETE FROM tbl_FunctionalTestRun WHERE [Id] = @Id
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'Test Run not available' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	IF @@ERROR = 0
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'success' [status], 'Test Run Deleted Successfully' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [TestRun]
+END CATCH
+GO
+CREATE OR  ALTER PROCEDURE [dbo].[stp_DeletePrivateLocation]
+@LocationId			INT
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_DeletePrivateLocation
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	10th May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_DeletePrivateLocation 
+**************************************************************************************/
+BEGIN TRY
+	IF EXISTS(SELECT 1 FROM tbl_Location WHERE [LocationId] = @LocationId)
+	BEGIN
+		DELETE FROM tbl_Location WHERE [LocationId] = @LocationId
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'Private Location is not available' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	IF @@ERROR = 0
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'success' [status], 'Private Location Deleted Successfully' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+	ELSE
+	BEGIN
+		SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+	END
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [TestRun]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddPrivatedLocation]
+@LocationId           INT,
+@CountryName	      NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_AddPrivatedLocation
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	10th May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_AddPrivatedLocation 
+				
+**************************************************************************************/
+BEGIN TRY
+ IF EXISTS( SELECT 1 FROM [dbo].[tbl_Location] WHERE [CountryName] = @CountryName AND [LocationId] = @LocationId)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Country Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
+	BEGIN
+		INSERT INTO [dbo].[tbl_Location] ([CountryName], [LocationId]) 
+		VALUES (@CountryName, @LocationId)
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [Result] = JSON_QUERY((
+				SELECT 'success' [status], 'successfully Added' [message]
+			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateUserOrganization]
+@Id			            INT = 0,
+@UserId                 NVARCHAR(MAX),
+@LogoPath				NVARCHAR(MAX),
+@Description			NVARCHAR(MAX),
+@CreatedBy				NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_AddUpdateUserOrganization
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	16 May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_AddUpdateUserOrganization 0
+				
+**************************************************************************************/
+BEGIN TRY
+	IF @Id = 0
+	BEGIN
+		INSERT INTO tbl_UsersOrganization (UserId, LogoPath, [Description], CreatedBy, CreatedOn, UpdatedBy, UpdatedOn) 
+		VALUES (@UserId, @LogoPath, @Description, @CreatedBy, GETDATE(), Null, Null)
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'success' [status], 'Users Organization Saved Successfully' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+	ELSE
+	BEGIN 
+		UPDATE tbl_UsersOrganization
+			SET [UserId]           = @UserId,
+               [LogoPath]	       = @LogoPath,
+			   [Description]	   = @Description,
+               [UpdatedBy]		   = @CreatedBy,
+               [UpdatedOn]		   = GETDATE()
+		WHERE [Id] = @Id
+
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'success' [status], 'Users Organization Updated Successfully' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetUsersOrganizationByUserId]
+@UserId          NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetUsersOrganizationByUserId
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	16 May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetUsersOrganizationByUserId
+**************************************************************************************/
+BEGIN TRY
+	SELECT [result] = JSON_QUERY((
+		SELECT [Id], 
+		       [UserId],
+			   [LogoPath],
+			   [Description],
+               [CreatedBy],
+               [CreatedOn],
+			   [UpdatedBy],
+               [UpdatedOn]
+		FROM tbl_UsersOrganization
+		WHERE UserId = @UserId
+	FOR JSON PATH))
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [UsersOrganization]
 END CATCH
 GO

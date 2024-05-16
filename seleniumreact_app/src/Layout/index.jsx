@@ -26,6 +26,7 @@ import { logout } from "../redux/actions/authActions";
 import { useStyles } from "./styles";
 import Navigations from "../Routes/Navigations";
 import { LogoutIcon, UserIcon } from "../comman/icons";
+import SettingsIcon from '@mui/icons-material/Settings'
 import { Box } from "@mui/material";
  
 export default function MiniDrawer() {
@@ -206,6 +207,15 @@ export default function MiniDrawer() {
                             <span style={{ marginLeft: "10px" }}>
                               My Account
                             </span>
+                          </MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              setShowMenu(false);
+                              navigate("/main-settings");
+                            }}
+                          >
+                            <SettingsIcon style={{ color: 'rgb(115, 115, 115' }} />
+                            <span style={{ marginLeft: "10px" }}>Settings</span>
                           </MenuItem>
                           <MenuItem
                             onClick={() => {

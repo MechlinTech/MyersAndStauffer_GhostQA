@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
 
@@ -101,7 +102,8 @@ const useStyles = makeStyles((theme) => ({
     inputError: {
         color: "red",
         textAlign: 'left',
-        fontSize: '14px !important',
+        fontSize: '10px',
+        fontFamily: "Lexend Deca"
         // paddingLeft: '10px',
     },
     testCaseErrorStyle:{
@@ -151,3 +153,10 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontFamily: `"Lexend Deca", sans-serif, -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
     },
 }));
+
+export const StyledTypography = styled(Typography)(({ theme }) => ({
+    fontFamily: 'Lexend Deca',
+    fontSize:'10px',
+    color:'red'
+    // Add other styles as needed
+  }));

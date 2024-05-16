@@ -12,7 +12,7 @@ import {
   Card,
   CircularProgress,
 } from "@mui/material";
-import useStyles from "./styles";
+import useStyles, { StyledTypography } from "./styles";
 import clsx from "clsx";
 import Select from "react-select";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -58,10 +58,13 @@ export default function EditTestSuite() {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   // const [openLoadingModal, setopenLoadingModal] = useState(false);
-  const { applicationList, environementList, suiteToEdit, testCasesList } =
+  const { applicationList, environementList, suiteToEdit, testCasesList,executingSuite} =
     useSelector((state) => state.selenium);
+
   const { testUserList } = useSelector((state) => state.settings);
   const [isExecuting, setisExecuting] = useState(false);
+  const [nameLengthError, setnameLengthError] = useState(false);
+
   useEffect(() => {
     dispatch(GetApplication());
     dispatch(GetEnvironment());
@@ -92,7 +95,9 @@ export default function EditTestSuite() {
     //   );
     // });
     setSelectedTestUser(() => {
-      return testUserList?.find((env) => env.UserId === suiteToEdit?.TestUser?.TestUserId);
+      return testUserList?.find(
+        (env) => env.UserId === suiteToEdit?.TestUser?.TestUserId
+      );
     });
     setDescription(suiteToEdit?.Description);
     // setSelectedRows(() => {
@@ -102,15 +107,15 @@ export default function EditTestSuite() {
     // });
     setSelectedRows(() => {
       const selectedTestCasesArray = suiteToEdit?.SelectedTestCases
-        ? suiteToEdit.SelectedTestCases.split(',')
+        ? suiteToEdit.SelectedTestCases.split(",")
         : [];
-    
+
       return testCasesList.filter((test) =>
-        selectedTestCasesArray.some((selectedTestCase) => selectedTestCase.trim() === test.TestCaseName)
+        selectedTestCasesArray.some(
+          (selectedTestCase) => selectedTestCase.trim() === test.TestCaseName
+        )
       );
     });
-    
-    
   }, [dispatch, suiteToEdit]);
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
@@ -121,7 +126,15 @@ export default function EditTestSuite() {
   };
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    // setName(e.target.value);
+    const inputValue = e.target.value;
+    if (inputValue.length <= 50) {
+      setName(inputValue);
+      setnameLengthError(false);
+      setError((prev) => ({ ...prev, name: "" }));
+    } else {
+      setnameLengthError(true);
+    }
   };
   const handleApplication = (env) => {
     const app = env
@@ -150,7 +163,7 @@ export default function EditTestSuite() {
     let payload = {
       TestSuiteName: name,
       Description: description,
-      TestSuiteId: suiteToEdit.TestSuiteId,
+      TestSuiteId: suiteToEdit?.TestSuiteId,
       TestSuiteType: selectedSuiteValue,
       TestUserId: selectedTestUser.UserId,
       ApplicationId: selectedApplication?.ApplicationId,
@@ -356,10 +369,15 @@ export default function EditTestSuite() {
                               )}
                             />
                           </FormControl>
+                          {nameLengthError && (
+                            <StyledTypography>
+                              Suite name cannot have more than 50 char*
+                            </StyledTypography>
+                          )}
                           {Error.name && (
-                            <Typography className={classes.inputError}>
+                            <StyledTypography>
                               {Error.name}
-                            </Typography>
+                            </StyledTypography>
                           )}
                         </div>
                       </Grid>
@@ -401,7 +419,10 @@ export default function EditTestSuite() {
                               error={Error.description ? true : false}
                               placeholder="Enter description.."
                               value={description}
-                              onChange={(e) => setDescription(e.target.value)}
+                              onChange={(e) => {
+                                setDescription(e.target.value);
+                                setError((prev) => ({ ...prev, description: "" }));
+                              }}
                               InputProps={{
                                 sx: {
                                   "&:hover fieldset": {
@@ -415,9 +436,9 @@ export default function EditTestSuite() {
                             />
                           </FormControl>
                           {Error.description && (
-                            <Typography className={classes.inputError}>
+                            <StyledTypography>
                               {Error.description}
-                            </Typography>
+                            </StyledTypography>
                           )}
                         </div>
                       </Grid>
@@ -503,9 +524,9 @@ export default function EditTestSuite() {
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
                             {Error.environment && (
-                              <Typography className={classes.inputError}>
+                              <StyledTypography>
                                 {Error.environment}
-                              </Typography>
+                              </StyledTypography>
                             )}
                           </div>
                         </Grid>
@@ -595,9 +616,9 @@ export default function EditTestSuite() {
                               menuPosition={"fixed"} // Set menuPosition to fixed
                             />
                             {Error.test_user && (
-                              <Typography className={classes.inputError}>
+                              <StyledTypography>
                                 {Error.test_user}
-                              </Typography>
+                              </StyledTypography>
                             )}
                           </div>
                         </Grid>
@@ -804,7 +825,7 @@ export default function EditTestSuite() {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleSubmit("SaveAndExecute")}
-                    // disabled={isExecuting}
+                    disabled={executingSuite?true:false}
                     sx={{
                       backgroundColor: "rgb(101, 77, 247)",
                       "&:hover": {
@@ -813,7 +834,7 @@ export default function EditTestSuite() {
                       },
                     }}
                   >
-                    {!isExecuting ? (
+                    {/* {!isExecuting ? (
                       "Save & Execute"
                     ) : (
                       <CircularProgress
@@ -823,7 +844,8 @@ export default function EditTestSuite() {
                           color: "#fff",
                         }}
                       />
-                    )}
+                    )} */}
+                    Save & Execute
                   </Button>
 
                   <Button

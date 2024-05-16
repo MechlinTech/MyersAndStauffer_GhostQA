@@ -52,7 +52,6 @@ export default function LocationPanel() {
 
   const {
     usedLocation,
-    suitId,
     locationOptions,
     scenarioId,
     scenarios,
@@ -319,7 +318,7 @@ export default function LocationPanel() {
     let payload = {
       id: 0,
       performanceFileId: scenarioId,
-      name: locationOptions[0]?.value,
+      name: locationOptions[1].options[0]?.value,
       numberUser: remainingUser,
       percentageTraffic: loadPerLocation+accumalatedPoint,
     };

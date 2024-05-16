@@ -150,7 +150,6 @@ export default function Summary() {
     return `${(parentContainerHeight * desiredPercentage) / 100}px`;
   };
 
-  console.log("executeJMXData", executeJMXData);
   return (
     <>
       <Grid className={classes.mainContainer}>

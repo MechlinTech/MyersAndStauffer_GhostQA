@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TableCell from "@material-ui/core/TableCell";
 import Modal from "@material-ui/core/Modal";
 import Box from "@material-ui/core/Box";
@@ -9,12 +9,25 @@ import { getVideoUrl } from "../../utils/configService";
 
 const CustomVideoChell =  (row) => {
   const [openModal, setOpenModal] = useState(false);
-  const baseUrl = getVideoUrl();
+  const [baseUrl, setBaseUrl] = useState("");
 
-  const videoUrl = (apiPath) => {
-    console.log("baseUrl",`${baseUrl}${apiPath?.replace(/\\/g, '/')}`)
-    return `${baseUrl}${apiPath?.replace(/\\/g, '/')}`;
-  };
+    // Load baseUrl when the component mounts
+    useEffect(() => {
+      const loadBaseUrl = async () => {
+        const fetchedBaseUrl = await getVideoUrl();
+        setBaseUrl(fetchedBaseUrl);
+      };
+      loadBaseUrl();
+    }, []);
+  
+    const videoUrl = (apiPath) => {
+      return `${baseUrl}${apiPath?.replace(/\\/g, '/')}`;
+    };
+
+  // const videoUrl = (apiPath) => {
+  //   console.log("baseUrl",baseUrl)
+  //   return `${baseUrl}${apiPath?.replace(/\\/g, '/')}`;
+  // };
   
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -66,7 +79,7 @@ const CustomVideoChell =  (row) => {
               style={{ width: "100%", height: "100%", objectFit: "contain" }}
             >
               <source
-                src={videoUrl(row.TestCaseVideoURL)}
+               src={videoUrl(row.row.TestCaseVideoURL)}
                 type="video/webm"
               />
             </video>

@@ -8,7 +8,6 @@ import { useStyles, StyledTableCell } from "./styles";
 
 export function RequestStateTable({ data }) {
   const classes = useStyles();
-
   return (
     <TableContainer>
       <Table>
@@ -207,6 +206,65 @@ export function RequestStateTable({ data }) {
                   )}
                 </React.Fragment>
               ))}
+          {data &&
+            data.transactions &&
+            data.transactions.map((trans) =>
+              trans ? ( // Check if trans is defined
+                <TableRow key={trans.transaction}>
+                  <StyledTableCell first colSpan={2}>
+                    {trans.transaction}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {trans.sampleCount ? trans.sampleCount : null}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {typeof trans.medianResTime === "number"
+                      ? trans.medianResTime.toFixed(2)
+                      : null}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {typeof trans.sentKBytesPerSec === "number"
+                      ? trans.sentKBytesPerSec.toFixed(2)
+                      : null}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {typeof trans.pct3ResTime === "number"
+                      ? trans.pct3ResTime.toFixed(2)
+                      : null}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {typeof trans.pct2ResTime === "number"
+                      ? trans.pct2ResTime.toFixed(2)
+                      : null}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {typeof trans.pct1ResTime === "number"
+                      ? trans.pct1ResTime.toFixed(2)
+                      : null}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {typeof trans.minResTime === "number"
+                      ? trans.minResTime.toFixed(2)
+                      : null}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {typeof trans.maxResTime === "number"
+                      ? trans.maxResTime.toFixed(2)
+                      : null}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {typeof trans.receivedKBytesPerSec === "number"
+                      ? trans.receivedKBytesPerSec.toFixed(2)
+                      : null}
+                  </StyledTableCell>
+                  <StyledTableCell last>
+                    {typeof trans.errorPct === "number"
+                      ? trans.errorPct.toFixed(2)
+                      : null}
+                  </StyledTableCell>
+                </TableRow>
+              ) : null
+            )}
         </TableBody>
       </Table>
     </TableContainer>

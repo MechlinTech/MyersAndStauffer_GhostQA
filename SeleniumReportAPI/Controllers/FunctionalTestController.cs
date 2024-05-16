@@ -118,5 +118,28 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetAllActiveUserDetails());
         }
+
+        /// <summary>
+        /// Add Functional Test Case
+        /// </summary>
+        /// <param name="FunctionalTestRun"></param>
+        /// <returns></returns>
+        [HttpPost("AddFunctionalTestRun")]
+        public async Task<ActionResult> AddFunctionalTestRun(FunctionalTestRun model)
+        {
+            var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            return Ok(await _helper.AddFunctionalTestRun(model, CreatedBy));
+        }
+
+        /// <summary>
+        ///  Delete Functional Test Run By Id
+        /// </summary>
+        /// <param Id="Id"></param>
+        /// <returns></returns>
+        [HttpPost("DeleteFuncationalTestRunById")]
+        public async Task<ActionResult> DeleteFuncationalTestRunById(int Id)
+        {
+            return Ok(await _helper.DeleteFuncationalTestRunById(Id));
+        }
     }
 }

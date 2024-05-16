@@ -139,6 +139,7 @@ const Card = ({
                         onClick={() => {
                           handleTask(item.id, nodeCount);
                           dispatch(setRootId(item.id));
+                          toggleExpand(item.id)
                         }}
                         style={{
                           cursor: "pointer",
