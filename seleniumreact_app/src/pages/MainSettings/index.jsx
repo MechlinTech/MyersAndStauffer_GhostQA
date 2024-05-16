@@ -62,7 +62,7 @@ export default function Settings() {
     sessionStorage.setItem("selectedCategory", childData);
     setSelectedItem(child);
     const parentCategory = categories.find(category =>
-        category.children && category.children.some(c => c.title === child.title)
+        category?.children && category?.children.some(c => c.title === child.title)
     );
     if (parentCategory) {
         setActiveParent(parentCategory.title);
@@ -75,6 +75,20 @@ export default function Settings() {
   };
 
   const categories = [
+    {
+      title: "User Account",
+      path: "/main-settings/detail",
+      children: [
+        {
+          title: "Detail",
+          path: "/main-settings/detail",
+        },
+        {
+          title: "Organization",
+          path: "/main-settings/organization",
+        },
+      ],
+    },,
     {
       title: "Performance",
       path: "/main-settings/location",
