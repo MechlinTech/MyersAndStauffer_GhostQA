@@ -83,11 +83,13 @@ export const getTestCaseRundetailsByTestName = (data, setInProgress) => {
 };
 
 export const ExecuteTestCasesByTestSuite = (data) => {
+  debugger
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.options(
         `${BASE_URL}/Selenium/ExecuteTestSuite?TestSuiteName=${data}`,
+        // `${BASE_URL}/Selenium/ExecuteTestSuite`,
         header()
       );
       const finishedItem = response.data.find(item => item?.status === "Finished")

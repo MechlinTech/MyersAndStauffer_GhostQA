@@ -21,6 +21,8 @@ import TestCase from "../pages/TestCase";
 import Location from "../pages/MainSettings/Component/Performance/Location";
 import Integration from "../pages/MainSettings/Component/Performance/Integration";
 import ViewAgent from "../pages/MainSettings/Component/Performance/Location/ViewAgent";
+import Detail from "../pages/MainSettings/Component/UserAccount/Detail";
+import Organization from "../pages/MainSettings/Component/UserAccount/Organization";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
@@ -73,7 +75,20 @@ export default function Navigations() {
             <Route path="User" element={<UserManagement />} />
             <Route path="test-user" element={<TestUser />} />
           </Route>
-
+          <Route path="main-settings" element={<MainSettings />}>
+            <Route path="detail" element={<Detail />} />
+            <Route path="organization" element={<Organization />} />
+            <Route path="location" element={<Location />} />
+            <Route
+              path="integration"
+              element={<Integration />}
+            />
+            <Route path="Application" element={<Application />} />
+            <Route
+              path="Application/Sub-Application"
+              element={<RoleManagement />}
+            />
+          </Route>
           <Route path="testLab" element={<TestLab />} />
           <Route path="testLab/:nodeId" element={<TestLab />} />
           <Route
