@@ -1,3 +1,4 @@
+import { ElectricalServices } from "@mui/icons-material";
 import {
   GET_LOC_COUNT,
   GET_USER_COUNT,
@@ -7,10 +8,12 @@ import {
   LOCATION_OPTIONS,
   SET_SCENARIO_ID,
   SET_SCENARIOS,
+  SET_EXPANDED_NODE,
+  EXPAND_PARENT
 } from "../actions/performanceAction";
 
 const initialState = {
-  suitId: 0,
+  selectedNodeId: 0,
   virtualUser: 0,
   totalLocation: 0,
   totalScenario: 0,
@@ -19,6 +22,8 @@ const initialState = {
   usedLocation: [],
   scenarioId: "",
   scenarios: null,
+  expanded: [],
+
 };
 
 const performanceReducer = (state = initialState, action) => {
@@ -32,9 +37,48 @@ const performanceReducer = (state = initialState, action) => {
     case SET_SUITE_ID: {
       return {
         ...state,
-        suitId: action.payload,
+        selectedNodeId: action.payload,
       };
     }
+    case SET_EXPANDED_NODE: {
+      const id = action.payload;
+      // following comment will open only one work space
+      // const expandedItem = state.listData.find((data)=>data.id === id)
+      // if(expandedItem.parentId === 0){
+      //   return{
+      //     ...state,
+      //     expanded:[id]
+      //   }
+      // }
+      const index = state.expanded?.indexOf(id);
+      if (index === -1) {
+        return {
+          ...state,
+          expanded: [...(state.expanded || []), id],
+        };
+      } else {
+        const newExpanded = [
+          ...state.expanded.slice(0, index),
+          ...state.expanded.slice(index + 1),
+        ];
+        return {
+          ...state,
+          expanded: newExpanded,
+        };
+      }
+    }
+    case EXPAND_PARENT: {
+      const id = action.payload;
+      const index = state.expanded?.indexOf(id);
+      if (index === -1) {
+        return {
+          ...state,
+          expanded: [...(state.expanded || []), id],
+        };
+      }
+      return state;
+    }
+    
     case GET_USER_COUNT: {
       return {
         ...state,
@@ -55,15 +99,20 @@ const performanceReducer = (state = initialState, action) => {
     }
     case LOCATION_OPTIONS: {
       const data = action.payload;
-      const transformedData = data
-        ?.filter((item) => !state.usedLocation?.includes(item.Name))
-        .map((item) => ({
-          label: item.Name,
-          value: item.Name,
-        }));
+      const groupedOptions = data
+        ?.filter((item) => !state.usedLocation?.includes(item.value))
+        .reduce((acc, curr) => {
+        const group = acc.find(group => group.label === curr.category);
+        if (group) {
+          group.options.push(curr);
+        } else {
+          acc.push({ label: curr.category, options: [curr] });
+        }
+        return acc;
+      }, []);
       return {
         ...state,
-        locationOptions: transformedData,
+        locationOptions: groupedOptions,
       };
     }
     case SET_SCENARIO_ID:

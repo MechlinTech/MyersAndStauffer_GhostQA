@@ -29,6 +29,7 @@ matplotlib = "*"
 dj-database-url = "*"
 django-mssql = "*"
 psycopg2-binary = "*"
+django-rest-knox = "*"
 
 [dev-packages]
 

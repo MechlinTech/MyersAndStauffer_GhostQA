@@ -2853,6 +2853,7 @@ namespace SeleniumReportAPI.Helper
 
         internal async Task<string> GetLocationList()
         {
+            var data = AddPrivateLocation();
             string result = string.Empty;
             try
             {
@@ -3474,6 +3475,239 @@ namespace SeleniumReportAPI.Helper
                     using (SqlCommand command = new SqlCommand("stp_GetAllActiveUserDetails", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> AddFunctionalTestRun(FunctionalTestRun model, string createdBy)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_AddFunctionalTestRun", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
+                        command.Parameters.AddWithValue("@TestRunName", model.TestRunName);
+                        command.Parameters.AddWithValue("@TestRunDescription", model.TestRunDescription);
+                        command.Parameters.AddWithValue("@BuildVersion", model.BuildVersion);
+                        command.Parameters.AddWithValue("@Environment", model.Environment);
+                        command.Parameters.AddWithValue("@Milestone", model.Milestone);
+                        command.Parameters.AddWithValue("@AssignedTo", model.AssignedTo);
+                        command.Parameters.AddWithValue("@TestCases", model.TestCases);
+                        command.Parameters.AddWithValue("@CreatedBy", createdBy);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> DeleteFuncationalTestRunById(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeleteFuncationalTestRun", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> AddPrivateLocation()
+        {
+            string result = string.Empty;
+            Dto_AddPrivateLocation data = new Dto_AddPrivateLocation();
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.GetAsync(_configuration["CypressAPI:Location"]))
+                    {
+                        var res1 = await response.Content.ReadAsStringAsync();
+                        data = JsonConvert.DeserializeObject<Dto_AddPrivateLocation>(res1);
+                    }
+
+                }
+                foreach (var item in data.results)
+                {
+
+                    using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                    {
+                        connection.Open();
+                        using (SqlCommand command = new SqlCommand("stp_AddPrivatedLocation", connection))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@LocationId", item.id);
+                            command.Parameters.AddWithValue("@CountryName", item.location_name);
+                            using (SqlDataReader reader = command.ExecuteReader())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    reader.Read();
+                                    result = reader["result"].ToString();
+                                }
+                            }
+                        }
+                        connection.Close();
+                    } 
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+        internal async Task<string> DeletePrivateLocationById(int Id)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_DeletePrivateLocation", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@LocationId", Id);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> AddUpdateUserOrganization(Dto_UserOrganization model, string createdBy)
+        {
+            string result = string.Empty;
+            try
+            {
+                string fileName = model.BinaryData.FileName;
+                string directoryPath = _configuration["LocationFile:LogoFileDev"];
+                string filePath = Path.Combine(directoryPath, fileName);
+
+                // Ensure directory exists
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                // Save uploaded file to disk
+                if (!File.Exists(filePath))
+                {
+                    using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await model.BinaryData.CopyToAsync(stream);
+                    }
+                }
+
+                // Save file path to database
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (SqlCommand command = new SqlCommand("stp_AddUpdateUserOrganization", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", model.Id);
+                        command.Parameters.AddWithValue("@UserId", model.UserId);
+                        command.Parameters.AddWithValue("@Description", model.Description);
+                        command.Parameters.AddWithValue("@CreatedBy", createdBy);
+                        command.Parameters.AddWithValue("@LogoPath", filePath);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                result = "Failed";
+            }
+            return result;
+        }
+
+        internal async Task<string> GetUsersOrganizationByUserId(string userId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetUsersOrganizationByUserId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", userId);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)

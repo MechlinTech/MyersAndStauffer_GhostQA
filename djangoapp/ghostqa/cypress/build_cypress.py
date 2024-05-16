@@ -278,7 +278,7 @@ def generate_action_code(action,wrap_it=False):
                     cy.get("{selector}").dblclick();
                 }});
             """
-        return f"""cy.dblclick("{selector}");"""
+        return f"""cy.get("{selector}").dblclick();"""
     elif action_type == 'rightclick':
         if wrap_it:
             name = f'Test Step: {action_type}: {selector}'
@@ -287,7 +287,7 @@ def generate_action_code(action,wrap_it=False):
                     cy.get("{selector}").rightclick();  
                 }})
             """
-        return f"""cy.rightclick({selector})"""
+        return f"""cy.get("{selector}").rightclick();"""
     elif action_type == 'clear_text':
         if wrap_it:
             name = f'Test Step: {action_type}: {selector}'

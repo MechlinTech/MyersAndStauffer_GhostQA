@@ -499,5 +499,28 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.DeleteTestUser(Id));
         }
+
+        /// <summary>
+        /// Add Test User
+        /// </summary>
+        /// <param Dto_UserOrganization = Dto_UserOrganization></param>
+        /// <returns></returns>
+        [HttpPost("AddUpdateUserOrganization")]
+        public async Task<ActionResult> AddUpdateUserOrganization([FromForm] Dto_UserOrganization model)
+        {
+            var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            return Ok(await _helper.AddUpdateUserOrganization(model, CreatedBy));
+        }
+
+        /// <summary>
+        /// Get Test User  By Id
+        /// </summary>
+        /// <param Id = Id></param>
+        /// <returns></returns>
+        [HttpGet("GetUsersOrganizationByUserId")]
+        public async Task<ActionResult> GetUsersOrganizationByUserId(string UserId)
+        {
+            return Ok(await _helper.GetUsersOrganizationByUserId(UserId));
+        }
     }
 }

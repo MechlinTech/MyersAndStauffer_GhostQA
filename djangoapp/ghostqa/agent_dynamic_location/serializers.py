@@ -1,18 +1,23 @@
 from rest_framework import serializers
 # from .models import Agent
-from .models import AgentDetails, Job, PrivateLocation, Agent
+from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution, CustomToken
 from cypress.serializers.request import TestSuiteSerializer
 from cypress.models import TestSuite, TestContainersRuns as CypressContainersRun
 from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer, TestContainersRunsSerializer
 from performace_test.models import JmeterTestContainersRuns, PerformaceTestSuite, TestContainersRuns
+from django.utils import timezone
 
 
 
 
 
-
+class AgentListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Agent
+        fields = '__all__'
 
 class PrivateLocationSerializer(serializers.ModelSerializer):
+    agents = serializers.SerializerMethodField()
     class Meta:
         model = PrivateLocation
         fields = [
@@ -27,10 +32,16 @@ class PrivateLocationSerializer(serializers.ModelSerializer):
             'console_xmx_mb',
             'created_at',
             'updated_at',
+            'agents'
         ]
+        
+    def get_agents(self, obj):
+        agents = Agent.objects.filter(location=obj)
+        return AgentListSerializer(agents, many=True).data
         
 class NewAgentSerializer(serializers.ModelSerializer):
     # location = serializers.PrimaryKeyRelatedField(queryset=PrivateLocation.objects.all())
+    docker_command = serializers.SerializerMethodField()
     class Meta:
         model = Agent
         fields = [
@@ -45,11 +56,47 @@ class NewAgentSerializer(serializers.ModelSerializer):
             'agent_status',
             'created_at',
             'updated_at',
+            'docker_command',
         ]
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['location'] = PrivateLocationSerializer(instance.location).data
+        # response['docker_command'] = 'docker run -d --name my-django-app -e DJANGO_DEBUG=True --net=host ghostqa/agent:latest python Agent/main.py' 
         return response
+    
+    def create(self, validated_data):
+        # Generate the token
+        expiry_date = timezone.now() + timezone.timedelta(hours=1)
+        # token = str(uuid.uuid4())
+
+        # Create the Agent instance
+        agent = Agent.objects.create(**validated_data)
+
+        # Create the CustomToken instance
+        custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
+
+        # Set the token attribute on the agent instance
+        # setattr(agent, '_token', token)
+
+        return agent
+    
+    def get_docker_command(self, instance):
+        try:
+            token = CustomToken.objects.get(agent=instance).token
+        except CustomToken.DoesNotExist:
+            token = None
+
+        token_param = f"-e token {token}" if token else "-e token DEFAULT_TOKEN_VALUE"
+        return f"docker run -d --name GhostQA-Codeengine -e DJANGO_DEBUG=True {token_param} --net=host ghostqa/agent:latest python Agent/main.py"
+
+
+
+class LoadDistributionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LoadDistribution
+        fields = ['id', 'ref', 'private_location', 'percentage_of_traffic', 'number_od_users', 'created_at', 'updated_at']
+
+
 
 class AgentSerializer(serializers.ModelSerializer):
     class Meta:

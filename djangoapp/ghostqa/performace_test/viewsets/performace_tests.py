@@ -22,7 +22,8 @@ from cypress.utils import (format_javascript,check_container_status, convert_to_
                            list_files_in_directory)
 
 from ..docker.containers import start_jmeter_test2,start_jmeter_test
-from agent_dynamic_location.models import Job, Agent
+from agent_dynamic_location.models import Job, Agent, PrivateLocation, LoadDistribution, CustomToken
+from django.utils import timezone
 
 class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
     queryset = PerformaceTestSuite.objects.all()
@@ -199,6 +200,9 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
     @action(detail=False,methods=['POST'])
     def execute3(self, request, *args, **kwargs):
         agent_id = request.data.pop('agent', None)
+        private_location = request.data.pop('private_location', None)
+        percentage_of_traffic = request.data.pop('percentage_of_traffic', None)
+        number_of_users = request.data.pop('number_of_users', None)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -215,24 +219,46 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         container_run.save()
         
         try:
-            agent = Agent.objects.get(id=agent_id[0])
+            location = PrivateLocation.objects.get(ref = private_location[0])
+            print("location :", location)
+        except PrivateLocation.DoesNotExist:
+            return Response({
+                "status": "error",
+                "message": f"PrivateLocation with ID {location} does not exist"
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+        load_distribution = LoadDistribution.objects.create(
+            private_location = location,
+            percentage_of_traffic =percentage_of_traffic[0],
+            number_of_users =number_of_users[0]
+        )
+            
+        agent = self.get_available_agent(location)
+        print("Agent is :", agent)
+            
+        try:
+            agent = Agent.objects.get(id=agent.id)
         except Agent.DoesNotExist:
             return Response({
                 "status": "error",
                 "message": f"Agent with ID {agent_id} does not exist"
             }, status=status.HTTP_400_BAD_REQUEST)
-        
         if instance.type == "jmeter":
             job = Job.objects.create(
                 field_type = f'{instance.type}',
                 performance_test_suite = instance,
-                job_status = f"queued",
+                job_status = "queued",
                 agent = agent
             )
+            # expiry_date = timezone.now() + timezone.timedelta(hours=1)
+            # custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
             
         return Response({
             "status":   "success",
             "message": "queued",
+            "location_id": location.ref,
+            "agent_id": agent.ref,
+            # "token": custom_token.token,
             "data":self.get_serializer(instance).data
         })            
 
@@ -292,3 +318,18 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             **TestContainersRunsSerializer(container_run).data
         })
         
+        
+    def get_available_agent(self, location):
+        agent =  None
+        try:
+            available_agent = Agent.objects.filter(location=location.id, agent_status="available")
+            if available_agent.exists():
+                agent = available_agent.first()
+                print(f'Available Agent : {agent.name}')
+            else:
+                print('No available agents found')
+        except Agent.DoesNotExist:
+            print('No available agents found')
+            
+        return agent
+                

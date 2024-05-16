@@ -70,10 +70,12 @@ export function TableData({ rows }) {
                 </Link>
               </StyledTableCell>
               <StyledTableCell>
-                {formatTime(row.TestRunStartDateTime)}
+                {/* {formatTime(row.TestRunStartDateTime)} */}
+                {row.TestRunStartTime}
               </StyledTableCell>
               <StyledTableCell>
-                {formatTime(row.TestRunEndDateTime)}
+                {/* {formatTime(row.TestRunEndDateTime)} */}
+                {row.TestRunEndTime}
               </StyledTableCell>
               <CustomStatusCell status={row.TestRunStatus} />
               <StyledTableCell className="p-4" sx={{}}>
