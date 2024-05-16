@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
 using SeleniumReportAPI.Models;
-using System.Linq;
 using System.Security.Claims;
-using System.Text.Json.Nodes;
 using TestSeleniumReport.DTO_s;
 
 namespace SeleniumReportAPI.Controllers
@@ -172,6 +171,11 @@ namespace SeleniumReportAPI.Controllers
         [HttpOptions("ExecuteTestSuite")]
         public async Task<ActionResult> ExecuteTestSuite(string TestSuiteName)
         {
+            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
+                return BadRequest("Timezone header is missing.");
+
+            string timeZoneId = timeZoneHeader.ToString();
+
             List<object> _result = new List<object>();
             string _testRunName = await _helper.GetRunId(TestSuiteName);
             string _testSuiteDetailsJson = await _helper.GetTestSuiteByName(TestSuiteName);
@@ -186,7 +190,7 @@ namespace SeleniumReportAPI.Controllers
                 {
                     try
                     {
-                        string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName,_testSuiteNameData.TestUser.Password);
+                        string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName, _testSuiteNameData.TestUser.Password);
                         if (!string.IsNullOrEmpty(_testCaseJsonData))
                         {
                             try
@@ -198,6 +202,23 @@ namespace SeleniumReportAPI.Controllers
                                 _testSuiteData.TestEnvironment = _environmentDetails.EnvironmentName;
                                 _testSuiteData.TestBrowserName = _environmentDetails?.BrowserName;
                                 _testSuiteData.TestCaseName = testCaseName.ToString();
+                                _testSuiteData.TestSuiteStartDateTime = ConvertToTimeZone(DateTime.Parse(_testSuiteData.TestSuiteStartDateTime), timeZoneId).ToString();
+                                _testSuiteData.TestSuiteEndDateTime = ConvertToTimeZone(DateTime.Parse(_testSuiteData.TestSuiteEndDateTime), timeZoneId).ToString();
+                                _testSuiteData.TestRunStartDateTime = ConvertToTimeZone(DateTime.Parse(_testSuiteData.TestRunStartDateTime), timeZoneId).ToString();
+                                _testSuiteData.TestRunEndDateTime = ConvertToTimeZone(DateTime.Parse(_testSuiteData.TestRunEndDateTime), timeZoneId).ToString();
+
+                                List<Dto_TestSteps> testCaseSteps = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dto_TestSteps>>(_testSuiteData.TestCaseSteps);
+
+                                List<Dto_TestSteps> newTestCaseSteps = new List<Dto_TestSteps>();
+
+                                foreach (var step in testCaseSteps)
+                                {
+                                    step.TimeStamp = ConvertToTimeZone(DateTime.Parse(step.TimeStamp), timeZoneId).ToString("HH:mm:ss");
+                                    newTestCaseSteps.Add(step);
+                                }
+
+                                _testSuiteData.TestCaseSteps = Newtonsoft.Json.JsonConvert.SerializeObject(newTestCaseSteps);
+
                                 //Save Data into table for custom test suite
                                 var result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
                                 _result.Add(result);
@@ -240,6 +261,13 @@ namespace SeleniumReportAPI.Controllers
             }
             _result.Add(new { status = "Finished", message = "Test Suite execution completed!" });
             return Ok(_result);
+        }
+
+        private DateTime ConvertToTimeZone(DateTime date, string timeZoneId)
+        {
+            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            DateTime convertedDate = TimeZoneInfo.ConvertTime(date, timeZone); // Convert the date to the specified timezone
+            return convertedDate;
         }
 
         /// <summary>
