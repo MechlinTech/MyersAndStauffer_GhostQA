@@ -126,7 +126,6 @@ const AddLocation = ({ open, onClose }) => {
       parallel_engine_runs: parseInt(formData.ParallelEngineRuns),
       functionality: functionality,
     };
-    console.log("data", data);
     dispatch(AddLocationSettings(data, onClose, resetFormAndState));
   };
 

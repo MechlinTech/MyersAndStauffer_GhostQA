@@ -157,8 +157,8 @@ export const getLocationList = () => {
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const response = await axios.get(
-        `${CORE_BASE_URL}/codeengine/api/private-location/`,
-        header()
+        `${CORE_BASE_URL}/codeengine/api/private-location/?page=2`
+        // header()
       );
       dispatch({
         type: GET_LOCATION_LISTS,
@@ -176,10 +176,9 @@ export const AddLocationSettings = (data, onClose, resetFormAndState) => {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const response = await axios.post(
         `${CORE_BASE_URL}/codeengine/api/private-location/`,
-        data,
-        header()
+        data
+        // header()
       );
-      console.log("res", response);
       if (response.status === 201) {
         toast.info("Successfully saved", {
           style: {
@@ -206,11 +205,9 @@ export const deleteLocationOnSettings = (refId, setopenDelModal) => {
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const response = await axios.delete(
-        `${CORE_BASE_URL}/codeengine/api/private-location/${refId}`,
-        header()
+        `${CORE_BASE_URL}/codeengine/api/private-location/${refId}`
+        // header()
       );
-      console.log("response", response);
-      // if (response.data.status == 301) {
       toast.info("Successfully deleted", {
         style: {
           background: "rgb(101, 77, 247)",
@@ -235,10 +232,9 @@ export const AddLocationAgent = (data, setShowDockerCommand) => {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const response = await axios.post(
         `${CORE_BASE_URL}/codeengine/api/remote-agent-connection/`,
-        data,
-        header()
+        data
+        // header()
       );
-      console.log("resAddLocationAgent", response);
       if (response.status === 201) {
         toast.info("Successfully saved", {
           style: {
@@ -270,16 +266,47 @@ export const getAgentById = (id) => {
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl(id);
       const response = await axios.get(
-        `${CORE_BASE_URL}/codeengine/api/private-location/agent_details/?location=${id}`,
-        header()
+        `${CORE_BASE_URL}/codeengine/api/private-location/agent_details/?location=${id}`
+        // header()
       );
-      console.log("response", response);
       dispatch({
         type: GET_AGENTS_LISTS,
         payload: response?.data?.message,
       });
     } catch (error) {
       console.error("Error in getTestSuites:", error);
+    }
+  };
+};
+
+export const updateLocationAgent = (data, setShowDockerCommand, ref) => {
+  return async (dispatch) => {
+    try {
+      const CORE_BASE_URL = await getCoreEngineBaseUrl();
+      const response = await axios.put(
+        `${CORE_BASE_URL}/codeengine/api/remote-agent-connection/${ref}/`,
+        data
+      );
+      console.log("response", response);
+      if (response.status === 200) {
+        toast.info("Successfully Updated", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+
+        dispatch(getLocationList());
+        dispatch({
+          type: ADD_AGENTS,
+          payload: response?.data,
+        });
+        setShowDockerCommand(true);
+      } else {
+        console.log("Submitting error");
+      }
+    } catch (error) {
+      console.log("error saving ", error);
     }
   };
 };

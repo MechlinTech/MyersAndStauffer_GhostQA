@@ -7,7 +7,6 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 function DeleteModal({ open, onClose, deleteItem, handleDelete }) {
-    console.log("deleteItem",deleteItem)
   return (
     <div>
       <Dialog
