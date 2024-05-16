@@ -1,11 +1,11 @@
 from rest_framework import serializers
 # from .models import Agent
-from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution
+from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution, CustomToken
 from cypress.serializers.request import TestSuiteSerializer
 from cypress.models import TestSuite, TestContainersRuns as CypressContainersRun
 from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer, TestContainersRunsSerializer
 from performace_test.models import JmeterTestContainersRuns, PerformaceTestSuite, TestContainersRuns
-
+from django.utils import timezone
 
 
 
@@ -64,8 +64,30 @@ class NewAgentSerializer(serializers.ModelSerializer):
         # response['docker_command'] = 'docker run -d --name my-django-app -e DJANGO_DEBUG=True --net=host ghostqa/agent:latest python Agent/main.py' 
         return response
     
+    def create(self, validated_data):
+        # Generate the token
+        expiry_date = timezone.now() + timezone.timedelta(hours=1)
+        # token = str(uuid.uuid4())
+
+        # Create the Agent instance
+        agent = Agent.objects.create(**validated_data)
+
+        # Create the CustomToken instance
+        custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
+
+        # Set the token attribute on the agent instance
+        # setattr(agent, '_token', token)
+
+        return agent
+    
     def get_docker_command(self, instance):
-        return 'docker run -d --name GhostQA-Codeengine -e DJANGO_DEBUG=True --net=host ghostqa/agent:latest python Agent/main.py'
+        try:
+            token = CustomToken.objects.get(agent=instance).token
+        except CustomToken.DoesNotExist:
+            token = None
+
+        token_param = f"-e token {token}" if token else "-e token DEFAULT_TOKEN_VALUE"
+        return f"docker run -d --name GhostQA-Codeengine -e DJANGO_DEBUG=True {token_param} --net=host ghostqa/agent:latest python Agent/main.py"
 
 
 
