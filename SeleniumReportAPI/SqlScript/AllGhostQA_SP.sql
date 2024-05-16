@@ -2365,8 +2365,10 @@ BEGIN TRY
 											SELECT
 												t1.[TestSuiteName],
 												t1.[TestRunName],
-												MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET)) AS [TestRunStartDateTime],
-												MAX(CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET)) AS [TestRunEndDateTime],
+												MIN(CAST(t1.[TestRunStartDateTime] AS DATE)) AS [TestRunStartDate],
+												MAX(CAST(t1.[TestRunEndDateTime] AS DATE)) AS [TestRunEndDate],
+												MIN(CAST(t1.[TestRunStartDateTime] AS TIME)) AS [TestRunStartTime],
+												MAX(CAST(t1.[TestRunEndDateTime] AS TIME)) AS [TestRunEndTime],
 												COUNT(t1.[TestCaseName]) AS [TotalTestCases],
 												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Passed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [PassedTestCases],
 												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Failed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [FailedTestCases],

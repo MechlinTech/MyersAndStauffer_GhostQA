@@ -12,13 +12,15 @@ PROC EXEC		:
 **************************************************************************************/
 BEGIN TRY
 	SELECT [RunDetailsJson] = JSON_QUERY ((
-		SELECT DISTINCT FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd') [TestRunDateYear]
+		SELECT DISTINCT CAST(FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd, yyyy') AS DATE) [TestRunDateYear]
 			   , [RunDetails] = JSON_QUERY ((
 											SELECT
 												t1.[TestSuiteName],
 												t1.[TestRunName],
-												MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET)) AS [TestRunStartDateTime],
-												MAX(CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET)) AS [TestRunEndDateTime],
+												MIN(CAST(t1.[TestRunStartDateTime] AS DATE)) AS [TestRunStartDate],
+												MAX(CAST(t1.[TestRunEndDateTime] AS DATE)) AS [TestRunEndDate],
+												MIN(CAST(t1.[TestRunStartDateTime] AS TIME)) AS [TestRunStartTime],
+												MAX(CAST(t1.[TestRunEndDateTime] AS TIME)) AS [TestRunEndTime],
 												COUNT(t1.[TestCaseName]) AS [TotalTestCases],
 												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Passed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [PassedTestCases],
 												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Failed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [FailedTestCases],
@@ -35,13 +37,13 @@ BEGIN TRY
 												tbl_TestCase t1
 											WHERE
 												t1.[TestSuiteName] = t.[TestSuiteName]
-												AND FORMAT(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd') = FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd')
+												AND FORMAT(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd yyyy') = FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd yyyy')
 											GROUP BY t1.[TestSuiteName], t1.[TestRunName]
 											ORDER BY MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET)) DESC
 											FOR JSON PATH
 											))
 		FROM tbl_TestCase t
-		WHERE [TestSuiteName] = @TestSuitName
+		WHERE t.[TestSuiteName] = @TestSuitName
 		ORDER BY [TestRunDateYear] DESC
 		FOR JSON PATH))
 END TRY
