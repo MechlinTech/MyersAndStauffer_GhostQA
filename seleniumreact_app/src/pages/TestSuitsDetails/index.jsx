@@ -512,8 +512,8 @@ return timeString
                             </Typography>
                             <Chip
                               label={`${formatDateString(
-                                testCaseSteps.TestCaseStartDate
-                              )} ${testCaseSteps.TestCaseStartTime}`}
+                                testCaseSteps.TestCaseEndDate
+                              )} ${testCaseSteps.TestCaseEndTime}`}
                               // label={formatDateStringWithTime(`${testCaseSteps.TestCaseEndDate}T${testCaseSteps.TestCaseEndTime}`)}
                               color="secondary"
                               variant="outlined"
