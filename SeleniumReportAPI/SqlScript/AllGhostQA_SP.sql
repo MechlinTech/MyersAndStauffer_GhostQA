@@ -2441,8 +2441,10 @@ BEGIN TRY
                 JSON_QUERY((
                         SELECT t1.[TestSuiteName], t1.[TestRunName], t1.[TestCaseName], t1.[TestCaseStatus]
                             , t1.[TestCaseVideoURL]
-                            , CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) [TestRunStartDateTime]
-                            , CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) [TestRunEndDateTime]
+							, CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss')AS DATE) AS [TestRunStartDate]
+							, CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss')AS TIME) AS [TestRunStartTime]
+							, CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS DATE) AS [TestRunEndDate]
+							, CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS TIME) AS [TestRunEndTime]
                         FROM tbl_TestCase t1
                         WHERE t1.[TestSuiteName] = t.[TestSuiteName]
                               AND t1.[TestRunName] = t.[TestRunName]

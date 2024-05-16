@@ -3392,15 +3392,43 @@ namespace SeleniumReportAPI.Helper
 
         internal string GenerateRandomPassword(int length)
         {
-            const string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%&*?"; // Include all the characters you want in your password        
+            const string lowerChars = "abcdefghijklmnopqrstuvwxyz";
+            const string upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string digitChars = "1234567890";
+            const string specialChars = "!@#$%&*?";
+            const string allChars = lowerChars + upperChars + digitChars + specialChars;
+
             Random rng = new Random();
             StringBuilder password = new StringBuilder();
-            for (int i = 0; i < length; i++)
+
+            // Ensure at least one of each required character type
+            password.Append(upperChars[rng.Next(upperChars.Length)]);
+            password.Append(lowerChars[rng.Next(lowerChars.Length)]);
+            password.Append(digitChars[rng.Next(digitChars.Length)]);
+            password.Append(specialChars[rng.Next(specialChars.Length)]);
+
+            // Fill the rest of the password
+            for (int i = 4; i < length; i++)
             {
-                int index = rng.Next(allowedChars.Length);
-                password.Append(allowedChars[index]);
+                password.Append(allChars[rng.Next(allChars.Length)]);
             }
-            return password.ToString();
+
+            // Shuffle the password to ensure randomness
+            return ShuffleString(password.ToString(), rng);
+        }
+
+        private string ShuffleString(string input, Random rng)
+        {
+            char[] array = input.ToCharArray();
+            int n = array.Length;
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = rng.Next(i + 1);
+                char temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return new string(array);
         }
 
         public async Task<Dto_Response> SendPasswordResetMailAsync(string Email)
@@ -3600,7 +3628,7 @@ namespace SeleniumReportAPI.Helper
                             }
                         }
                         connection.Close();
-                    } 
+                    }
                 }
             }
             catch (Exception ex)
