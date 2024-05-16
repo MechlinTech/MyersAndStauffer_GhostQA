@@ -24,7 +24,7 @@ export function RequestStateTable({ data }) {
             <StyledTableCell>99 % (ms)</StyledTableCell>
             <StyledTableCell>Min. Response Time (ms)</StyledTableCell>
             <StyledTableCell>Max. Response Time (ms)</StyledTableCell>
-            <StyledTableCell>Average Bandwidth Key/s</StyledTableCell>
+            <StyledTableCell>Average Bandwidth KB/S</StyledTableCell>
             <StyledTableCell last>Error Percentage</StyledTableCell>
           </TableRow>
         </TableHead>
