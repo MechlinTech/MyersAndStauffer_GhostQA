@@ -208,7 +208,7 @@ export function RequestStateTable({ data }) {
               ))}
           {data &&
             data.transactions &&
-            data.transactions.map((trans) =>
+            data.transactions.filter((trans)=> !trans.transaction.startsWith("http")).map((trans) =>
               trans ? ( // Check if trans is defined
                 <TableRow key={trans.transaction}>
                   <StyledTableCell first colSpan={2}>

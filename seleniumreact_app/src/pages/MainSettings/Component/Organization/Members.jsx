@@ -120,14 +120,18 @@ export default function Members() {
           </Grid>
         </Grid>
         <Paper
-          style={{ marginTop: "20px", maxHeight: "70vh", overflow: "auto" }}
+          style={{ marginTop: "20px", maxHeight: "70vh"}}
         >
-          <Grid item style={{ margin: "8px 20px" }}>
+          <Grid item style={{ margin: "8px 20px"}}>
             <SearchField
               placeholder="Search User..."
               onChange={(value) => setSearchTerm(value)}
             />
           </Grid>
+          <Grid item style={{
+                  overflow: "auto",
+                  maxHeight: "calc(70vh - 50px)",
+                }}>
           {loading ? (
             <Box style={{ textAlign: "center" }}>
               <CircularProgress
@@ -138,6 +142,8 @@ export default function Members() {
           ) : (
             <CustomTable users={userList} />
           )}
+          </Grid>
+          
         </Paper>
       </Grid>
     </Grid>
