@@ -152,23 +152,33 @@ export const deleteLocation = (locationId) => {
 
 // coreEngineBaseUrl is used to make api call for loaction
 
-export const getLocationList = () => {
+// redux/actions/locationAction.js
+
+export const getLocationList = (page) => {
   return async (dispatch) => {
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const response = await axios.get(
-        `${CORE_BASE_URL}/codeengine/api/private-location/?page=2`
-        // header()
+        `${CORE_BASE_URL}/codeengine/api/private-location/?page=${page}`
       );
+
+      const totalCount = response?.data?.count;
+      const calculatedTotalPages = Math.ceil(totalCount / 10);
+
       dispatch({
         type: GET_LOCATION_LISTS,
-        payload: response?.data?.results,
+        payload: {
+          results: response?.data?.results,
+          totalPages: calculatedTotalPages,
+        },
       });
     } catch (error) {
-      console.error("Error in getTestSuites:", error);
+      console.error("Error in getLocationList:", error);
     }
   };
 };
+
+
 
 export const AddLocationSettings = (data, onClose, resetFormAndState) => {
   return async (dispatch) => {

@@ -4,7 +4,7 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 
 export const useStyles = makeStyles((theme) => ({
   main: {
-    margin: "20px",
+    margin: "5px 20px",
     padding: "10px 22px",
   },
   Outlined: {

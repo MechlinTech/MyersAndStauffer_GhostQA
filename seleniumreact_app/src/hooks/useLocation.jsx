@@ -1,19 +1,16 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { getLocationList } from "../redux/actions/locationAction";
 
 export default function useLocation() {
   const dispatch = useDispatch();
   const { locationList } = useSelector((state) => state.location);
   const [openModal, setOpenModal] = useState(false);
-  const totalPages = useSelector((state) => state.location.totalPages);
-  const [page, setPage] = useState(1); // State variable for current page
-  const pageSize = 10; // Set the page size
+  const [page, setPage] = useState(1); 
+  console.log("totalPages",locationList)
 
   useEffect(() => {
-    dispatch(getLocationList(page, pageSize));
+    dispatch(getLocationList(page));
   }, [page, dispatch]);
 
   const handleClose = () => {
@@ -25,7 +22,7 @@ export default function useLocation() {
   };
 
   const handleNextPage = () => {
-    setPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    setPage((prevPage) => Math.min(prevPage + 1, locationList.totalPages));
   };
 
   const handlePrevPage = () => {
@@ -40,8 +37,7 @@ export default function useLocation() {
     handleAddApplication,
     handleNextPage,
     handlePrevPage,
-    page, setPage,
-    totalPages,
-    pageSize
+    page,
+    setPage,
   };
 }

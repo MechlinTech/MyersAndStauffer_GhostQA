@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
+import { Button } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
@@ -15,19 +16,25 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteModal from "./DeleteModal";
 import { useDispatch } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
-import { deleteLocationOnSettings } from "../../../../../redux/actions/locationAction";
+import {
+  deleteLocationOnSettings,
+  getLocationList,
+} from "../../../../../redux/actions/locationAction";
 import AddAgent from "./AddAgent";
 import { useNavigate } from "react-router-dom";
+import useLocation from "../../../../../hooks/useLocation";
 
 export function LocationTable({ rows }) {
   const classes = useTableStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [openDelModal, setopenDelModal] = useState(false);
-  const [item, setitem] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [agentLocation, setAgentLocation] = useState(null);
   const [itemDel, setDelItem] = useState(null);
+  const { handlePrevPage, page, handleNextPage, locationList } = useLocation();
+
+  console.log("rowsrowsrows", rows);
 
   const handleModalOpen = (row) => {
     setopenDelModal(true);
@@ -65,7 +72,7 @@ export function LocationTable({ rows }) {
         deleteItem={itemDel}
         handleDelete={handleDelete}
       />
-      <TableContainer sx={{ marginBottom: "8vh" }}>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -76,13 +83,13 @@ export function LocationTable({ rows }) {
               <StyledTableCell>Actions</StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody style={{ maxHeight: '400px', overflowY: 'auto' }}>
+          <TableBody>
             {rows.map((row) => (
               <TableRow
                 key={row.id}
                 className={`${classes.tableRow}`}
                 style={{ height: "10px" }}
-                spacing="3"
+                spacing="1"
               >
                 <StyledTableCell component="th" scope="row">
                   {row.id}
@@ -151,6 +158,33 @@ export function LocationTable({ rows }) {
             ))}
           </TableBody>
         </Table>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "2px",
+            marginBottom: "2px",
+          }}
+        >
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#6c757d", height: '25px' }}
+            onClick={handlePrevPage}
+            disabled={page === 1}
+            sx={{ marginRight: 1 }}
+          >
+            Pre
+          </Button>
+          <span style={{ margin: "0 10px" }}>Page {page}</span>
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#6c757d", height: '25px' }}
+            onClick={handleNextPage}
+            disabled={page === locationList?.totalPages}
+          >
+            Next
+          </Button>
+        </div>
       </TableContainer>
     </>
   );

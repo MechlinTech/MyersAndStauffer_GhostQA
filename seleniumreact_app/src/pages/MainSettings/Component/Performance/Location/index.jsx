@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Grid, Card } from "@material-ui/core";
 import { useStyles } from "./styles";
 import { Button } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
 import AddLocation from "./AddLocation";
 import { LocationTable } from "./LocationTable";
-import { getLocationList } from "../../../../../redux/actions/locationAction";
+import useLocation from "../../../../../hooks/useLocation";
 
 export default function Location() {
   const classes = useStyles();
-  const dispatch = useDispatch()
-  const { locationList } = useSelector((state) => state.location);
-  const [openModal, setOpenModal] = useState(false);
+  const { openModal, handleClose, handleAddApplication, locationList } =
+    useLocation();
+  // const dispatch = useDispatch()
+  // const { locationList } = useSelector((state) => state.location);
+  // const [openModal, setOpenModal] = useState(false);
 
-  useEffect(() => {
-    dispatch(getLocationList())
-  },[])
+  // useEffect(() => {
+  //   dispatch(getLocationList())
+  // },[])
 
-  const handleClose = () => {
-    setOpenModal(false);
-  };
+  // const handleClose = () => {
+  //   setOpenModal(false);
+  // };
 
-  const handleAddApplication = () => {
-    setOpenModal(true);
-  };
-
+  // const handleAddApplication = () => {
+  //   setOpenModal(true);
+  // };
+  
   return (
     <>
       <AddLocation open={openModal} onClose={handleClose} />
@@ -34,7 +35,7 @@ export default function Location() {
         className={classes.header}
         justifyContent="space-between"
         alignItems="center"
-        spacing={2}
+        spacing={1}
       >
         <Grid item xs={6} className={classes.header}>
           <div className={classes.highlight}>In Private Location</div>
@@ -63,11 +64,13 @@ export default function Location() {
       </Grid>
       {/* Body */}
 
-      <Grid container justifyContent="center" alignItems="center" spacing={2}>
+      <Grid container justifyContent="center" alignItems="center" spacing={1}>
         <Grid item xs={12}>
-          <Card style={{ textAlign: "center", margin: "20px" }}>
+          <Card style={{ textAlign: "center", margin: "5px 20px" }}>
             <Grid item>
-              <LocationTable rows={locationList} />
+              {locationList?.results && (
+                <LocationTable rows={locationList.results} />
+              )}
             </Grid>
           </Card>
         </Grid>
