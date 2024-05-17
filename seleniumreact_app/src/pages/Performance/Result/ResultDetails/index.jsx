@@ -30,7 +30,7 @@ export default function Summary() {
       hour: "numeric",
       minute: "2-digit",
       second: "2-digit",
-      hour12: true,
+      hour12: false,
     };
     return date.toLocaleString("en-US", options);
   };
