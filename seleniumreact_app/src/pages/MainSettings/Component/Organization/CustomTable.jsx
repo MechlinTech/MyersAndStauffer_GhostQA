@@ -8,48 +8,21 @@ import { useStyles, StyledTableCell, IOSSwitch } from "./style";
 import axios from "axios";
 import { header } from "../../../../utils/authheader";
 import { getBaseUrl } from "../../../../utils/configService";
-import { fetchUsers } from "../../../../redux/actions/userActions";
+import { DisableEnableUser, fetchUsers } from "../../../../redux/actions/userActions";
 import { useDispatch } from "react-redux";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export function CustomTable({ users }) {
   const classes = useStyles();
   const dispatch = useDispatch()
-  const [userList, setuserList] = useState(users);
-
-  const getUserList = async () => {
-    const BASE_URL = await getBaseUrl();
-    const res = await axios.get(
-      `${BASE_URL}/Selenium/GetUserDetails`,
-      header()
-    );
-    setuserList(res.data);
-    console.log("user list : ", res);
-  };
-  useEffect(() => {
-    // dispatch(fetchUsers());
-    getUserList();
-  }, []); // userlist will rerender when checked switch button
 
   const handleSwitch = (e, row) => {
     let payload = {
       userId: row.Id,
       isDisabled: !e.target.checked,
     };
-    const EnableDisableUser = async () => {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.post(
-        `${BASE_URL}/Selenium/DisableEnableUser`,
-        payload,
-        header()
-      );
-      getUserList();
-      console.log("response : ", res);
-    };
-
-    EnableDisableUser();
-  };
-
+  dispatch(DisableEnableUser(payload))
+  }
   const getName = (email) => {
     const i = email.indexOf("@");
     const name = email.substring(0, i);
@@ -68,7 +41,7 @@ export function CustomTable({ users }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {userList?.map((row) => (
+            {users?.map((row) => (
               <TableRow
                 key={row.Email}
                 className={`${classes.tableRow}`}
