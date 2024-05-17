@@ -88,13 +88,13 @@ class NewAgentSerializer(serializers.ModelSerializer):
 
         token_param = f"-e token {token}" if token else "-e token DEFAULT_TOKEN_VALUE"
         return f"docker run -d --name GhostQA-Codeengine -e DJANGO_DEBUG=True {token_param} --net=host ghostqa/agent:latest python Agent/main.py"
-
+        #TODO need to add the agent_id
 
 
 class LoadDistributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoadDistribution
-        fields = ['id', 'ref', 'private_location', 'percentage_of_traffic', 'number_od_users', 'created_at', 'updated_at']
+        fields = ['id', 'ref', 'private_location', 'percentage_of_traffic', 'number_of_users', 'created_at', 'updated_at']
 
 
 
