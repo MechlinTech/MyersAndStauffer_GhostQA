@@ -17,7 +17,6 @@ export default function Members() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { members, loading } = useSelector((state) => state.user);
-  const [users, setusers] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [email, setEmail] = useState("");
@@ -28,10 +27,6 @@ export default function Members() {
   useEffect(() => {
     dispatch(fetchUsers());
   }, []);
-
-  useEffect(() => {
-    setusers(members);
-  }, [members]);
 
   const handleInvite = () => {
     let error = {};
@@ -52,9 +47,10 @@ export default function Members() {
     }
   };
 
-  const userList = users?.filter((user) =>
+  const userList = members && members?.filter((user) =>
     user?.UserName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
+
   return (
     <Grid
       container
