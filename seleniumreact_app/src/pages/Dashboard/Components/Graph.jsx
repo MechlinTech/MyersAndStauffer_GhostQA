@@ -114,14 +114,13 @@ const Graph = (props) => {
 
         if (response.data.length) {
           response.data.forEach((item) => {
-            const date = new Date(item.TestRunStartDate);
-            console.log("date", date);
-            const formattedDate = date.toLocaleDateString("en-US", {
-              month: "long", // full month name
-              day: "numeric", // day of the month
-              year: "numeric", // full year
-            });
-
+            // const date = new Date(item.TestRunStartDate);
+            // const formattedDate = date.toLocaleDateString("en-US", {
+            //   month: "long", // full month name
+            //   day: "numeric", // day of the month
+            //   year: "numeric", // full year
+            // });
+            const formattedDate = extractDate(item.TestRunStartDate)
             TestRunStartDate.push(formattedDate);
             TotalFailedTestCase.push(item.TotalFailedTestCase);
             TotalPassedTestCase.push(item.TotalPassedTestCase);
@@ -160,7 +159,6 @@ const Graph = (props) => {
       });
   };
   useEffect(() => {
-    
     get_host();
   }, [filterType, filterValue, testSuiteLists]);
 
@@ -180,6 +178,32 @@ useEffect(()=>{
   const menuIcon = document.querySelector('.apexcharts-menu-icon');
 menuIcon?.setAttribute('title', 'Download');
 })
+
+function extractDate(dateStr) {
+  if (typeof dateStr !== 'string') {
+    return null; // Return null or some default value if dateStr is invalid
+  }
+  const [year, month, day] = dateStr?.split("-");
+
+  const monthNames = {
+    "01": "Jan",
+    "02": "Feb",
+    "03": "Mar",
+    "04": "April",
+    "05": "May",
+    "06": "June",
+    "07": "July",
+    "08": "Aug",
+    "09": "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Dec",
+  };
+
+  const formattedDate = `${monthNames[month]} ${parseInt(day, 10)}, ${year}`;
+
+  return formattedDate;
+}
   return (
     <>
       <div>
