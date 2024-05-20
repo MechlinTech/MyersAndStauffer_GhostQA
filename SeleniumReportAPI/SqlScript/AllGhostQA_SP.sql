@@ -4483,3 +4483,79 @@ BEGIN CATCH
 	SELECT ERROR_MESSAGE() [UsersOrganization]
 END CATCH
 GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetAllIntegration]
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetAllIntegration
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	20 May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetAllIntegration
+**************************************************************************************/
+BEGIN TRY
+	SELECT [result] = JSON_QUERY((
+		SELECT [Id],
+			   [UserId],
+			   [AppName],
+			   [IsIntegrated],
+			   [CreatedBy],
+			   [CreatedOn],
+			   [UpdatedBy],
+			   [UpdatedOn]
+		FROM tbl_Integration
+		FOR JSON PATH, INCLUDE_NULL_VALUES
+	))
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [result]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateIntegration]
+@Id                   INT,
+@UserId               VARCHAR(100),
+@IsIntegrated         Bit,
+@CreatedBy			  VARCHAR(100)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_UpdateIntegration
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	20th May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:  EXEC stp_UpdateIntegration 
+				
+**************************************************************************************/
+BEGIN TRY
+	IF EXISTS(SELECT 1 FROM tbl_Integration WHERE [Id] = @Id)
+	BEGIN
+		UPDATE tbl_Integration
+		SET [UserId]              = @UserId,
+			[IsIntegrated]        = @IsIntegrated,
+			[UpdatedBy]			  = @CreatedBy,
+			[UpdatedOn]			  = GETDATE()
+			WHERE [Id] = @Id
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'success' [status], 'Updated Successfully' [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END CATCH
+GO
