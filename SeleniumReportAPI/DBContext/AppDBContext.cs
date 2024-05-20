@@ -35,6 +35,7 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<FunctionalTestCase> tbl_FunctionalTestCase { get; set; }
         public DbSet<FunctionalTestRun> tbl_FunctionalTestRun { get; set; }
         public DbSet<UsersOrganization> tbl_UsersOrganization { get; set; }
+        public DbSet<Integration> tbl_Integration { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TestSuites>()

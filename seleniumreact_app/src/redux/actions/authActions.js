@@ -4,6 +4,7 @@ import { header } from "../../utils/authheader";
 import { getBaseUrl } from "../../utils/configService";
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
+export const SET_USER_ID = "SET_USER_ID";
 
 
 export const login = (data, setLoading) => {
@@ -186,25 +187,26 @@ export const ChangePasswordReq = (payload,redirectToLogin)=>{
   }
 }
 
-export const UpdateUserProfile = (payload)=>{
+export const setUserId = (id) => {
+  return (dispatch) => {
+    dispatch({ type: SET_USER_ID ,
+      payload:id
+    });
+  };
+};
+export const getUserId = ()=>{
+  const emailFromSession = sessionStorage.getItem("email");
   return async (dispatch)=>{
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(
-        `${BASE_URL}/Selenium/UpdateUserProfile`,payload,header());
-        console.log('res',res)
-      if(res.data.status === "success"){
-        sessionStorage.setItem('email',payload.email,)
-        toast.info('Successfully updated', {
-          style: {
-            background: 'rgb(101, 77, 247)', 
-            color: 'rgb(255, 255, 255)', 
-          },
-        });
-      }
-    }catch (error) {
-      console.log("error updating profile ",error);
-      toast('Failed update')
+        `${BASE_URL}/Selenium/GetProfilByEmail?Email=${emailFromSession}`,
+        emailFromSession,
+        header()
+      );
+      dispatch(setUserId(res.data?.Id))
+    } catch (error) {
+      console.error("Error fetching user details:", error);
     }
   }
 }

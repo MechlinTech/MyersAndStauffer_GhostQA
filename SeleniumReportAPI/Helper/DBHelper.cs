@@ -101,7 +101,7 @@ namespace SeleniumReportAPI.Helper
             return TestSuites;
         }
 
-        internal async Task<string> GetDashboardDetails(string testSuitName)
+        internal async Task<string> GetDashboardDetails(string testSuitName, string timeZone)
         {
             string DashBoardDetailsJson = string.Empty;
             try
@@ -113,6 +113,7 @@ namespace SeleniumReportAPI.Helper
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuitName", testSuitName);
+                        command.Parameters.AddWithValue("@TimeZone", timeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -132,7 +133,7 @@ namespace SeleniumReportAPI.Helper
             return DashBoardDetailsJson;
         }
 
-        internal async Task<string> GetRunDetails(string TestSuitName)
+        internal async Task<string> GetRunDetails(string TestSuitName, string TimeZone)
         {
             string RunDetailsJson = string.Empty;
             try
@@ -144,6 +145,7 @@ namespace SeleniumReportAPI.Helper
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuitName", TestSuitName);
+                        command.Parameters.AddWithValue("@TimeZone", TimeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -168,7 +170,7 @@ namespace SeleniumReportAPI.Helper
             return RunDetailsJson;
         }
 
-        internal async Task<string> GetTestCaseDetails(string TestSuitName, string RunID)
+        internal async Task<string> GetTestCaseDetails(string TestSuitName, string RunID, string TimeZone)
         {
             string TestCaseDetailsJson = string.Empty;
             try
@@ -181,6 +183,7 @@ namespace SeleniumReportAPI.Helper
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuiteName", TestSuitName);
                         command.Parameters.AddWithValue("@TestRunId", RunID);
+                        command.Parameters.AddWithValue("@TimeZone", TimeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -200,7 +203,7 @@ namespace SeleniumReportAPI.Helper
             return TestCaseDetailsJson;
         }
 
-        internal async Task<string> GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
+        internal async Task<string> GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName, string timeZone)
         {
             string testCaseStepDetailsJson = string.Empty;
             try
@@ -214,6 +217,7 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@TestSuiteName", testSuitName);
                         command.Parameters.AddWithValue("@TestRunName", runId);
                         command.Parameters.AddWithValue("@TestCaseName", testCaseName);
+                        command.Parameters.AddWithValue("@TimeZone", timeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -808,7 +812,7 @@ namespace SeleniumReportAPI.Helper
             return BrowserListJson;
         }
 
-        internal async Task<string> GetDashboardDetails(string testSuitName, string filterType, int filterValue)
+        internal async Task<string> GetDashboardDetails(string testSuitName, string filterType, int filterValue, string timeZone)
         {
             string DashBoardDetailsJson = string.Empty;
             try
@@ -822,6 +826,7 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@TestSuitName", testSuitName);
                         command.Parameters.AddWithValue("@FilterType", filterType);
                         command.Parameters.AddWithValue("@FilterValue", filterValue);
+                        command.Parameters.AddWithValue("@TimeZone", timeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -3010,10 +3015,10 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal List<object> SendExecutionDataMail(string testSuiteName, string testRunName, string testerName, string Url)
+        internal List<object> SendExecutionDataMail(string testSuiteName, string testRunName, string testerName, string Url, string timeZone)
         {
             List<object> result = new List<object>();
-            var testrunData = GetTestRunData(testSuiteName, testRunName);
+            var testrunData = GetTestRunData(testSuiteName, testRunName, timeZone);
             var data = JsonConvert.DeserializeObject<Dto_TestRunData>(testrunData.Result);
             if (!string.IsNullOrEmpty(testerName))
             {
@@ -3103,7 +3108,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<string> GetTestRunData(string testSuiteName, string testRunName)
+        internal async Task<string> GetTestRunData(string testSuiteName, string testRunName, string timeZone)
         {
             string result = string.Empty;
             try
@@ -3116,6 +3121,7 @@ namespace SeleniumReportAPI.Helper
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuitName", testSuiteName);
                         command.Parameters.AddWithValue("@TestRunName", testRunName);
+                        command.Parameters.AddWithValue("@TimeZone", timeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -3736,6 +3742,70 @@ namespace SeleniumReportAPI.Helper
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@UserId", userId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> GetAllIntegration()
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetAllIntegration", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> UpdateIntegration(Integration model, string createdBy)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateIntegration", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@Id", model.Id);
+                        command.Parameters.AddWithValue("@UserId", model.UserId);
+                        command.Parameters.AddWithValue("@IsIntegrated", model.IsIntegrated);
+                        command.Parameters.AddWithValue("@CreatedBy", createdBy);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)

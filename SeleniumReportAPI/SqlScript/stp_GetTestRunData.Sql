@@ -1,6 +1,7 @@
-CREATE OR ALTER  PROCEDURE [dbo].[stp_GetTestRunData]
-@TestSuitName VARCHAR(100),
-@TestRunName  VARCHAR(100)
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestRunData]
+@TestSuitName	VARCHAR(100),
+@TestRunName	VARCHAR(100),
+@TimeZone		VARCHAR(100) = 'India Standard Time'
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestRunData
@@ -16,8 +17,8 @@ BEGIN TRY
 										SELECT
 												t1.[TestSuiteName],
 												t1.[TestRunName],
-												FORMAT(MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET)),'dd-MMM-yyyy HH:mm:ss') AS [TestRunStartDateTime],
-												FORMAT(MAX(CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS [TestRunEndDateTime],
+												FORMAT(MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone),'dd-MMM-yyyy HH:mm:ss') AS [TestRunStartDateTime],
+												FORMAT(MAX(CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss') AS [TestRunEndDateTime],
 												COUNT(t1.[TestCaseName]) AS [TotalTestCases],
 												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Passed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [PassedTestCases],
 												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Failed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [FailedTestCases],

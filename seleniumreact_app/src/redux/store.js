@@ -12,6 +12,7 @@ import testdataReducer from "./redusers/testDataReducer";
 import propertyReducer from "./redusers/propertyReducer";
 import testcaseReducer from "./redusers/TestCase/testcaseReducer";
 import testlabReduer from "./redusers/testlabReducer";
+import userReducer from "./redusers/userReducer";
 
 const rootReducer = combineReducers({
   auth: authReduser,
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
   testData:testdataReducer,
   property:propertyReducer,
   testcase:testcaseReducer,
-  testlab:testlabReduer
+  testlab:testlabReduer,
+  user:userReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

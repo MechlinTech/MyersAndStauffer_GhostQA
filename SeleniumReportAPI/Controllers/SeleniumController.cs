@@ -42,7 +42,11 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetDashboardDetails")]
         public async Task<ActionResult> GetDashboardDetails(string testSuitName)
         {
-            return Ok(await _helper.GetDashboardDetails(testSuitName));
+            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
+                return BadRequest("Timezone header is missing.");
+
+            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
+            return Ok(await _helper.GetDashboardDetails(testSuitName, mapping));
         }
 
         /// <summary>
@@ -53,7 +57,11 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetRunDetails")]
         public async Task<ActionResult> GetRunDetails(string testSuitName)
         {
-            return Ok(await _helper.GetRunDetails(testSuitName));
+            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
+                return BadRequest("Timezone header is missing.");
+
+            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
+            return Ok(await _helper.GetRunDetails(testSuitName, mapping));
         }
 
         /// <summary>
@@ -65,7 +73,11 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetTestCaseDetails")]
         public async Task<ActionResult> GetTestCaseDetails(string testSuitName, string runId)
         {
-            return Ok(await _helper.GetTestCaseDetails(testSuitName, runId));
+            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
+                return BadRequest("Timezone header is missing.");
+
+            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
+            return Ok(await _helper.GetTestCaseDetails(testSuitName, runId, mapping));
         }
 
         /// <summary>
@@ -78,7 +90,11 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetTestCaseStepsDetails")]
         public async Task<ActionResult> GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
         {
-            return Ok(await _helper.GetTestCaseStepsDetails(testSuitName, runId, testCaseName));
+            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
+                return BadRequest("Timezone header is missing.");
+
+            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
+            return Ok(await _helper.GetTestCaseStepsDetails(testSuitName, runId, testCaseName, mapping));
         }
 
         /// <summary>
@@ -174,14 +190,13 @@ namespace SeleniumReportAPI.Controllers
             if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
                 return BadRequest("Timezone header is missing.");
 
-            string timeZoneId = timeZoneHeader.ToString();
+            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
 
             List<object> _result = new List<object>();
             string _testRunName = await _helper.GetRunId(TestSuiteName);
             string _testSuiteDetailsJson = await _helper.GetTestSuiteByName(TestSuiteName);
             TestSuiteNameData _testSuiteNameData = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuiteNameData>(_testSuiteDetailsJson);
             string? testerName = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-            //Dto_TestSuiteDetailsData _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestSuiteDetailsData>(_testSuiteDetailsJson);
 
             Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteNameData.Environment.EnvironmentId));
             if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Length > 0)
@@ -202,22 +217,6 @@ namespace SeleniumReportAPI.Controllers
                                 _testSuiteData.TestEnvironment = _environmentDetails.EnvironmentName;
                                 _testSuiteData.TestBrowserName = _environmentDetails?.BrowserName;
                                 _testSuiteData.TestCaseName = testCaseName.ToString();
-                                _testSuiteData.TestSuiteStartDateTime = ConvertToTimeZone(DateTime.Parse(_testSuiteData.TestSuiteStartDateTime), timeZoneId).ToString();
-                                _testSuiteData.TestSuiteEndDateTime = ConvertToTimeZone(DateTime.Parse(_testSuiteData.TestSuiteEndDateTime), timeZoneId).ToString();
-                                _testSuiteData.TestRunStartDateTime = ConvertToTimeZone(DateTime.Parse(_testSuiteData.TestRunStartDateTime), timeZoneId).ToString();
-                                _testSuiteData.TestRunEndDateTime = ConvertToTimeZone(DateTime.Parse(_testSuiteData.TestRunEndDateTime), timeZoneId).ToString();
-
-                                List<Dto_TestSteps> testCaseSteps = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dto_TestSteps>>(_testSuiteData.TestCaseSteps);
-
-                                List<Dto_TestSteps> newTestCaseSteps = new List<Dto_TestSteps>();
-
-                                foreach (var step in testCaseSteps)
-                                {
-                                    step.TimeStamp = ConvertToTimeZone(DateTime.Parse(step.TimeStamp), timeZoneId).ToString("HH:mm:ss");
-                                    newTestCaseSteps.Add(step);
-                                }
-
-                                _testSuiteData.TestCaseSteps = Newtonsoft.Json.JsonConvert.SerializeObject(newTestCaseSteps);
 
                                 //Save Data into table for custom test suite
                                 var result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
@@ -230,7 +229,7 @@ namespace SeleniumReportAPI.Controllers
                                     var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
                                     if (_testSuiteNameData.SendEmail == true)
                                     {
-                                        var obj = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url);
+                                        var obj = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url, mapping);
                                         _result.Add(obj);
                                     }
                                     else
@@ -242,7 +241,7 @@ namespace SeleniumReportAPI.Controllers
                                         // Convert to comma-separated string
                                         string commaSeparatedEmails = string.Join(", ", emails);
 
-                                        var obj1 = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url);
+                                        var obj1 = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
                                         _result.Add(obj1);
                                     }
                                 }
@@ -386,9 +385,14 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetChartDetails")]
         public async Task<ActionResult> GetDashboardDetails(string TestSuiteName, string Filtertype, int FilterValue)
         {
+            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
+                return BadRequest("Timezone header is missing.");
+
+            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
+
             try
             {
-                string result = await _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue);
+                string result = await _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue, mapping);
                 return Ok(result);
             }
             catch (Exception ex)

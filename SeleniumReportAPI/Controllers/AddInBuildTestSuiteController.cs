@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
+using SeleniumReportAPI.Models;
+using System.Security.Claims;
 
 namespace SeleniumReportAPI.Controllers
 {
@@ -149,6 +151,28 @@ namespace SeleniumReportAPI.Controllers
             var result = await _helper.ResetPasswordAsync(model.Email, model.Token, model.NewPassword);
 
             return result.status == "Success" ? Ok(new { status = result.status, message = result.message }) : result.status == "NotFound" ? StatusCode(404, new { status = "Failed", message = result.message }) : StatusCode(400, new { status = "Failed", message = result.message });
+        }
+
+        /// <summary>
+        /// Update Integration
+        /// </summary>
+        /// <param Integration = Integration></param>
+        /// <returns></returns>
+        [HttpPost("UpdateIntegration")]
+        public async Task<ActionResult> UpdateIntegration(Integration model)
+        {
+            var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            return Ok(await _helper.UpdateIntegration(model, CreatedBy));
+        }
+
+        /// <summary>
+        /// Get All Integration
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAllIntegration")]
+        public async Task<ActionResult> GetAllIntegration()
+        {
+            return Ok(await _helper.GetAllIntegration());
         }
     }
 }

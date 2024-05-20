@@ -23,6 +23,7 @@ import Integration from "../pages/MainSettings/Component/Performance/Integration
 import ViewAgent from "../pages/MainSettings/Component/Performance/Location/ViewAgent";
 import Detail from "../pages/MainSettings/Component/UserAccount/Detail";
 import Organization from "../pages/MainSettings/Component/UserAccount/Organization";
+import Members from "../pages/MainSettings/Component/Organization/Members";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
@@ -74,20 +75,6 @@ export default function Navigations() {
             <Route path="Roles" element={<RoleManagement />} />
             <Route path="User" element={<UserManagement />} />
             <Route path="test-user" element={<TestUser />} />
-          </Route>
-          <Route path="main-settings" element={<MainSettings />}>
-            <Route path="detail" element={<Detail />} />
-            <Route path="organization" element={<Organization />} />
-            <Route path="location" element={<Location />} />
-            <Route
-              path="integration"
-              element={<Integration />}
-            />
-            <Route path="Application" element={<Application />} />
-            <Route
-              path="Application/Sub-Application"
-              element={<RoleManagement />}
-            />
           </Route>
           <Route path="testLab" element={<TestLab />} />
           <Route path="testLab/:nodeId" element={<TestLab />} />
@@ -159,15 +146,24 @@ export default function Navigations() {
           path="/setting/edit-environment"
           element={<EditNewEnvironment />}
         />
-        <Route path="main-settings" element={<MainSettings />}>
-          <Route path="location" element={<Location />}>
-            <Route path=":id" element={<ViewAgent />} />
-          </Route>
-          <Route path="view-agent/:id" element={<ViewAgent />} />
-          <Route path="integration" element={<Integration />} />
-        </Route>
         <Route path="/edit/:suiteName" element={<EditTestSuite />} />
         <Route path="/AcceptInvitation/:toEmail" element={<Invitation />} />
+        <Route path="main-settings" element={<MainSettings />}>
+          <Route path="location" element={<Location />} />
+          <Route path="view-agent/:id" element={<ViewAgent />} />
+          <Route path="integration" element={<Integration />} />
+          <Route path="detail" element={<Detail />} />
+          <Route path="organization" element={<Organization />} />
+          <Route path="members" element={<Members />} />
+          <Route path="add-member" element={<Organization />} />
+
+          <Route path="integration" element={<Integration />} />
+          {/* <Route path="Application" element={<Application />} /> */}
+          <Route
+            path="Application/Sub-Application"
+            element={<RoleManagement />}
+          />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

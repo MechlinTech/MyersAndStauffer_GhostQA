@@ -12,15 +12,23 @@ import {
 } from "../../../../comman/icons";
 import LineChart from "./LoadLineChart";
 import ResponseLineChart from "./ResponseLineChart";
-
+import { useParams } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { GetResultsDetailsBysRunId } from "../../../../redux/actions/ResultAction";
 export default function Summary() {
   const classes = useStyles();
+  const dispatch = useDispatch()
+  const { runId } = useParams();
   const { executerData, executeJMXData, isRunning } = useSelector(
     (state) => state.result
   );
   const [endedTime, setEndedTime] = useState(null);
   const [isValidData, setIsValidData] = useState(false);
-
+  useEffect(()=>{
+    if(!executerData){
+      dispatch(GetResultsDetailsBysRunId(runId))
+    }
+  },[])
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = {
@@ -30,7 +38,7 @@ export default function Summary() {
       hour: "numeric",
       minute: "2-digit",
       second: "2-digit",
-      hour12: true,
+      hour12: false,
     };
     return date.toLocaleString("en-US", options);
   };
@@ -382,7 +390,7 @@ export default function Summary() {
                                 ).toFixed(2)
                               : null}
                           </span>
-                          KiB/S
+                          KB/S
                         </span>
                       </Typography>
                     </CardContent>
