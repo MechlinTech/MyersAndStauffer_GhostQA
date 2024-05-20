@@ -83,7 +83,6 @@ export const getTestCaseRundetailsByTestName = (data, setInProgress) => {
 };
 
 export const ExecuteTestCasesByTestSuite = (data) => {
-  debugger
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
