@@ -17,13 +17,10 @@ export default function Settings() {
 
   const [selectedItem, setSelectedItem] = useState(() => {
     const storedItem = sessionStorage.getItem("selectedCategory");
+    console.log(flatted.parse(storedItem))
     return storedItem
       ? flatted.parse(storedItem)
-      : {
-          title: "Environment",
-          icon: <StyledDashBoardIcon />,
-          path: "/",
-        };
+      : null
   });
 
   const tabLabelStyle = {
@@ -33,7 +30,13 @@ export default function Settings() {
     padding: "10px 22px",
   };
 
-  const [activeParent, setActiveParent] = useState(null);
+  const [activeParent, setActiveParent] = useState(() => {
+    const storedItem = sessionStorage.getItem("selectedParent");
+    const parentTitle = flatted.parse(storedItem).title
+    return storedItem
+      ? parentTitle
+      : null
+  });
 
   useEffect(() => {
     dispatch(getTestSuitesList());
@@ -44,8 +47,8 @@ export default function Settings() {
   const handleItemClick = (category) => {
     try {
       const categoryData = flatted.stringify(category);
-      sessionStorage.setItem("selectedCategory", categoryData);
-      setSelectedItem(category);
+      sessionStorage.setItem("selectedParent", categoryData);
+      // setSelectedItem(category);
 
       if (activeParent === category.title) {
         setActiveParent(null);
@@ -64,14 +67,14 @@ export default function Settings() {
     const childData = flatted.stringify(child);
     sessionStorage.setItem("selectedCategory", childData);
     setSelectedItem(child);
-    const parentCategory = categories.find(
-      (category) =>
-        category?.children &&
-        category?.children.some((c) => c.title === child.title)
-    );
-    if (parentCategory) {
-      setActiveParent(parentCategory.title);
-    }
+    // const parentCategory = categories.find(
+    //   (category) =>
+    //     category?.children &&
+    //     category?.children.some((c) => c.title === child.title)
+    // );
+    // if (parentCategory) {
+    //   setActiveParent(parentCategory.title);
+    // }
   };
 
   const toggleParentExpansion = (parentTitle) => {
@@ -140,8 +143,8 @@ export default function Settings() {
   // Function to render categories and their submenus
   const renderCategoriesAndSubmenus = categories.map((category, index) => {
     const isParentActive =
-      category.title === activeParent ||
-      category.children.some((child) => child.title === selectedItem?.title);
+      category.title === activeParent && 
+      category.children.every((child) => child.title !== selectedItem?.title);
 
     return (
       <Grid item key={index} xs={12}>
@@ -180,8 +183,8 @@ export default function Settings() {
           </Grid>
         </Paper>
         {category.children && activeParent === category.title && (
-          <Grid item xs={12}>
-            <Box className={classes.subMenu} style={{ marginTop: "10px" }}>
+          <Grid item xs={12} style={{ display:'flex',flexDirection:'column', alignItems:'end'}}>
+            <Box className={classes.subMenu} >
               {category.children.map((child, childIndex) => (
                 <Paper
                   key={childIndex}
@@ -226,14 +229,14 @@ export default function Settings() {
     <div className={classes.main}>
       <Grid container spacing={2}>
         {/* Left Section */}
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={3} xl={2}>
           <Card style={{ paddingBottom: "30px", maxHeight: "84vh" }}>
             {renderCategoriesAndSubmenus}
           </Card>
         </Grid>
 
         {/* Right Section */}
-        <Grid item xs={12} sm={10}>
+        <Grid item xs={12} sm={9} xl={10}>
           <Card style={{ maxHeight: "84vh" }}>
             <Grid container>
               {selectedItem ? (
