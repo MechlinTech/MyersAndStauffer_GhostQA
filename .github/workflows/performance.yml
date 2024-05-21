@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           file: djangoapp/ghostqa/performace_test/jmeter/Dockerfile.actions
-          # context: djangoapp/ghostqa/performace_test/jmeter
+          context: djangoapp/ghostqa/performace_test/jmeter/Dockerfile.actions
           no-cache: false
           push: true
           tags: |
