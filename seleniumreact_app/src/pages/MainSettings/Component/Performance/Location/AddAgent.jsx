@@ -85,12 +85,10 @@ const AddAgent = ({ open, onClose, row }) => {
   };
 
   const handleCopyCommand = () => {
-    console.log("Clipboard API supported:", !!navigator?.clipboard?.writeText);
     if (navigator?.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard
         .writeText(formData.DockerCommand)
         .then(() => {
-          console.log("Text copied successfully:", formData.DockerCommand);
           setCopied(true);
         })
         .catch((error) => {
@@ -147,7 +145,7 @@ const AddAgent = ({ open, onClose, row }) => {
   return (
     <Modal
       open={open}
-      onClose={null}
+      onClose={handleClose}
       aria-labelledby="image-modal-title"
       aria-describedby="image-modal-description"
       style={{
