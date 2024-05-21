@@ -97,8 +97,36 @@ const AddAgent = ({ open, onClose, row }) => {
         });
     } else {
       console.error("Clipboard API not supported");
+      fallbackCopyTextToClipboard(formData.DockerCommand);
+    }
+  };
+
+  const fallbackCopyTextToClipboard = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      const successful = document.execCommand("copy");
+      if (successful) {
+        setCopied(true);
+      } else {
+        setCopied(false);
+      }
+    } catch (err) {
+      console.error("Fallback copy failed:", err);
       setCopied(false);
     }
+
+    document.body.removeChild(textArea);
   };
 
   const handleClose = () => {
