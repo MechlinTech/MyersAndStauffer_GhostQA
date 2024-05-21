@@ -85,15 +85,20 @@ const AddAgent = ({ open, onClose, row }) => {
   };
 
   const handleCopyCommand = () => {
-    navigator?.clipboard
-      ?.writeText(formData?.DockerCommand)
-      .then(() => {
-        setCopied(true);
-      })
-      .catch((error) => {
-        console.error("Copy failed:", error);
-        setCopied(false);
-      });
+    if (navigator?.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(formData.DockerCommand)
+        .then(() => {
+          setCopied(true);
+        })
+        .catch((error) => {
+          console.error("Copy failed:", error);
+          setCopied(false);
+        });
+    } else {
+      console.error("Clipboard API not supported");
+      setCopied(false);
+    }
   };
 
   const handleClose = () => {
