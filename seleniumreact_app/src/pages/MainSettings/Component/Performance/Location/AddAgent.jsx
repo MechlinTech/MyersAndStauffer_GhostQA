@@ -147,7 +147,7 @@ const AddAgent = ({ open, onClose, row }) => {
   return (
     <Modal
       open={open}
-      onClose={handleClose}
+      onClose={null}
       aria-labelledby="image-modal-title"
       aria-describedby="image-modal-description"
       style={{
