@@ -26,10 +26,6 @@ jobs:
         uses: pr-mpt/actions-commit-hash@v2
       - uses: docker/setup-buildx-action@v1
       -
-        name: Print file and context paths
-        run: |
-          echo "File path: djangoapp/ghostqa/performace_test/jmeter/Dockerfile.actions"
-          echo "Context path: djangoapp/ghostqa/performace_test/jmeter"
         name: Build and push
         uses: docker/build-push-action@v3
         with:
