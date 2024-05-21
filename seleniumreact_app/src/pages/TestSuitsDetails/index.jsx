@@ -133,7 +133,7 @@ export default function TestSuitsDetails() {
       hour: "numeric",
       minute: "numeric",
       second: "numeric",
-     hour12: false,
+      hour12: false,
     };
     const formattedTime = new Date(dateTimeString).toLocaleTimeString(
       undefined,
@@ -143,16 +143,46 @@ export default function TestSuitsDetails() {
   }
 
   function extractTime(dateTimeString) {
-const dateObject = new Date(dateTimeString);
+    const dateObject = new Date(dateTimeString);
 
-// Extracting hours, minutes, and seconds
-const hours = dateObject.getHours();
-const minutes = dateObject.getMinutes();
-const seconds = dateObject.getSeconds();
+    // Extracting hours, minutes, and seconds
+    const hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
+    const seconds = dateObject.getSeconds();
 
-// Convert to 12-hour format with AM/PM
-const timeString = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds} ${hours >= 12 ? 'PM' : 'AM'}`;
-return timeString
+    // Convert to 12-hour format with AM/PM
+    const timeString = `${hours % 12 || 12}:${
+      minutes < 10 ? "0" : ""
+    }${minutes}:${seconds < 10 ? "0" : ""}${seconds} ${
+      hours >= 12 ? "PM" : "AM"
+    }`;
+    return timeString;
+  }
+
+  function extractDate(dateStr) {
+    if (typeof dateStr !== 'string') {
+      return null; // Return null or some default value if dateStr is invalid
+    }
+    const [year, month, day] = dateStr?.split("-");
+
+    const monthNames = {
+      "01": "Jan",
+      "02": "Feb",
+      "03": "Mar",
+      "04": "April",
+      "05": "May",
+      "06": "June",
+      "07": "July",
+      "08": "Aug",
+      "09": "Sep",
+      10: "Oct",
+      11: "Nov",
+      12: "Dec",
+    };
+
+    const formattedDate = `${monthNames[month]} ${parseInt(day, 10)}, ${year}`;
+
+    return formattedDate;
   }
   return (
     <>
@@ -285,8 +315,10 @@ return timeString
                             variant="body1"
                             className={classess.tbodyFont}
                           >
-                            {formatDateString(testCaseDetils.TestRunStartDate)}{" "}
-                            {testCaseDetils.TestRunStartTime}
+                            {/* {formatDateString(testCaseDetils.TestRunStartDate)}{" "} */}
+                            {`${extractDate(
+                              testCaseDetils?.TestRunStartDate
+                            )} ${testCaseDetils.TestRunStartTime}`}
                             {/* {formatDateStringWithTime(`${testCaseDetils.TestRunStartDate}T${testCaseDetils.TestRunStartTime}`)} */}
                           </Typography>
                         </CardContent>
@@ -367,7 +399,7 @@ return timeString
 
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Card style={{ height: "60vh", overflow: "auto" }}>
+                  <Card>
                     <Table>
                       <TableHead>
                         <TableRow style={{ backgroundColor: "#f0f0f0" }}>
@@ -497,9 +529,7 @@ return timeString
                               Start DateTime
                             </Typography>
                             <Chip
-                              label={`${formatDateString(
-                                testCaseSteps.TestCaseStartDate
-                              )} ${testCaseSteps.TestCaseStartTime}`}
+                              label={`${extractDate(testCaseSteps.TestCaseStartDate)} ${testCaseSteps.TestCaseStartTime}`}
                               // label={formatDateStringWithTime(`${testCaseSteps.TestCaseStartDate}T${testCaseSteps.TestCaseStartTime}`)}
                               color="primary"
                               variant="outlined"
@@ -511,9 +541,7 @@ return timeString
                               End DateTime
                             </Typography>
                             <Chip
-                              label={`${formatDateString(
-                                testCaseSteps.TestCaseEndDate
-                              )} ${testCaseSteps.TestCaseEndTime}`}
+                              label={`${extractDate(testCaseSteps.TestCaseEndDate)} ${testCaseSteps.TestCaseEndTime}`}
                               // label={formatDateStringWithTime(`${testCaseSteps.TestCaseEndDate}T${testCaseSteps.TestCaseEndTime}`)}
                               color="secondary"
                               variant="outlined"
