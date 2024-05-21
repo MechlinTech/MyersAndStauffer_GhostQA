@@ -16,12 +16,17 @@ export default function Settings() {
   const dispatch = useDispatch();
 
   const [selectedItem, setSelectedItem] = useState(() => {
-    const storedItem = sessionStorage.getItem("selectedCategory");
-    console.log(flatted.parse(storedItem))
-    return storedItem
-      ? flatted.parse(storedItem)
-      : null
-  });
+    const storedItem = sessionStorage.getItem("selectedChild");
+    if (storedItem) {
+      try {
+        return flatted.parse(storedItem);
+      } catch (error) {
+        console.error("Error parsing stored item:", error);
+        return null;
+      }
+    }
+    return null;
+});
 
   const tabLabelStyle = {
     fontWeight: "400",
@@ -32,10 +37,16 @@ export default function Settings() {
 
   const [activeParent, setActiveParent] = useState(() => {
     const storedItem = sessionStorage.getItem("selectedParent");
-    const parentTitle = flatted.parse(storedItem).title
-    return storedItem
-      ? parentTitle
-      : null
+    if (storedItem) {
+      try {
+        const parentData = flatted.parse(storedItem);
+        return parentData?.title || null;
+      } catch (error) {
+        console.error("Error parsing stored item:", error);
+        return null;
+      }
+    }
+    return null;
   });
 
   useEffect(() => {
@@ -50,7 +61,7 @@ export default function Settings() {
       sessionStorage.setItem("selectedParent", categoryData);
       // setSelectedItem(category);
 
-      if (activeParent === category.title) {
+      if (activeParent === category?.title) {
         setActiveParent(null);
       } else {
         setActiveParent(category.title);
@@ -65,7 +76,7 @@ export default function Settings() {
 
   const handleChildClick = (child) => {
     const childData = flatted.stringify(child);
-    sessionStorage.setItem("selectedCategory", childData);
+    sessionStorage.setItem("selectedChild", childData);
     setSelectedItem(child);
     // const parentCategory = categories.find(
     //   (category) =>
@@ -143,7 +154,7 @@ export default function Settings() {
   // Function to render categories and their submenus
   const renderCategoriesAndSubmenus = categories.map((category, index) => {
     const isParentActive =
-      category.title === activeParent && 
+      category.title === activeParent &&
       category.children.every((child) => child.title !== selectedItem?.title);
 
     return (
@@ -183,9 +194,17 @@ export default function Settings() {
           </Grid>
         </Paper>
         {category.children && activeParent === category.title && (
-          <Grid item xs={12} style={{ display:'flex',flexDirection:'column', alignItems:'end'}}>
-            <Box className={classes.subMenu} >
-              {category.children.map((child, childIndex) => (
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "end",
+            }}
+          >
+            <Box className={classes.subMenu}>
+              {category.children?.map((child, childIndex) => (
                 <Paper
                   key={childIndex}
                   className={`
@@ -243,7 +262,7 @@ export default function Settings() {
                 <Outlet />
               ) : (
                 <Box style={tabLabelStyle}>
-                  {selectedItem ? selectedItem.title : "Test Case"}
+                  {selectedItem ? selectedItem?.title : "Test Case"}
                 </Box>
               )}
             </Grid>
