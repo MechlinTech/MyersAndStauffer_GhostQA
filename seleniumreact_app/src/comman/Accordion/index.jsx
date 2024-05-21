@@ -8,6 +8,7 @@ import { TableData } from "./TableData";
 import { Box, CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setExpandedAccord } from "../../redux/actions/seleniumAction";
+import { StyledTypography } from "./style";
 
 export default function BasicAccordion({ inprogress }) {
   const dispatch = useDispatch();
@@ -60,6 +61,8 @@ export default function BasicAccordion({ inprogress }) {
           size={25}
           style={{ marginRight: "8px", color: "#fff" }}
         />
+      ) : testSuiteLists.length === 0 ? (
+        <StyledTypography>Suite doesn't have history to show</StyledTypography>
       ) : (
         testSuiteLists?.map((item, index) => (
           <Accordion
