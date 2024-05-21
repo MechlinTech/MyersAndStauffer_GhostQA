@@ -31,6 +31,9 @@ jobs:
         with:
           file: djangoapp/ghostqa/performace_test/jmeter/Dockerfile.actions
           context: djangoapp/ghostqa/performace_test/jmeter
+          run: |
+            echo "File path: djangoapp/ghostqa/performace_test/jmeter/Dockerfile.actions"
+            echo "Context path: djangoapp/ghostqa/performace_test/jmeter"
           no-cache: false
           push: true
           tags: |
