@@ -26,16 +26,7 @@ jobs:
         uses: pr-mpt/actions-commit-hash@v2
       - uses: docker/setup-buildx-action@v1
       -
-      # Print current working directory
-      - name: Print working directory
-        run: pwd
-
-      # List files in the relevant directory
-      - name: List files in djangoapp/ghostqa/performace_test/jmeter
-        run: ls -la djangoapp/ghostqa/performace_test/jmeter
-
-      # Print file and context paths
-      - name: Print file and context paths
+        name: Print file and context paths
         run: |
           echo "File path: djangoapp/ghostqa/performace_test/jmeter/Dockerfile.actions"
           echo "Context path: djangoapp/ghostqa/performace_test/jmeter"
