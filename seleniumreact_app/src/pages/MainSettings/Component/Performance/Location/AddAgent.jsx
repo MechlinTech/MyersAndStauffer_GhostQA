@@ -13,7 +13,10 @@ import { useStyles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { AddLocationAgent, updateLocationAgent } from "../../../../../redux/actions/locationAction";
+import {
+  AddLocationAgent,
+  updateLocationAgent,
+} from "../../../../../redux/actions/locationAction";
 
 const AddAgent = ({ open, onClose, row }) => {
   const classes = useStyles();
@@ -39,13 +42,13 @@ const AddAgent = ({ open, onClose, row }) => {
   }, [addAgents]);
   const [showDockerCommand, setShowDockerCommand] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); 
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (row && row.agents && row.agents.length > 0) {
       const { name, agent_address } = row.agents[0];
       setFormData({ ...formData, AgentName: name, Address: agent_address });
-      setIsEditing(true); 
+      setIsEditing(true);
     } else {
       setFormData(initialFormData);
       setIsEditing(false);
@@ -55,7 +58,6 @@ const AddAgent = ({ open, onClose, row }) => {
   const handleFieldChange = (fieldName, value) => {
     setFormData({ ...formData, [fieldName]: value });
   };
-
 
   const handleSave = () => {
     if (!formData.AgentName.trim()) {
@@ -83,8 +85,8 @@ const AddAgent = ({ open, onClose, row }) => {
   };
 
   const handleCopyCommand = () => {
-    navigator.clipboard
-      .writeText(formData.DockerCommand)
+    navigator?.clipboard
+      ?.writeText(formData?.DockerCommand)
       .then(() => {
         setCopied(true);
       })
@@ -121,7 +123,8 @@ const AddAgent = ({ open, onClose, row }) => {
     >
       <div className={classes.modalContainer}>
         <Typography variant="h6" align="center" sx={{ fontWeight: "bold" }}>
-          {isEditing ? "Edit Agent" : "Create Agent"} {/* Step 2: Update modal title */}
+          {isEditing ? "Edit Agent" : "Create Agent"}{" "}
+          {/* Step 2: Update modal title */}
         </Typography>
         {/* Body */}
         <div className={classes.modalBody}>
@@ -218,7 +221,8 @@ const AddAgent = ({ open, onClose, row }) => {
               className={classes.button}
               style={{ background: "#654DF7" }}
             >
-              {isEditing ? "Edit Agent" : "Create Agent"} {/* Step 2: Update button label */}
+              {isEditing ? "Edit Agent" : "Create Agent"}{" "}
+              {/* Step 2: Update button label */}
             </Button>
           ) : (
             <Button
