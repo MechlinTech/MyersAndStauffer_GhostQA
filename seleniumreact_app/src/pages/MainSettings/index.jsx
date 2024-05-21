@@ -152,7 +152,7 @@ export default function Settings() {
   ];
 
   // Function to render categories and their submenus
-  const renderCategoriesAndSubmenus = categories.map((category, index) => {
+  const renderCategoriesAndSubmenus = categories?.map((category, index) => {
     const isParentActive =
       category.title === activeParent &&
       category.children.every((child) => child.title !== selectedItem?.title);
