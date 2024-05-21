@@ -21,12 +21,12 @@ BEGIN TRY
             SELECT DISTINCT TOP ' + CAST(@FilterValue AS NVARCHAR(10)) + ' 
 				t.[TestSuitename],
 				t.[TestRunName],
-				CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) AS [TestRunStartDate],
+				CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) AS [TestRunStartDate],
 				ISNULL((SELECT COUNT(1)
 					FROM tbl_TestCase t1
 					WHERE t1.[TestSuiteName] = t.[TestSuiteName]
 							AND t1.[TestRunName] = t.[TestRunName]
-							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
 					GROUP BY t1.[TestRunName]
 				),0) AS [TotalTestCase],
 				ISNULL((SELECT COUNT(1)
@@ -34,7 +34,7 @@ BEGIN TRY
 					WHERE t1.[TestSuiteName] = t.[TestSuiteName]
 							AND t1.[TestRunName] = t.[TestRunName]
 							AND t1.[TestCaseStatus] LIKE ''%Passed%''
-							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
 					GROUP BY t1.[TestRunName]
 				),0) AS [TotalPassedTestCase],
 				ISNULL((SELECT COUNT(1)
@@ -42,7 +42,7 @@ BEGIN TRY
 					WHERE t1.[TestSuiteName] = t.[TestSuiteName]
 							AND t1.[TestRunName] = t.[TestRunName]
 							AND t1.[TestCaseStatus] LIKE ''%Failed%''
-							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
 					GROUP BY t1.[TestRunName]
 				),0) AS [TotalFailedTestCase]
 				FROM 
@@ -52,9 +52,9 @@ BEGIN TRY
 				GROUP BY
 					t.[TestSuitename],
 					t.[TestRunName],
-					CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+					CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
 				ORDER BY 
-					CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) DESC,
+					CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) DESC,
 					t.[TestRunName] DESC
         FOR JSON PATH)))'
 	PRINT @SQLQuery
