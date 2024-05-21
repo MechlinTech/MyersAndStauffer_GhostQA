@@ -17,7 +17,7 @@ export default function Settings() {
 
   const [selectedItem, setSelectedItem] = useState(() => {
     const storedItem = sessionStorage.getItem("selectedCategory");
-    console.log(flatted.parse(storedItem))
+    // console.log(flatted.parse(storedItem))
     return storedItem
       ? flatted.parse(storedItem)
       : null
@@ -141,7 +141,7 @@ export default function Settings() {
   ];
 
   // Function to render categories and their submenus
-  const renderCategoriesAndSubmenus = categories.map((category, index) => {
+  const renderCategoriesAndSubmenus = categories?.map((category, index) => {
     const isParentActive =
       category.title === activeParent && 
       category.children.every((child) => child.title !== selectedItem?.title);
@@ -185,7 +185,7 @@ export default function Settings() {
         {category.children && activeParent === category.title && (
           <Grid item xs={12} style={{ display:'flex',flexDirection:'column', alignItems:'end'}}>
             <Box className={classes.subMenu} >
-              {category.children.map((child, childIndex) => (
+              {category.children?.map((child, childIndex) => (
                 <Paper
                   key={childIndex}
                   className={`
