@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           file: djangoapp/ghostqa/cypress/cypress/Dockerfile
-          context: "{{defaultContext}}:djangoapp/ghostqa/cypress/cypress"
+          # context: "{{defaultContext}}:djangoapp/ghostqa/cypress/cypress"
           no-cache: false
           push: true
           tags: |
