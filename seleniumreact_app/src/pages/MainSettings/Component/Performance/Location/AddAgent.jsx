@@ -90,42 +90,48 @@ const AddAgent = ({ open, onClose, row }) => {
   const handleCopyCommand = () => {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(formData.DockerCommand)
-        .then(() => setCopied(true))
+        .then(() => {
+          setCopied(true);
+          console.log("Copy successful");
+        })
         .catch((error) => {
           console.error("Copy failed:", error);
           setCopied(false);
+          fallbackCopyTextToClipboard(formData.DockerCommand);
         });
     } else {
       console.error("Clipboard API not supported");
       fallbackCopyTextToClipboard(formData.DockerCommand);
     }
   };
-
+  
   const fallbackCopyTextToClipboard = (text) => {
     const textArea = document.createElement("textarea");
     textArea.value = text;
-
+  
     // Avoid scrolling to bottom
     textArea.style.top = "0";
     textArea.style.left = "0";
     textArea.style.position = "fixed";
-
+  
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-
+  
     try {
       const successful = document.execCommand("copy");
       if (successful) {
         setCopied(true);
+        console.log("Fallback copy successful");
       } else {
         setCopied(false);
+        console.error("Fallback copy failed");
       }
     } catch (err) {
       console.error("Fallback copy failed:", err);
       setCopied(false);
     }
-
+  
     document.body.removeChild(textArea);
   };
 
