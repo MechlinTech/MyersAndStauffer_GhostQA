@@ -49,7 +49,7 @@ export const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   subMenu: {
-    marginTop: theme.spacing(1),
+    width:'85%',
   },
   linkStyle: {
     textDecoration: "none",
