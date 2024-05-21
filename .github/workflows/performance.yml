@@ -29,7 +29,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          file: /djangoapp/ghostqa/performace_test/jmeter/Dockerfile.actions
+          file: .djangoapp/ghostqa/performace_test/jmeter/Dockerfile.actions
           context: "{{defaultContext}}:djangoapp/ghostqa/performace_test/jmeter"
           no-cache: false
           push: true
