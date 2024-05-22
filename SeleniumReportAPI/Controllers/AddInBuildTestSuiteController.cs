@@ -174,5 +174,25 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetAllIntegration());
         }
+
+        /// <summary>
+        /// Get All Integration
+        /// </summary>
+        /// <returns></returns>
+        //[HttpGet("GetAllIssue")]
+        //public async Task<ActionResult> GetAllIssue()
+        //{
+        //    return Ok(await _helper.GetAllIssue());
+        //}
+
+        ///// <summary>
+        ///// Get All Integration
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost("CreateIssueOnJire")]
+        //public async Task<ActionResult> CreateIssueOnJire()
+        //{
+        //    return Ok(await _helper.CreateIssueOnJire());
+        //}
     }
 }
