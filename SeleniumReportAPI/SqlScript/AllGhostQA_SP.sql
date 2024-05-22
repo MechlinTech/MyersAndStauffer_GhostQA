@@ -4548,6 +4548,7 @@ BEGIN CATCH
 END CATCH
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetAllIntegration]
+@UserId          VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetAllIntegration
@@ -4559,6 +4560,12 @@ PROC EXEC		:
 				EXEC stp_GetAllIntegration
 **************************************************************************************/
 BEGIN TRY
+	IF NOT EXISTS(SELECT 1 FROM tbl_Integration WHERE [UserId] = @UserId)
+	BEGIN
+		INSERT INTO tbl_Integration([UserId], [AppName], [IsIntegrated], [CreatedBy], [CreatedOn], [UpdatedBy], [UpdatedOn], [Domain], [Email],
+		 [APIKey]) VALUES(@UserId, 'Jira', 0, @UserId, GETDATE(), @UserId, GETDATE(), NULL, NULL, NULL),
+		 (@UserId, 'MS Teams/Slack', 0, @UserId, GETDATE(), @UserId, GETDATE(), NULL, NULL, NULL)
+	END
 	SELECT [result] = JSON_QUERY((
 		SELECT [Id],
 			   [UserId],
@@ -4572,6 +4579,7 @@ BEGIN TRY
 			   [Email],
 			   [APIKey]
 		FROM tbl_Integration
+		WHERE [UserId] = @UserId
 		FOR JSON PATH, INCLUDE_NULL_VALUES
 	))
 END TRY
@@ -4580,13 +4588,13 @@ BEGIN CATCH
 END CATCH
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateIntegration]
-@Id                   INT,
 @UserId               VARCHAR(100),
 @IsIntegrated         Bit,
 @CreatedBy			  VARCHAR(100),
 @Domain				  VARCHAR(100),
 @Email				  VARCHAR(100),
-@APIKey				  VARCHAR(100)
+@APIKey				  VARCHAR(100),
+@AppName			  VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_UpdateIntegration
@@ -4598,17 +4606,14 @@ PROC EXEC		:  EXEC stp_UpdateIntegration
 				
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS(SELECT 1 FROM tbl_Integration WHERE [Id] = @Id)
-	BEGIN
 		UPDATE tbl_Integration
-		SET [UserId]              = @UserId,
-			[IsIntegrated]        = @IsIntegrated,
-			[UpdatedBy]			  = @CreatedBy,
+		SET [IsIntegrated]        = @IsIntegrated,
+			[UpdatedBy]			  = @UserId,
 			[UpdatedOn]			  = GETDATE(),
 			[Domain]			  = @Domain,
 			[Email]				  = @Email,
 			[APIKey]			  = @APIKey
-			WHERE [Id] = @Id
+			WHERE [AppName] = @AppName AND [UserId] = @UserId
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -4623,12 +4628,37 @@ BEGIN TRY
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 			))
 		END
-	END
 END TRY
 BEGIN CATCH
 	SELECT [result] = JSON_QUERY((
 		SELECT 'fail' [status], ERROR_MESSAGE() [message]
 		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 	))
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetJiraDetailsByUserId]
+@UserId          VARCHAR(100)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetJiraDetailsByUserId
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	23 May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetJiraDetailsByUserId '5782a89b-3714-4a0d-88f0-8f5b9435454c'
+**************************************************************************************/
+BEGIN TRY
+	SELECT [result] = JSON_QUERY((
+		SELECT [Domain],
+			   [Email],
+			   [APIKey]
+		FROM tbl_Integration
+		WHERE [UserId] = @UserId
+		FOR JSON PATH, INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER
+	))
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [result]
 END CATCH
 GO

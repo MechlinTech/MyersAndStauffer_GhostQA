@@ -159,40 +159,51 @@ namespace SeleniumReportAPI.Controllers
         /// <param Integration = Integration></param>
         /// <returns></returns>
         [HttpPost("UpdateIntegration")]
-        public async Task<ActionResult> UpdateIntegration(Integration model)
+        public async Task<ActionResult> UpdateIntegration(Dto_Integration model)
         {
-            var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-            return Ok(await _helper.UpdateIntegration(model, CreatedBy));
+            return Ok(await _helper.UpdateIntegration(model));
         }
 
         /// <summary>
         /// Get All Integration
         /// </summary>
         /// <returns></returns>
-        [HttpGet("GetAllIntegration")]
-        public async Task<ActionResult> GetAllIntegration()
+        [HttpGet("GetAllUserIntegration")]
+        public async Task<ActionResult> GetAllIntegration(string userId)
         {
-            return Ok(await _helper.GetAllIntegration());
+            return Ok(await _helper.GetAllUserIntegration(userId));
         }
 
         /// <summary>
-        /// Get All Integration
+        /// Get All Jira Issue
         /// </summary>
         /// <returns></returns>
-        //[HttpGet("GetAllIssue")]
-        //public async Task<ActionResult> GetAllIssue()
-        //{
-        //    return Ok(await _helper.GetAllIssue());
-        //}
+        [HttpGet("GetAllJiraIssue")]
+        public async Task<ActionResult> GetAllJiraIssue(string userId)
+        {
+            return Ok(await _helper.GetAllJiraIssue(userId));
+        }
 
         ///// <summary>
-        ///// Get All Integration
+        ///// Create Issue On Jire
         ///// </summary>
+        //// <param Integration = Integration></param>
         ///// <returns></returns>
-        //[HttpPost("CreateIssueOnJire")]
-        //public async Task<ActionResult> CreateIssueOnJire()
-        //{
-        //    return Ok(await _helper.CreateIssueOnJire());
-        //}
+        [HttpPost("CreateIssueOnJire")]
+        public async Task<ActionResult> CreateIssueOnJire(Dto_CreateJiraIssue model)
+        {
+            return Ok(await _helper.CreateIssueOnJire(model));
+        }
+
+        ///// <summary>
+        ///// Link Issue On Jire
+        ///// </summary>
+        //// <param IssueLinkOnJira = IssueLinkOnJira></param>
+        ///// <returns></returns>
+        [HttpPost("LinkIssueOnJire")]
+        public async Task<ActionResult> LinkIssueOnJire(IssueLinkOnJira model)
+        {
+            return Ok(await _helper.LinkIssueOnJire(model));
+        }
     }
 }

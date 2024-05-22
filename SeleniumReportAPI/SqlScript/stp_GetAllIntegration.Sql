@@ -1,4 +1,5 @@
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetAllIntegration]
+@UserId          VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetAllIntegration
@@ -10,6 +11,12 @@ PROC EXEC		:
 				EXEC stp_GetAllIntegration
 **************************************************************************************/
 BEGIN TRY
+	IF NOT EXISTS(SELECT 1 FROM tbl_Integration WHERE [UserId] = @UserId)
+	BEGIN
+		INSERT INTO tbl_Integration([UserId], [AppName], [IsIntegrated], [CreatedBy], [CreatedOn], [UpdatedBy], [UpdatedOn], [Domain], [Email],
+		 [APIKey]) VALUES(@UserId, 'Jira', 0, @UserId, GETDATE(), @UserId, GETDATE(), NULL, NULL, NULL),
+		 (@UserId, 'MS Teams/Slack', 0, @UserId, GETDATE(), @UserId, GETDATE(), NULL, NULL, NULL)
+	END
 	SELECT [result] = JSON_QUERY((
 		SELECT [Id],
 			   [UserId],
@@ -23,6 +30,7 @@ BEGIN TRY
 			   [Email],
 			   [APIKey]
 		FROM tbl_Integration
+		WHERE [UserId] = @UserId
 		FOR JSON PATH, INCLUDE_NULL_VALUES
 	))
 END TRY
