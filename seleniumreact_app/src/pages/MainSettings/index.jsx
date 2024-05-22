@@ -26,7 +26,7 @@ export default function Settings() {
       }
     }
     return null;
-});
+  });
 
   const tabLabelStyle = {
     fontWeight: "400",
@@ -135,20 +135,32 @@ export default function Settings() {
         },
       ],
     },
-    // {
-    //   title: "Funcational",
-    //   path: "/settings/Application",
-    //   children: [
-    //     {
-    //       title: "browser",
-    //       path: "/settings/Application/Sub-Application",
-    //     },
-    //     {
-    //         title: "Environment",
-    //         path: "/settings/Application/Sub-Application",
-    //       },
-    //   ],
-    // },
+    {
+      title: "Funcational",
+      path: "/main-settings",
+      children: [
+        {
+          title: "Environment",
+          path: "/main-settings/environment",
+        },
+        {
+          title: "Application",
+          path: "/main-settings/application",
+        },
+        {
+          title: "Browser",
+          path: "/main-settings/browser",
+        },
+        {
+          title: "Test User",
+          path: "/main-settings/test-user",
+        },
+        {
+          title: "Integration (Jira & Teams)",
+          path: "/main-settings/on-prem/ntegration",
+        },
+      ],
+    },
   ];
 
   // Function to render categories and their submenus
@@ -205,8 +217,8 @@ export default function Settings() {
           >
             <Box className={classes.subMenu}>
               {category.children?.map((child, childIndex) => (
-                <Paper
-                  key={childIndex}
+                  <Link to={child.path} className={classes.linkStyle} key={childIndex}>
+                  <Paper
                   className={`
                     ${classes.paper}
                     ${classes.subPaper}
@@ -218,7 +230,6 @@ export default function Settings() {
                   `}
                   onClick={() => handleChildClick(child)}
                 >
-                  <Link to={child.path} className={classes.linkStyle}>
                     <Grid container alignItems="left">
                       <Typography
                         className={`
@@ -234,8 +245,8 @@ export default function Settings() {
                         {child.title}
                       </Typography>
                     </Grid>
-                  </Link>
                 </Paper>
+                  </Link>
               ))}
             </Box>
           </Grid>
