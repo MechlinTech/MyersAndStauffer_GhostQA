@@ -2,7 +2,10 @@ CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateIntegration]
 @Id                   INT,
 @UserId               VARCHAR(100),
 @IsIntegrated         Bit,
-@CreatedBy			  VARCHAR(100)
+@CreatedBy			  VARCHAR(100),
+@Domain				  VARCHAR(100),
+@Email				  VARCHAR(100),
+@APIKey				  VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_UpdateIntegration
@@ -20,7 +23,10 @@ BEGIN TRY
 		SET [UserId]              = @UserId,
 			[IsIntegrated]        = @IsIntegrated,
 			[UpdatedBy]			  = @CreatedBy,
-			[UpdatedOn]			  = GETDATE()
+			[UpdatedOn]			  = GETDATE(),
+			[Domain]			  = @Domain,
+			[Email]				  = @Email,
+			[APIKey]			  = @APIKey
 			WHERE [Id] = @Id
 		IF @@ERROR = 0
 		BEGIN

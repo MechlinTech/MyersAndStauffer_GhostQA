@@ -11,6 +11,7 @@ using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
@@ -3791,9 +3792,33 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<string> UpdateIntegration(Integration model, string createdBy)
+        internal async Task<Dto_Response> UpdateIntegration(Integration model, string createdBy)
         {
             string result = string.Empty;
+
+            if (model.IsIntegrated)
+            {
+                using (var httpClient = new HttpClient())
+                {
+
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{model.Domain}{_configuration["Integration:JiraBaseUrl"]}project"))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{model.Email}:{model.APIKey}"));
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        var response = await httpClient.SendAsync(request);
+                        if (response.StatusCode == HttpStatusCode.Unauthorized)
+                            return new Dto_Response
+                            {
+                                status = HttpStatusCode.Unauthorized.ToString(),
+                                message = "Invalid Credentials"
+                            };
+                    }
+                }
+            }
+
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -3806,6 +3831,9 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@UserId", model.UserId);
                         command.Parameters.AddWithValue("@IsIntegrated", model.IsIntegrated);
                         command.Parameters.AddWithValue("@CreatedBy", createdBy);
+                        command.Parameters.AddWithValue("@Domain", model.Domain);
+                        command.Parameters.AddWithValue("@Email", model.Email);
+                        command.Parameters.AddWithValue("@APIKey", model.APIKey);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -3816,6 +3844,103 @@ namespace SeleniumReportAPI.Helper
                         }
                     }
                     connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return new Dto_Response
+            {
+                status = HttpStatusCode.OK.ToString(),
+                message = "Success"
+            }; 
+        }
+
+        internal async Task<object> CreateIssueOnJire()
+        {
+            string result = string.Empty;
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                   string _email = _configuration["Integration:EmailId"];
+                   string _apiToken = _configuration["EmailDetails:apiKey"];
+                    string baseUrl = _configuration["Integration:JiraBaseUrl"];
+
+                    using (var request = new HttpRequestMessage(new HttpMethod("POST"), baseUrl))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_email}:{_apiToken}"));
+
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        request.Content = new StringContent("{  \"fields\": {    \"issuetype\": {      \"id\": \"10005\"    },    \"project\": {      \"id\": \"10000\"    },    \"summary\": \"Test ticket 2 from REST API\"}}");
+                        request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                        var response = await httpClient.SendAsync(request);
+                        if (response.StatusCode == HttpStatusCode.Unauthorized)
+                            return new
+                            {
+                                status = HttpStatusCode.Unauthorized,
+                                message = "Invalid Credentials"
+                            };
+
+                        var obj = response.Content.ReadAsStringAsync();
+                    }
+                }
+
+                //using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                //{
+                //    connection.Open();
+                //    using (SqlCommand command = new SqlCommand("stp_UpdateIntegration", connection))
+                //    {
+                //        command.CommandType = CommandType.StoredProcedure;
+                //        command.Parameters.AddWithValue("@Id", model.Id);
+                //        command.Parameters.AddWithValue("@UserId", model.UserId);
+                //        command.Parameters.AddWithValue("@IsIntegrated", model.IsIntegrated);
+                //        command.Parameters.AddWithValue("@CreatedBy", createdBy);
+                //        using (SqlDataReader reader = command.ExecuteReader())
+                //        {
+                //            if (reader.HasRows)
+                //            {
+                //                reader.Read();
+                //                result = reader["result"].ToString();
+                //            }
+                //        }
+                //    }
+                //    connection.Close();
+                //}
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<string> GetAllIssue()
+        {
+            string result = string.Empty;
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string _email = "admin@gmail.com";
+                    string _apiToken = _configuration["Integration:JiraAPIKey"];
+
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), "https://ghostqa123.atlassian.net/rest/api/3/project"))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_email}:{_apiToken}"));
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        var response = await httpClient.SendAsync(request);
+
+                        var obj = response.Content.ReadAsStringAsync();
+                    }
                 }
             }
             catch (Exception ex)

@@ -18,7 +18,10 @@ BEGIN TRY
 			   [CreatedBy],
 			   [CreatedOn],
 			   [UpdatedBy],
-			   [UpdatedOn]
+			   [UpdatedOn],
+			   [Domain],
+			   [Email],
+			   [APIKey]
 		FROM tbl_Integration
 		FOR JSON PATH, INCLUDE_NULL_VALUES
 	))

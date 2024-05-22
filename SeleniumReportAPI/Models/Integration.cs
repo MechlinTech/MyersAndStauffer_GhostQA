@@ -13,6 +13,8 @@ namespace SeleniumReportAPI.Models
         public string CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public string UpdatedOn { get; set; }
-
+        public string Domain { get; set; }
+        public string Email { get; set; }
+        public string APIKey { get; set; }
     }
 }
