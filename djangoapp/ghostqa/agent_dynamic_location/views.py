@@ -10,6 +10,7 @@ from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRun
 from performace_test.models import JmeterTestContainersRuns, TestContainersRuns
 from performace_test.serializers.performace_tests import TestContainersRunsSerializer
 import psutil
+from rest_framework import status
 
 class AgentViewSet(viewsets.ModelViewSet):
     queryset = AgentDetails.objects.all()
@@ -121,6 +122,14 @@ class JobViewSet(viewsets.ModelViewSet):
             'message': 'successfully fetched!',
             'data':data
         })
+    @action(detail=False, methods=['POST'])
+    def get_agent_system_info(self, request):
+        data = request.data
+        print(f"Received system info : {data}")
+        return Response({
+            'message': 'System info successfully received!',
+            'data': data
+        }, status=status.HTTP_200_OK)
     
     
 class PrivateLocationViewSet(viewsets.ModelViewSet):
