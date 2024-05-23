@@ -140,16 +140,16 @@ export default function Settings() {
       path: "/main-settings",
       children: [
         {
-          title: "Environment",
-          path: "/main-settings/environment",
-        },
-        {
           title: "Application",
           path: "/main-settings/application",
         },
         {
           title: "Browser",
           path: "/main-settings/browser",
+        },
+        {
+          title: "Environment",
+          path: "/main-settings/environment",
         },
         {
           title: "Test User",
