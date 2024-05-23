@@ -9,6 +9,7 @@ from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution,
 from .serializers import AgentSerializer, JobSerializer, JmeterTestContainersRunsSerializer, JmeterTestContainersRunsSerializerNew, PrivateLocationSerializer, NewAgentSerializer, LoadDistributionSerializer, AgentListSerializer
 from performace_test.models import JmeterTestContainersRuns, TestContainersRuns
 from performace_test.serializers.performace_tests import TestContainersRunsSerializer
+import psutil
 
 class AgentViewSet(viewsets.ModelViewSet):
     queryset = AgentDetails.objects.all()
@@ -83,7 +84,43 @@ class JobViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'])    
     def receive_data(self, request):
         data = request.data
-        return Response({'message': 'Data received successfully', 'data': data}) 
+        return Response({'message': 'Data received successfully', 'data': data})
+    
+    @action(detail=False, methods=['GET'])
+    def system_info(self, request):
+        cpu_usage = psutil.cpu_percent(interval=1)
+        # print(f"CPU Usage : {cpu_usage}")
+        # get Memory usage
+        memory_info = psutil.virtual_memory()
+        total_memory = memory_info.total / (1024 ** 3) # byte to GB
+        available_memory = memory_info.available / (1024 ** 3) # byte to GB
+        used_memory = memory_info.used / (1024 ** 3) # byte to GB
+        memory_usage_percent = memory_info.percent
+        # print(f"Total Memory: {total_memory:.2f} GB")
+        # print(f"Available Memory: {available_memory:.2f} GB")
+        # print(f"Used Memory: {used_memory:.2f} GB")
+        # print(f"Memory Usage: {memory_usage_percent}%")
+        
+        net_io = psutil.net_io_counters()
+        bytes_sent = net_io.bytes_sent / (1024 ** 2)  # Convert bytes to MB
+        bytes_recv = net_io.bytes_recv / (1024 ** 2)  # Convert bytes to MB
+        # print(f"Bytes Sent: {bytes_sent:.2f} MB")
+        # print(f"Bytes Received: {bytes_recv:.2f} MB")
+        
+        data = {
+            'cpu_usage': f"{cpu_usage}%",
+            'total_memory_gb': f"{total_memory:.2f} GB",
+            'available_memory_gb': f"{available_memory:.2f} GB",
+            'used_memory_gb': f"{used_memory:.2f} GB",
+            'memory_usage_percent': f"{memory_usage_percent}%",
+            'bytes_sent_mb': f"{bytes_sent:.2f} MB",
+            'bytes_received_mb': f"{bytes_recv:.2f} MB"
+        }
+        
+        return Response({
+            'message': 'successfully fetched!',
+            'data':data
+        })
     
     
 class PrivateLocationViewSet(viewsets.ModelViewSet):
