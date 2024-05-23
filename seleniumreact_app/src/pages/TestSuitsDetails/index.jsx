@@ -31,7 +31,8 @@ import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { CircularProgress } from "@material-ui/core";
-
+import BugReportIcon from '@mui/icons-material/BugReport';
+import BugReport from "./CreateIssue";
 export default function TestSuitsDetails() {
   const { testSuiteName, testRunName } = useParams();
   const classess = useStyles();
@@ -184,6 +185,7 @@ export default function TestSuitsDetails() {
 
     return formattedDate;
   }
+  const [drawerOpen, setdrawerOpen] = useState(false)
   return (
     <>
       {" "}
@@ -225,7 +227,6 @@ export default function TestSuitsDetails() {
               </Stack>
             </Grid>
           </Grid>
-
           {/* main compoent */}
           <Grid container spacing={2}>
             {/* Left side content */}
@@ -405,6 +406,7 @@ export default function TestSuitsDetails() {
                         <TableRow style={{ backgroundColor: "#f0f0f0" }}>
                           <TableCell>Status</TableCell>
                           <TableCell>Test Case Name</TableCell>
+                          <TableCell></TableCell>
                           <TableCell>Video</TableCell>
                           <TableCell>Start Time</TableCell>
                         </TableRow>
@@ -434,6 +436,10 @@ export default function TestSuitsDetails() {
                               </TableCell>
                               <TableCell className={classess.tbodyFont}>
                                 {row.TestCaseName}
+                              </TableCell>
+                              <TableCell className={classess.tbodyFont}>
+                                {/* {row.TestCaseStatus === "Failed" && <BugReportIcon style={{color:'#dc3545'}} onClick={()=>setdrawerOpen(true)}/>} */}
+                                <BugReport row={row}/>
                               </TableCell>
                               <CustomVideoChell row={row} />
                               <TableCell className={classess.tbodyFont}>
