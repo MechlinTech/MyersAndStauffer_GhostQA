@@ -42,6 +42,7 @@ class JmeterTestContainerRunsViewSet(viewsets.ModelViewSet):
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
+    latest_system_info = {}
     
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)
@@ -125,12 +126,28 @@ class JobViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['POST'])
     def get_agent_system_info(self, request):
         data = request.data
+        self.__class__.latest_system_info = data
         print(f"Received system info : {data}")
+        # return Response(data, status=status.HTTP_200_OK, content_type='application/json')
         return Response({
             'message': 'System info successfully received!',
             'data': data
         }, status=status.HTTP_200_OK)
     
+    @action(detail=False, methods=['GET'])
+    def show_agent_system_info(self, request):
+        data = self.__class__.latest_system_info
+        
+        if data:
+            return Response({
+                'message': 'System info successfully fetched!',
+                'data': data
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'message': 'No system info found for the given agent ID.',
+                'data': {}
+            }, status=status.HTTP_404_NOT_FOUND)
     
 class PrivateLocationViewSet(viewsets.ModelViewSet):
     queryset = PrivateLocation.objects.all()
