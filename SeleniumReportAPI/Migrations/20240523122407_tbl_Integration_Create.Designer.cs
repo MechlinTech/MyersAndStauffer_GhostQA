@@ -12,8 +12,8 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240520131335_tbl_Integration")]
-    partial class tbl_Integration
+    [Migration("20240523122407_tbl_Integration_Create")]
+    partial class tbl_Integration_Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -569,6 +569,9 @@ namespace SeleniumReportAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<byte[]>("APIKey")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("AppName")
                         .HasColumnType("nvarchar(max)");
 
@@ -576,6 +579,12 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Domain")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsIntegrated")

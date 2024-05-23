@@ -154,6 +154,16 @@ namespace SeleniumReportAPI.Controllers
         }
 
         /// <summary>
+        /// Get All Integration
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAllUserIntegration")]
+        public async Task<ActionResult> GetAllIntegration(string userId)
+        {
+            return Ok(await _helper.GetAllUserIntegration(userId));
+        }
+
+        /// <summary>
         /// Update Integration
         /// </summary>
         /// <param Integration = Integration></param>
@@ -165,13 +175,23 @@ namespace SeleniumReportAPI.Controllers
         }
 
         /// <summary>
-        /// Get All Integration
+        /// Get Project List Jira
         /// </summary>
         /// <returns></returns>
-        [HttpGet("GetAllUserIntegration")]
-        public async Task<ActionResult> GetAllIntegration(string userId)
+        [HttpGet("GetProjectListJira")]
+        public async Task<ActionResult> GetProjectListJira(string userId)
         {
-            return Ok(await _helper.GetAllUserIntegration(userId));
+            return Ok(await _helper.GetProjectListJira(userId));
+        }
+
+        /// <summary>
+        /// Get All Jira Issue Types
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAllJiraIssueTypes")]
+        public async Task<ActionResult> GetAllJiraIssueTypes(string userId)
+        {
+            return Ok(await _helper.GetAllJiraIssueTypes(userId));
         }
 
         /// <summary>
@@ -201,7 +221,7 @@ namespace SeleniumReportAPI.Controllers
         //// <param IssueLinkOnJira = IssueLinkOnJira></param>
         ///// <returns></returns>
         [HttpPost("LinkIssueOnJire")]
-        public async Task<ActionResult> LinkIssueOnJire(IssueLinkOnJira model)
+        public async Task<ActionResult>LinkIssueOnJire(IssueLinkOnJira model)
         {
             return Ok(await _helper.LinkIssueOnJire(model));
         }

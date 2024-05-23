@@ -1,7 +1,6 @@
 CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateIntegration]
 @UserId               VARCHAR(100),
 @IsIntegrated         Bit,
-@CreatedBy			  VARCHAR(100),
 @Domain				  VARCHAR(100),
 @Email				  VARCHAR(100),
 @APIKey				  VARCHAR(100),

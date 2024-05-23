@@ -15,5 +15,8 @@
     public class GetFields
     {
         public string summary { get; set; }
+        public IssueType issuetype { get; set; }
+        public Project project { get; set; }
     }
+
 }

@@ -15,6 +15,6 @@ namespace SeleniumReportAPI.Models
         public string UpdatedOn { get; set; }
         public string Domain { get; set; }
         public string Email { get; set; }
-        public string APIKey { get; set; }
+        public byte[] APIKey { get; set; }
     }
 }
