@@ -9,6 +9,7 @@ export const GET_USER_COUNT = "GET_USER_COUNT";
 export const RESET_USER_COUNT = "RESET_USER_COUNT";
 export const RESET_LOC_COUNT = "RESET_LOC_COUNT";
 export const GET_USER_LIST ="GET_USER_LIST"
+export const GET_PERFORMANCE_INTEGRATION = "GET_PERFORMANCE_INTEGRATION";
 
 export const getTestSuitesList = () => {
   return async (dispatch) => {
@@ -284,3 +285,57 @@ export const DeleteUser = (id) => {
     }
   };
 };
+
+// performance
+
+export const getPerformanceIntegrationList = (userId) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.get(
+        `${BASE_URL}/AddInBuildTestSuite/GetAllUserIntegration?userId=${userId}`,
+        header()
+      );
+      console.log("getPerformanceIntegrationList====", response);
+      dispatch({
+        type: GET_PERFORMANCE_INTEGRATION,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error("Error in getTestSuites:", error);
+    }
+  };
+};
+
+export const updateZiraIntegration = (data, setOpenModal, setLoading) => {
+  setLoading(true)
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/UpdateIntegration`,
+        data,
+        header()
+      );
+      console.log("updateZiraIntegration====", response);
+      if(response.status ===  200) {
+        toast.info('Successfully Jira Integrated', {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+        dispatch(getPerformanceIntegrationList(data?.userId));
+        setOpenModal(false)
+        setLoading(false)
+       
+      }
+     
+    } catch (error) {
+      console.error("Error in getTestSuites:", error);
+      setOpenModal(false)
+      setLoading(false)
+    }
+  };
+};
+
