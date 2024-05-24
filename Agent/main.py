@@ -48,10 +48,10 @@ def main(agent_id, token):
                 
     
 if __name__ == "__main__":
-    # agent_id = 'b06dc431-4161-41e0-9b4e-4c9378ac6911'
-    # token = '49313a00-7111-4dca-9fbf-886be8b39d3f'
-    agent_id = os.getenv('AGENT_ID')
-    token = os.getenv('TOKEN')
+    agent_id = '45356034-33b8-4859-8762-542aac24256c'
+    token = '385df753-a539-4448-8099-ac523cb5e008'
+    # agent_id = os.getenv('AGENT_ID')
+    # token = os.getenv('TOKEN')
     if not agent_id or not token:
         parser = argparse.ArgumentParser()
         parser.add_argument("agent_id", help="Agent ID to use for job execution")
