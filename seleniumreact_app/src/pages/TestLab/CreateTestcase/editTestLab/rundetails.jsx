@@ -47,7 +47,7 @@ const regex = /\x1b\[30m/g; // Define the regular expression pattern
 console.log(regex.test(escapeSequenceString));
   let parsedDetail;
   if (runIdDetails && runIdDetails.length > 0) {
-    parsedDetail = JSON.parse(runIdDetails[0].TestScreenShotUrl);
+    parsedDetail = JSON.parse(runIdDetails[0]?.TestScreenShotUrl);
   } else {
     parsedDetail = null;
   }
