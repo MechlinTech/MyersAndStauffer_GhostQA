@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
 import { Add } from "@mui/icons-material";
 
-import AddTestCase from "./AddTestCase";
+import AddTestCase from "./Design/AddTestCase";
 import AddNewProject from "./AddNewProject";
 
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
@@ -15,19 +15,17 @@ import axios from "axios";
 import { header } from "../../utils/authheader";
 import { useParams } from "react-router-dom";
 import { getBaseUrl } from "../../utils/configService";
+import TabsPanel from "./TabsPanel";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TestLab() {
   const classes = useStyles();
-
-  const { nodeId } = useParams();
 
   const [addTestCase, setAddTestCase] = useState(0);
   const [addNewProject, setAddNewProject] = useState(false);
 
   const [formData, setFormData] = useState({ name: "" });
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const [nameSuite, setNameSuite] = useState("");
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [listData, setListData] = useState([]);
@@ -104,13 +102,11 @@ export default function TestLab() {
     setdepth(node);
     if (node > 1) {
       setAddTestCase(item.id);
-      setNameSuite(item.name);
       setAddNewProject(false);
     } else {
       let childs = listData.filter((data) => data.parentId === item.id);
       setchildOfFirstTwoParent(childs);
       setAddTestCase(0);
-      setNameSuite("");
       setAddNewProject(false);
     }
   };
@@ -192,14 +188,14 @@ export default function TestLab() {
                   TestCaseHandle={handleTestCaseList}
                   listData={listData}
                   setListData={setListData}
-                  params={nodeId}
                 />
               </Grid>
             </Card>
           </Grid>
           <Grid item xs={12} md={drawerOpen ? 9 : 12} xl={10}>
             {depth > 1 ? (
-              <AddTestCase addTestCase={addTestCase} nameSuite={nameSuite} />
+              // <AddTestCase addTestCase={addTestCase} nameSuite={nameSuite} />
+              <TabsPanel addTestCase={addTestCase} />
             ) : (
               <Box />
             )}
