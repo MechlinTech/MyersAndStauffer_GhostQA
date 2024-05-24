@@ -567,8 +567,8 @@ namespace SeleniumReportAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("APIKey")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("APIKey")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("AppName")
                         .HasColumnType("nvarchar(max)");

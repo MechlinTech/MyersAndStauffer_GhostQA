@@ -4,6 +4,6 @@
     {
         public string Email { get; set; }
         public string Domain { get; set; }
-        public string APIKey { get; set; }
+        public byte[] APIKey { get; set; }
     }
 }

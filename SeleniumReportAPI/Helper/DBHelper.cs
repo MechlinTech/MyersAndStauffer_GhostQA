@@ -3794,16 +3794,15 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<Dto_Response> UpdateIntegration(Dto_Integration model)
+        internal async Task<object> UpdateIntegration(Dto_Integration model)
         {
             string result = string.Empty;
-
+            var str = CompressString(model.APIKey);
             if (model.IsIntegrated)
             {
                 using (var httpClient = new HttpClient())
                 {
-
-                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{model.Domain}{_configuration["Integration:JiraBaseUrl"]}project"))
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{model.Domain}{_configuration["Integration:JiraBaseUrl"]}events"))
                     {
                         request.Headers.TryAddWithoutValidation("Accept", "application/json");
 
@@ -3811,12 +3810,9 @@ namespace SeleniumReportAPI.Helper
                         request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
 
                         var response = await httpClient.SendAsync(request);
-                        if (response.StatusCode == HttpStatusCode.Unauthorized)
-                            return new Dto_Response
-                            {
-                                status = HttpStatusCode.Unauthorized.ToString(),
-                                message = "Invalid Credentials"
-                            };
+
+                        if (!response.IsSuccessStatusCode)
+                            return new { status = response.StatusCode, message = response.ReasonPhrase };
                     }
                 }
             }
@@ -3830,10 +3826,11 @@ namespace SeleniumReportAPI.Helper
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@UserId", model.UserId);
+                        command.Parameters.AddWithValue("@AppName", model.AppName);
                         command.Parameters.AddWithValue("@IsIntegrated", model.IsIntegrated);
                         command.Parameters.AddWithValue("@Domain", model.Domain);
                         command.Parameters.AddWithValue("@Email", model.Email);
-                        command.Parameters.AddWithValue("@APIKey", model.APIKey);
+                        command.Parameters.AddWithValue("@APIKey", CompressString(model.APIKey));
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -3854,13 +3851,14 @@ namespace SeleniumReportAPI.Helper
             {
                 status = HttpStatusCode.OK.ToString(),
                 message = "Success"
-            }; 
+            };
         }
 
-        internal async Task<object> CreateIssueOnJire(Dto_CreateJiraIssue model)
+        internal async Task<Dto_Response> CreateIssueOnJire(Dto_CreateJiraIssue model)
         {
             string result = string.Empty;
-           
+            Dto_Response resp = null;
+
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -3892,23 +3890,20 @@ namespace SeleniumReportAPI.Helper
                     {
                         request.Headers.TryAddWithoutValidation("Accept", "application/json");
 
-                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{jiraDetails.APIKey}"));
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{DecompressString(jiraDetails.APIKey)}"));
 
                         request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
 
-                        request.Content = new StringContent(JsonConvert.SerializeObject(result));
+                        request.Content = new StringContent(JsonConvert.SerializeObject(model.jiraCreateIssueModel));
                         request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
                         var response = await httpClient.SendAsync(request);
                         if (response.StatusCode == HttpStatusCode.Unauthorized)
-                            return new
-                            {
-                                status = HttpStatusCode.Unauthorized,
-                                message = "Invalid Credentials"
-                            };
+                            resp = new Dto_Response { status = HttpStatusCode.Unauthorized.ToString(), message = "Invalid credentials or key expired!" };
 
-                        var obj = response.Content.ReadAsStringAsync();
-                        var obj1 = JsonConvert.DeserializeObject<Dto_GetAllJiraIssue>(obj.Result);
+                        var obj = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                            resp = new Dto_Response { status = HttpStatusCode.OK.ToString(), message = "Created successfully!", Data = JsonConvert.DeserializeObject<Dto_GetJirataskDetail>(await response.Content.ReadAsStringAsync()) };
                     }
                 }
             }
@@ -3916,7 +3911,7 @@ namespace SeleniumReportAPI.Helper
             {
                 throw ex;
             }
-            return result;
+            return resp;
         }
 
         internal async Task<Dto_GetAllJiraIssue> GetAllJiraIssue(string userId)
@@ -3949,11 +3944,11 @@ namespace SeleniumReportAPI.Helper
                 using (var httpClient = new HttpClient())
                 {
                     string baseUrl = _configuration["Integration:JiraBaseUrl"];
-                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{jiraDetails.Domain}{baseUrl}search?jql=" ))
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{jiraDetails.Domain}{baseUrl}search?jql="))
                     {
                         request.Headers.TryAddWithoutValidation("Accept", "application/json");
 
-                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{jiraDetails.APIKey}"));
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{DecompressString(jiraDetails.APIKey)}"));
                         request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
 
                         var response = await httpClient.SendAsync(request);
@@ -4016,6 +4011,108 @@ namespace SeleniumReportAPI.Helper
                         var response = await httpClient.SendAsync(request);
 
                         var obj = response.Content.ReadAsStringAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<List<Dto_GetAllIssueTypes>> GetAllJiraIssueTypes(string userId)
+        {
+            List<Dto_GetAllIssueTypes> result;
+            string result1 = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetJiraDetailsByUserId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", userId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result1 = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                Dto_JiraDetails jiraDetails = JsonConvert.DeserializeObject<Dto_JiraDetails>(result1);
+
+                using (var httpClient = new HttpClient())
+                {
+                    string baseUrl = _configuration["Integration:JiraBaseUrl"];
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{jiraDetails.Domain}{baseUrl}issuetype"))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{DecompressString(jiraDetails.APIKey)}"));
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        var response = await httpClient.SendAsync(request);
+
+                        var obj = await response.Content.ReadAsStringAsync();
+                        result = JsonConvert.DeserializeObject<List<Dto_GetAllIssueTypes>>(obj);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<List<Dto_ProjectListJira>> GetProjectListJira(string userId)
+        {
+            List<Dto_ProjectListJira> result;
+            string result1 = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetJiraDetailsByUserId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", userId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result1 = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                Dto_JiraDetails jiraDetails = JsonConvert.DeserializeObject<Dto_JiraDetails>(result1);
+
+                using (var httpClient = new HttpClient())
+                {
+                    string baseUrl = _configuration["Integration:JiraBaseUrl"];
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{jiraDetails.Domain}{baseUrl}project"))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{DecompressString(jiraDetails.APIKey)}"));
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        var response = await httpClient.SendAsync(request);
+
+                        var obj = await response.Content.ReadAsStringAsync();
+                        result = JsonConvert.DeserializeObject<List<Dto_ProjectListJira>>(obj);
                     }
                 }
             }

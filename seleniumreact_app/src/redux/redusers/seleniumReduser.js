@@ -14,7 +14,9 @@ import {
   EXECUTING_SUITE,
   SELECETED_SUITE,
   SELECETED_TAB,
-  EXPANDED_ACC
+  EXPANDED_ACC,
+  JIRA_ISSUE_TYPES,
+  JIRA_PROJECT_LIST,
 } from "../actions/seleniumAction";
 
 const initialState = {
@@ -29,10 +31,12 @@ const initialState = {
   testCasesList: [],
   suiteToEdit: null,
   testSuiteAdded: {},
-  executingSuite:null,
-  selectedSuite:null,
-  selectedTab:"1",
-  expandedAccord:null
+  executingSuite: null,
+  selectedSuite: null,
+  selectedTab: "1",
+  expandedAccord: null,
+  jiraIssueTypes: [],
+  jiraProjectList: [],
 };
 
 const seleniumReduser = (state = initialState, action) => {
@@ -126,11 +130,31 @@ const seleniumReduser = (state = initialState, action) => {
         ...state,
         selectedTab: action.payload,
       };
-    } 
+    }
     case EXPANDED_ACC: {
       return {
         ...state,
         expandedAccord: action.payload,
+      };
+    }
+    case JIRA_ISSUE_TYPES: {
+      const transformedArray = action.payload?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      }));
+      return {
+        ...state,
+        jiraIssueTypes: transformedArray,
+      };
+    }
+    case JIRA_PROJECT_LIST: {
+      const transformedArray = action.payload?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      }));
+      return {
+        ...state,
+        jiraProjectList: transformedArray,
       };
     }
     default:
