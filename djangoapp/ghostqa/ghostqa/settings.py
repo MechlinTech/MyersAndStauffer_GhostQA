@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'cypress',
     'performace_test',
     'agent_dynamic_location',
+    'web_crawler',
     'django_filters',
     # 'knox',
 ]
