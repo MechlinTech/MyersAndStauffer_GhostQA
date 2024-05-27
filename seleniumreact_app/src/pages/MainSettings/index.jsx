@@ -136,7 +136,7 @@ export default function Settings() {
       ],
     },
     {
-      title: "Funcational",
+      title: "Functional",
       path: "/main-settings",
       children: [
         {
