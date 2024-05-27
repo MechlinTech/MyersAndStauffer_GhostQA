@@ -333,3 +333,28 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             
         return agent
                 
+    
+    def combine_raw_data(self, request):
+        location_ref_id = request.query_params.get('location_ref_id', None)
+        if not location_ref_id:
+            return Response({"error": "location_ref_id parameter is required"}, status=400)
+        
+        # Filter jobs based on the location ref id
+        jobs = Job.objects.filter(location_ref_id=location_ref_id)
+
+        if not jobs.exists():
+            return Response({"error": "No jobs found for the given location ref id"}, status=404)
+        
+        # Retrieve and combine raw data
+        combined_data = self._combine_data(jobs)
+
+        return Response(combined_data, status=200)
+
+    def _combine_data(self, jobs):
+        combined_raw_data = []
+
+        for job in jobs:
+            raw_data = job.raw_data  # assuming raw_data is a list of dicts
+            combined_raw_data.extend(raw_data)
+
+        return combined_raw_data
