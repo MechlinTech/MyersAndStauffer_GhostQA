@@ -33,6 +33,9 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { CircularProgress } from "@material-ui/core";
 import BugReportIcon from '@mui/icons-material/BugReport';
 import BugReport from "./CreateIssue";
+import { getUserId } from "../../redux/actions/authActions";
+import { getPerformanceIntegrationList } from "../../redux/actions/settingAction";
+
 export default function TestSuitsDetails() {
   const { testSuiteName, testRunName } = useParams();
   const classess = useStyles();
@@ -41,6 +44,18 @@ export default function TestSuitsDetails() {
   const [activeRow, setActiveRow] = useState(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { performanceIntegration } = useSelector((state) => state.settings);
+  const { userId } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(getUserId());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userId) dispatch(getPerformanceIntegrationList(userId));
+  }, [userId, dispatch]);
+  console.log("performanceIntegration",performanceIntegration)
+
   const { testCaseDetils, testCaseSteps } = useSelector(
     (state) => state.selenium
   );
@@ -55,6 +70,11 @@ export default function TestSuitsDetails() {
       dispatch(GetTestCaseDetails(data, setLoading));
     }
   }, [dispatch, testSuiteName, testRunName]);
+
+   // Check if Jira is integrated
+   const isJiraIntegrated = performanceIntegration?.some(
+    (integration) => integration.AppName === 'Jira' && integration.IsIntegrated
+  );
 
   const handleRowClick = (payload) => {
     let data = {
@@ -439,7 +459,12 @@ export default function TestSuitsDetails() {
                               </TableCell>
                               <TableCell className={classess.tbodyFont}>
                                 {/* {row.TestCaseStatus === "Failed" && <BugReportIcon style={{color:'#dc3545'}} onClick={()=>setdrawerOpen(true)}/>} */}
-                                <BugReport row={row}/>
+                                {/* <BugReport /> */}
+                                {isJiraIntegrated && (
+                                <BugReport
+                                row={row}
+                                />
+                              )}
                               </TableCell>
                               <CustomVideoChell row={row} />
                               <TableCell className={classess.tbodyFont}>

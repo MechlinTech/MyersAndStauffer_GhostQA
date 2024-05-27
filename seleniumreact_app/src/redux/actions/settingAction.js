@@ -10,6 +10,8 @@ export const RESET_USER_COUNT = "RESET_USER_COUNT";
 export const RESET_LOC_COUNT = "RESET_LOC_COUNT";
 export const GET_USER_LIST ="GET_USER_LIST"
 export const GET_PERFORMANCE_INTEGRATION = "GET_PERFORMANCE_INTEGRATION";
+export const JIRA_ISSUE_TYPES = "JIRA_ISSUE_TYPES";
+export const JIRA_PROJECT_LIST = "JIRA_PROJECT_LIST";
 
 export const getTestSuitesList = () => {
   return async (dispatch) => {
@@ -307,8 +309,8 @@ export const getPerformanceIntegrationList = (userId) => {
   };
 };
 
-export const updateZiraIntegration = (data, setOpenModal, setLoading) => {
-  setLoading(true)
+export const updateZiraIntegration = (data, setOpenModal, setLoading, callback) => {
+  setLoading(true);
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
@@ -317,25 +319,90 @@ export const updateZiraIntegration = (data, setOpenModal, setLoading) => {
         data,
         header()
       );
-      console.log("updateZiraIntegration====", response);
-      if(response.status ===  200) {
+      console.log("updateZiraIntegration====", response.data.message);
+      if(response.data.message == "Success") {
         toast.info('Successfully Jira Integrated', {
           style: {
             background: "rgb(101, 77, 247)",
             color: "rgb(255, 255, 255)",
           },
         });
-        dispatch(getPerformanceIntegrationList(data?.userId));
-        setOpenModal(false)
-        setLoading(false)
-       
+        dispatch(getPerformanceIntegrationList(data.userId));
+        setOpenModal(false);
+        setLoading(false);
+        callback(true);
+      } else {
+        setOpenModal(false);
+        setLoading(false);
+        callback(false);
       }
-     
     } catch (error) {
-      console.error("Error in getTestSuites:", error);
-      setOpenModal(false)
-      setLoading(false)
+      console.error("Error in updateZiraIntegration:", error);
+      setOpenModal(false);
+      setLoading(false);
+      callback(false);
     }
   };
 };
+
+export const GetAllJiraIssueTypes = (userId) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.get(
+        `${BASE_URL}/AddInBuildTestSuite/GetAllJiraIssueTypes?userId=${userId}`,
+        header()
+      );
+      dispatch({
+        type: JIRA_ISSUE_TYPES,
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log("error getting JIRA ISSUE TYPE", error);
+    }
+  };
+};
+
+export const GetProjectListJira = (userId) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.get(
+        `${BASE_URL}/AddInBuildTestSuite/GetProjectListJira?userId=${userId}`,
+        header()
+      );
+      dispatch({
+        type: JIRA_PROJECT_LIST,
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log("error getting project data", error);
+    }
+  };
+};
+
+export const createIssueOnJira = (payload,closeDrawer) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/CreateIssueOnJire`,
+        payload,
+        header()
+      );
+      if(res.data.status === "OK"){
+        closeDrawer(false)
+        toast.info('Successfully created', {
+                style: {
+                  background: 'rgb(101, 77, 247)',
+                  color: 'rgb(255, 255, 255)',
+                },
+              });
+      }
+    } catch (error) {
+      console.log("error creating issue on jira ", error);
+    }
+  };
+};
+
 

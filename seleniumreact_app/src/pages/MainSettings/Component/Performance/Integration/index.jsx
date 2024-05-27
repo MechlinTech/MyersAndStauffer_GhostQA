@@ -30,7 +30,6 @@ export default function Integration() {
     accountUrl: false,
     userEmail: false,
     apiKey: false,
-    // confirmApiKey: false,
   });
 
   useEffect(() => {
@@ -55,13 +54,13 @@ export default function Integration() {
     if (name === "Jira" && switchState[name]) return;
 
     setSelectedCard(name);
-    setSwitchState((prevState) => ({
-      ...prevState,
-      [name]: !prevState[name],
-    }));
-
     if (name === "Jira" && !switchState[name]) {
       setOpenModal(true);
+    } else {
+      setSwitchState((prevState) => ({
+        ...prevState,
+        [name]: !prevState[name],
+      }));
     }
   };
 
@@ -75,20 +74,14 @@ export default function Integration() {
       accountUrl: !accountUrl,
       userEmail: !userEmail,
       apiKey: !apiKey,
-      // confirmApiKey: !confirmApiKey,
     };
 
     setErrors(newErrors);
 
     if (!Object.values(newErrors).some((error) => error)) {
-      console.log({
-        accountUrl,
-        userEmail,
-        apiKey,
-        confirmApiKey,
-      });
+      setLoading(true);
 
-      let payload = {
+      const payload = {
         userId: userId,
         appName: selectedCard,
         isIntegrated: true,
@@ -96,7 +89,20 @@ export default function Integration() {
         email: userEmail,
         apiKey: apiKey,
       };
-      dispatch(updateZiraIntegration(payload, setOpenModal, setLoading));
+      
+      dispatch(updateZiraIntegration(payload, setOpenModal, setLoading, (success) => {
+        if (success) {
+          setSwitchState((prevState) => ({
+            ...prevState,
+            [selectedCard]: true,
+          }));
+        } else {
+          setSwitchState((prevState) => ({
+            ...prevState,
+            [selectedCard]: false,
+          }));
+        }
+      }));
     }
   };
 

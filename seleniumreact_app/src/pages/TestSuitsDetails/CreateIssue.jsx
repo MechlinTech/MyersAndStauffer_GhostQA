@@ -10,7 +10,7 @@ import {
   GetAllJiraIssueTypes,
   GetProjectListJira,
   createIssueOnJira,
-} from "../../redux/actions/seleniumAction";
+} from "../../redux/actions/settingAction";
 import { getUserId } from "../../redux/actions/authActions";
 import { toast } from "react-toastify";
 
@@ -20,7 +20,7 @@ export default function BugReport({ row }) {
   const { testRunName } = useParams();
   const { userId } = useSelector((state) => state.auth);
   const { jiraProjectList, jiraIssueTypes } = useSelector(
-    (state) => state.selenium
+    (state) => state.settings
   );
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState(null);
