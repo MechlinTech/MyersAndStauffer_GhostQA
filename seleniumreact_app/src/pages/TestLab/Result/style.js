@@ -13,9 +13,11 @@ export const useStyles = makeStyles((theme) => ({
     activeRow: {
         border: "2px solid #654DF7",
     },
+    
 }));
  
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    // textAlign:'center',
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: "rgb(242, 242, 242)",
         color: "#5c5c5c",

@@ -25,6 +25,7 @@ import Detail from "../pages/MainSettings/Component/UserAccount/Detail";
 import Organization from "../pages/MainSettings/Component/UserAccount/Organization";
 import Members from "../pages/MainSettings/Component/Organization/Members";
 import ExecutionEnvironment from "../pages/Settings/Component/ExecutionEnvironment/index";
+import TestLabSuitsDetails from "../pages/TestLab/Result/TestSuitsDetails/index";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
@@ -99,6 +100,10 @@ export default function Navigations() {
           />
           <Route path="testcase" element={<TestCase />} />
         </Route>
+        <Route
+            path="testLab-detail/:testSuiteName/:testRunId"
+            element={<TestLabSuitsDetails/>}
+          />
         <Route path="performance" element={<Performance />}></Route>
         <Route path="/result" element={<Results />}>
           <Route
