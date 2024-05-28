@@ -8,25 +8,34 @@ import CustomStatusCell from "./CustomStatusCell";
 import { useStyles, StyledTableCell } from "./style";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
- 
-function formatTime(dateTimeString) {
+import { Link } from "react-router-dom";
+import { getExecutionHistory } from "../../../redux/actions/testlab/ResultAction";
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  // Check if the date is invalid
+  if (isNaN(date.getTime())) {
+    return ""; // Return empty string for invalid dates
+  }
+
   const options = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
     hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
     hour12: true,
   };
-  const formattedTime = new Date(dateTimeString).toLocaleTimeString(
-    undefined,
-    options
-  );
-  return formattedTime;
-}
+  return date.toLocaleString("en-US", options);
+};
 export function TableData({ rows }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [activeRow, setActiveRow] = React.useState(null);
-  const [loading ,setLoading] = useState(false);
+
+  const handleRowClick = (row) => {
+    dispatch(getExecutionHistory(1234));
+  };
 
   return (
     <TableContainer>
@@ -43,6 +52,39 @@ export function TableData({ rows }) {
           </TableRow>
         </TableHead>
         <TableBody>
+          {rows?.map((row) => (
+            <TableRow
+              key={row.TestRunId}
+              className={`${classes.tableRow}`}
+            >
+              <StyledTableCell component="th" scope="row">
+                <Link
+                  to={`/testLab-detail/${row?.TestSuiteName}/${row.TestRunId}`}
+                  style={{ textDecoration: "none",cursor:"pointer" }}
+                  onClick={() => handleRowClick(row)}
+                >
+                {row.TestRunId}
+                </Link>
+              </StyledTableCell>
+              <StyledTableCell>
+                {formatDate(row.LastRunOn)}
+              </StyledTableCell>
+              <StyledTableCell>
+
+              <CustomStatusCell status={row.TestRunStatus} />
+              </StyledTableCell>
+              <StyledTableCell className="p-4" sx={{}}>
+                {row.TotalTestCases}
+              </StyledTableCell>
+              <StyledTableCell className="p-4">
+                {row.PassedTestCases}
+              </StyledTableCell>
+              <StyledTableCell className="p-4">
+                {row.FailedTestCases}
+              </StyledTableCell>
+              <StyledTableCell className="p-4">{row.RunBy}</StyledTableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

@@ -5,8 +5,8 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { StyledTypography } from "./styles";
-import AddTestCase from "./Design/AddTestCase";
-import Result from "./Result";
+import CustomeImgView from "./modals/CustomeImgView";
+import { useSelector } from "react-redux";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,8 +40,18 @@ function a11yProps(index) {
   };
 }
 
-export default function TabsPanel() {
-  const [value, setValue] = useState("Design");
+export default function Rundetails() {
+  const { runIdDetails } = useSelector(
+    (state) => state.testlabResult
+  );
+  const [value, setValue] = useState("screenshot");
+  let parsedDetail;
+  if (runIdDetails && runIdDetails.length > 0) {
+    parsedDetail = JSON.parse(runIdDetails[0]?.TestScreenShotUrl);
+  } else {
+    parsedDetail = null;
+  }
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -61,40 +71,35 @@ export default function TabsPanel() {
         }}
       >
         <Tab
-          value="Design"
+          value="screenshot"
           label={
             <StyledTypography style={{ textTransform: "capitalize" }}>
-              Design
+              Screenshots
             </StyledTypography>
           }
         />
         <Tab
-          value="Result"
+          value="logs"
           label={
             <StyledTypography style={{ textTransform: "capitalize" }}>
-              Result
-            </StyledTypography>
-          }
-        />
-        <Tab
-          value="Trends"
-          label={
-            <StyledTypography style={{ textTransform: "capitalize" }}>
-              Trends
+              Logs
             </StyledTypography>
           }
         />
       </Tabs>
 
-      <TabPanel value={value} index={"Design"}>
-        <AddTestCase />
+      <TabPanel value={value} index={"screenshot"}>
+        {parsedDetail &&
+          parsedDetail?.map((item, index) => {
+            if(item.type === "screenshot")  
+             return  <CustomeImgView ScreenshotUrl={item.files} />
+            
+          })}
       </TabPanel>
-      <TabPanel value={value} index={"Result"}>
-        {/* <div>Result</div> */}
-        <Result/>
-      </TabPanel>
-      <TabPanel value={value} index={"Trends"}>
-        <div>Trends</div>
+      <TabPanel value={value} index={"logs"}>
+        <StyledTypography>
+        No log for now
+        </StyledTypography>
       </TabPanel>
     </Box>
   );

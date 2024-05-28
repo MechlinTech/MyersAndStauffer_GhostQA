@@ -4,23 +4,40 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { TableData } from "./TableData";
+import {TableData} from "./TableData";
 import { Box, CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { StyledTypography } from "./style";
 
 export default function Result({ inprogress }) {
   const dispatch = useDispatch();
-  const { testSuiteLists, expandedAccord } = useSelector(
-    (state) => state.selenium
-  );
-  const handleExpandAccord = (panel) => (e, isExpanded) => {
+  const [expandedAccord, setExpandedAccord] = React.useState(false);
+
+  const testSuiteLists = [
+    {
+      TestRunDateYear: "2024-04-25",
+      RunDetails: [
+        {
+          TestSuiteName: "Aa-Test-Demo1",
+          TestRunId: "TestRun-1",
+          LastRunOn: "2024-04-25",
+          TestRunStatus: "failed",
+          TotalTestCases: 1,
+          PassedTestCases: 0,
+          FailedTestCases: 1,
+          RunBy: "admin",
+        },
+      ],
+    },
+  ];
+
+  const handleExpandAccord = (panel) => (event, isExpanded) => {
+    setExpandedAccord(isExpanded ? panel : false);
   };
 
   function formatDateStringWithTime(dateString) {
     const date = new Date(dateString);
-    // Extract the month and day in UTC
-    const month = date.getUTCMonth(); // getUTCMonth() returns 0-11, so add 1
+    const month = date.getUTCMonth();
     const day = date.getUTCDate();
     const monthNames = [
       "January",
@@ -36,17 +53,7 @@ export default function Result({ inprogress }) {
       "November",
       "December",
     ];
-
-    // Get the month name
     const monthName = monthNames[month];
-    // const options = {
-    //   month: "short",
-    //   day: "numeric",
-    // };
-
-    // const formattedDate = new Date(dateString).toLocaleString("en-US", options);
-    // return formattedDate;
-
     return `${monthName} ${day}`;
   }
 
@@ -60,29 +67,30 @@ export default function Result({ inprogress }) {
       ) : testSuiteLists.length === 0 ? (
         <StyledTypography>No testcase to show</StyledTypography>
       ) : (
-        testSuiteLists?.map((item, index) => (
-          <Accordion
-            expanded={expandedAccord === item}
-            onChange={handleExpandAccord(item)}
-            key={index}
-            sx={{
-              boxShadow: "none",
-              border: "1px solid rgb(217, 217, 217)",
-              marginBottom: "3px",
-            }}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography fontFamily={"Lexend Deca"} fontSize="14px">
-                {`${formatDateStringWithTime(item.TestRunDateYear)} (${
-                  item?.RunDetails?.length
-                })`}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails sx={{ p: "0" }}>
-              <TableData rows={item.RunDetails} />
-            </AccordionDetails>
-          </Accordion>
-        ))
+        testSuiteLists.map((item, index) => {
+          const panelId = `panel${index}`;
+          return (
+            <Accordion
+              expanded={expandedAccord === panelId}
+              onChange={handleExpandAccord(panelId)}
+              key={index}
+              sx={{
+                boxShadow: "none",
+                border: "1px solid rgb(217, 217, 217)",
+                marginBottom: "3px",
+              }}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography fontFamily={"Lexend Deca"} fontSize="14px">
+                  {`${formatDateStringWithTime(item.TestRunDateYear)} (${item.RunDetails.length})`}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ p: "0" }}>
+                <TableData rows={item.RunDetails} />
+              </AccordionDetails>
+            </Accordion>
+          );
+        })
       )}
     </Box>
   );
