@@ -19,7 +19,7 @@
     reverse_proxy  webui
 }
 
-:80, :443 {
+:80 {
     log {
         output stdout
         format json
@@ -33,7 +33,7 @@
     reverse_proxy  webui
 }
 
-https://app.ghostqa.com, http://app.ghostqa.com {
+app.ghostqa.com, http://app.ghostqa.com {
     log {
         output stdout
         format json
@@ -47,7 +47,7 @@ https://app.ghostqa.com, http://app.ghostqa.com {
 }
 
 
-*.nip.io {
+15.207.97.170.nip.io {
     log {
         output stdout
         format json
