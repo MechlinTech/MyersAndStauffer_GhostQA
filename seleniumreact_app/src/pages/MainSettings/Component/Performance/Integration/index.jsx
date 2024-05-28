@@ -10,7 +10,10 @@ import {
 import { useStyles } from "./styles";
 import AddJira from "./Jira/AddJira";
 import { useDispatch, useSelector } from "react-redux";
-import { getPerformanceIntegrationList, updateZiraIntegration } from "../../../../../redux/actions/settingAction";
+import {
+  getPerformanceIntegrationList,
+  updateZiraIntegration,
+} from "../../../../../redux/actions/settingAction";
 import { getUserId } from "../../../../../redux/actions/authActions";
 
 export default function Integration() {
@@ -51,7 +54,29 @@ export default function Integration() {
   }, [performanceIntegration]);
 
   const handleSwitchChange = (name) => {
-    if (name === "Jira" && switchState[name]) return;
+    if (name === "Jira" && switchState[name]) {
+      const payload = {
+        userId: userId,
+        appName: "Jira",
+        isIntegrated: false,
+        domain: "",
+        email: "",
+        apiKey: "",
+      };
+
+      dispatch(
+        updateZiraIntegration(payload, setOpenModal, setLoading, (success) => {
+          if (success) {
+            setSwitchState((prevState) => ({
+              ...prevState,
+              [name]: false,
+            }));
+          }
+        })
+      );
+
+      return;
+    }
 
     setSelectedCard(name);
     if (name === "Jira" && !switchState[name]) {
@@ -64,7 +89,15 @@ export default function Integration() {
     }
   };
 
+  const resetFormData = () => {
+    setAccountUrl("");
+    setUserEmail("");
+    setApiKey("");
+    setConfirmApiKey("");
+  };
+
   const handleCloseModal = () => {
+    resetFormData();
     setOpenModal(false);
     setSelectedCard(null);
   };
@@ -89,20 +122,23 @@ export default function Integration() {
         email: userEmail,
         apiKey: apiKey,
       };
-      
-      dispatch(updateZiraIntegration(payload, setOpenModal, setLoading, (success) => {
-        if (success) {
-          setSwitchState((prevState) => ({
-            ...prevState,
-            [selectedCard]: true,
-          }));
-        } else {
-          setSwitchState((prevState) => ({
-            ...prevState,
-            [selectedCard]: false,
-          }));
-        }
-      }));
+
+      dispatch(
+        updateZiraIntegration(payload, setOpenModal, setLoading, (success) => {
+          if (success) {
+            setSwitchState((prevState) => ({
+              ...prevState,
+              [selectedCard]: true,
+            }));
+            resetFormData();
+          } else {
+            setSwitchState((prevState) => ({
+              ...prevState,
+              [selectedCard]: false,
+            }));
+          }
+        })
+      );
     }
   };
 

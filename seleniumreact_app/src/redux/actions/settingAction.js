@@ -321,12 +321,22 @@ export const updateZiraIntegration = (data, setOpenModal, setLoading, callback) 
       );
       console.log("updateZiraIntegration====", response.data.message);
       if(response.data.message == "Success") {
-        toast.info('Successfully Jira Integrated', {
-          style: {
-            background: "rgb(101, 77, 247)",
-            color: "rgb(255, 255, 255)",
-          },
-        });
+        if(data.isIntegrated == true) {
+          toast.info('Successfully Jira Integrated', {
+            style: {
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
+            },
+          });
+        } else {
+          toast.info('Successfully Jira Integrated Removed', {
+            style: {
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
+            },
+          });
+        }
+        
         dispatch(getPerformanceIntegrationList(data.userId));
         setOpenModal(false);
         setLoading(false);
