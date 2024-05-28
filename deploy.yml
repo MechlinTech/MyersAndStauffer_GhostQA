@@ -142,5 +142,5 @@ services:
     volumes:
       - ~/caddy/data:/data
       - ~/caddy/config:/config
-      - compose/caddy/Caddyfile:/etc/caddy/Caddyfile
+      # - compose/caddy/Caddyfile:/etc/caddy/Caddyfile
 
