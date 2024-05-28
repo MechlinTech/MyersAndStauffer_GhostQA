@@ -25,7 +25,7 @@ import Detail from "../pages/MainSettings/Component/UserAccount/Detail";
 import Organization from "../pages/MainSettings/Component/UserAccount/Organization";
 import Members from "../pages/MainSettings/Component/Organization/Members";
 import ExecutionEnvironment from "../pages/Settings/Component/ExecutionEnvironment/index";
-import TestLabSuitsDetails from "../pages/TestLab/Result/TestSuitsDetails";
+import TestLabSuitsDetails from "../pages/TestLab/Result/TestSuitsDetails/index";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
