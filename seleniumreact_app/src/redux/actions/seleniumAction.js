@@ -19,8 +19,6 @@ export const EXECUTING_SUITE= "EXECUTING_SUITE"
 export const SELECETED_SUITE= "SELECETED_SUITE"
 export const SELECETED_TAB= "SELECETED_TAB"
 export const EXPANDED_ACC= "EXPANDED_ACC"
-export const JIRA_ISSUE_TYPES = "JIRA_ISSUE_TYPES";
-export const JIRA_PROJECT_LIST = "JIRA_PROJECT_LIST";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || 'api';
 
 export const getTestSuites = () => {
@@ -374,62 +372,4 @@ export const DeleteTestSuite = (suiteName) => {
   };
 };
 
-export const GetAllJiraIssueTypes = (userId) => {
-  return async (dispatch) => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.get(
-        `${BASE_URL}/AddInBuildTestSuite/GetAllJiraIssueTypes?userId=${userId}`,
-        header()
-      );
-      dispatch({
-        type: JIRA_ISSUE_TYPES,
-        payload: res.data,
-      });
-    } catch (error) {
-      console.log("error getting JIRA ISSUE TYPE", error);
-    }
-  };
-};
 
-export const GetProjectListJira = (userId) => {
-  return async (dispatch) => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.get(
-        `${BASE_URL}/AddInBuildTestSuite/GetProjectListJira?userId=${userId}`,
-        header()
-      );
-      dispatch({
-        type: JIRA_PROJECT_LIST,
-        payload: res.data,
-      });
-    } catch (error) {
-      console.log("error getting project data", error);
-    }
-  };
-};
-
-export const createIssueOnJira = (payload,closeDrawer) => {
-  return async (dispatch) => {
-    try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.post(
-        `${BASE_URL}/AddInBuildTestSuite/CreateIssueOnJire`,
-        payload,
-        header()
-      );
-      if(res.data.status === "OK"){
-        closeDrawer(false)
-        toast.info('Successfully created', {
-                style: {
-                  background: 'rgb(101, 77, 247)',
-                  color: 'rgb(255, 255, 255)',
-                },
-              });
-      }
-    } catch (error) {
-      console.log("error creating issue on jira ", error);
-    }
-  };
-};

@@ -35,8 +35,6 @@ const initialState = {
   selectedSuite: null,
   selectedTab: "1",
   expandedAccord: null,
-  jiraIssueTypes: [],
-  jiraProjectList: [],
 };
 
 const seleniumReduser = (state = initialState, action) => {
@@ -136,27 +134,7 @@ const seleniumReduser = (state = initialState, action) => {
         ...state,
         expandedAccord: action.payload,
       };
-    }
-    case JIRA_ISSUE_TYPES: {
-      const transformedArray = action.payload?.map((item) => ({
-        label: item.name,
-        value: item.id,
-      }));
-      return {
-        ...state,
-        jiraIssueTypes: transformedArray,
-      };
-    }
-    case JIRA_PROJECT_LIST: {
-      const transformedArray = action.payload?.map((item) => ({
-        label: item.name,
-        value: item.id,
-      }));
-      return {
-        ...state,
-        jiraProjectList: transformedArray,
-      };
-    }
+    }   
     default:
       return state;
   }

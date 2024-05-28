@@ -6,28 +6,27 @@ import {
   FormControl,
   Button,
   OutlinedInput,
-  Box,
+  CircularProgress,
 } from "@mui/material";
 import clsx from "clsx";
 import { useStyles } from "./styles";
 
-const AddJira = ({ open, onClose }) => {
+const AddJira = ({
+  open,
+  onClose,
+  handleSave,
+  errors,
+  accountUrl,
+  setAccountUrl,
+  userEmail,
+  setUserEmail,
+  apiKey,
+  setApiKey,
+  confirmApiKey,
+  setConfirmApiKey,
+  loading
+}) => {
   const classes = useStyles();
-  
-  const [accountUrl, setAccountUrl] = useState("");
-  const [userName, setUserName] = useState("");
-  const [apiKey, setApiKey] = useState("");
-  const [confirmApiKey, setConfirmApiKey] = useState("");
-
-  const handleSave = () => {
-    // Handle save logic here
-    console.log({
-      accountUrl,
-      userName,
-      apiKey,
-      confirmApiKey
-    });
-  };
 
   return (
     <Modal
@@ -53,11 +52,12 @@ const AddJira = ({ open, onClose }) => {
               className={clsx(classes.margin, classes.textField)}
               sx={{
                 "& .MuiOutlinedInput-root": {
+                  borderColor: errors.accountUrl ? "red" : "transparent",
                   "&:hover fieldset": {
-                    borderColor: "#654DF7",
+                    borderColor: errors.accountUrl ? "red" : "#654DF7",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#654DF7",
+                    borderColor: errors.accountUrl ? "red" : "#654DF7",
                   },
                 },
               }}
@@ -68,33 +68,35 @@ const AddJira = ({ open, onClose }) => {
                 value={accountUrl}
                 onChange={(e) => setAccountUrl(e.target.value)}
                 placeholder="Enter Account URL"
+                error={errors.accountUrl}
               />
             </FormControl>
           </Grid>
 
           <Grid item xs={12} sx={{ marginTop: "10px" }}>
-            <Typography variant="subtitle1">User Name</Typography>
+            <Typography variant="subtitle1">User Email</Typography>
             <FormControl
               fullWidth
               className={clsx(classes.margin, classes.textField)}
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderColor: "transparent",
+                  borderColor: errors.userEmail ? "red" : "transparent",
                   "&:hover fieldset": {
-                    borderColor: "#654DF7",
+                    borderColor: errors.userEmail ? "red" : "#654DF7",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#654DF7",
+                    borderColor: errors.userEmail ? "red" : "#654DF7",
                   },
                 },
               }}
             >
               <OutlinedInput
                 className={classes.Outlined}
-                type="text"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                placeholder="Enter User Name"
+                type="email"
+                value={userEmail}
+                onChange={(e) => setUserEmail(e.target.value)}
+                placeholder="Enter User Email"
+                error={errors.userEmail}
               />
             </FormControl>
           </Grid>
@@ -106,12 +108,12 @@ const AddJira = ({ open, onClose }) => {
               className={clsx(classes.margin, classes.textField)}
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderColor: "transparent",
+                  borderColor: errors.apiKey ? "red" : "transparent",
                   "&:hover fieldset": {
-                    borderColor: "#654DF7",
+                    borderColor: errors.apiKey ? "red" : "#654DF7",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#654DF7",
+                    borderColor: errors.apiKey ? "red" : "#654DF7",
                   },
                 },
               }}
@@ -122,23 +124,24 @@ const AddJira = ({ open, onClose }) => {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder="Enter API Key"
+                error={errors.apiKey}
               />
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} sx={{ marginTop: "10px" }}>
+          {/* <Grid item xs={12} sx={{ marginTop: "10px" }}>
             <Typography variant="subtitle1">Confirm API Key</Typography>
             <FormControl
               fullWidth
               className={clsx(classes.margin, classes.textField)}
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  borderColor: "transparent",
+                  borderColor: errors.confirmApiKey ? "red" : "transparent",
                   "&:hover fieldset": {
-                    borderColor: "#654DF7",
+                    borderColor: errors.confirmApiKey ? "red" : "#654DF7",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#654DF7",
+                    borderColor: errors.confirmApiKey ? "red" : "#654DF7",
                   },
                 },
               }}
@@ -149,9 +152,10 @@ const AddJira = ({ open, onClose }) => {
                 value={confirmApiKey}
                 onChange={(e) => setConfirmApiKey(e.target.value)}
                 placeholder="Enter Confirm API Key"
+                error={errors.confirmApiKey}
               />
             </FormControl>
-          </Grid>
+          </Grid> */}
         </div>
 
         <div className={classes.modalFooter}>
@@ -170,6 +174,7 @@ const AddJira = ({ open, onClose }) => {
             className={classes.button}
             style={{ background: "#654DF7" }}
             onClick={handleSave}
+            endIcon={loading && <CircularProgress size={20} color="inherit" />}
           >
             Save & Enable
           </Button>

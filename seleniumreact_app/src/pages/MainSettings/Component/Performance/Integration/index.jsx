@@ -1,88 +1,86 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
-  CardContent,
   Typography,
   Grid,
   Avatar,
   Switch,
   FormControlLabel,
-  Modal,
-  Backdrop,
-  Fade,
 } from "@mui/material";
 import { useStyles } from "./styles";
 import AddJira from "./Jira/AddJira";
-
-const cardData = [
-  {
-    title: "Jira",
-    content: "This is Jira.",
-    description:
-      "Jira is a proprietary issue tracking product developed by Atlassian that allows bug tracking and agile project management.",
-    logo: "https://upload.wikimedia.org/wikipedia/en/3/3d/JIRA_logo_%282019%29.svg",
-  },
-  {
-    title: "MS Teams",
-    content: "This is Microsoft Teams.",
-    description:
-      "Microsoft Teams is a collaboration app that helps your team stay organized and have conversations all in one place.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/4/48/Teams-Logo.png",
-    isIntegrated: true,
-  },
-  {
-    title: "Google Meet",
-    content: "This is Google Meet.",
-    description:
-      "Google Meet is a video-communication service developed by Google.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Google_Meet_Logo.png",
-  },
-  {
-    title: "Zoom",
-    content: "This is Zoom.",
-    description: "Zoom is a cloud-based video conferencing service.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Zoom_Communications_Logo.svg",
-  },
-  {
-    title: "Slack",
-    content: "This is Slack.",
-    description:
-      "Slack is a messaging app for businesses that connects people to the information they need.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/7/76/Slack_Icon.png",
-  },
-  {
-    title: "Skype",
-    content: "This is Skype.",
-    description:
-      "Skype is a telecommunications application that provides video chat and voice call services.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Skype_icon_2020.svg",
-  },
-  {
-    title: "Cisco Webex",
-    content: "This is Cisco Webex.",
-    description:
-      "Cisco Webex is a suite of video conferencing, online meetings, and collaboration solutions.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/d/de/Cisco_Webex_Meetings_logo.png",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getPerformanceIntegrationList,
+  updateZiraIntegration,
+} from "../../../../../redux/actions/settingAction";
+import { getUserId } from "../../../../../redux/actions/authActions";
 
 export default function Integration() {
   const classes = useStyles();
-
-  const [switchState, setSwitchState] = useState(
-    cardData.reduce((acc, card) => {
-      acc[card.title] = false;
-      return acc;
-    }, {})
-  );
-
+  const dispatch = useDispatch();
+  const { userId } = useSelector((state) => state.auth);
+  const { performanceIntegration } = useSelector((state) => state.settings);
+  const [accountUrl, setAccountUrl] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [confirmApiKey, setConfirmApiKey] = useState("");
+  const [switchState, setSwitchState] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    accountUrl: false,
+    userEmail: false,
+    apiKey: false,
+  });
+
+  useEffect(() => {
+    dispatch(getUserId());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userId) dispatch(getPerformanceIntegrationList(userId));
+  }, [userId, dispatch]);
+
+  useEffect(() => {
+    if (performanceIntegration) {
+      const newSwitchState = {};
+      performanceIntegration.forEach((integration) => {
+        newSwitchState[integration.AppName] = integration.IsIntegrated;
+      });
+      setSwitchState(newSwitchState);
+    }
+  }, [performanceIntegration]);
 
   const handleSwitchChange = (name) => {
-    if (!switchState[name]) {
-      setSelectedCard(name);
-      if (name == "Jira") setOpenModal(true);
+    if (name === "Jira" && switchState[name]) {
+      const payload = {
+        userId: userId,
+        appName: "Jira",
+        isIntegrated: false,
+        domain: "",
+        email: "",
+        apiKey: "",
+      };
+
+      dispatch(
+        updateZiraIntegration(payload, setOpenModal, setLoading, (success) => {
+          if (success) {
+            setSwitchState((prevState) => ({
+              ...prevState,
+              [name]: false,
+            }));
+          }
+        })
+      );
+
+      return;
+    }
+
+    setSelectedCard(name);
+    if (name === "Jira" && !switchState[name]) {
+      setOpenModal(true);
     } else {
       setSwitchState((prevState) => ({
         ...prevState,
@@ -91,54 +89,103 @@ export default function Integration() {
     }
   };
 
+  const resetFormData = () => {
+    setAccountUrl("");
+    setUserEmail("");
+    setApiKey("");
+    setConfirmApiKey("");
+  };
+
   const handleCloseModal = () => {
+    resetFormData();
     setOpenModal(false);
     setSelectedCard(null);
   };
 
+  const handleSave = () => {
+    const newErrors = {
+      accountUrl: !accountUrl,
+      userEmail: !userEmail,
+      apiKey: !apiKey,
+    };
+
+    setErrors(newErrors);
+
+    if (!Object.values(newErrors).some((error) => error)) {
+      setLoading(true);
+
+      const payload = {
+        userId: userId,
+        appName: selectedCard,
+        isIntegrated: true,
+        domain: accountUrl,
+        email: userEmail,
+        apiKey: apiKey,
+      };
+
+      dispatch(
+        updateZiraIntegration(payload, setOpenModal, setLoading, (success) => {
+          if (success) {
+            setSwitchState((prevState) => ({
+              ...prevState,
+              [selectedCard]: true,
+            }));
+            resetFormData();
+          } else {
+            setSwitchState((prevState) => ({
+              ...prevState,
+              [selectedCard]: false,
+            }));
+          }
+        })
+      );
+    }
+  };
+
   return (
     <>
-      {/* Modal component */}
-      <AddJira open={openModal} onClose={handleCloseModal} />
+      <AddJira
+        open={openModal}
+        onClose={handleCloseModal}
+        handleSave={handleSave}
+        errors={errors}
+        accountUrl={accountUrl}
+        setAccountUrl={setAccountUrl}
+        userEmail={userEmail}
+        setUserEmail={setUserEmail}
+        apiKey={apiKey}
+        setApiKey={setApiKey}
+        confirmApiKey={confirmApiKey}
+        setConfirmApiKey={setConfirmApiKey}
+        loading={loading}
+      />
       <Grid
         container
         spacing={2}
-        justifyContent="center"
+        justifyContent="flex-start"
         className={classes.gridContainer}
       >
-        {cardData.map((card, index) => (
+        {performanceIntegration.map((integration, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card className={classes.card}>
               <div className={classes.cardHeader}>
                 <div className={classes.logoAndTitle}>
                   <Avatar
-                    src={card.logo}
-                    alt={`${card.title} logo`}
+                    src={integration.logo}
+                    alt={`${integration.AppName} logo`}
                     className={classes.logo}
                   />
                   <Typography variant="h6" component="div">
-                    {card.title}
+                    {integration.AppName}
                   </Typography>
                 </div>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={switchState[card.title]}
-                      onChange={() => handleSwitchChange(card.title)}
-                      name={card.title}
+                      checked={switchState[integration.AppName] || false}
+                      onChange={() => handleSwitchChange(integration.AppName)}
+                      name={integration.AppName}
                       color="primary"
-                      sx={{
-                        "& .MuiSwitch-thumb": {
-                          backgroundColor: switchState[card.title]
-                            ? "#654DF7"
-                            : "",
-                        },
-                        "& .MuiSwitch-track": {
-                          backgroundColor: switchState[card.title]
-                            ? "#654DF7"
-                            : "",
-                        },
-                      }}
                     />
                   }
                   label=""
