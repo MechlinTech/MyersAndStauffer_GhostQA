@@ -195,7 +195,7 @@ export default function TestLab() {
           <Grid item xs={12} md={drawerOpen ? 9 : 12} xl={10}>
             {depth > 1 ? (
               // <AddTestCase addTestCase={addTestCase} nameSuite={nameSuite} />
-              <TabsPanel addTestCase={addTestCase} />
+              <TabsPanel/>
             ) : (
               <Box />
             )}
