@@ -210,3 +210,15 @@ def final_update_container_after_execution_cypress(ref, container_status):
     response = requests.patch(container_run_update_url, data=payload)
     # Check response status code and handle exceptions if necessary
     return response
+
+def add_system_info_in_condeengine(data):
+    url = f'{BASE_URL}/codeengine/api/system-info/'
+    try:
+        response = requests.post(url, json=data)
+        response.raise_for_status()
+        logger.info("System info added successfully in codeengine")
+        return response.json()
+    except requests.exceptions.HTTPError as http_err:
+        logger.error(f"Failed to add system info in codeengine: {http_err}")
+    except Exception as err:
+        logger.error(f"Failed to add system info in codeengine: {err}")

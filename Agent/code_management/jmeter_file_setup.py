@@ -69,7 +69,7 @@ def setup_jmeter_files(job):
     BASE_DIR = settings.BASE_DIR
     JMETER_CONFIG_PATH = os.path.abspath(os.path.join(BASE_DIR, "jmeter"))
     
-    name = job['container_run']['container_name']
+    name = job['container_run'][0]['container_name']
     volume_path = f"/tests/performace/{name}"
     volume_path = get_full_path(volume_path)
     volume_path = convert_to_unix_path(volume_path)
@@ -97,10 +97,10 @@ def setup_jmeter_files(job):
         with open(f"{volume_path}/test.jmx", "w") as file:
             file.write(jmx_text_content)
         
-        container_run_ref = job['container_run']['ref']
+        container_run_ref = job['container_run'][0]['ref']
         update_container_run(container_run_ref, f"{volume_path}/test.jmx")
             
-        container =jmeter_container(name, volume_path, [job['performance_details']['jthreads_total_user']], job['performance_details']['jrampup_time'], job['container_run'])
+        container =jmeter_container(name, volume_path, job, [job['performance_details']['jthreads_total_user']], job['performance_details']['jrampup_time'], job['container_run'])
         print("Container : ", container)  
         # jmeter_container = jmeter_container(name, [job['performance_details']['jthreads_total_user']], job['performance_details']['jrampup_time'], job['container_run'])
     return Response({

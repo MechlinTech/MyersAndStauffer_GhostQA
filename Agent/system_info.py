@@ -3,6 +3,8 @@ import requests
 import os
 from dotenv import load_dotenv
 import logging
+import time
+from code_management.api_call import add_system_info_in_condeengine
 
 load_dotenv()
 
@@ -35,18 +37,33 @@ def get_system_info():
     }
     
     return data
-import time
-def send_system_info_to_server(data):
-    api_url = f"{BASE_URL}/codeengine/api/agent-job/get_agent_system_info/"
-    # api_url = "http://127.0.0.1:8000//codeengine/api/agent-job/get_agent_system_info/"
-    response = requests.post(api_url, json=data)
-    print("data:", response.json())
-    logging.info(f"Response from server: {response.text}")
+
+
+def construct_system_info_data(location_id, agent_id, job_id, system_info_type, container_ref_id, system_info):
+    data = {
+        "location": location_id,
+        "agent": agent_id,
+        "job": job_id,
+        "system_info_type": system_info_type,
+        'container_ref_id': container_ref_id,
+        **system_info
+    }
+    
+    add_system_info_in_condeengine(data)
+    
+    
+    
+# def send_system_info_to_server(data):
+#     api_url = f"{BASE_URL}/codeengine/api/agent-job/get_agent_system_info/"
+#     # api_url = "http://127.0.0.1:8000//codeengine/api/agent-job/get_agent_system_info/"
+#     response = requests.post(api_url, json=data)
+#     print("data:", response.json())
+#     logging.info(f"Response from server: {response.text}")
     
 
-if __name__ == "__main__":
-    while True:
-        time.sleep(5)
-        system_info = get_system_info()
-        print("####",system_info)
-        send_system_info_to_server(system_info)
+# if __name__ == "__main__":
+#     while True:
+#         time.sleep(5)
+#         system_info = get_system_info()
+#         print("####",system_info)
+#         send_system_info_to_server(system_info)
