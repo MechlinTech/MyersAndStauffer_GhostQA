@@ -149,4 +149,7 @@ services:
       - "443:443"
     extra_hosts:
       - host.docker.internal:host-gateway
+    volumes:
+      - ~/caddy/data:/data
+      - ~/caddy/config:/config
 
