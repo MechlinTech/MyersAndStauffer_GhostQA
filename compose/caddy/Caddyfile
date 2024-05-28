@@ -33,6 +33,20 @@
     reverse_proxy  webui
 }
 
+https://app.ghostqa.com, http://app.ghostqa.com {
+    log {
+        output stdout
+        format json
+    }
+
+    reverse_proxy /api/* dotnetapi
+    reverse_proxy /swagger/* dotnetapi
+    reverse_proxy /codeengine/* codeengine:8000
+
+    reverse_proxy webui
+}
+
+
 *.nip.io {
     log {
         output stdout
