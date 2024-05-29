@@ -39,7 +39,8 @@ export default function MiniDrawer() {
   const [showmodel, setshowmodel] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
  
-  const userData = useSelector((store) => store.auth.userData);
+  // const userData = useSelector((store) => store.auth.userData);
+  const {userData, userId} = useSelector((store) => store.auth);
   const getName = () => {
     const email = sessionStorage.getItem("email");
     const i = email.indexOf("@");
@@ -197,7 +198,7 @@ export default function MiniDrawer() {
                           onKeyDown={() => setShowMenu(false)}
                           className={classes.customMenuList}
                         >
-                          <MenuItem
+                          {/* <MenuItem
                             onClick={() => {
                               setShowMenu(false);
                               navigate("/myaccount");
@@ -207,7 +208,7 @@ export default function MiniDrawer() {
                             <span style={{ marginLeft: "10px" }}>
                               My Account
                             </span>
-                          </MenuItem>
+                          </MenuItem> */}
                           <MenuItem
                             onClick={() => {
                               setShowMenu(false);
