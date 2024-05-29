@@ -17,7 +17,7 @@ class AgentListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PrivateLocationSerializer(serializers.ModelSerializer):
-    agents = serializers.SerializerMethodField()
+    # agents = serializers.SerializerMethodField()
     class Meta:
         model = PrivateLocation
         fields = [
@@ -32,12 +32,12 @@ class PrivateLocationSerializer(serializers.ModelSerializer):
             'console_xmx_mb',
             'created_at',
             'updated_at',
-            'agents'
+            # 'agents'
         ]
         
-    def get_agents(self, obj):
-        agents = Agent.objects.filter(location=obj)
-        return AgentListSerializer(agents, many=True).data
+    # def get_agents(self, obj):
+    #     agents = Agent.objects.filter(location=obj)
+    #     return AgentListSerializer(agents, many=True).data
         
 class NewAgentSerializer(serializers.ModelSerializer):
     # location = serializers.PrimaryKeyRelatedField(queryset=PrivateLocation.objects.all())

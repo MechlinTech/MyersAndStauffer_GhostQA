@@ -3,7 +3,7 @@ from time import sleep
 from code_management.jmeter_file_setup import setup_jmeter_files
 from code_management.cypress_file_setup import setup_cypress_file
 import requests
-from code_management.api_call import update_job_status
+from code_management.api_call import update_job_status, get_agent_by_ref_to_set_status
 
 import argparse
 import os
@@ -18,7 +18,10 @@ def execute_jmeter_job(job):
     if jmeter_file_data.status_code == 200:
         job_id = job['id']
         status = "completed"
+        agent_ref = job['agent_details']['ref']
+        agent_status = "available"
         update_job_status(job_id, status)
+        get_agent_by_ref_to_set_status(agent_ref, agent_status)
     return jmeter_file_data
 def execute_cypress_job(job):
     setup_cypress_files = setup_cypress_file(job)
@@ -48,10 +51,10 @@ def main(agent_id, token):
                 
     
 if __name__ == "__main__":
-    agent_id = '45356034-33b8-4859-8762-542aac24256c'
-    token = '385df753-a539-4448-8099-ac523cb5e008'
-    # agent_id = os.getenv('AGENT_ID')
-    # token = os.getenv('TOKEN')
+    # agent_id = '45356034-33b8-4859-8762-542aac24256c'
+    # token = '385df753-a539-4448-8099-ac523cb5e008'
+    agent_id = os.getenv('AGENT_ID')
+    token = os.getenv('TOKEN')
     if not agent_id or not token:
         parser = argparse.ArgumentParser()
         parser.add_argument("agent_id", help="Agent ID to use for job execution")

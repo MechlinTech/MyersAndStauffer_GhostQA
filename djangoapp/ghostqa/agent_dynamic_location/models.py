@@ -108,16 +108,16 @@ class Job(models.Model):
     #     return f"Job {self.job_id}"
     
     
-    def save(self, *args, **kwargs):
-        if self.pk:
-            orig_job = Job.objects.get(pk=self.pk)
-            if orig_job.job_status == 'completed':
-                self.agent.agent_status = 'available'
-                self.agent.save()
-            elif orig_job.job_status == 'queued':
-                self.agent.agent_status = 'occupied'
-                self.agent.save()
-        super(Job, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.pk:
+    #         orig_job = Job.objects.get(pk=self.pk)
+    #         if orig_job.job_status == 'completed':
+    #             self.agent.agent_status = 'available'
+    #             self.agent.save()
+    #         elif orig_job.job_status == 'queued':
+    #             self.agent.agent_status = 'occupied'
+    #             self.agent.save()
+    #     super(Job, self).save(*args, **kwargs)
 
 
 
