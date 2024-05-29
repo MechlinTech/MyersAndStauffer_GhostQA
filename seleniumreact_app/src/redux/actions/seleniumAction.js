@@ -93,13 +93,18 @@ export const ExecuteTestCasesByTestSuite = (data) => {
         // `${BASE_URL}/Selenium/ExecuteTestSuite`,
         header()
       );
-      const finishedItem = response.data.find(item => item?.status === "Finished")
+      if(response.data?.status === "Conflict"){
+        toast.error(response.data.message)
+      }else{
+        const finishedItem = response.data?.find(item => item?.status === "Finished")
         toast.info(finishedItem.message, {
           style: {
             background: "rgb(101, 77, 247)",
             color: "rgb(255, 255, 255)",
           },
         });
+      }
+      
       dispatch({
         type:EXECUTING_SUITE,
         payload:null
