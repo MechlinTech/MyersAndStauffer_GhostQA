@@ -152,12 +152,12 @@ export default function Settings() {
           path: "/main-settings/environment",
         },
         {
-          title: "Test User",
+          title: "Test Users",
           path: "/main-settings/test-user",
         },
         {
-          title: "Integration (Jira & Teams)",
-          path: "/main-settings/on-prem/ntegration",
+          title: "Integration",
+          path: "/main-settings/on-prem/integration",
         },
       ],
     },

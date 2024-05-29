@@ -4,28 +4,23 @@ import {
   Grid,
   Paper,
   Typography,
-  FormControl,
   Box,
   CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { StyledFormControl, StyledTextBox, useStyles } from "./style";
+import { StyledFormControl, useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
-import { StyledTypography, StyledOutlinedInput } from "./style";
+import { StyledTypography } from "./style";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import {
-  UpdateUserProfile,
   getUserId,
 } from "../../../../../redux/actions/authActions";
 import TextField from "@mui/material/TextField";
-
-import { getBaseUrl } from "../../../../../utils/configService";
-import { header } from "../../../../../utils/authheader";
 import {
   fetchOrganizationDetail,
   updateOrganizationDetails,
 } from "../../../../../redux/actions/userActions";
+import CustomeImgView from "./CustomeImgView";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Organization() {
@@ -52,7 +47,6 @@ export default function Organization() {
 
   useEffect(() => {
     setDescription(organizationDetails?.Description);
-    console.log(organizationDetails);
   }, [organizationDetails]);
   // Extracting the name of user
   const getName = () => {
@@ -68,7 +62,7 @@ export default function Organization() {
   };
   const handleSave = () => {
     const formData = new FormData();
-    formData.append("Id", 0);
+    formData.append("Id", organizationDetails?organizationDetails.Id:0);
     formData.append("UserId", userId);
     formData.append("Description", description);
     formData.append("BinaryData", selectedImage);
@@ -100,7 +94,7 @@ export default function Organization() {
             </Box>
           ) : (
             <Box sx={{ width: "70%" }}>
-              <Box
+              {/* <Box
                 m={1}
                 sx={{
                   display: "flex",
@@ -114,12 +108,32 @@ export default function Organization() {
                 <Typography fontSize="18px" fontFamily="Lexend Deca">
                   {getName()}
                 </Typography>
-              </Box>
+              </Box> */}
               <Paper
                 variant="outlined"
                 sx={{ padding: "20px", marginBottom: "20px" }}
               >
                 <Grid container justifyContent="center" spacing={1}>
+                
+                  <Grid item xs={12} style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom:'10px'
+                }}>
+                  <CustomeImgView ScreenshotUrl={""}/>
+                  {/* <Avatar
+                  style={{ marginRight: "10px", backgroundColor: "#654DF7" }}
+                  src="http://65.1.188.67:8010/codeengine/api/test-suitesV2/29/get_file/"
+                /> */}
+                {/* <Box>
+                  <img
+                  src="http://65.1.188.67:8010/codeengine/api/test-suitesV2/29/get_file/"
+                  className={classes.imgStyle}/>
+                </Box> */}
+                <Typography fontSize="18px" fontFamily="Lexend Deca">
+                  {getName()}
+                </Typography>
+                  </Grid>
                   <Grid item xs={12}>
                     <StyledTypography>About</StyledTypography>
                     <StyledFormControl fullWidth>
@@ -153,7 +167,7 @@ export default function Organization() {
                     item
                     xs={12}
                     style={{
-                      display: "flex",
+                      display: isEditable?"flex":'none',
                       alignItems: "center",
                       justifyContent: "space-between",
                     }}
@@ -184,7 +198,7 @@ export default function Organization() {
                       +
                     </label>
                   </Grid>
-                  {Error.imageError && (
+                  {Error.imageError  && isEditable && (
                     <Grid item xs={12}>
                       <StyledTypography
                         style={{ color: "red", textAlign: "left" }}

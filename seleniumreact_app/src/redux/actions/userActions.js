@@ -83,7 +83,7 @@ export const fetchOrganizationDetail = (userId) => {
         `${BASE_URL}/Selenium/GetUsersOrganizationByUserId?UserId=${userId}`,
         header()
       );
-      console.log(res);
+      if(Array.isArray(res.data))
       dispatch(fetchOrganization(res.data[0]));
     } catch (error) {
       dispatch(fetchFailure(error.message));
