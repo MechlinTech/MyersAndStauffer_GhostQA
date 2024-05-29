@@ -14,6 +14,13 @@ logger = logging.getLogger(__name__)
 BASE_URL = os.getenv('BASE_URL')
 
 
+def get_agent_by_ref_to_set_status(ref, status):
+    update_agent_status_url = f"{BASE_URL}/codeengine/api/remote-agent-connection/{ref}/"
+    payload = {
+        'agent_status': status,
+    }
+    response = requests.patch(update_agent_status_url, data=payload)
+    return response
 
 def get_job_to_execute(agent_id, token):
     api_url = f'{BASE_URL}/codeengine/api/agent-job/queued_job/?agent_id={agent_id}&token={token}'
