@@ -74,7 +74,7 @@ export default function Organization() {
 
     setError(error);
     if (Object.keys(error).length === 0) {
-      dispatch(updateOrganizationDetails(formData));
+      dispatch(updateOrganizationDetails(formData,userId));
       setisEditable(false);
     } else {
       console.log("some field are empty or not valid");
@@ -120,7 +120,7 @@ export default function Organization() {
                   alignItems: "center",
                   marginBottom:'10px'
                 }}>
-                  <CustomeImgView ScreenshotUrl={""}/>
+                  <CustomeImgView ScreenshotUrl={organizationDetails?.LogoPath}/>
                   {/* <Avatar
                   style={{ marginRight: "10px", backgroundColor: "#654DF7" }}
                   src="http://65.1.188.67:8010/codeengine/api/test-suitesV2/29/get_file/"
@@ -180,6 +180,7 @@ export default function Organization() {
                       onChange={handleFileChange}
                       disabled={!isEditable}
                       style={{ display: "none" }}
+                      accept="image/jpeg, image/png, image/gif, image/bmp, image/tiff, image/webp, image/x-raw"
                       id="logoupload"
                     />
                     {/* Button to trigger the file input */}

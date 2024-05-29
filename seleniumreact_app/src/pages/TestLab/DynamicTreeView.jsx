@@ -14,9 +14,11 @@ import { CircularProgress, Tooltip } from "@mui/material";
 import { getBaseUrl } from "../../utils/configService";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "./Comman/DeleteModal";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useSelector, useDispatch } from "react-redux";
 import {
   ExpandParent,
+  SetSchedule,
   setExpandedNodes,
   setRootId,
   setSelectedNode,
@@ -125,9 +127,10 @@ const Card = ({
                           handleTask(item, nodeCount);
                           // setSelectedNodeId(item.id); // Update the clicked node ID
                           // dispatch(setRootId(item.id));
-                          dispatch(setSelectedNode(item))
+                          dispatch(setSelectedNode(item));
                           // navigate(`/testLab/${item.id}`)
                           toggleExpand(item.id);
+                          dispatch(SetSchedule(false));
                         }}
                         style={{
                           cursor: "pointer",
@@ -151,6 +154,21 @@ const Card = ({
                     )}
                   </div>
                   <div className={styleClass.crud} style={{}}>
+                    {nodeCount > 1 && (
+                      <Tooltip title="schedule" arrow>
+                        <CalendarMonthIcon
+                          sx={{
+                            color:
+                              selectedNodeId === item.id ? "white" : "#654df7",
+                          }}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            dispatch(setSelectedNode(item));
+                            dispatch(SetSchedule(true));
+                          }}
+                        />
+                      </Tooltip>
+                    )}
                     {editMode == 0 && (
                       <Tooltip title="Edit" arrow>
                         <EditIcon
@@ -159,7 +177,7 @@ const Card = ({
                               selectedNodeId === item.id ? "white" : "#654df7",
                           }}
                           onClick={() => handleEdit(item.id, item.name)}
-                          style={{ cursor: "pointer", marginLeft: "10px" }}
+                          style={{ cursor: "pointer" }}
                         />
                       </Tooltip>
                     )}
@@ -569,7 +587,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
       />
       <div className={styleClass.orgTree}>
         {isFetching ? (
-          <Box style={{ textAlign: "center", padding:'10px'}}>
+          <Box style={{ textAlign: "center", padding: "10px" }}>
             <CircularProgress
               style={{ color: "rgb(101, 77, 247)" }}
               size={25}

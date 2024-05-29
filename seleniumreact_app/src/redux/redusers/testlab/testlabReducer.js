@@ -2,13 +2,15 @@ import {
   SET_EXPANDED_NODE,
   EXPAND_PARENT,
   SET_ROOT_ID,
-  SET_SELECTED_NODE
+  SET_SELECTED_NODE,
+  SCHEDULE_SUITE
 } from "../../actions/testlab/testlabAction";
 
 const initialState = {
   selectedNode:null,
   selectedNodeId: 0,
   expanded: [],
+  isScheduling:false
 };
 
 const testlabReduer = (state = initialState, action) => {
@@ -62,6 +64,12 @@ const testlabReduer = (state = initialState, action) => {
         };
       }
       return state;
+    }
+    case SCHEDULE_SUITE: {
+      return {
+        ...state,
+        isScheduling: action.payload,
+      };
     }
     default:
       return state;

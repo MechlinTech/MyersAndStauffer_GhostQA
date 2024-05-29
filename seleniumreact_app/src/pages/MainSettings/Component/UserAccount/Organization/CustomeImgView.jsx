@@ -20,7 +20,7 @@ const CustomeImgView = ({ ScreenshotUrl }) => {
       <Avatar
         src={ScreenshotUrl?ScreenshotUrl:""}
         alt="Screenshot"
-        style={{ marginRight: "10px", backgroundColor: "#654DF7",cursor:'pointer' }}
+        style={{ marginRight: "10px", backgroundColor: ScreenshotUrl?"#fff":"#654DF7",cursor:'pointer' }}
         onClick={handleOpenModal}
       />
 
