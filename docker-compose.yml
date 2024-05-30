@@ -23,11 +23,11 @@ services:
     ports:
       - "80"
     environment:
-      - DB_HOST=15.207.97.170,1435
+      - DB_HOST=db
       - DB_PASSWORD=P@ssw0rd@123###
       - DB_USER=sa
       - DB_NAME=GhostQA
-      - ConnectionStrings__AppDBContextConnection=Server=15.207.97.170,1435;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
+      - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
       - CypressAPI__PerformanceExecutor=http://codeengine:8000/codeengine/api/performance-testsexecute2/
       - CypressAPI__ExecutorResult=http://codeengine:8000/codeengine/api/performance-container-runs/
       - LocationFile__JMXFile=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFile
@@ -37,7 +37,6 @@ services:
     command: dotnet SeleniumReportAPI.dll
     volumes:
       - ./app/dotnet/wwwroot/:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/
-    
     depends_on:
       - db
       - migrations
@@ -150,4 +149,6 @@ services:
       - "443:443"
     extra_hosts:
       - host.docker.internal:host-gateway
-  
+    volumes:
+      - ~/caddy/data:/data
+      - ~/caddy/config:/config
