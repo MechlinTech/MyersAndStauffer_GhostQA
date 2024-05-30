@@ -13,7 +13,10 @@ import { useStyles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { AddLocationAgent, updateLocationAgent } from "../../../../../redux/actions/locationAction";
+import {
+  AddLocationAgent,
+  updateLocationAgent,
+} from "../../../../../redux/actions/locationAction";
 
 const AddAgent = ({ open, onClose, row }) => {
   const classes = useStyles();
@@ -31,21 +34,26 @@ const AddAgent = ({ open, onClose, row }) => {
     Address: false,
     DockerCommand: false,
   });
+  const [showDockerCommand, setShowDockerCommand] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
   useEffect(() => {
     if (addAgents) {
       const { docker_command } = addAgents;
-      setFormData({ ...formData, DockerCommand: docker_command });
+      setFormData((prevFormData) => ({ ...prevFormData, DockerCommand: docker_command }));
     }
   }, [addAgents]);
-  const [showDockerCommand, setShowDockerCommand] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); 
 
   useEffect(() => {
     if (row && row.agents && row.agents.length > 0) {
       const { name, agent_address } = row.agents[0];
-      setFormData({ ...formData, AgentName: name, Address: agent_address });
-      setIsEditing(true); 
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        AgentName: name,
+        Address: agent_address,
+      }));
+      setIsEditing(true);
     } else {
       setFormData(initialFormData);
       setIsEditing(false);
@@ -53,27 +61,24 @@ const AddAgent = ({ open, onClose, row }) => {
   }, [row]);
 
   const handleFieldChange = (fieldName, value) => {
-    setFormData({ ...formData, [fieldName]: value });
+    setFormData((prevFormData) => ({ ...prevFormData, [fieldName]: value }));
   };
-
 
   const handleSave = () => {
     if (!formData.AgentName.trim()) {
-      setErrors({ ...errors, AgentName: true });
-
+      setErrors((prevErrors) => ({ ...prevErrors, AgentName: true }));
       setTimeout(() => {
-        setErrors({ ...errors, AgentName: false });
-      }, 15000);
-
+        setErrors((prevErrors) => ({ ...prevErrors, AgentName: false }));
+      }, 1500);
       return;
     }
-    let data = {
+    const data = {
       location: row?.id,
       name: formData.AgentName,
       agent_address: formData.Address,
     };
 
-    let ref = row?.agents[0]?.ref;
+    const ref = row?.agents[0]?.ref;
 
     if (isEditing) {
       dispatch(updateLocationAgent(data, setShowDockerCommand, ref));
@@ -83,15 +88,51 @@ const AddAgent = ({ open, onClose, row }) => {
   };
 
   const handleCopyCommand = () => {
-    navigator.clipboard
-      .writeText(formData.DockerCommand)
-      .then(() => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(formData.DockerCommand)
+        .then(() => {
+          setCopied(true);
+          console.log("Copy successful");
+        })
+        .catch((error) => {
+          console.error("Copy failed:", error);
+          setCopied(false);
+          fallbackCopyTextToClipboard(formData.DockerCommand);
+        });
+    } else {
+      console.error("Clipboard API not supported");
+      fallbackCopyTextToClipboard(formData.DockerCommand);
+    }
+  };
+  
+  const fallbackCopyTextToClipboard = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+  
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+  
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+  
+    try {
+      const successful = document.execCommand("copy");
+      if (successful) {
         setCopied(true);
-      })
-      .catch((error) => {
-        console.error("Copy failed:", error);
+        console.log("Fallback copy successful");
+      } else {
         setCopied(false);
-      });
+        console.error("Fallback copy failed");
+      }
+    } catch (err) {
+      console.error("Fallback copy failed:", err);
+      setCopied(false);
+    }
+  
+    document.body.removeChild(textArea);
   };
 
   const handleClose = () => {
@@ -121,9 +162,8 @@ const AddAgent = ({ open, onClose, row }) => {
     >
       <div className={classes.modalContainer}>
         <Typography variant="h6" align="center" sx={{ fontWeight: "bold" }}>
-          {isEditing ? "Edit Agent" : "Create Agent"} {/* Step 2: Update modal title */}
+          {isEditing ? "Edit Agent" : "Create Agent"}
         </Typography>
-        {/* Body */}
         <div className={classes.modalBody}>
           <Grid item xs={12}>
             <Typography variant="subtitle1">Agent Name</Typography>
@@ -199,7 +239,6 @@ const AddAgent = ({ open, onClose, row }) => {
           )}
         </div>
 
-        {/* Footer */}
         <div className={classes.modalFooter}>
           <Button
             variant="contained"
@@ -218,7 +257,7 @@ const AddAgent = ({ open, onClose, row }) => {
               className={classes.button}
               style={{ background: "#654DF7" }}
             >
-              {isEditing ? "Edit Agent" : "Create Agent"} {/* Step 2: Update button label */}
+              {isEditing ? "Edit Agent" : "Create Agent"}
             </Button>
           ) : (
             <Button

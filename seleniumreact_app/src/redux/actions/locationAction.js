@@ -157,7 +157,7 @@ export const getLocationList = () => {
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const response = await axios.get(
-        `${CORE_BASE_URL}/codeengine/api/private-location/?page=2`
+        `${CORE_BASE_URL}/codeengine/api/private-location`
         // header()
       );
       dispatch({

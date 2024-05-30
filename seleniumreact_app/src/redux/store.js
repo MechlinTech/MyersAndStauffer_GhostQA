@@ -11,7 +11,10 @@ import locationReducer from "./redusers/locationReducer";
 import testdataReducer from "./redusers/testDataReducer";
 import propertyReducer from "./redusers/propertyReducer";
 import testcaseReducer from "./redusers/TestCase/testcaseReducer";
-import testlabReduer from "./redusers/testlabReducer";
+import testlabReduer from "./redusers/testlab/testlabReducer";
+import userReducer from "./redusers/userReducer";
+import testCaseReducer from "./redusers/testlab/designReducer";
+import executionHistoryReducer from "./redusers/testlab/resultReducer";
 
 const rootReducer = combineReducers({
   auth: authReduser,
@@ -23,7 +26,10 @@ const rootReducer = combineReducers({
   testData:testdataReducer,
   property:propertyReducer,
   testcase:testcaseReducer,
-  testlab:testlabReduer
+  testlab:testlabReduer,
+  testlabTestCase:testCaseReducer,
+  user:userReducer,
+  testlabResult:executionHistoryReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

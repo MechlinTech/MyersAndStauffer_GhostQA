@@ -37,7 +37,7 @@ export default function Location() {
         spacing={2}
       >
         <Grid item xs={6} className={classes.header}>
-          <div className={classes.highlight}>In Private Location</div>
+          <div className={classes.highlight}>In-Private Locations</div>
         </Grid>
         <Grid item>
           <Button

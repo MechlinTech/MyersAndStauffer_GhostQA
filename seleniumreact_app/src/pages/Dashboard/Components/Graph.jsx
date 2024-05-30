@@ -96,72 +96,76 @@ const Graph = (props) => {
 
   const [filterType, setFilterType] = useState("runs");
   const [filterValue, setFilterValue] = useState({ value: "7", label: "7" });
-  const { testSuiteLists } = useSelector((state) => state.selenium);
+  const { testSuiteLists,executingSuite } = useSelector((state) => state.selenium);
   const [empty, setEmpty] = useState(true);
-  useEffect(() => {
-    const get_host = async () => {
-      const BASE_URL = await getBaseUrl();
-      await axios
-        .get(
-          // `${BASE_URL}/Selenium/GetChartDetails?TestSuiteName=${props.testSuitName.TestSuiteName}&Filtertype=${filterType}&FilterValue=${filterValue.value}`,
-          `${BASE_URL}/Selenium/GetChartDetails?TestSuiteName=${selectedSuite}&Filtertype=${filterType}&FilterValue=${filterValue.value}`,
-          header()
-        )
-        .then((response) => {
-          const TestRunStartDate = [];
-          const TotalFailedTestCase = [];
-          const TotalPassedTestCase = [];
-          const TotalTestCase = [];
+  const get_host = async () => {
+    const BASE_URL = await getBaseUrl();
+    await axios
+      .get(
+        // `${BASE_URL}/Selenium/GetChartDetails?TestSuiteName=${props.testSuitName.TestSuiteName}&Filtertype=${filterType}&FilterValue=${filterValue.value}`,
+        `${BASE_URL}/Selenium/GetChartDetails?TestSuiteName=${selectedSuite}&Filtertype=${filterType}&FilterValue=${filterValue.value}`,
+        header()
+      )
+      .then((response) => {
+        const TestRunStartDate = [];
+        const TotalFailedTestCase = [];
+        const TotalPassedTestCase = [];
+        const TotalTestCase = [];
 
-          if (response.data.length) {
-            response.data.forEach((item) => {
-              const date = new Date(item.TestRunStartDate);
-              console.log("date", date);
-              const formattedDate = date.toLocaleDateString("en-US", {
-                month: "long", // full month name
-                day: "numeric", // day of the month
-                year: "numeric", // full year
-              });
+        if (response.data.length) {
+          response.data.forEach((item) => {
+            // const date = new Date(item.TestRunStartDate);
+            // const formattedDate = date.toLocaleDateString("en-US", {
+            //   month: "long", // full month name
+            //   day: "numeric", // day of the month
+            //   year: "numeric", // full year
+            // });
+            const formattedDate = extractDate(item.TestRunStartDate)
+            TestRunStartDate.push(formattedDate);
+            TotalFailedTestCase.push(item.TotalFailedTestCase);
+            TotalPassedTestCase.push(item.TotalPassedTestCase);
+            TotalTestCase.push(item.TotalTestCase);
+          });
 
-              TestRunStartDate.push(formattedDate);
-              TotalFailedTestCase.push(item.TotalFailedTestCase);
-              TotalPassedTestCase.push(item.TotalPassedTestCase);
-              TotalTestCase.push(item.TotalTestCase);
-            });
-
-            setEmpty((current) => false);
-          } else {
-            setEmpty((current) => true);
-          }
-          const newData = {
-            ...data,
-            options: {
-              ...data.options,
-              xaxis: {
-                categories: TestRunStartDate,
-              }
+          setEmpty((current) => false);
+        } else {
+          setEmpty((current) => true);
+        }
+        const newData = {
+          ...data,
+          options: {
+            ...data.options,
+            xaxis: {
+              categories: TestRunStartDate,
+            }
+          },
+          series: [
+            {
+              name: "Total Test Case",
+              data: TotalTestCase,
             },
-            series: [
-              {
-                name: "Total Test Case",
-                data: TotalTestCase,
-              },
-              {
-                name: "Passed",
-                data: TotalPassedTestCase,
-              },
-              {
-                name: "Failed",
-                data: TotalFailedTestCase,
-              },
-            ],
-          };
+            {
+              name: "Passed",
+              data: TotalPassedTestCase,
+            },
+            {
+              name: "Failed",
+              data: TotalFailedTestCase,
+            },
+          ],
+        };
 
-          setData((current) => newData);
-        });
-    };
+        setData((current) => newData);
+      });
+  };
+  useEffect(() => {
     get_host();
   }, [filterType, filterValue, testSuiteLists]);
+
+  useEffect(()=>{
+    if(!executingSuite)
+      get_host();
+  },[executingSuite])
   const handleRadioChange = (event) => {
     setFilterType(event.target.value);
   };
@@ -174,6 +178,32 @@ useEffect(()=>{
   const menuIcon = document.querySelector('.apexcharts-menu-icon');
 menuIcon?.setAttribute('title', 'Download');
 })
+
+function extractDate(dateStr) {
+  if (typeof dateStr !== 'string') {
+    return null; // Return null or some default value if dateStr is invalid
+  }
+  const [year, month, day] = dateStr?.split("-");
+
+  const monthNames = {
+    "01": "Jan",
+    "02": "Feb",
+    "03": "Mar",
+    "04": "April",
+    "05": "May",
+    "06": "June",
+    "07": "July",
+    "08": "Aug",
+    "09": "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Dec",
+  };
+
+  const formattedDate = `${monthNames[month]} ${parseInt(day, 10)}, ${year}`;
+
+  return formattedDate;
+}
   return (
     <>
       <div>

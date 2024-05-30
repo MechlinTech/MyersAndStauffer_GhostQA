@@ -11,6 +11,8 @@ using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
@@ -101,7 +103,7 @@ namespace SeleniumReportAPI.Helper
             return TestSuites;
         }
 
-        internal async Task<string> GetDashboardDetails(string testSuitName)
+        internal async Task<string> GetDashboardDetails(string testSuitName, string timeZone)
         {
             string DashBoardDetailsJson = string.Empty;
             try
@@ -113,6 +115,7 @@ namespace SeleniumReportAPI.Helper
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuitName", testSuitName);
+                        command.Parameters.AddWithValue("@TimeZone", timeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -132,7 +135,7 @@ namespace SeleniumReportAPI.Helper
             return DashBoardDetailsJson;
         }
 
-        internal async Task<string> GetRunDetails(string TestSuitName)
+        internal async Task<string> GetRunDetails(string TestSuitName, string TimeZone)
         {
             string RunDetailsJson = string.Empty;
             try
@@ -144,6 +147,7 @@ namespace SeleniumReportAPI.Helper
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuitName", TestSuitName);
+                        command.Parameters.AddWithValue("@TimeZone", TimeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -168,7 +172,7 @@ namespace SeleniumReportAPI.Helper
             return RunDetailsJson;
         }
 
-        internal async Task<string> GetTestCaseDetails(string TestSuitName, string RunID)
+        internal async Task<string> GetTestCaseDetails(string TestSuitName, string RunID, string TimeZone)
         {
             string TestCaseDetailsJson = string.Empty;
             try
@@ -181,6 +185,7 @@ namespace SeleniumReportAPI.Helper
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuiteName", TestSuitName);
                         command.Parameters.AddWithValue("@TestRunId", RunID);
+                        command.Parameters.AddWithValue("@TimeZone", TimeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -200,7 +205,7 @@ namespace SeleniumReportAPI.Helper
             return TestCaseDetailsJson;
         }
 
-        internal async Task<string> GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
+        internal async Task<string> GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName, string timeZone)
         {
             string testCaseStepDetailsJson = string.Empty;
             try
@@ -214,6 +219,7 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@TestSuiteName", testSuitName);
                         command.Parameters.AddWithValue("@TestRunName", runId);
                         command.Parameters.AddWithValue("@TestCaseName", testCaseName);
+                        command.Parameters.AddWithValue("@TimeZone", timeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -808,7 +814,7 @@ namespace SeleniumReportAPI.Helper
             return BrowserListJson;
         }
 
-        internal async Task<string> GetDashboardDetails(string testSuitName, string filterType, int filterValue)
+        internal async Task<string> GetDashboardDetails(string testSuitName, string filterType, int filterValue, string timeZone)
         {
             string DashBoardDetailsJson = string.Empty;
             try
@@ -822,6 +828,7 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@TestSuitName", testSuitName);
                         command.Parameters.AddWithValue("@FilterType", filterType);
                         command.Parameters.AddWithValue("@FilterValue", filterValue);
+                        command.Parameters.AddWithValue("@TimeZone", timeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -3010,10 +3017,10 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal List<object> SendExecutionDataMail(string testSuiteName, string testRunName, string testerName, string Url)
+        internal List<object> SendExecutionDataMail(string testSuiteName, string testRunName, string testerName, string Url, string timeZone)
         {
             List<object> result = new List<object>();
-            var testrunData = GetTestRunData(testSuiteName, testRunName);
+            var testrunData = GetTestRunData(testSuiteName, testRunName, timeZone);
             var data = JsonConvert.DeserializeObject<Dto_TestRunData>(testrunData.Result);
             if (!string.IsNullOrEmpty(testerName))
             {
@@ -3103,7 +3110,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<string> GetTestRunData(string testSuiteName, string testRunName)
+        internal async Task<string> GetTestRunData(string testSuiteName, string testRunName, string timeZone)
         {
             string result = string.Empty;
             try
@@ -3116,6 +3123,7 @@ namespace SeleniumReportAPI.Helper
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@TestSuitName", testSuiteName);
                         command.Parameters.AddWithValue("@TestRunName", testRunName);
+                        command.Parameters.AddWithValue("@TimeZone", timeZone);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -3392,15 +3400,43 @@ namespace SeleniumReportAPI.Helper
 
         internal string GenerateRandomPassword(int length)
         {
-            const string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%&*?"; // Include all the characters you want in your password        
+            const string lowerChars = "abcdefghijklmnopqrstuvwxyz";
+            const string upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string digitChars = "1234567890";
+            const string specialChars = "!@#$%&*?";
+            const string allChars = lowerChars + upperChars + digitChars + specialChars;
+
             Random rng = new Random();
             StringBuilder password = new StringBuilder();
-            for (int i = 0; i < length; i++)
+
+            // Ensure at least one of each required character type
+            password.Append(upperChars[rng.Next(upperChars.Length)]);
+            password.Append(lowerChars[rng.Next(lowerChars.Length)]);
+            password.Append(digitChars[rng.Next(digitChars.Length)]);
+            password.Append(specialChars[rng.Next(specialChars.Length)]);
+
+            // Fill the rest of the password
+            for (int i = 4; i < length; i++)
             {
-                int index = rng.Next(allowedChars.Length);
-                password.Append(allowedChars[index]);
+                password.Append(allChars[rng.Next(allChars.Length)]);
             }
-            return password.ToString();
+
+            // Shuffle the password to ensure randomness
+            return ShuffleString(password.ToString(), rng);
+        }
+
+        private string ShuffleString(string input, Random rng)
+        {
+            char[] array = input.ToCharArray();
+            int n = array.Length;
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = rng.Next(i + 1);
+                char temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return new string(array);
         }
 
         public async Task<Dto_Response> SendPasswordResetMailAsync(string Email)
@@ -3600,7 +3636,7 @@ namespace SeleniumReportAPI.Helper
                             }
                         }
                         connection.Close();
-                    } 
+                    }
                 }
             }
             catch (Exception ex)
@@ -3726,5 +3762,366 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+
+        internal async Task<string> GetAllUserIntegration(string userId)
+        {
+            string result = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetAllIntegration", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", userId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<object> UpdateIntegration(Dto_Integration model)
+        {
+            string result = string.Empty;
+            var str = CompressString(model.APIKey);
+            if (model.IsIntegrated)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{model.Domain}{_configuration["Integration:JiraBaseUrl"]}events"))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{model.Email}:{model.APIKey}"));
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        var response = await httpClient.SendAsync(request);
+
+                        if (!response.IsSuccessStatusCode)
+                            return new { status = response.StatusCode, message = response.ReasonPhrase };
+                    }
+                }
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateIntegration", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", model.UserId);
+                        command.Parameters.AddWithValue("@AppName", model.AppName);
+                        command.Parameters.AddWithValue("@IsIntegrated", model.IsIntegrated);
+                        command.Parameters.AddWithValue("@Domain", model.Domain);
+                        command.Parameters.AddWithValue("@Email", model.Email);
+                        command.Parameters.AddWithValue("@APIKey", CompressString(model.APIKey));
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return new Dto_Response
+            {
+                status = HttpStatusCode.OK.ToString(),
+                message = "Success"
+            };
+        }
+
+        internal async Task<Dto_Response> CreateIssueOnJire(Dto_CreateJiraIssue model)
+        {
+            string result = string.Empty;
+            Dto_Response resp = null;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetJiraDetailsByUserId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", model.UserId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                Dto_JiraDetails jiraDetails = JsonConvert.DeserializeObject<Dto_JiraDetails>(result);
+
+                using (var httpClient = new HttpClient())
+                {
+                    string baseUrl = _configuration["Integration:JiraBaseUrl"];
+
+                    using (var request = new HttpRequestMessage(new HttpMethod("POST"), $"{jiraDetails.Domain}{baseUrl}issue"))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{DecompressString(jiraDetails.APIKey)}"));
+
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        request.Content = new StringContent(JsonConvert.SerializeObject(model.jiraCreateIssueModel));
+                        request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                        var response = await httpClient.SendAsync(request);
+                        if (response.StatusCode == HttpStatusCode.Unauthorized)
+                            resp = new Dto_Response { status = HttpStatusCode.Unauthorized.ToString(), message = "Invalid credentials or key expired!" };
+
+                        var obj = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                            resp = new Dto_Response { status = HttpStatusCode.OK.ToString(), message = "Created successfully!", Data = JsonConvert.DeserializeObject<Dto_GetJirataskDetail>(await response.Content.ReadAsStringAsync()) };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return resp;
+        }
+
+        internal async Task<Dto_GetAllJiraIssue> GetAllJiraIssue(string userId)
+        {
+            Dto_GetAllJiraIssue result;
+            string result1 = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetJiraDetailsByUserId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", userId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result1 = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                Dto_JiraDetails jiraDetails = JsonConvert.DeserializeObject<Dto_JiraDetails>(result1);
+
+                using (var httpClient = new HttpClient())
+                {
+                    string baseUrl = _configuration["Integration:JiraBaseUrl"];
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{jiraDetails.Domain}{baseUrl}search?jql="))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{DecompressString(jiraDetails.APIKey)}"));
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        var response = await httpClient.SendAsync(request);
+
+                        var obj = response.Content.ReadAsStringAsync();
+                        result = JsonConvert.DeserializeObject<Dto_GetAllJiraIssue>(obj.Result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<object> LinkIssueOnJire(IssueLinkOnJira model)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetJiraDetailsByUserId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", model.UserId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                Dto_JiraDetails jiraDetails = JsonConvert.DeserializeObject<Dto_JiraDetails>(result);
+
+                using (var httpClient = new HttpClient())
+                {
+                    string baseUrl = _configuration["Integration:JiraBaseUrl"];
+
+                    using (var request = new HttpRequestMessage(new HttpMethod("POST"), $"{jiraDetails.Domain}{baseUrl}issueLink"))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{jiraDetails.APIKey}"));
+
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        request.Content = new StringContent(JsonConvert.SerializeObject(model.IssueLink));
+
+                        request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                        var response = await httpClient.SendAsync(request);
+
+                        var obj = response.Content.ReadAsStringAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<List<Dto_GetAllIssueTypes>> GetAllJiraIssueTypes(string userId)
+        {
+            List<Dto_GetAllIssueTypes> result;
+            string result1 = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetJiraDetailsByUserId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", userId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result1 = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                Dto_JiraDetails jiraDetails = JsonConvert.DeserializeObject<Dto_JiraDetails>(result1);
+
+                using (var httpClient = new HttpClient())
+                {
+                    string baseUrl = _configuration["Integration:JiraBaseUrl"];
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{jiraDetails.Domain}{baseUrl}issuetype"))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{DecompressString(jiraDetails.APIKey)}"));
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        var response = await httpClient.SendAsync(request);
+
+                        var obj = await response.Content.ReadAsStringAsync();
+                        result = JsonConvert.DeserializeObject<List<Dto_GetAllIssueTypes>>(obj);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task<List<Dto_ProjectListJira>> GetProjectListJira(string userId)
+        {
+            List<Dto_ProjectListJira> result;
+            string result1 = string.Empty;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_GetJiraDetailsByUserId", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@UserId", userId);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result1 = reader["result"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                Dto_JiraDetails jiraDetails = JsonConvert.DeserializeObject<Dto_JiraDetails>(result1);
+
+                using (var httpClient = new HttpClient())
+                {
+                    string baseUrl = _configuration["Integration:JiraBaseUrl"];
+                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), $"{jiraDetails.Domain}{baseUrl}project"))
+                    {
+                        request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+                        var base64authorization = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{jiraDetails.Email}:{DecompressString(jiraDetails.APIKey)}"));
+                        request.Headers.TryAddWithoutValidation("Authorization", $"Basic {base64authorization}");
+
+                        var response = await httpClient.SendAsync(request);
+
+                        var obj = await response.Content.ReadAsStringAsync();
+                        result = JsonConvert.DeserializeObject<List<Dto_ProjectListJira>>(obj);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
     }
 }

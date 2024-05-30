@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
+using SeleniumReportAPI.Models;
+using System.Security.Claims;
 
 namespace SeleniumReportAPI.Controllers
 {
@@ -149,6 +151,79 @@ namespace SeleniumReportAPI.Controllers
             var result = await _helper.ResetPasswordAsync(model.Email, model.Token, model.NewPassword);
 
             return result.status == "Success" ? Ok(new { status = result.status, message = result.message }) : result.status == "NotFound" ? StatusCode(404, new { status = "Failed", message = result.message }) : StatusCode(400, new { status = "Failed", message = result.message });
+        }
+
+        /// <summary>
+        /// Get All Integration
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAllUserIntegration")]
+        public async Task<ActionResult> GetAllIntegration(string userId)
+        {
+            return Ok(await _helper.GetAllUserIntegration(userId));
+        }
+
+        /// <summary>
+        /// Update Integration
+        /// </summary>
+        /// <param Integration = Integration></param>
+        /// <returns></returns>
+        [HttpPost("UpdateIntegration")]
+        public async Task<ActionResult> UpdateIntegration(Dto_Integration model)
+        {
+            return Ok(await _helper.UpdateIntegration(model));
+        }
+
+        /// <summary>
+        /// Get Project List Jira
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetProjectListJira")]
+        public async Task<ActionResult> GetProjectListJira(string userId)
+        {
+            return Ok(await _helper.GetProjectListJira(userId));
+        }
+
+        /// <summary>
+        /// Get All Jira Issue Types
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAllJiraIssueTypes")]
+        public async Task<ActionResult> GetAllJiraIssueTypes(string userId)
+        {
+            return Ok(await _helper.GetAllJiraIssueTypes(userId));
+        }
+
+        /// <summary>
+        /// Get All Jira Issue
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAllJiraIssue")]
+        public async Task<ActionResult> GetAllJiraIssue(string userId)
+        {
+            return Ok(await _helper.GetAllJiraIssue(userId));
+        }
+
+        ///// <summary>
+        ///// Create Issue On Jire
+        ///// </summary>
+        //// <param Integration = Integration></param>
+        ///// <returns></returns>
+        [HttpPost("CreateIssueOnJire")]
+        public async Task<ActionResult> CreateIssueOnJire(Dto_CreateJiraIssue model)
+        {
+            return Ok(await _helper.CreateIssueOnJire(model));
+        }
+
+        ///// <summary>
+        ///// Link Issue On Jire
+        ///// </summary>
+        //// <param IssueLinkOnJira = IssueLinkOnJira></param>
+        ///// <returns></returns>
+        [HttpPost("LinkIssueOnJire")]
+        public async Task<ActionResult>LinkIssueOnJire(IssueLinkOnJira model)
+        {
+            return Ok(await _helper.LinkIssueOnJire(model));
         }
     }
 }

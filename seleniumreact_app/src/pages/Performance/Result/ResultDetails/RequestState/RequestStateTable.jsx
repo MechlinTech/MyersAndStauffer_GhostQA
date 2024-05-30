@@ -24,7 +24,7 @@ export function RequestStateTable({ data }) {
             <StyledTableCell>99 % (ms)</StyledTableCell>
             <StyledTableCell>Min. Response Time (ms)</StyledTableCell>
             <StyledTableCell>Max. Response Time (ms)</StyledTableCell>
-            <StyledTableCell>Average Bandwidth Key/s</StyledTableCell>
+            <StyledTableCell>Average Bandwidth KB/S</StyledTableCell>
             <StyledTableCell last>Error Percentage</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -208,7 +208,7 @@ export function RequestStateTable({ data }) {
               ))}
           {data &&
             data.transactions &&
-            data.transactions.map((trans) =>
+            data.transactions.filter((trans)=> !trans.transaction.startsWith("http")).map((trans) =>
               trans ? ( // Check if trans is defined
                 <TableRow key={trans.transaction}>
                   <StyledTableCell first colSpan={2}>

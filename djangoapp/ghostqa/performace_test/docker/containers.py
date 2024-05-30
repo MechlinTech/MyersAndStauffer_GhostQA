@@ -232,10 +232,11 @@ def start_jmeter_test2(name, volume_path,Jthreads=10,Jrampup=10,container_run=No
     print(f"{__name__}: volume_path: {volume_path}")
     
     # Build the Docker image from the Dockerfile
-    image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
+    # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
+    image = client.images.pull('ghostqa/performace:latest')
 
     container = client.containers.run(
-        image='jmeter_apline',
+        image=image,
         name=name,
         remove=False,
         command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t /jmeter-scripts/test.jmx -l /jmeter-scripts/log.csv -e -o /jmeter-scripts/html-results',

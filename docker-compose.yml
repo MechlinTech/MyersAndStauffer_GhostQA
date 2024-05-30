@@ -152,3 +152,7 @@ services:
     volumes:
       - ~/caddy/data:/data
       - ~/caddy/config:/config
+<<<<<<< HEAD
+=======
+
+>>>>>>> bfbbe9ee17ebdc2394dd176f025356fb717a2a8a
