@@ -109,7 +109,7 @@ export function LocationTable({ rows }) {
                       }}
                     />
                   </Tooltip>
-                  {row.agents.length === 0 && (
+                  {row?.agents?.length === 0 && (
                     <Tooltip title="Add Agent">
                       <AddCircleIcon
                         onClick={() => handleAddAgent(row)}
@@ -121,7 +121,7 @@ export function LocationTable({ rows }) {
                       />
                     </Tooltip>
                   )}
-                  {row.agents.length > 0 && (
+                  {row?.agents?.length > 0 && (
                     <Tooltip title="Edit Agent">
                       <EditIcon
                         onClick={() => handleEditAgent(row)}
@@ -134,7 +134,7 @@ export function LocationTable({ rows }) {
                     </Tooltip>
                   )}
 
-                  {row.agents.length > 0 && (
+                  {row?.agents?.length > 0 && (
                     <Tooltip title="View Agent">
                       <VisibilityIcon
                         onClick={() => handleViewAgent(row)}
