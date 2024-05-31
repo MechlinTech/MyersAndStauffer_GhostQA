@@ -1,19 +1,10 @@
-import {
-  GET_TEST_SUITS,
-  GET_USER_LIST,
-  GET_PERFORMANCE_INTEGRATION,
-  JIRA_ISSUE_TYPES,
-  JIRA_PROJECT_LIST
-} from "../actions/settingAction";
+import { GET_TEST_SUITS,GET_LOC_COUNT,GET_USER_COUNT,RESET_LOC_COUNT,RESET_USER_COUNT, GET_USER_LIST } from "../actions/settingAction";
 
 const initialState = {
-  testSuitsList: [],
-  virtualUser: 0,
-  totalLocation: 0,
-  testUserList: [],
-  performanceIntegration: [],
-  jiraIssueTypes: [],
-  jiraProjectList: [],
+ testSuitsList: [],
+ virtualUser:0,
+ totalLocation:0,
+ testUserList:[]
 };
 
 const settingsReduser = (state = initialState, action) => {
@@ -28,33 +19,7 @@ const settingsReduser = (state = initialState, action) => {
       return {
         ...state,
         testUserList: action.payload,
-      };
-    }
-    case GET_PERFORMANCE_INTEGRATION: {
-      return {
-        ...state,
-        performanceIntegration: action.payload,
-      };
-    }
-    case JIRA_ISSUE_TYPES: {
-      const transformedArray = action.payload?.map((item) => ({
-        label: item.name,
-        value: item.id,
-      }));
-      return {
-        ...state,
-        jiraIssueTypes: transformedArray,
-      };
-    }
-    case JIRA_PROJECT_LIST: {
-      const transformedArray = action.payload?.map((item) => ({
-        label: item.name,
-        value: item.id,
-      }));
-      return {
-        ...state,
-        jiraProjectList: transformedArray,
-      };
+      }
     }
     default:
       return state;

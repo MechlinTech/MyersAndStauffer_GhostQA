@@ -5,19 +5,6 @@ volumes:
   ms_logs:
 
 services:
-
-  caddy:
-    image: ghostqa/caddy:latest
-    ports:
-      - "30001:30001"
-      - "80:80"
-      - "443:443"
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    volumes:
-      - ~/caddy/data:/data
-      - ~/caddy/config:/config
-
   webui:
     image: ghostqa/webui:latest
     ports:
@@ -144,4 +131,12 @@ services:
       DJANGO_SUPERUSER_PASSWORD: Admin@1234
       DATABASE_URL: postgres://yourusername:yourpassword@postgres:5432/yourdatabase
 
-  
+  caddy:
+    image: ghostqa/caddy:latest
+    ports:
+      - "30001:30001"
+      - "80:80"
+      - "443:443"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+

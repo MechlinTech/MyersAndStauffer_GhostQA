@@ -53,15 +53,9 @@ class TestContainersRunsSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         
         raw_data = representation.get('raw_data')
-        json_data = representation.get('json')
-        
         if raw_data is None or not raw_data:
             representation['success_group_data'] = None
             representation['error_group_data'] = None
-            return representation
-        
-        if json_data is None or not json_data:
-            representation['error_groupby_transaction_name'] = None
             return representation
 
         # Group raw_data by responseCode when success is True
@@ -79,14 +73,8 @@ class TestContainersRunsSerializer(serializers.ModelSerializer):
         success_data = [{'code': code, 'description': data[0]['responseMessage'], 'count': len(data)} for code, data in success_grouped_data.items()]
         error_data = [{'code': code, 'description': data[0]['responseMessage'], 'count': len(data)} for code, data in error_grouped_data.items()]
         
-        error_groupby_transaction_name = []
-        for key, value in json_data.items():
-            if value['errorCount'] > 0:
-                error_groupby_transaction_name.append(value)
-        
         representation['success_group_data'] = success_data
         representation['error_group_data'] = error_data
-        representation['error_groupby_transaction_name'] = error_groupby_transaction_name
         return representation
         
 class PerformaceTestSuiteSerializer(serializers.ModelSerializer):

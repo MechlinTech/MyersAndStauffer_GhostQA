@@ -22,7 +22,7 @@ import {
   updateTestDetails,
 } from "../Api";
 import { toast } from "react-toastify";
-import { userActionsOptions, selectorTypeList } from "../../Comman/DropDownOptions";
+import { userActionsOptions, selectorTypeList } from "../../DropDownOptions";
 import { StyledFormControl } from "../styleTestCase";
 import RenderActionFields from "../RenderActionFields";
 import ExecutionHistory from "./ExecutionHistory";

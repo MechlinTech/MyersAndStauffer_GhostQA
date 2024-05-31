@@ -13,9 +13,9 @@ import { useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
 import { useDispatch } from "react-redux";
+import { UpdateUserProfile } from "../../redux/actions/authActions";
 import axios from "axios";
 import { header } from "../../utils/authheader";
-import { UpdateUserProfile } from "../../redux/actions/userActions";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Profile() {

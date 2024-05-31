@@ -14,13 +14,6 @@ logger = logging.getLogger(__name__)
 BASE_URL = os.getenv('BASE_URL')
 
 
-def get_agent_by_ref_to_set_status(ref, status):
-    update_agent_status_url = f"{BASE_URL}/codeengine/api/remote-agent-connection/{ref}/"
-    payload = {
-        'agent_status': status,
-    }
-    response = requests.patch(update_agent_status_url, data=payload)
-    return response
 
 def get_job_to_execute(agent_id, token):
     api_url = f'{BASE_URL}/codeengine/api/agent-job/queued_job/?agent_id={agent_id}&token={token}'
@@ -217,15 +210,3 @@ def final_update_container_after_execution_cypress(ref, container_status):
     response = requests.patch(container_run_update_url, data=payload)
     # Check response status code and handle exceptions if necessary
     return response
-
-def add_system_info_in_condeengine(data):
-    url = f'{BASE_URL}/codeengine/api/system-info/'
-    try:
-        response = requests.post(url, json=data)
-        response.raise_for_status()
-        logger.info("System info added successfully in codeengine")
-        return response.json()
-    except requests.exceptions.HTTPError as http_err:
-        logger.error(f"Failed to add system info in codeengine: {http_err}")
-    except Exception as err:
-        logger.error(f"Failed to add system info in codeengine: {err}")

@@ -66,7 +66,7 @@ export default function InitialSetup() {
                                   ? executeJMXData?.scenarios?.length
                                   : null}
                               </span>
-                              {/* vu */}
+                              vu
                             </span>
                           </Typography>
                         </CardContent>

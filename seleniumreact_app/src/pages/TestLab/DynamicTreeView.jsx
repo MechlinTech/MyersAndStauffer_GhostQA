@@ -10,20 +10,12 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { header } from "../../utils/authheader";
-import { CircularProgress, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import { getBaseUrl } from "../../utils/configService";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "./Comman/DeleteModal";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  ExpandParent,
-  SetSchedule,
-  setExpandedNodes,
-  setRootId,
-  setSelectedNode,
-} from "../../redux/actions/testlab/testlabAction";
-import { Box } from "@material-ui/core";
+import { useSelector,useDispatch } from "react-redux";
+import { ExpandParent, setExpandedNodes, setRootId } from "../../redux/actions/testlabAction";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Card = ({
@@ -57,9 +49,11 @@ const Card = ({
   // setSelectedNodeId,
 }) => {
   const styleClass = useStylesTree();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { expanded, selectedNodeId } = useSelector((state) => state.testlab);
+ const navigate = useNavigate()
+ const dispatch = useDispatch()
+ const { expanded,selectedNodeId } = useSelector(
+    (state) => state.testlab
+  );
   return (
     <>
       <ul
@@ -126,11 +120,9 @@ const Card = ({
                         onClick={() => {
                           handleTask(item, nodeCount);
                           // setSelectedNodeId(item.id); // Update the clicked node ID
-                          // dispatch(setRootId(item.id));
-                          dispatch(setSelectedNode(item));
+                          dispatch(setRootId(item.id))
                           // navigate(`/testLab/${item.id}`)
-                          toggleExpand(item.id);
-                          dispatch(SetSchedule(false));
+                          toggleExpand(item.id)
                         }}
                         style={{
                           cursor: "pointer",
@@ -154,21 +146,6 @@ const Card = ({
                     )}
                   </div>
                   <div className={styleClass.crud} style={{}}>
-                    {nodeCount > 1 && (
-                      <Tooltip title="schedule" arrow>
-                        <CalendarMonthIcon
-                          sx={{
-                            color:
-                              selectedNodeId === item.id ? "white" : "#654df7",
-                          }}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            dispatch(setSelectedNode(item));
-                            dispatch(SetSchedule(true));
-                          }}
-                        />
-                      </Tooltip>
-                    )}
                     {editMode == 0 && (
                       <Tooltip title="Edit" arrow>
                         <EditIcon
@@ -177,7 +154,7 @@ const Card = ({
                               selectedNodeId === item.id ? "white" : "#654df7",
                           }}
                           onClick={() => handleEdit(item.id, item.name)}
-                          style={{ cursor: "pointer" }}
+                          style={{ cursor: "pointer", marginLeft: "10px" }}
                         />
                       </Tooltip>
                     )}
@@ -231,13 +208,7 @@ const Card = ({
                         fontFamily: "Lexend Deca",
                         fontSize: "14px",
                       }}
-                      placeholder={
-                        nodeCount == 0
-                          ? "Add Project"
-                          : nodeCount == 1
-                          ? "Add Suite"
-                          : "Test"
-                      }
+                      placeholder={nodeCount == 0 ? "Add Project": nodeCount == 1 ? "Add Suite": "Test" }
                       className={styleClass.addNewFolder}
                       value={newElementName}
                       key={item.id}
@@ -297,12 +268,13 @@ const Card = ({
   );
 };
 
-const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
+const DynamicTreeView = ({ TestCaseHandle, listData, setListData, params }) => {
   const styleClass = useStylesTree();
-  const dispatch = useDispatch();
-  const { expanded, selectedNodeId } = useSelector((state) => state.testlab);
+  const dispatch = useDispatch()
+  const { expanded,selectedNodeId } = useSelector(
+    (state) => state.testlab
+  );
   // const [selectedNodeId, setSelectedNodeId] = useState(null);
-  const [isFetching, setisFetching] = useState(false);
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
   const [editData, setEditData] = useState(""); // State to store the value of the input field
@@ -312,39 +284,46 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
   const [openDelModal, setopenDelModal] = useState(false);
   const [deleteItem, setsDeleteItem] = useState("");
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (params !== null && params !== undefined) {
+  //   const nodeId = parseInt(params)
+  //   setSelectedNodeId(nodeId);
+  //   }
+    
+  // }, [params]);
+
+  useEffect(()=>{
     if (selectedNodeId) {
-      const expandedNode = listData.find((item) => item.id === selectedNodeId);
+      const expandedNode = listData.find(item => item.id === selectedNodeId);
       if (expandedNode) {
-        let parentid = expandedNode.parentId;
-        const parentids = [];
-        while (parentid !== 0) {
-          parentids.unshift(parentid);
-          let parentNode = listData.find((item) => item.id === parentid);
-          parentid = parentNode.parentId;
+       let  parentid = expandedNode.parentId
+        const parentids = []
+        while(parentid !== 0){
+          parentids.unshift(parentid)
+          let parentNode = listData.find(item => item.id === parentid);
+          parentid = parentNode.parentId
         }
-        parentids.unshift(parentid);
+        parentids.unshift(parentid)
         // setExpanded([...parentids]);
-        const nodeCount = findDepth(expandedNode, listData);
-        TestCaseHandle(expandedNode, nodeCount - 1);
+        const nodeCount = findDepth(expandedNode,listData)
+        TestCaseHandle(expandedNode,nodeCount-1)
       }
     }
-  }, [listData, selectedNodeId]);
+  },[listData,selectedNodeId])
   const findDepth = (item, items) => {
     if (item.parentId === 0) {
-      return 1; // Base case: root item
+        return 1; // Base case: root item
     } else {
-      const parentItem = items.find((parent) => parent.id === item.parentId);
-      if (parentItem) {
-        return 1 + findDepth(parentItem, items); // Recursive call to find parent's depth
-      } else {
-        return 1; // If parent item is not found, assume depth of 1
-      }
+        const parentItem = items.find(parent => parent.id === item.parentId);
+        if (parentItem) {
+            return 1 + findDepth(parentItem, items); // Recursive call to find parent's depth
+        } else {
+            return 1; // If parent item is not found, assume depth of 1
+        }
     }
-  };
+};
   useEffect(() => {
     const fetchData = async () => {
-      setisFetching(true);
       try {
         const BASE_URL = await getBaseUrl();
         const response = await axios.get(
@@ -353,11 +332,9 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
         );
         // Assuming response.data is the array of data you want to set as listData
         setListData(response.data == "" ? [] : response.data);
-        setisFetching(false);
       } catch (error) {
         console.error("Error fetching data:", error);
         setListData([]);
-        setisFetching(false);
       }
     };
 
@@ -379,7 +356,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
       if (newItem.name.trim() === "") {
         console.log("Name cannot be empty.");
         toast.error("Whitespace is not allowed.");
-        return;
+        return; 
       }
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
@@ -393,12 +370,12 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
 
         header()
       );
-      if (response.data.status === "fail") {
-        toast.error("Duplicate name");
-      } else {
+      if(response.data.status === "fail"){
+        toast.error("Duplicate name")
+      }else{
         setListData([...listData, response.data.Data[0]]); // Reset form data
         // setSelectedNodeId(response.data.Data[0].id)
-        dispatch(setRootId(response.data.Data[0].id));
+        dispatch(setRootId(response.data.Data[0].id))
       }
       // setListData([...listData, response.data.Data[0]]); // need to check the response
       // setSelectedNodeId(response.data.Data[0].id);
@@ -423,7 +400,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
           };
           handleCRUDAtParent(newItem);
           // setExpanded([...expanded, parentId]);
-          dispatch(ExpandParent(parentId));
+          dispatch(ExpandParent(parentId))
           setNewElementName("");
         }
       } else {
@@ -445,7 +422,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
         if (editData.trim() === "") {
           console.log("Name cannot be empty.", editData);
           toast.error("Whitespace is not allowed.");
-          return;
+          return; 
         }
         const BASE_URL = await getBaseUrl();
         const response = await axios.post(
@@ -459,9 +436,9 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
 
           header()
         );
-        if (response.data.status === "fail") {
-          toast.error(response.data.message);
-        } else {
+        if(response.data.status === 'fail'){
+          toast.error(response.data.message)
+        }else{
           setEditMode(0);
           const newData = listData.filter((item) => {
             if (item.id !== itemId) {
@@ -474,6 +451,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
           setListData(newData);
           setEditData("");
         }
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -534,16 +512,16 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
 
         header()
       );
-      console.log("response", response.data);
-      if (response.data.status == "success") {
-        TestCaseHandle(itemToDelete, 0);
+      console.log("response",response.data)
+      if(response.data.status == "success"){
+        TestCaseHandle(itemToDelete,0)
         setopenDelModal(false);
         toast.info("Successfully deleted", {
           style: {
-            background: "rgb(101, 77, 247)",
-            color: "rgb(255, 255, 255)",
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
           },
-        });
+      });
       }
       const childrenToDelete = listData.filter(
         (item) => item.parentId === itemId
@@ -586,18 +564,7 @@ const DynamicTreeView = ({ TestCaseHandle, listData, setListData }) => {
         handleDelete={handleDelete}
       />
       <div className={styleClass.orgTree}>
-        {isFetching ? (
-          <Box style={{ textAlign: "center", padding: "10px" }}>
-            <CircularProgress
-              style={{ color: "rgb(101, 77, 247)" }}
-              size={25}
-            />
-          </Box>
-        ) : listData.length === 0 ? (
-          <Box style={{ textAlign: "center" }}>
-            <p>No workspace available.</p>
-          </Box>
-        ) : (
+        {listData.length != 0 && (
           <Card
             handleEdit={handleEdit}
             handleKeyPressEdit={handleKeyPressEdit}

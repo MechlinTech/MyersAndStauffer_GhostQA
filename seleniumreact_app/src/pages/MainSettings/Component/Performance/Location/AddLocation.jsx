@@ -165,7 +165,7 @@ const AddLocation = ({ open, onClose }) => {
   return (
     <Modal
       open={open}
-      onClose={null}
+      onClose={onClose}
       aria-labelledby="image-modal-title"
       aria-describedby="image-modal-description"
       style={{

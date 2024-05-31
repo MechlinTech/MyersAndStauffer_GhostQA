@@ -24,6 +24,7 @@
 		<None Remove="SqlScript\stp_GetApplications.sql" />
 		<None Remove="SqlScript\stp_GetBrowsers.Sql" />
 		<None Remove="SqlScript\stp_GetCustomTestSuites.Sql" />
+		<None Remove="SqlScript\stp_GetDashBoardDetails.Sql" />
 		<None Remove="SqlScript\stp_GetEnvironment.sql" />
 		<None Remove="SqlScript\stp_GetEnvironmentById.sql" />
 		<None Remove="SqlScript\stp_GetFunctionalTestCaseByRootId.Sql" />
@@ -66,6 +67,7 @@
 		<EmbeddedResource Include="SqlScript\stp_SaveCustomTestSuiteExecutionData.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_UpdateUserProfile.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_ValidateUser.Sql" />
+		<EmbeddedResource Include="SqlScript\stp_GetDashBoardDetails.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetRunDetails.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetRunId.Sql" />
 		<EmbeddedResource Include="SqlScript\stp_GetTestCaseDetails.Sql" />

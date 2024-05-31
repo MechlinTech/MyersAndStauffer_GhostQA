@@ -31,10 +31,6 @@ import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { CircularProgress } from "@material-ui/core";
-import BugReportIcon from '@mui/icons-material/BugReport';
-import BugReport from "./CreateIssue";
-import { getUserId } from "../../redux/actions/authActions";
-import { getPerformanceIntegrationList } from "../../redux/actions/settingAction";
 
 export default function TestSuitsDetails() {
   const { testSuiteName, testRunName } = useParams();
@@ -44,18 +40,6 @@ export default function TestSuitsDetails() {
   const [activeRow, setActiveRow] = useState(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { performanceIntegration } = useSelector((state) => state.settings);
-  const { userId } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    dispatch(getUserId());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (userId) dispatch(getPerformanceIntegrationList(userId));
-  }, [userId, dispatch]);
-  console.log("performanceIntegration",performanceIntegration)
-
   const { testCaseDetils, testCaseSteps } = useSelector(
     (state) => state.selenium
   );
@@ -70,11 +54,6 @@ export default function TestSuitsDetails() {
       dispatch(GetTestCaseDetails(data, setLoading));
     }
   }, [dispatch, testSuiteName, testRunName]);
-
-   // Check if Jira is integrated
-   const isJiraIntegrated = performanceIntegration?.some(
-    (integration) => integration.AppName === 'Jira' && integration.IsIntegrated
-  );
 
   const handleRowClick = (payload) => {
     let data = {
@@ -154,7 +133,7 @@ export default function TestSuitsDetails() {
       hour: "numeric",
       minute: "numeric",
       second: "numeric",
-      hour12: false,
+     hour12: false,
     };
     const formattedTime = new Date(dateTimeString).toLocaleTimeString(
       undefined,
@@ -164,48 +143,17 @@ export default function TestSuitsDetails() {
   }
 
   function extractTime(dateTimeString) {
-    const dateObject = new Date(dateTimeString);
+const dateObject = new Date(dateTimeString);
 
-    // Extracting hours, minutes, and seconds
-    const hours = dateObject.getHours();
-    const minutes = dateObject.getMinutes();
-    const seconds = dateObject.getSeconds();
+// Extracting hours, minutes, and seconds
+const hours = dateObject.getHours();
+const minutes = dateObject.getMinutes();
+const seconds = dateObject.getSeconds();
 
-    // Convert to 12-hour format with AM/PM
-    const timeString = `${hours % 12 || 12}:${
-      minutes < 10 ? "0" : ""
-    }${minutes}:${seconds < 10 ? "0" : ""}${seconds} ${
-      hours >= 12 ? "PM" : "AM"
-    }`;
-    return timeString;
+// Convert to 12-hour format with AM/PM
+const timeString = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds} ${hours >= 12 ? 'PM' : 'AM'}`;
+return timeString
   }
-
-  function extractDate(dateStr) {
-    if (typeof dateStr !== 'string') {
-      return null; // Return null or some default value if dateStr is invalid
-    }
-    const [year, month, day] = dateStr?.split("-");
-
-    const monthNames = {
-      "01": "Jan",
-      "02": "Feb",
-      "03": "Mar",
-      "04": "April",
-      "05": "May",
-      "06": "June",
-      "07": "July",
-      "08": "Aug",
-      "09": "Sep",
-      10: "Oct",
-      11: "Nov",
-      12: "Dec",
-    };
-
-    const formattedDate = `${monthNames[month]} ${parseInt(day, 10)}, ${year}`;
-
-    return formattedDate;
-  }
-  const [drawerOpen, setdrawerOpen] = useState(false)
   return (
     <>
       {" "}
@@ -247,6 +195,7 @@ export default function TestSuitsDetails() {
               </Stack>
             </Grid>
           </Grid>
+
           {/* main compoent */}
           <Grid container spacing={2}>
             {/* Left side content */}
@@ -336,10 +285,8 @@ export default function TestSuitsDetails() {
                             variant="body1"
                             className={classess.tbodyFont}
                           >
-                            {/* {formatDateString(testCaseDetils.TestRunStartDate)}{" "} */}
-                            {`${extractDate(
-                              testCaseDetils?.TestRunStartDate
-                            )} ${testCaseDetils.TestRunStartTime}`}
+                            {formatDateString(testCaseDetils.TestRunStartDate)}{" "}
+                            {testCaseDetils.TestRunStartTime}
                             {/* {formatDateStringWithTime(`${testCaseDetils.TestRunStartDate}T${testCaseDetils.TestRunStartTime}`)} */}
                           </Typography>
                         </CardContent>
@@ -420,13 +367,12 @@ export default function TestSuitsDetails() {
 
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Card>
+                  <Card style={{ height: "60vh", overflow: "auto" }}>
                     <Table>
                       <TableHead>
                         <TableRow style={{ backgroundColor: "#f0f0f0" }}>
                           <TableCell>Status</TableCell>
                           <TableCell>Test Case Name</TableCell>
-                          <TableCell></TableCell>
                           <TableCell>Video</TableCell>
                           <TableCell>Start Time</TableCell>
                         </TableRow>
@@ -456,15 +402,6 @@ export default function TestSuitsDetails() {
                               </TableCell>
                               <TableCell className={classess.tbodyFont}>
                                 {row.TestCaseName}
-                              </TableCell>
-                              <TableCell className={classess.tbodyFont}>
-                                {/* {row.TestCaseStatus === "Failed" && <BugReportIcon style={{color:'#dc3545'}} onClick={()=>setdrawerOpen(true)}/>} */}
-                                {/* <BugReport /> */}
-                                {isJiraIntegrated && (
-                                <BugReport
-                                row={row}
-                                />
-                              )}
                               </TableCell>
                               <CustomVideoChell row={row} />
                               <TableCell className={classess.tbodyFont}>
@@ -560,7 +497,9 @@ export default function TestSuitsDetails() {
                               Start DateTime
                             </Typography>
                             <Chip
-                              label={`${extractDate(testCaseSteps.TestCaseStartDate)} ${testCaseSteps.TestCaseStartTime}`}
+                              label={`${formatDateString(
+                                testCaseSteps.TestCaseStartDate
+                              )} ${testCaseSteps.TestCaseStartTime}`}
                               // label={formatDateStringWithTime(`${testCaseSteps.TestCaseStartDate}T${testCaseSteps.TestCaseStartTime}`)}
                               color="primary"
                               variant="outlined"
@@ -572,7 +511,9 @@ export default function TestSuitsDetails() {
                               End DateTime
                             </Typography>
                             <Chip
-                              label={`${extractDate(testCaseSteps.TestCaseEndDate)} ${testCaseSteps.TestCaseEndTime}`}
+                              label={`${formatDateString(
+                                testCaseSteps.TestCaseEndDate
+                              )} ${testCaseSteps.TestCaseEndTime}`}
                               // label={formatDateStringWithTime(`${testCaseSteps.TestCaseEndDate}T${testCaseSteps.TestCaseEndTime}`)}
                               color="secondary"
                               variant="outlined"

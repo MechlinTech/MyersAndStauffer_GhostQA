@@ -6,25 +6,27 @@ import {
   Typography,
   FormControl,
   Box,
-  CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
-import { useDispatch, useSelector } from "react-redux";
-import { UpdateUserProfile, fetchUserByEmail } from "../../../../../redux/actions/userActions";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { UpdateUserProfile } from "../../../../../redux/actions/authActions";
+import { getBaseUrl } from "../../../../../utils/configService";
+import { header } from "../../../../../utils/authheader";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
 export default function Detail() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, loading, organizationDetails } = useSelector((state) => state.user);
-
-  const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [organizationName, setOrganizationName] = useState("");
+  const [user, setuser] = useState(null);
+  const [fullName, setfullName] = useState("");
+  const [email, setEmail] = useState(user?.Email);
+  const [organizationName, setorganizationName] = useState("");
+  // const [isEmailValid, setIsEmailValid] = useState(true);
   const [isEditable, setisEditable] = useState(false);
   const [Error, setError] = useState({
     nameError: "",
@@ -32,16 +34,27 @@ export default function Detail() {
     organizationNameError: "",
   });
 
-  // useEffect(() => {
-  //   dispatch(fetchUserByEmail());
-  // }, []);
   useEffect(() => {
-    if (user) {
-      setEmail(user.Email || "");
-      setFullName(user.FullName || "");
-      setOrganizationName(user.OrganizationName || "");
-    }
-  }, [user]);
+    const emailFromSession = sessionStorage.getItem("email");
+    const updateUserByEmail = async () => {
+      try {
+        const BASE_URL = await getBaseUrl();
+        const res = await axios.post(
+          `${BASE_URL}/Selenium/GetProfilByEmail?Email=${emailFromSession}`,
+          emailFromSession,
+          header()
+        );
+        setuser(res.data);
+        setEmail(res.data?.Email || "");
+        setfullName(res.data?.FullName || "");
+        setorganizationName(res.data?.OrganizationName || "");
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    updateUserByEmail();
+  }, []);
   // Extracting the name of user
   const getName = () => {
     const email = sessionStorage.getItem("email");
@@ -50,10 +63,12 @@ export default function Detail() {
     return name.charAt(0).toUpperCase() + name.slice(1);
   };
 
-  const handleCancel = () => {
+  const handleCancel = (err) => {
+    console.log("res.data", user);
+
     setEmail(user?.Email || "");
-    setFullName(user?.FullName || "");
-    setOrganizationName(user?.OrganizationName || "");
+    setfullName(user?.FullName || "");
+    setorganizationName(user?.OrganizationName || "");
     setisEditable(false);
   };
   const handleSave = () => {
@@ -84,18 +99,12 @@ export default function Detail() {
     }
   };
 
+  console.log("fullName", fullName, email, organizationName);
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={12} md={12} lg={8}>
         <Paper elevation={0} className={classes.papercontainer}>
-          {loading ? (
-            <Box style={{ textAlign: "center" }}>
-              <CircularProgress
-                style={{ color: "rgb(101, 77, 247)" }}
-                size={25}
-              />
-            </Box>
-          ) : (
+          {user && (
             <Box sx={{ width: "70%" }}>
               <Box
                 m={1}
@@ -106,7 +115,7 @@ export default function Detail() {
               >
                 <Avatar
                   style={{ marginRight: "10px", backgroundColor: "#654DF7" }}
-                  src={organizationDetails?organizationDetails.LogoPath:""}
+                  src=""
                 />
                 <Typography fontSize="18px" fontFamily="Lexend Deca">
                   {getName()}
@@ -143,7 +152,7 @@ export default function Detail() {
                         error={Error.nameError ? true : false}
                         value={fullName}
                         onChange={(e) => {
-                          setFullName(e.target.value);
+                          setfullName(e.target.value);
                           setError((prev) => ({ ...prev, ["nameError"]: "" }));
                         }}
 
@@ -221,7 +230,7 @@ export default function Detail() {
                         error={Error.organizationNameError ? true : false}
                         value={organizationName}
                         onChange={(e) => {
-                          setOrganizationName(e.target.value);
+                          setorganizationName(e.target.value);
                           setError({ ...Error, ["organizationNameError"]: "" });
                         }}
                       />

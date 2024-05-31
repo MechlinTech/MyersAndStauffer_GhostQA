@@ -90,12 +90,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     dispatch(getTestSuites());
-  }, [dispatch, openDelModal]);
+  }, [dispatch, openDelModal, executingSuite]);
 
-  useEffect(()=>{
-    if(!executingSuite)
-    dispatch(getTestCaseRundetailsByTestName(selectedSuite,setInProgress))
-  },[executingSuite])
   const filteredTestSuiteData =
     testSuits &&
     testSuits?.filter((suite) =>

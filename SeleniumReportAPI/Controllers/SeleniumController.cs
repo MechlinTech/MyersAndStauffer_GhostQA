@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
 using SeleniumReportAPI.Models;
+using System.Linq;
 using System.Security.Claims;
+using System.Text.Json.Nodes;
 using TestSeleniumReport.DTO_s;
 
 namespace SeleniumReportAPI.Controllers
@@ -42,11 +43,7 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetDashboardDetails")]
         public async Task<ActionResult> GetDashboardDetails(string testSuitName)
         {
-            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
-                return BadRequest("Timezone header is missing.");
-
-            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
-            return Ok(await _helper.GetDashboardDetails(testSuitName, mapping));
+            return Ok(await _helper.GetDashboardDetails(testSuitName));
         }
 
         /// <summary>
@@ -57,11 +54,7 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetRunDetails")]
         public async Task<ActionResult> GetRunDetails(string testSuitName)
         {
-            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
-                return BadRequest("Timezone header is missing.");
-
-            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
-            return Ok(await _helper.GetRunDetails(testSuitName, mapping));
+            return Ok(await _helper.GetRunDetails(testSuitName));
         }
 
         /// <summary>
@@ -73,11 +66,7 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetTestCaseDetails")]
         public async Task<ActionResult> GetTestCaseDetails(string testSuitName, string runId)
         {
-            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
-                return BadRequest("Timezone header is missing.");
-
-            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
-            return Ok(await _helper.GetTestCaseDetails(testSuitName, runId, mapping));
+            return Ok(await _helper.GetTestCaseDetails(testSuitName, runId));
         }
 
         /// <summary>
@@ -90,11 +79,7 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetTestCaseStepsDetails")]
         public async Task<ActionResult> GetTestCaseStepsDetails(string testSuitName, string runId, string testCaseName)
         {
-            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
-                return BadRequest("Timezone header is missing.");
-
-            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
-            return Ok(await _helper.GetTestCaseStepsDetails(testSuitName, runId, testCaseName, mapping));
+            return Ok(await _helper.GetTestCaseStepsDetails(testSuitName, runId, testCaseName));
         }
 
         /// <summary>
@@ -187,16 +172,12 @@ namespace SeleniumReportAPI.Controllers
         [HttpOptions("ExecuteTestSuite")]
         public async Task<ActionResult> ExecuteTestSuite(string TestSuiteName)
         {
-            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
-                return BadRequest("Timezone header is missing.");
-
-            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
-
             List<object> _result = new List<object>();
             string _testRunName = await _helper.GetRunId(TestSuiteName);
             string _testSuiteDetailsJson = await _helper.GetTestSuiteByName(TestSuiteName);
             TestSuiteNameData _testSuiteNameData = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuiteNameData>(_testSuiteDetailsJson);
             string? testerName = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            //Dto_TestSuiteDetailsData _testSuiteDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestSuiteDetailsData>(_testSuiteDetailsJson);
 
             Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteNameData.Environment.EnvironmentId));
             if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Length > 0)
@@ -205,7 +186,7 @@ namespace SeleniumReportAPI.Controllers
                 {
                     try
                     {
-                        string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName, _testSuiteNameData.TestUser.Password);
+                        string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName,_testSuiteNameData.TestUser.Password);
                         if (!string.IsNullOrEmpty(_testCaseJsonData))
                         {
                             try
@@ -217,7 +198,6 @@ namespace SeleniumReportAPI.Controllers
                                 _testSuiteData.TestEnvironment = _environmentDetails.EnvironmentName;
                                 _testSuiteData.TestBrowserName = _environmentDetails?.BrowserName;
                                 _testSuiteData.TestCaseName = testCaseName.ToString();
-
                                 //Save Data into table for custom test suite
                                 var result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
                                 _result.Add(result);
@@ -229,7 +209,7 @@ namespace SeleniumReportAPI.Controllers
                                     var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
                                     if (_testSuiteNameData.SendEmail == true)
                                     {
-                                        var obj = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url, mapping);
+                                        var obj = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url);
                                         _result.Add(obj);
                                     }
                                     else
@@ -241,7 +221,7 @@ namespace SeleniumReportAPI.Controllers
                                         // Convert to comma-separated string
                                         string commaSeparatedEmails = string.Join(", ", emails);
 
-                                        var obj1 = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
+                                        var obj1 = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url);
                                         _result.Add(obj1);
                                     }
                                 }
@@ -378,14 +358,9 @@ namespace SeleniumReportAPI.Controllers
         [HttpGet("GetChartDetails")]
         public async Task<ActionResult> GetDashboardDetails(string TestSuiteName, string Filtertype, int FilterValue)
         {
-            if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
-                return BadRequest("Timezone header is missing.");
-
-            string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
-
             try
             {
-                string result = await _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue, mapping);
+                string result = await _helper.GetDashboardDetails(TestSuiteName, Filtertype, FilterValue);
                 return Ok(result);
             }
             catch (Exception ex)

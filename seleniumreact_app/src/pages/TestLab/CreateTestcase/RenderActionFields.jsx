@@ -12,9 +12,9 @@ import {
   StyledTextField,
   useStyles
 } from "./styleTestCase";
-import { keyList, accessibilityList, users } from "../Comman/DropDownOptions";
+import { keyList, accessibilityList, users } from "../DropDownOptions";
 import Select from "react-select";
-import { testCases } from "../Comman/DropDownOptions";
+import { testCases } from "../DropDownOptions";
 export default function RenderActionFields({
   action,
   step,

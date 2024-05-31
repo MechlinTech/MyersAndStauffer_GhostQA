@@ -39,7 +39,7 @@ export function TableData({ rows,rootId }) {
       hour: "numeric",
       minute: "2-digit",
       second: "2-digit",
-      hour12: false,
+      hour12: true,
     };
     return date.toLocaleString("en-US", options);
   };

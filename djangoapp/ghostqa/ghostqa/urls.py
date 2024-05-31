@@ -23,7 +23,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 from performace_test.viewsets.performace_tests import PerformaceViewSet
 from performace_test.viewsets.container_runs import ContainersRunsViewSet as PerformanceContainersRunsViewSet
-from agent_dynamic_location.views import NewAgentViewSet, JobViewSet, JmeterTestContainerRunsViewSet, PrivateLocationViewSet, LoadDistributionViewSet, SystemInfoViewSet
+from agent_dynamic_location.views import NewAgentViewSet, JobViewSet, JmeterTestContainerRunsViewSet, PrivateLocationViewSet
 
 
 router = DefaultRouter()
@@ -37,8 +37,6 @@ router.register(r"remote-agent-connection", NewAgentViewSet)
 router.register(r"remote-agent-connection-jmeter-container", JmeterTestContainerRunsViewSet, basename="newjmeterTestContainer")
 router.register(r"agent-job", JobViewSet)
 router.register(r"private-location", PrivateLocationViewSet)
-router.register(r"load-distribution", LoadDistributionViewSet)
-router.register(r"system-info", SystemInfoViewSet)
 # router.register(r'container-runs', TestContainersRunsViewset)
 
 

@@ -1691,8 +1691,7 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetDashBoardChartDetails]
 @TestSuitName			VARCHAR(100),
 @FilterType				VARCHAR(100),
-@FilterValue			INT = 7,
-@TimeZone				VARCHAR(100) = 'India Standard Time'
+@FilterValue			INT = 7
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetDashBoardChartDetails
@@ -1711,12 +1710,12 @@ BEGIN TRY
             SELECT DISTINCT TOP ' + CAST(@FilterValue AS NVARCHAR(10)) + ' 
 				t.[TestSuitename],
 				t.[TestRunName],
-				CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) AS [TestRunStartDate],
+				CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) AS [TestRunStartDate],
 				ISNULL((SELECT COUNT(1)
 					FROM tbl_TestCase t1
 					WHERE t1.[TestSuiteName] = t.[TestSuiteName]
 							AND t1.[TestRunName] = t.[TestRunName]
-							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
+							AND CAST(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) = CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
 					GROUP BY t1.[TestRunName]
 				),0) AS [TotalTestCase],
 				ISNULL((SELECT COUNT(1)
@@ -1724,7 +1723,7 @@ BEGIN TRY
 					WHERE t1.[TestSuiteName] = t.[TestSuiteName]
 							AND t1.[TestRunName] = t.[TestRunName]
 							AND t1.[TestCaseStatus] LIKE ''%Passed%''
-							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
+							AND CAST(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) = CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
 					GROUP BY t1.[TestRunName]
 				),0) AS [TotalPassedTestCase],
 				ISNULL((SELECT COUNT(1)
@@ -1732,7 +1731,7 @@ BEGIN TRY
 					WHERE t1.[TestSuiteName] = t.[TestSuiteName]
 							AND t1.[TestRunName] = t.[TestRunName]
 							AND t1.[TestCaseStatus] LIKE ''%Failed%''
-							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
+							AND CAST(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) = CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
 					GROUP BY t1.[TestRunName]
 				),0) AS [TotalFailedTestCase]
 				FROM 
@@ -1742,9 +1741,9 @@ BEGIN TRY
 				GROUP BY
 					t.[TestSuitename],
 					t.[TestRunName],
-					CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
+					CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
 				ORDER BY 
-					CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) DESC,
+					CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) DESC,
 					t.[TestRunName] DESC
         FOR JSON PATH)))'
 	PRINT @SQLQuery
@@ -1754,42 +1753,42 @@ BEGIN TRY
     ELSE
         SELECT
             [DashBoardDetailsJson] = JSON_QUERY((
-                SELECT DISTINCT CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) AS [TestRunStartDate],
+                SELECT DISTINCT CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) AS [TestRunStartDate],
                        t.[TestSuitename],
                     (
                         SELECT COUNT(t1.[TestRunName])
                         FROM tbl_TestCase t1
                         WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-                                AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+                                AND CAST(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) = CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
                     ) AS [TotalTestCase],
                     (
                         SELECT COUNT(t1.[TestRunName])
                         FROM tbl_TestCase t1
                         WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-                                AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+                                AND CAST(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) = CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
                                 AND t1.[TestCaseStatus] LIKE '%Passed%'
                     ) AS [TotalPassedTestCase],
                     (
                         SELECT COUNT(t1.[TestRunName])
                         FROM tbl_TestCase t1
                         WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-                                AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+                                AND CAST(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) = CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
                                 AND t1.[TestCaseStatus] LIKE '%Failed%'
                     ) AS [TotalFailedTestCase]
                 FROM tbl_TestCase t
                 WHERE t.[TestSuiteName] = @TestSuitName
-                      AND CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) >= CAST(DATEADD(DAY,-@FilterValue,GETDATE() AT TIME ZONE @TimeZone) AS DATE)
+                      AND CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) >= CAST(DATEADD(DAY,-@FilterValue,GETDATE()) AS DATE)
                 GROUP BY t.[TestSuitename], [TestRunStartDateTime]
-                ORDER BY CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) DESC
+                ORDER BY CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) DESC
             FOR JSON PATH))
 END TRY
 BEGIN CATCH
     -- Add error handling logic here
 END CATCH
+
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetDashBoardDetails]
-@TestSuitName			VARCHAR(100),
-@TimeZone				VARCHAR(100) = 'India Standard Time'
+@TestSuitName			VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetDashBoardDetails
@@ -1802,32 +1801,32 @@ PROC EXEC		:
 **************************************************************************************/
 BEGIN TRY
 	SELECT [DashBoardDetailsJson] = JSON_QUERY((
-		SELECT DISTINCT CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) AS [TestRunStartDate],
+		SELECT DISTINCT CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) AS [TestRunStartDate],
 			   t.[TestSuitename],
 			(
 				SELECT COUNT(t1.[TestRunName])
 				FROM tbl_TestCase t1
 				WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-						AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+						AND CAST(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) = CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
 			) AS [TotalTestCase],
 			(
 				SELECT COUNT(t1.[TestRunName])
 				FROM tbl_TestCase t1
 				WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-						AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+						AND CAST(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) = CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
 						AND t1.[TestCaseStatus] LIKE '%Passed%'
 			) AS [TotalPassedTestCase],
 			(
 				SELECT COUNT(t1.[TestRunName])
 				FROM tbl_TestCase t1
 				WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-						AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
+						AND CAST(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) = CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE)
 						AND t1.[TestCaseStatus] LIKE '%Failed%'
 			) AS [TotalFailedTestCase]
 		FROM tbl_TestCase t
 		WHERE t.[TestSuiteName] = @TestSuitName
 		GROUP BY t.[TestSuitename], [TestRunStartDateTime]
-		ORDER BY CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) DESC
+		ORDER BY CAST(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AS DATE) DESC
 		FOR JSON PATH
 	))
 END TRY
@@ -2348,8 +2347,7 @@ BEGIN CATCH
 END CATCH
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetRunDetails]
-@TestSuitName		VARCHAR(100),
-@TimeZone			VARCHAR(100) = 'India Standard Time'
+@TestSuitName VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetRunDetails
@@ -2361,45 +2359,39 @@ PROC EXEC		:
 				EXEC stp_GetRunDetails 'Mississippi'
 **************************************************************************************/
 BEGIN TRY
-	DECLARE @DynamicSQL NVARCHAR(MAX)
-	
-	SET @DynamicSQL = 'SELECT [RunDetailsJson] = JSON_QUERY ((
-		SELECT DISTINCT CAST(FORMAT((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +'''), ''MMMM dd, yyyy'') AS DATE) [TestRunDateYear]
+	SELECT [RunDetailsJson] = JSON_QUERY ((
+		SELECT DISTINCT CAST(FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd, yyyy') AS DATE) [TestRunDateYear]
 			   , [RunDetails] = JSON_QUERY ((
 											SELECT
 												t1.[TestSuiteName],
 												t1.[TestRunName],
-												CAST(MIN((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS DATE) AS [TestRunStartDate],
-												CAST(MAX((CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS DATE) AS [TestRunEndDate],
-												CONVERT(VARCHAR(8), CAST(MIN((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS TIME), 108) AS [TestRunStartTime],
-												CONVERT(VARCHAR(8), CAST(MAX((CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS TIME), 108) AS [TestRunEndTime],
+												MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET)) AS [TestRunStartDateTime],
+												MAX(CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET)) AS [TestRunEndDateTime],
 												COUNT(t1.[TestCaseName]) AS [TotalTestCases],
-												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE ''%Passed%'' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [PassedTestCases],
-												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE ''%Failed%'' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [FailedTestCases],
+												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Passed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [PassedTestCases],
+												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Failed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [FailedTestCases],
 												CASE
-													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Passed%'' THEN 1 ELSE 0 END) = 0 THEN ''Failed''
-													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Failed%'' THEN 1 ELSE 0 END) = 0 THEN ''Passed''
-													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Passed%'' THEN 1 ELSE 0 END) >
-														 SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Failed%'' THEN 1 ELSE 0 END) THEN ''Partially Passed''
-													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Passed%'' THEN 1 ELSE 0 END) <
-														 SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Failed%'' THEN 1 ELSE 0 END) THEN ''Partially Failed''
-													ELSE ''Partially Passed''
+													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE '%Passed%' THEN 1 ELSE 0 END) = 0 THEN 'Failed'
+													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE '%Failed%' THEN 1 ELSE 0 END) = 0 THEN 'Passed'
+													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE '%Passed%' THEN 1 ELSE 0 END) >
+														 SUM(CASE WHEN t1.[TestCaseStatus] LIKE '%Failed%' THEN 1 ELSE 0 END) THEN 'Partially Passed'
+													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE '%Passed%' THEN 1 ELSE 0 END) <
+														 SUM(CASE WHEN t1.[TestCaseStatus] LIKE '%Failed%' THEN 1 ELSE 0 END) THEN 'Partially Failed'
+													ELSE 'Partially Passed'
 												END AS [TestRunStatus]
 											FROM
 												tbl_TestCase t1
 											WHERE
 												t1.[TestSuiteName] = t.[TestSuiteName]
-												AND FORMAT((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + '''), ''MMMM dd yyyy'') = FORMAT((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + '''), ''MMMM dd yyyy'')
+												AND FORMAT(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd yyyy') = FORMAT(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET), 'MMMM dd yyyy')
 											GROUP BY t1.[TestSuiteName], t1.[TestRunName]
-											ORDER BY MIN((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) DESC
+											ORDER BY MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET)) DESC
 											FOR JSON PATH
 											))
 		FROM tbl_TestCase t
-		WHERE t.[TestSuiteName] = ''' + @TestSuitName + '''
+		WHERE t.[TestSuiteName] = @TestSuitName
 		ORDER BY [TestRunDateYear] DESC
-		FOR JSON PATH))'
-PRINT @DynamicSQL
-EXECUTE SP_EXECUTESQL @DynamicSQL
+		FOR JSON PATH))
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuiteName]
@@ -2425,8 +2417,7 @@ END CATCH
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestCaseDetails]
 @TestSuiteName			VARCHAR(100),
-@TestRunId				VARCHAR(100),
-@TimeZone				VARCHAR(100) = 'India Standard Time'
+@TestRunId				VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestCaseDetails
@@ -2435,7 +2426,7 @@ CREATED DATE	:	20 Dec 2023
 MODIFIED BY		:	Mohammad Mobin
 MODIFIED DATE	:	26 Dec 2023
 PROC EXEC		:
-				EXEC stp_GetTestCaseDetails 'Mississippi', 'TestRun-33'
+				EXEC stp_GetTestCaseDetails 'Mississippi', 'TestRun-1'
 **************************************************************************************/
 BEGIN TRY
     SELECT [TestCaseDetailsJson] = JSON_QUERY((
@@ -2443,24 +2434,22 @@ BEGIN TRY
 				, COUNT(t.TestCaseName) [TotalTestCases],
                 SUM(CASE WHEN t.[TestCaseStatus] LIKE '%Pass%' THEN 1 ELSE 0 END) [PassedTestCases],
                 SUM(CASE WHEN t.[TestCaseStatus] LIKE '%Fail%' THEN 1 ELSE 0 END) [FailedTestCases],
-				CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss')AS DATE) AS [TestRunStartDate],
-				CONVERT(VARCHAR(8), CAST(MIN((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone)) AS TIME), 108) AS [TestRunStartTime],
-				CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss') AS DATE) AS [TestRunEndDate],
-				CONVERT(VARCHAR(8), CAST(MAX((CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone)) AS TIME), 108) AS [TestRunEndTime],
+				CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss')AS DATE) AS [TestRunStartDate],
+				CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss')AS TIME) AS [TestRunStartTime],
+				CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS DATE) AS [TestRunEndDate],
+				CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS TIME) AS [TestRunEndTime],
                 JSON_QUERY((
                         SELECT t1.[TestSuiteName], t1.[TestRunName], t1.[TestCaseName], t1.[TestCaseStatus]
                             , t1.[TestCaseVideoURL]
-							, CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET)  AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss')AS DATE) AS [TestRunStartDate]
-							, CONVERT(VARCHAR(8), CAST(MIN((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone)) AS TIME), 108) AS [TestRunStartTime]
-							, CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET)  AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss') AS DATE) AS [TestRunEndDate]
-							, CONVERT(VARCHAR(8), CAST(MIN((CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone)) AS TIME), 108) AS [TestRunEndTime]
+                            , CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) [TestRunStartDateTime]
+                            , CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) [TestRunEndDateTime]
                         FROM tbl_TestCase t1
                         WHERE t1.[TestSuiteName] = t.[TestSuiteName]
                               AND t1.[TestRunName] = t.[TestRunName]
                         FOR JSON PATH
                     )) [TestCaseDetailsList]
             FROM tbl_TestCase t
-            WHERE [TestSuiteName] = @TestSuiteName
+            WHERE [TestSuiteName] = @TestSuiteName 
                   AND [TestRunName] = @TestRunId
             GROUP BY t.[TestSuiteName], t.[TestRunName], t.[TestEnvironment], t.[TesterName]
             FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
@@ -2605,8 +2594,7 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestCaseStepsDetails]
 @TestSuiteName		VARCHAR(100),
 @TestRunName		VARCHAR(100),
-@TestCaseName		VARCHAR(100),
-@TimeZone			VARCHAR(100) = 'India Standard Time'
+@TestCaseName		VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestCaseStepsDetails
@@ -2618,75 +2606,22 @@ PROC EXEC		:
 				EXEC stp_GetTestCaseStepsDetails 'Mississippi', 'TestRun-1', 'VerifyOK'
 **************************************************************************************/
 BEGIN TRY
-
-	SELECT
-		*
-	INTO #temp
-	FROM
-		tbl_TestCase t
-	WHERE
-		[TestSuiteName] = @TestSuiteName
-		AND [TestRunName] = @TestRunName
-		AND [TestCaseName] = @TestCaseName
-
-	DROP TABLE IF EXISTS #TempResults;
-	CREATE TABLE #TempResults (
-		[Status] NVARCHAR(50),
-		[Timestamp] VARCHAR(100),
-		Details NVARCHAR(MAX),
-		FailureMessage NVARCHAR(MAX),
-		FailureException NVARCHAR(MAX),
-		FailureScreenShots NVARCHAR(MAX)
-	);
-
-	INSERT INTO #TempResults
-	SELECT 
-	    JSON_VALUE(value, '$.Status') AS [Status],
-	    JSON_VALUE(value, '$.Timestamp') AS [Timestamp],
-	    JSON_VALUE(value, '$.Details') AS Details,
-	    JSON_VALUE(value, '$.FailureMessage') AS FailureMessage,
-	    JSON_VALUE(value, '$.FailureException') AS FailureException,
-	    JSON_VALUE(value, '$.FailureScreenShots') AS FailureScreenShots
-	FROM 
-	    #temp
-	CROSS APPLY 
-	    OPENJSON(TestCaseSteps);
-
-	UPDATE #TempResults
-	SET [Timestamp] = CONVERT(VARCHAR(8), CAST(CAST([Timestamp] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone AS TIME), 108);
-
-	DECLARE @UpdatedJson NVARCHAR(MAX);
-	SELECT @UpdatedJson = (
-		SELECT
-		    [Status],
-		    [TimeStamp],
-		    Details,
-		    FailureMessage,
-		    FailureException,
-		    FailureScreenShots
-		FROM
-		    #TempResults
-		FOR JSON PATH
-	);
-
-	UPDATE #temp
-	SET TestCaseSteps = @UpdatedJson
-
 	SELECT [TestCaseStepsJson] = JSON_QUERY((
 		SELECT [TestCaseName], [TestCaseSteps],
-			CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss')AS DATE) AS [TestCaseStartDate],
-			CONVERT(VARCHAR(8), CAST(MIN((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone)) AS TIME), 108) AS [TestCaseStartTime],
-			CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss') AS DATE) AS [TestCaseEndDate],
-			CONVERT(VARCHAR(8), CAST(MAX((CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone)) AS TIME), 108) AS [TestCaseEndTime]
+			CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss')AS DATE) AS [TestCaseStartDate],
+			CAST(FORMAT(MIN(CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss')AS TIME) AS [TestCaseStartTime],
+			CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS DATE) AS [TestCaseEndDate],
+			CAST(FORMAT(MAX(CAST(t.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS TIME) AS [TestCaseEndTime]
 		FROM
-			#temp t
+			tbl_TestCase t
+		WHERE
+			[TestSuiteName] = @TestSuiteName
+			AND [TestRunName] = @TestRunName
+			AND [TestCaseName] = @TestCaseName
 		GROUP BY
 			[TestCaseName], [TestCaseSteps]
 		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 	))
-
-	DROP TABLE IF EXISTS #temp;
-	DROP TABLE IF EXISTS #TempResults;
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuiteName]
@@ -3825,10 +3760,9 @@ BEGIN CATCH
     ))
 END CATCH
 GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_GetTestRunData]
-@TestSuitName	VARCHAR(100),
-@TestRunName	VARCHAR(100),
-@TimeZone		VARCHAR(100) = 'India Standard Time'
+CREATE OR ALTER  PROCEDURE [dbo].[stp_GetTestRunData]
+@TestSuitName VARCHAR(100),
+@TestRunName  VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetTestRunData
@@ -3844,8 +3778,8 @@ BEGIN TRY
 										SELECT
 												t1.[TestSuiteName],
 												t1.[TestRunName],
-												FORMAT(MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone),'dd-MMM-yyyy HH:mm:ss') AS [TestRunStartDateTime],
-												FORMAT(MAX(CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss') AS [TestRunEndDateTime],
+												FORMAT(MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET)),'dd-MMM-yyyy HH:mm:ss') AS [TestRunStartDateTime],
+												FORMAT(MAX(CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET)), 'dd-MMM-yyyy HH:mm:ss') AS [TestRunEndDateTime],
 												COUNT(t1.[TestCaseName]) AS [TotalTestCases],
 												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Passed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [PassedTestCases],
 												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE '%Failed%' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [FailedTestCases],
@@ -4545,119 +4479,5 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [UsersOrganization]
-END CATCH
-GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_GetAllIntegration]
-@UserId          VARCHAR(100)
-AS
-/**************************************************************************************
-PROCEDURE NAME	:	stp_GetAllIntegration
-CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	20 May 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
-PROC EXEC		:
-				EXEC stp_GetAllIntegration
-**************************************************************************************/
-BEGIN TRY
-	IF NOT EXISTS(SELECT 1 FROM tbl_Integration WHERE [UserId] = @UserId)
-	BEGIN
-		INSERT INTO tbl_Integration([UserId], [AppName], [IsIntegrated], [CreatedBy], [CreatedOn], [UpdatedBy], [UpdatedOn], [Domain], [Email],
-		 [APIKey]) VALUES(@UserId, 'Jira', 0, @UserId, GETDATE(), @UserId, GETDATE(), NULL, NULL, NULL),
-		 (@UserId, 'MS Teams/Slack', 0, @UserId, GETDATE(), @UserId, GETDATE(), NULL, NULL, NULL)
-	END
-	SELECT [result] = JSON_QUERY((
-		SELECT [Id],
-			   [UserId],
-			   [AppName],
-			   [IsIntegrated],
-			   [CreatedBy],
-			   [CreatedOn],
-			   [UpdatedBy],
-			   [UpdatedOn],
-			   [Domain],
-			   [Email],
-			   [APIKey]
-		FROM tbl_Integration
-		WHERE [UserId] = @UserId
-		FOR JSON PATH, INCLUDE_NULL_VALUES
-	))
-END TRY
-BEGIN CATCH
-	SELECT ERROR_MESSAGE() [result]
-END CATCH
-GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateIntegration]
-@UserId               VARCHAR(100),
-@IsIntegrated         Bit,
-@Domain				  VARCHAR(100),
-@Email				  VARCHAR(100),
-@APIKey				  VARCHAR(100),
-@AppName			  VARCHAR(100)
-AS
-/**************************************************************************************
-PROCEDURE NAME	:	stp_UpdateIntegration
-CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	20th May 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
-PROC EXEC		:  EXEC stp_UpdateIntegration 
-				
-**************************************************************************************/
-BEGIN TRY
-		UPDATE tbl_Integration
-		SET [IsIntegrated]        = @IsIntegrated,
-			[UpdatedBy]			  = @UserId,
-			[UpdatedOn]			  = GETDATE(),
-			[Domain]			  = @Domain,
-			[Email]				  = @Email,
-			[APIKey]			  = @APIKey
-			WHERE [AppName] = @AppName AND [UserId] = @UserId
-		IF @@ERROR = 0
-		BEGIN
-			SELECT [result] = JSON_QUERY((
-				SELECT 'success' [status], 'Updated Successfully' [message]
-				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-			))
-		END
-		ELSE
-		BEGIN
-			SELECT [result] = JSON_QUERY((
-				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
-				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-			))
-		END
-END TRY
-BEGIN CATCH
-	SELECT [result] = JSON_QUERY((
-		SELECT 'fail' [status], ERROR_MESSAGE() [message]
-		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-	))
-END CATCH
-GO
-CREATE OR ALTER PROCEDURE [dbo].[stp_GetJiraDetailsByUserId]
-@UserId          VARCHAR(100)
-AS
-/**************************************************************************************
-PROCEDURE NAME	:	stp_GetJiraDetailsByUserId
-CREATED BY		:	Mohammed Yaseer
-CREATED DATE	:	23 May 2024
-MODIFIED BY		:	
-MODIFIED DATE	:	
-PROC EXEC		:
-				EXEC stp_GetJiraDetailsByUserId '5782a89b-3714-4a0d-88f0-8f5b9435454c'
-**************************************************************************************/
-BEGIN TRY
-	SELECT [result] = JSON_QUERY((
-		SELECT [Domain],
-			   [Email],
-			   [APIKey]
-		FROM tbl_Integration
-		WHERE [UserId] = @UserId
-		FOR JSON PATH, INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER
-	))
-END TRY
-BEGIN CATCH
-	SELECT ERROR_MESSAGE() [result]
 END CATCH
 GO

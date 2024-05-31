@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'cypress',
     'performace_test',
     'agent_dynamic_location',
-    'web_crawler',
     'django_filters',
     # 'knox',
 ]
@@ -163,7 +162,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE += ('crum.CurrentRequestUserMiddleware',)
 
-# DOCKER_HOST =  os.environ.get('DOCKER_HOST', 'unix://var/run/docker.sock')
+DOCKER_HOST =  os.environ.get('DOCKER_HOST', 'unix://var/run/docker.sock')
 
 from datetime import timedelta
 

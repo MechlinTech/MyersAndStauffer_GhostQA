@@ -1,4 +1,3 @@
-// this style page apply to different components
 import { makeStyles } from "@material-ui/core";
 import { styled } from "@mui/material/styles";
 import { Typography } from "@mui/material";
@@ -134,7 +133,7 @@ export const useStylesTestCase = makeStyles((theme) => ({
         fontWeight: "400",
         fontSize: "14px",
         lineHeight: "21px",
-        // padding: "10px 22px",
+        padding: "10px 22px",
         
     },
     button: {

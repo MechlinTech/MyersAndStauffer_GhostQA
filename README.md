@@ -20,7 +20,7 @@
     - Run the following command in PowerShell:
      - WINDOWS
         ```powershell
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ghost-QA/GhostQA/main/deploy.ps1" -OutFile "deploy.ps1"; ./deploy.ps1
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Ghost-QA/GhostQA/main/deploy.ps1" -OutFile "deploy.sh"; ./deploy.ps1
         ```
 
         Ubuntu

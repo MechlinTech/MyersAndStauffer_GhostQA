@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,28 +10,48 @@ import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import { useNavigate, useParams } from "react-router-dom";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import axios from "axios";
-import { header, headerCypres, headerForm } from "../../../utils/authheader";
+import { header, headerCypres, headerForm } from "../../utils/authheader";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
-import { StyledTypography } from "../styles";
+import { StyledTypography } from "./styles";
 import { Delete } from "@material-ui/icons";
-import { getBaseUrl, getCoreEngineBaseUrl } from "../../../utils/configService";
-import DeleteModal from "../Comman/DeleteModal";
-import CustomStatusCell from "./CustomStatusCell";
-import { useSelector, useDispatch } from "react-redux";
-import { deleteTestCase, fetchTestCases } from "../../../redux/actions/testlab/designAction";
+import { getBaseUrl, getCoreEngineBaseUrl } from "../../utils/configService";
+import DeleteModal from "./Comman/DeleteModal";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-export default function TableTestCase() {
+export default function TableTestCase({ testCase, rootId }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { selectedNodeId } = useSelector((state) => state.testlab);
-  const { testCases } = useSelector((state) => state.testlabTestCase);
-
+  const { nodeId } = useParams();
   const [executingTest, setexecutingTest] = React.useState({});
+  const [testCaseList, setTestCaseList] = React.useState(testCase);
   const [openDelModal, setopenDelModal] = useState(false);
   const [deleteItem, setsDeleteItem] = useState("");
 
+  const fetchData = async () => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.post(
+        `${BASE_URL}/AddTestLab/GetTestCaseDetailsByRootId?RootId=${rootId}`,
+        header()
+      );
+
+      // Assuming response.data is the array of data you want to set as listData
+      // setTestCaseList(
+      //   response.data.status === "fail" || response.data == ""
+      //     ? []
+      //     : response.data
+      // );
+      if (response.data.status === "fail" || response.data === "") {
+        setTestCaseList([]);
+      } else {
+        const reversedTestCaseList = response.data.reverse();
+        setTestCaseList(reversedTestCaseList);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setTestCaseList([]);
+    }
+  };
   const handleExecution = async (row) => {
     console.log("test case name ", row);
     setexecutingTest((prev) => ({
@@ -43,8 +63,7 @@ export default function TableTestCase() {
       const BASE_URL = await getBaseUrl();
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const jsonData = await axios.get(
-        `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${selectedNodeId}&TestName=${row.TestCaseName}`
-        // `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${row.TestCaseName}`
+        `${BASE_URL}/AddTestLab/GetExcutedByRootId?RootId=${rootId}&TestName=${row.TestCaseName}`
       );
       const currentDate = new Date();
       const formattedStartDateTime = currentDate.toISOString();
@@ -81,6 +100,7 @@ export default function TableTestCase() {
         .join(" "); // Join the array of words back into a string
     }
 
+    
     try {
       const CORE_BASE_URL = await getCoreEngineBaseUrl();
       const res = await axios.get(
@@ -126,8 +146,7 @@ export default function TableTestCase() {
               },
             });
           }
-          // fetchData();
-          dispatch(fetchTestCases(selectedNodeId));
+          fetchData();
         } catch (error) {
           console.log("error", error);
           toast.error(`${row.TestCaseName} Error AddExecuteResult`);
@@ -156,10 +175,29 @@ export default function TableTestCase() {
     setsDeleteItem(data);
     setopenDelModal(true);
   };
-  
-  const handleDeleteTestCase = (testId)=>{
-    dispatch(deleteTestCase(testId,setopenDelModal))
-  }
+
+  const handleDelete = async (testId) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.post(
+        `${BASE_URL}/AddTestLab/DeleteTestCaseDetailsByTestCaseDetailsId?TestCaseDetailsId=${testId}`
+      );
+      console.log("res", res);
+      if (res.data.status === "success") {
+        setopenDelModal(false);
+        toast.info("successfully deleted", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+        fetchData();
+      }
+    } catch (error) {
+      toast.error("NETWORK ERROR");
+    }
+    setopenDelModal(false);
+  };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     // Check if the date is invalid
@@ -195,7 +233,7 @@ export default function TableTestCase() {
         open={openDelModal}
         onClose={() => setopenDelModal(false)}
         deleteItem={deleteItem}
-        handleDelete={handleDeleteTestCase}
+        handleDelete={handleDelete}
       />
 
       <TableContainer component={Paper}>
@@ -223,7 +261,7 @@ export default function TableTestCase() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {testCases?.map((row) => (
+            {testCaseList?.map((row) => (
               <TableRow
                 key={row.TestCaseDetailsId}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -243,11 +281,9 @@ export default function TableTestCase() {
                 </TableCell>
                 <TableCell align="center">
                   <StyledTypography>
-                    {executingTest[row.TestCaseName] ? (
-                      "Running"
-                    ) : (
-                      <CustomStatusCell status={row?.Status} />
-                    )}
+                    {executingTest[row.TestCaseName]
+                      ? "Running"
+                      : capitalizeFirstLetter(row.Status)}
                   </StyledTypography>
                 </TableCell>
                 {/* <TableCell align="center">

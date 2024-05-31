@@ -4,7 +4,7 @@ services:
   jmeter:
     build:
       context: .
-      dockerfile: Dockerfile.actions
+      dockerfile: Dockerfile
     volumes:
       - ./jmeter-scripts:/jmeter-scripts
       - ./jmeter-scripts/bin:/opt/apache-jmeter-5.6.3/bin/

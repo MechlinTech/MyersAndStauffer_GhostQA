@@ -14,9 +14,7 @@ import {
   EXECUTING_SUITE,
   SELECETED_SUITE,
   SELECETED_TAB,
-  EXPANDED_ACC,
-  JIRA_ISSUE_TYPES,
-  JIRA_PROJECT_LIST,
+  EXPANDED_ACC
 } from "../actions/seleniumAction";
 
 const initialState = {
@@ -31,10 +29,10 @@ const initialState = {
   testCasesList: [],
   suiteToEdit: null,
   testSuiteAdded: {},
-  executingSuite: null,
-  selectedSuite: null,
-  selectedTab: "1",
-  expandedAccord: null,
+  executingSuite:null,
+  selectedSuite:null,
+  selectedTab:"1",
+  expandedAccord:null
 };
 
 const seleniumReduser = (state = initialState, action) => {
@@ -128,13 +126,13 @@ const seleniumReduser = (state = initialState, action) => {
         ...state,
         selectedTab: action.payload,
       };
-    }
+    } 
     case EXPANDED_ACC: {
       return {
         ...state,
         expandedAccord: action.payload,
       };
-    }   
+    }
     default:
       return state;
   }

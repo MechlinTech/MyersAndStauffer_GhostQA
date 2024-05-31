@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from .models import Agent
-from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution, CustomToken, SystemInfo
+from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution, CustomToken
 from cypress.serializers.request import TestSuiteSerializer
 from cypress.models import TestSuite, TestContainersRuns as CypressContainersRun
 from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer, TestContainersRunsSerializer
@@ -17,7 +17,7 @@ class AgentListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PrivateLocationSerializer(serializers.ModelSerializer):
-    # agents = serializers.SerializerMethodField()
+    agents = serializers.SerializerMethodField()
     class Meta:
         model = PrivateLocation
         fields = [
@@ -32,12 +32,12 @@ class PrivateLocationSerializer(serializers.ModelSerializer):
             'console_xmx_mb',
             'created_at',
             'updated_at',
-            # 'agents'
+            'agents'
         ]
         
-    # def get_agents(self, obj):
-    #     agents = Agent.objects.filter(location=obj)
-    #     return AgentListSerializer(agents, many=True).data
+    def get_agents(self, obj):
+        agents = Agent.objects.filter(location=obj)
+        return AgentListSerializer(agents, many=True).data
         
 class NewAgentSerializer(serializers.ModelSerializer):
     # location = serializers.PrimaryKeyRelatedField(queryset=PrivateLocation.objects.all())
@@ -85,16 +85,16 @@ class NewAgentSerializer(serializers.ModelSerializer):
             token = CustomToken.objects.get(agent=instance).token
         except CustomToken.DoesNotExist:
             token = None
-        agent_id = f"{instance.ref}" if instance.ref else None
-        token_param = f"{token}" if token else None
-        return f"docker run -d --name GhostQA-Codeengine -e DJANGO_DEBUG=True --net=host ghostqa/agent:latest python Agent/main.py {agent_id} {token_param}"
-        #TODO need to add the agent_id
+
+        token_param = f"-e token {token}" if token else "-e token DEFAULT_TOKEN_VALUE"
+        return f"docker run -d --name GhostQA-Codeengine -e DJANGO_DEBUG=True {token_param} --net=host ghostqa/agent:latest python Agent/main.py"
+
 
 
 class LoadDistributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoadDistribution
-        fields = ['id', 'ref', 'private_location', 'percentage_of_traffic', 'number_of_users', 'created_at', 'updated_at']
+        fields = ['id', 'ref', 'private_location', 'percentage_of_traffic', 'number_od_users', 'created_at', 'updated_at']
 
 
 
@@ -151,75 +151,38 @@ class JobSerializer(serializers.ModelSerializer):
                   ]
     
     def get_container_run(self, obj):
-        container_runs = TestContainersRuns.objects.filter(suite=obj.performance_test_suite)
-        if container_runs.exists():
-            # Assuming you need to handle multiple container runs
-            return [
-                {
-                    'container_id': run.container_id,
-                    'container_status': run.container_status,
-                    'container_name': run.container_name,
-                    'container_short_id': run.container_short_id,
-                    'container_logs_str': run.container_logs_str,
-                    'ref': run.ref,
-                    'json': run.json,
-                    'raw_data': run.raw_data,
-                    'client_reference_id': run.client_reference_id
-                } for run in container_runs
-            ]
-        return None
+        try:
+            container_run = TestContainersRuns.objects.get(suite=obj.performance_test_suite)
+            return {
+                'container_id': container_run.container_id,
+                'container_status': container_run.container_status,
+                'container_name': container_run.container_name,
+                'container_short_id': container_run.container_short_id,
+                'container_logs_str': container_run.container_logs_str,
+                'ref': container_run.ref,
+                'json': container_run.json,
+                'raw_data': container_run.raw_data,
+                'client_reference_id': container_run.client_reference_id
+            }
+        except TestContainersRuns.DoesNotExist:
+            return None
         
     def get_cypress_container_run(self, obj):
-        container_runs = CypressContainersRun.objects.filter(suite=obj.test_suite)
-        if container_runs.exists():
-            # Assuming you need to handle multiple cypress container runs
-            return [
-                {
-                    'id': run.id,
-                    'container_id': run.container_id,
-                    'container_status': run.container_status,
-                    'container_name': run.container_name,
-                    'container_short_id': run.container_short_id,
-                    'container_logs_str': run.container_logs_str,
-                    'ref': run.ref,
-                    'json': run.json,
-                    'container_label': run.container_labels
-                } for run in container_runs
-            ]
-        return None
-    # def get_container_run(self, obj):
-    #     try:
-    #         container_run = TestContainersRuns.objects.get(suite=obj.performance_test_suite)
-    #         return {
-    #             'container_id': container_run.container_id,
-    #             'container_status': container_run.container_status,
-    #             'container_name': container_run.container_name,
-    #             'container_short_id': container_run.container_short_id,
-    #             'container_logs_str': container_run.container_logs_str,
-    #             'ref': container_run.ref,
-    #             'json': container_run.json,
-    #             'raw_data': container_run.raw_data,
-    #             'client_reference_id': container_run.client_reference_id
-    #         }
-    #     except TestContainersRuns.DoesNotExist:
-    #         return None
-        
-    # def get_cypress_container_run(self, obj):
-    #     try:
-    #         container_run = CypressContainersRun.objects.get(suite=obj.test_suite)
-    #         return {
-    #             'id': container_run.id,
-    #             'container_id': container_run.container_id,
-    #             'container_status': container_run.container_status,
-    #             'container_name': container_run.container_name,
-    #             'container_short_id': container_run.container_short_id,
-    #             'container_logs_str': container_run.container_logs_str,
-    #             'ref': container_run.ref,
-    #             'json': container_run.json,
-    #             'container_label': container_run.container_labels
-    #         }
-    #     except CypressContainersRun.DoesNotExist:
-    #         return None     
+        try:
+            container_run = CypressContainersRun.objects.get(suite=obj.test_suite)
+            return {
+                'id': container_run.id,
+                'container_id': container_run.container_id,
+                'container_status': container_run.container_status,
+                'container_name': container_run.container_name,
+                'container_short_id': container_run.container_short_id,
+                'container_logs_str': container_run.container_logs_str,
+                'ref': container_run.ref,
+                'json': container_run.json,
+                'container_label': container_run.container_labels
+            }
+        except CypressContainersRun.DoesNotExist:
+            return None     
     # def create(self, validated_data):
     #     field_type = validated_data.pop('field_type')
     #     performance_test_suite_data = validated_data.pop('performance_test_suite', None)
@@ -244,26 +207,3 @@ class JobSerializer(serializers.ModelSerializer):
     #         container_run.save()
     #         job = Job.objects.create(test_suite=test_suite, **validated_data)
     #     return job
-
-
-class SystemInfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SystemInfo
-        fields = [
-            'id',
-            'ref',
-            'location',
-            'agent',
-            'job',
-            'system_info_type',
-            'container_ref_id',
-            'cpu_usage',
-            'total_memory_gb',
-            'available_memory_gb',
-            'used_memory_gb',
-            'memory_usage_percent',
-            'bytes_sent_mb',
-            'bytes_received_mb',
-            'created_at',
-            'updated_at',
-        ]

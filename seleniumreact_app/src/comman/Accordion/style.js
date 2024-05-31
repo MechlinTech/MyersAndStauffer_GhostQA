@@ -1,4 +1,4 @@
-import { Typography, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from "@mui/material/styles";
  
@@ -34,9 +34,3 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontFamily: `"Lexend Deca", sans-serif, -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
     },
 }));
-
-export const StyledTypography = styled(Typography)(({ theme }) => ({
-    fontFamily: 'Lexend Deca',
-    fontSize:'14px'
-    // Add other styles as needed
-  }));

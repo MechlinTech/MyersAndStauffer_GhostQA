@@ -9,7 +9,7 @@ import {
 } from "./styleTestCase";
 import Select from "react-select";
 import { useNavigate, useParams } from "react-router-dom";
-import { userActionsOptions, selectorTypeList } from "../Comman/DropDownOptions";
+import { userActionsOptions, selectorTypeList } from "../DropDownOptions";
 import { AddTestCaseDetails } from "./Api";
 // import { useStyles } from "../styles";
 import { toast } from "react-toastify";
