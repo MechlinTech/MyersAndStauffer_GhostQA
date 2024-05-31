@@ -200,10 +200,11 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             
     @action(detail=False,methods=['POST'])
     def execute3(self, request, *args, **kwargs):
-        agent_id = request.data.pop('agent', None)
+        # agent_id = request.data.pop('agent', None)
         private_location = request.data.pop('private_location', None)
         percentage_of_traffic = request.data.pop('percentage_of_traffic', None)
         number_of_users = request.data.pop('number_of_users', None)
+        
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -217,14 +218,13 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         container_run.client_reference_id = instance.client_reference_id
         container_run.save()
         
-        try:
-            location = PrivateLocation.objects.get(ref = private_location[0])
-            print("location :", location)
-        except PrivateLocation.DoesNotExist:
+        if private_location is None or percentage_of_traffic is None or number_of_users is None:
             return Response({
                 "status": "error",
-                "message": f"PrivateLocation with ID {location} does not exist"
+                "message": "private_location, percentage_of_traffic and number_of_users are required"
             }, status=status.HTTP_400_BAD_REQUEST)
+            
+        location = get_object_or_404(PrivateLocation, ref=private_location[0])
             
         load_distribution = LoadDistribution.objects.create(
             private_location = location,
@@ -234,14 +234,14 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             
         agent = self.get_available_agent(location)
         print("Agent is :", agent)
-            
-        try:
-            agent = Agent.objects.get(id=agent.id)
-        except Agent.DoesNotExist:
+        if agent is None:
             return Response({
                 "status": "error",
-                "message": f"Agent with ID {agent_id} does not exist"
+                "message": "No available agents"
             }, status=status.HTTP_400_BAD_REQUEST)
+        
+        agent = get_object_or_404(Agent, id=agent.id)
+            
         try:
             if instance.type == "jmeter":
                 job = Job.objects.create(
@@ -257,17 +257,6 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
                 "status": "error",
                 "message": f"Failed to create job: {str(e)}"
             }, status=status.HTTP_400_BAD_REQUEST)
-        # if instance.type == "jmeter":
-        #     job = Job.objects.create(
-        #         field_type = f'{instance.type}',
-        #         performance_test_suite = instance,
-        #         job_status = "queued",
-        #         agent = agent
-        #     )
-        #     agent.agent_status = 'Occupied'
-        #     agent.save()
-            # expiry_date = timezone.now() + timezone.timedelta(hours=1)
-            # custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
             
         return Response({
             "status":   "success",
