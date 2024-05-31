@@ -38,16 +38,17 @@ def cypress_container(name, volume_path,job,container_run=None):
     print(f"{__name__}: volume_path: {volume_path}")
     
     # Build the Docker image from the Dockerfile
-    image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='ghost_qa_cypress')
-    try:
-        for log in build_logs:
-            print("LOGS:",log)
-    except Exception as e:
-        print("Exception",e)
+    # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='ghost_qa_cypress')
+    image = client.images.pull('ghostqa/cypress:latest')
+    # try:
+    #     for log in build_logs:
+    #         print("LOGS:",log)
+    # except Exception as e:
+    #     print("Exception",e)
         
         
     container = client.containers.run(
-        image="ghost_qa_cypress",
+        image=image,
         name=name,
         # remove=True,
         command='cypress run --reporter mochawesome --reporter-options reportDir="cypress/results",overwrite=false,html=false,json=true',
@@ -182,10 +183,11 @@ def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_ru
     print(f"{__name__}: volume_path: {volume_path}")
     
     # Build the Docker image from the Dockerfile
-    image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
+    # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
+    image = client.images.pull('ghostqa/performace:latest')
 
     container = client.containers.run(
-        image='jmeter_apline',
+        image=image,
         name=name,
         remove=False,
         command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t /jmeter-scripts/test.jmx -l /jmeter-scripts/log.csv -e -o /jmeter-scripts/html-results',
