@@ -3,7 +3,8 @@ import {
   GET_USER_LIST,
   GET_PERFORMANCE_INTEGRATION,
   JIRA_ISSUE_TYPES,
-  JIRA_PROJECT_LIST
+  JIRA_PROJECT_LIST,
+  GET_ALL_JIRA_ISSUE
 } from "../actions/settingAction";
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
   performanceIntegration: [],
   jiraIssueTypes: [],
   jiraProjectList: [],
+  jiraIssueList: []
 };
 
 const settingsReduser = (state = initialState, action) => {
@@ -54,6 +56,12 @@ const settingsReduser = (state = initialState, action) => {
       return {
         ...state,
         jiraProjectList: transformedArray,
+      };
+    }
+    case GET_ALL_JIRA_ISSUE: {
+      return {
+        ...state,
+        jiraIssueList: action.payload,
       };
     }
     default:

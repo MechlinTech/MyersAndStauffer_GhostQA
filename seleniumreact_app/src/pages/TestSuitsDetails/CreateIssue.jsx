@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 export default function BugReport({ row }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { testRunName } = useParams();
+  const { testRunName, testSuiteName } = useParams();
   const { userId } = useSelector((state) => state.auth);
   const { jiraProjectList, jiraIssueTypes } = useSelector(
     (state) => state.settings
@@ -47,12 +47,12 @@ export default function BugReport({ row }) {
         fields: {
           issuetype: { id: selectedIssue },
           project: { id: selectedProject },
-          summary: `${testRunName}-${row.TestCaseName}`,
+          summary: `${testSuiteName}-${testRunName}-${row.TestCaseName}`,
         },
       },
       userId,
     };
-    dispatch(createIssueOnJira(payload, setIsOpen));
+    dispatch(createIssueOnJira(payload, setIsOpen, userId));
   };
 
   const selectStyles = {
