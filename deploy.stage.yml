@@ -49,6 +49,7 @@ services:
       - ./app/dotnet/wwwroot/TestDataFile:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFile
       - ./app/dotnet/wwwroot/TestDataCSVFile:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataCSVFile
       - ./app/dotnet/wwwroot/TestDataFileDev:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFileDev
+      - ./app/UploadedLogos:/app/UploadedLogos/
     depends_on:
       - db
       - migrations
