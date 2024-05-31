@@ -9,9 +9,9 @@ services:
   caddy:
     image: ghostqa/caddy:${COMMITHASH}
     ports:
-      - "30002:30001"
-      - "80"
-      - "443"
+      - "30001:30001"
+      - "80:80"
+      - "443:443"
     extra_hosts:
       - host.docker.internal:host-gateway
     volumes:
@@ -21,7 +21,7 @@ services:
   webui:
     image: ghostqa/webui:${COMMITHASH}
     ports:
-      - "80"
+      - "3000:80"
     environment:
       - NODE_ENV=production
     stdin_open: true
@@ -31,7 +31,7 @@ services:
   dotnetapi:
     image: ghostqa/dotnetapi:${COMMITHASH}
     ports:
-      - "80"
+      - "5000:80"
     environment:
       - DB_HOST=db
       - DB_PASSWORD=P@ssw0rd@123###
@@ -59,7 +59,7 @@ services:
   migrations:
     image: ghostqa/dotnetapi-migrations:${COMMITHASH}
     ports:
-      - "80"
+      - "5001:80"
     extra_hosts:
       - host.docker.internal:host-gateway
     depends_on:
@@ -78,12 +78,12 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     user: root
     ports:
-      - "1433"
+      - "1435:1433"
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "P@ssw0rd@123###"
     hostname: db
-    container_name: db-stage
+    container_name: db
     restart: unless-stopped
     volumes:
       - ms_data:/var/opt/mssql/data
@@ -102,7 +102,7 @@ services:
       POSTGRES_PASSWORD: "yourpassword"  # Set your PostgreSQL password here
       POSTGRES_DB: "yourdatabase"  # Set your PostgreSQL database name here
     ports:
-      - "5432"  # Expose PostgreSQL port
+      - "5433:5432"  # Expose PostgreSQL port
     volumes:
       - ~/ghostqa/postgres-data:/var/lib/postgresql/data 
   
@@ -122,7 +122,7 @@ services:
       - /automation-tests:/automation-tests
       - /tests/performace:/tests/performace
     ports:
-      - "8000"
+      - "8010:8000"
     depends_on:
       - postgres
   
