@@ -91,5 +91,15 @@ export const useStyles = makeStyles({
         '&:hover': {
             background: 'rgb(101, 77, 247)',
         }
-    }
+    },
+    customDrawer :{
+        width: "50vw", /* 50% of the viewport width */
+        flexShrink: '0', /* Prevent shrinking */
+      },
+      
+      customDrawerPaper: {
+        width: "50vw", /* 50% of the viewport width */
+        zIndex: "130000",/* Ensure it's on top */
+        flexShrink: '0'
+      }
 });

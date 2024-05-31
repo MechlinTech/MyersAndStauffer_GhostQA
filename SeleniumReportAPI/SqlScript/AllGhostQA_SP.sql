@@ -876,7 +876,13 @@ BEGIN TRY
 		END
 	END
 	ELSE
-	BEGIN 
+	BEGIN
+		DECLARE @OldTestSuiteName VARCHAR(200);
+		SELECT 
+		@OldTestSuiteName = TestSuiteName 
+		FROM tbl_TestSuites
+		WHERE [TestSuiteId] = @TestSuiteId;
+
 		UPDATE tbl_TestSuites
 			SET [TestSuiteName]		= @TestSuiteName,
 				[TestSuiteType]		= @TestSuiteType,
@@ -887,6 +893,10 @@ BEGIN TRY
 				[Description]		= @Description,
 				[TestUserId]        = @TestUserId
 		WHERE [TestSuiteId] = @TestSuiteId
+
+		UPDATE tbl_TestCase
+		SET TestSuiteName = @TestSuiteName
+		WHERE TestSuiteName = @OldTestSuiteName
 
 		IF @@ERROR = 0
 		BEGIN
@@ -1707,81 +1717,104 @@ BEGIN TRY
     DECLARE @SQLQuery NVARCHAR(MAX)
 
     SET @SQLQuery = '
-        (SELECT [DashBoardDetailsJson] = JSON_QUERY((
-            SELECT DISTINCT TOP ' + CAST(@FilterValue AS NVARCHAR(10)) + ' 
-				t.[TestSuitename],
+		WITH TestRuns AS (
+			SELECT 
+				CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''') AS DATETIME) AS [TestRunStartDate],
+				t.[TestSuiteName],
 				t.[TestRunName],
-				CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) AS [TestRunStartDate],
-				ISNULL((SELECT COUNT(1)
-					FROM tbl_TestCase t1
-					WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-							AND t1.[TestRunName] = t.[TestRunName]
-							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
-					GROUP BY t1.[TestRunName]
-				),0) AS [TotalTestCase],
-				ISNULL((SELECT COUNT(1)
-					FROM tbl_TestCase t1
-					WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-							AND t1.[TestRunName] = t.[TestRunName]
+				t.[TestCaseStatus]
+			FROM tbl_TestCase (NOLOCK) t
+			WHERE t.[TestSuiteName] = ''' + @TestSuitName + '''
+		)
+
+        SELECT [DashBoardDetailsJson] = JSON_QUERY((
+            SELECT TOP ' + CAST(@FilterValue AS NVARCHAR(10)) + ' 
+				Cast(tr.[TestRunStartDate] As Date) [TestRunStartDate],
+				tr.[TestRunName],
+				CASE WHEN tr.TestRunName LIKE ''%TestRun%'' THEN ''Custom'' ELSE ''In-Built'' END AS SuiteType,
+				tr.[TestSuiteName],
+				(
+					SELECT COUNT(t1.[TestRunName])
+					FROM tbl_TestCase (NOLOCK) t1
+					WHERE t1.[TestSuiteName] = tr.[TestSuiteName]
+							AND t1.TestRunName = tr.TestRunName
+							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''') AS DATE) 
+							= CAST(tr.[TestRunStartDate] AS DATE)
+				) AS [TotalTestCase],
+				(
+					SELECT COUNT(t1.[TestRunName])
+					FROM tbl_TestCase (NOLOCK) t1
+					WHERE t1.[TestSuiteName] = tr.[TestSuiteName]
+							AND t1.TestRunName = tr.TestRunName
+							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''') AS DATE) 
+							= CAST(tr.[TestRunStartDate] AS DATE)
 							AND t1.[TestCaseStatus] LIKE ''%Passed%''
-							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
-					GROUP BY t1.[TestRunName]
-				),0) AS [TotalPassedTestCase],
-				ISNULL((SELECT COUNT(1)
-					FROM tbl_TestCase t1
-					WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-							AND t1.[TestRunName] = t.[TestRunName]
+				) AS [TotalPassedTestCase],
+				(
+					SELECT COUNT(t1.[TestRunName])
+					FROM tbl_TestCase (NOLOCK) t1
+					WHERE t1.[TestSuiteName] = tr.[TestSuiteName]
+							AND t1.TestRunName = tr.TestRunName
+							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''') AS DATE) 
+							= CAST(tr.[TestRunStartDate] AS DATE)
 							AND t1.[TestCaseStatus] LIKE ''%Failed%''
-							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
-					GROUP BY t1.[TestRunName]
-				),0) AS [TotalFailedTestCase]
-				FROM 
-					tbl_TestCase t
-				WHERE 
-					t.[TestSuiteName] = '''+ @TestSuitName +'''
+				) AS [TotalFailedTestCase]
+			FROM TestRuns tr
 				GROUP BY
-					t.[TestSuitename],
-					t.[TestRunName],
-					CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE)
+					tr.[TestSuitename],
+					tr.[TestRunName],
+					Cast(tr.[TestRunStartDate] As Date)
 				ORDER BY 
-					CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +''') AS DATE) DESC,
-					t.[TestRunName] DESC
-        FOR JSON PATH)))'
+					tr.[TestRunName], Cast(tr.[TestRunStartDate] As Date) DESC
+        FOR JSON PATH))'
 	PRINT @SQLQuery
 
     IF @FilterType = 'runs'
         EXEC sp_executesql @SQLQuery
     ELSE
-        SELECT
-            [DashBoardDetailsJson] = JSON_QUERY((
-                SELECT DISTINCT CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) AS [TestRunStartDate],
-                       t.[TestSuitename],
-                    (
-                        SELECT COUNT(t1.[TestRunName])
-                        FROM tbl_TestCase t1
-                        WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-                                AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
-                    ) AS [TotalTestCase],
-                    (
-                        SELECT COUNT(t1.[TestRunName])
-                        FROM tbl_TestCase t1
-                        WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-                                AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
-                                AND t1.[TestCaseStatus] LIKE '%Passed%'
-                    ) AS [TotalPassedTestCase],
-                    (
-                        SELECT COUNT(t1.[TestRunName])
-                        FROM tbl_TestCase t1
-                        WHERE t1.[TestSuiteName] = t.[TestSuiteName]
-                                AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) = CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE)
-                                AND t1.[TestCaseStatus] LIKE '%Failed%'
-                    ) AS [TotalFailedTestCase]
-                FROM tbl_TestCase t
-                WHERE t.[TestSuiteName] = @TestSuitName
-                      AND CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) >= CAST(DATEADD(DAY,-@FilterValue,GETDATE() AT TIME ZONE @TimeZone) AS DATE)
-                GROUP BY t.[TestSuitename], [TestRunStartDateTime]
-                ORDER BY CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) DESC
-            FOR JSON PATH))
+		WITH TestRuns AS (
+			SELECT 
+				CAST((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATETIME) AS [TestRunStartDate],
+				t.[TestSuiteName],
+				t.[TestRunName],
+				t.[TestCaseStatus]
+			FROM tbl_TestCase (NOLOCK) t
+			WHERE t.[TestSuiteName] = @TestSuitName
+		)
+
+        SELECT [DashBoardDetailsJson] = JSON_QUERY((
+            SELECT CAST(tr.[TestRunStartDate] AS DATE) [TestRunStartDate],
+				tr.[TestRunName],
+				CASE WHEN tr.TestRunName LIKE '%TestRun%' THEN 'Custom' ELSE 'In-Built' END AS SuiteType,
+				tr.[TestSuiteName],
+				(
+					SELECT COUNT(t1.[TestRunName])
+					FROM tbl_TestCase (NOLOCK) t1
+					WHERE t1.[TestSuiteName] = tr.[TestSuiteName]
+							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) 
+							= CAST(tr.[TestRunStartDate] AS DATE)
+				) AS [TotalTestCase],
+				(
+					SELECT COUNT(t1.[TestRunName])
+					FROM tbl_TestCase (NOLOCK) t1
+					WHERE t1.[TestSuiteName] = tr.[TestSuiteName]
+							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) 
+							= CAST(tr.[TestRunStartDate] AS DATE)
+							AND t1.[TestCaseStatus] LIKE '%Passed%'
+				) AS [TotalPassedTestCase],
+				(
+					SELECT COUNT(t1.[TestRunName])
+					FROM tbl_TestCase (NOLOCK) t1
+					WHERE t1.[TestSuiteName] = tr.[TestSuiteName]
+							AND CAST((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone) AS DATE) 
+							= CAST(tr.[TestRunStartDate] AS DATE)
+							AND t1.[TestCaseStatus] LIKE '%Failed%'
+				) AS [TotalFailedTestCase]
+			FROM TestRuns tr
+			WHERE CAST(tr.[TestRunStartDate] AS DATE) >= CAST(DATEADD(DAY, -@FilterValue, GETDATE() AT TIME ZONE @TimeZone) AS DATE)
+			GROUP BY tr.[TestSuiteName], tr.[TestRunName], Cast(tr.[TestRunStartDate] As Date)
+			ORDER BY tr.[TestRunName], Cast(tr.[TestRunStartDate] As Date) DESC
+        FOR JSON PATH))
 END TRY
 BEGIN CATCH
     -- Add error handling logic here
@@ -2363,41 +2396,59 @@ PROC EXEC		:
 BEGIN TRY
 	DECLARE @DynamicSQL NVARCHAR(MAX)
 	
-	SET @DynamicSQL = 'SELECT [RunDetailsJson] = JSON_QUERY ((
-		SELECT DISTINCT CAST(FORMAT((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE '''+ @TimeZone +'''), ''MMMM dd, yyyy'') AS DATE) [TestRunDateYear]
-			   , [RunDetails] = JSON_QUERY ((
-											SELECT
-												t1.[TestSuiteName],
-												t1.[TestRunName],
-												CAST(MIN((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS DATE) AS [TestRunStartDate],
-												CAST(MAX((CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS DATE) AS [TestRunEndDate],
-												CONVERT(VARCHAR(8), CAST(MIN((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS TIME), 108) AS [TestRunStartTime],
-												CONVERT(VARCHAR(8), CAST(MAX((CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS TIME), 108) AS [TestRunEndTime],
-												COUNT(t1.[TestCaseName]) AS [TotalTestCases],
-												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE ''%Passed%'' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [PassedTestCases],
-												(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE ''%Failed%'' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [FailedTestCases],
-												CASE
-													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Passed%'' THEN 1 ELSE 0 END) = 0 THEN ''Failed''
-													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Failed%'' THEN 1 ELSE 0 END) = 0 THEN ''Passed''
-													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Passed%'' THEN 1 ELSE 0 END) >
-														 SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Failed%'' THEN 1 ELSE 0 END) THEN ''Partially Passed''
-													WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Passed%'' THEN 1 ELSE 0 END) <
-														 SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Failed%'' THEN 1 ELSE 0 END) THEN ''Partially Failed''
-													ELSE ''Partially Passed''
-												END AS [TestRunStatus]
-											FROM
-												tbl_TestCase t1
-											WHERE
-												t1.[TestSuiteName] = t.[TestSuiteName]
-												AND FORMAT((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + '''), ''MMMM dd yyyy'') = FORMAT((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + '''), ''MMMM dd yyyy'')
-											GROUP BY t1.[TestSuiteName], t1.[TestRunName]
-											ORDER BY MIN((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) DESC
-											FOR JSON PATH
-											))
-		FROM tbl_TestCase t
-		WHERE t.[TestSuiteName] = ''' + @TestSuitName + '''
-		ORDER BY [TestRunDateYear] DESC
-		FOR JSON PATH))'
+SET @DynamicSQL = '
+-- Check if the temporary table exists and drop it if it does
+IF OBJECT_ID(''tempdb..#tbl_TestCase'') IS NOT NULL
+BEGIN
+	DROP TABLE #tbl_TestCase;
+END;
+
+-- Create a temporary table to store intermediate results
+CREATE TABLE #tbl_TestCase
+(
+	TestRunDateYear			DATE,
+	TestRunDateString		VARCHAR(100)
+);
+-- Insert data into the temporary table
+INSERT INTO #tbl_TestCase (TestRunDateYear, TestRunDateString)
+SELECT DISTINCT CAST(FORMAT((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + '''), ''MMMM dd yyyy'') AS DATE) AS TestRunDateYear,
+				FORMAT((CAST(t.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + '''), ''MMMM dd yyyy'') AS TestRunDateString
+FROM tbl_TestCase (NOLOCK) t
+WHERE t.TestSuiteName = ''' + @TestSuitName + ''';
+
+SELECT [RunDetailsJson] = JSON_QUERY ((
+	SELECT t.TestRunDateYear
+		, [RunDetails] = JSON_QUERY((
+				SELECT
+					t1.[TestSuiteName],
+					t1.[TestRunName],
+					CAST(MIN((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS DATE) AS [TestRunStartDate],
+					CAST(MAX((CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS DATE) AS [TestRunEndDate],
+					CONVERT(VARCHAR(8), CAST(MIN((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS TIME), 108) AS [TestRunStartTime],
+					CONVERT(VARCHAR(8), CAST(MAX((CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) AS TIME), 108) AS [TestRunEndTime],
+					COUNT(t1.[TestCaseName]) AS [TotalTestCases],
+					(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE ''%Passed%'' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [PassedTestCases],
+					(SELECT COUNT([TestCaseStatus]) FROM tbl_TestCase WHERE [TestCaseStatus] LIKE ''%Failed%'' AND [TestSuiteName] = t1.[TestSuiteName] AND [TestRunName] = t1.[TestRunName]) AS [FailedTestCases],
+					CASE
+						WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Passed%'' THEN 1 ELSE 0 END) = 0 THEN ''Failed''
+						WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Failed%'' THEN 1 ELSE 0 END) = 0 THEN ''Passed''
+						WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Passed%'' THEN 1 ELSE 0 END) >
+								SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Failed%'' THEN 1 ELSE 0 END) THEN ''Partially Passed''
+						WHEN SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Passed%'' THEN 1 ELSE 0 END) <
+								SUM(CASE WHEN t1.[TestCaseStatus] LIKE ''%Failed%'' THEN 1 ELSE 0 END) THEN ''Partially Failed''
+						ELSE ''Partially Passed''
+					END AS [TestRunStatus]
+				FROM tbl_TestCase (NOLOCK) t1
+					WHERE t1.TestSuiteName = ''' + @TestSuitName + ''' 
+					AND FORMAT((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + '''), ''MMMM dd yyyy'') = t.TestRunDateString
+					GROUP BY t1.[TestSuiteName], t1.[TestRunName]
+					ORDER BY MIN((CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE ''' + @TimeZone + ''')) DESC
+				FOR JSON PATH
+			))
+	FROM #tbl_TestCase (NOLOCK) t
+	ORDER BY CONVERT(DATE,t.TestRunDateYear) DESC
+FOR JSON PATH));'
+
 PRINT @DynamicSQL
 EXECUTE SP_EXECUTESQL @DynamicSQL
 END TRY
@@ -4548,6 +4599,7 @@ BEGIN CATCH
 END CATCH
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_GetAllIntegration]
+@UserId          VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_GetAllIntegration
@@ -4559,6 +4611,12 @@ PROC EXEC		:
 				EXEC stp_GetAllIntegration
 **************************************************************************************/
 BEGIN TRY
+	IF NOT EXISTS(SELECT 1 FROM tbl_Integration WHERE [UserId] = @UserId)
+	BEGIN
+		INSERT INTO tbl_Integration([UserId], [AppName], [IsIntegrated], [CreatedBy], [CreatedOn], [UpdatedBy], [UpdatedOn], [Domain], [Email],
+		 [APIKey]) VALUES(@UserId, 'Jira', 0, @UserId, GETDATE(), @UserId, GETDATE(), NULL, NULL, NULL),
+		 (@UserId, 'MS Teams/Slack', 0, @UserId, GETDATE(), @UserId, GETDATE(), NULL, NULL, NULL)
+	END
 	SELECT [result] = JSON_QUERY((
 		SELECT [Id],
 			   [UserId],
@@ -4567,8 +4625,12 @@ BEGIN TRY
 			   [CreatedBy],
 			   [CreatedOn],
 			   [UpdatedBy],
-			   [UpdatedOn]
+			   [UpdatedOn],
+			   [Domain],
+			   [Email],
+			   [APIKey]
 		FROM tbl_Integration
+		WHERE [UserId] = @UserId
 		FOR JSON PATH, INCLUDE_NULL_VALUES
 	))
 END TRY
@@ -4577,10 +4639,12 @@ BEGIN CATCH
 END CATCH
 GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateIntegration]
-@Id                   INT,
 @UserId               VARCHAR(100),
 @IsIntegrated         Bit,
-@CreatedBy			  VARCHAR(100)
+@Domain				  VARCHAR(100),
+@Email				  VARCHAR(100),
+@APIKey				  VARCHAR(100),
+@AppName			  VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_UpdateIntegration
@@ -4592,14 +4656,14 @@ PROC EXEC		:  EXEC stp_UpdateIntegration
 				
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS(SELECT 1 FROM tbl_Integration WHERE [Id] = @Id)
-	BEGIN
 		UPDATE tbl_Integration
-		SET [UserId]              = @UserId,
-			[IsIntegrated]        = @IsIntegrated,
-			[UpdatedBy]			  = @CreatedBy,
-			[UpdatedOn]			  = GETDATE()
-			WHERE [Id] = @Id
+		SET [IsIntegrated]        = @IsIntegrated,
+			[UpdatedBy]			  = @UserId,
+			[UpdatedOn]			  = GETDATE(),
+			[Domain]			  = @Domain,
+			[Email]				  = @Email,
+			[APIKey]			  = @APIKey
+			WHERE [AppName] = @AppName AND [UserId] = @UserId
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -4614,12 +4678,70 @@ BEGIN TRY
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 			))
 		END
-	END
 END TRY
 BEGIN CATCH
 	SELECT [result] = JSON_QUERY((
 		SELECT 'fail' [status], ERROR_MESSAGE() [message]
 		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 	))
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetJiraDetailsByUserId]
+@UserId          VARCHAR(100)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetJiraDetailsByUserId
+CREATED BY		:	Mohammed Yaseer
+CREATED DATE	:	23 May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:
+				EXEC stp_GetJiraDetailsByUserId '5782a89b-3714-4a0d-88f0-8f5b9435454c'
+**************************************************************************************/
+BEGIN TRY
+	SELECT [result] = JSON_QUERY((
+		SELECT [Domain],
+			   [Email],
+			   [APIKey]
+		FROM tbl_Integration
+		WHERE [UserId] = @UserId
+		FOR JSON PATH, INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER
+	))
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [result]
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_CheckIfAnySuiteRunning]
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_CheckIfAnySuiteRunning
+CREATED BY		:	Lokesh
+CREATED DATE	:	30 May 2024
+MODIFIED BY		:	
+MODIFIED DATE	:	
+PROC EXEC		:	EXEC stp_CheckIfAnySuiteRunning
+**************************************************************************************/
+BEGIN TRY
+	IF NOT EXISTS(SELECT 1 FROM dbo.tbl_ExistingSuiteRun)
+	BEGIN
+		INSERT INTO dbo.tbl_ExistingSuiteRun (IsExistingSuiteRunning) VALUES (0)
+	END
+
+	SELECT IsExistingSuiteRunning FROM dbo.tbl_ExistingSuiteRun
+END TRY
+BEGIN CATCH
+	--Error handling
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateSuiteRunStatus]
+@IsSuiteRunning bit
+AS
+BEGIN TRY
+	UPDATE dbo.tbl_ExistingSuiteRun
+	SET IsExistingSuiteRunning = @IsSuiteRunning
+END TRY
+BEGIN CATCH
+	--Error handling
 END CATCH
 GO

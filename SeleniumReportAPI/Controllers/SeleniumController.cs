@@ -187,8 +187,16 @@ namespace SeleniumReportAPI.Controllers
         [HttpOptions("ExecuteTestSuite")]
         public async Task<ActionResult> ExecuteTestSuite(string TestSuiteName)
         {
+            if (await _helper.IsAnySuiteRunning())
+                return Ok(new { status = "Conflict", message = "Another test is already running on GhostQA. Please try after some time." });
+
+            await _helper.UpdateSuiteRunStatus(true);
+
             if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
+            {
+                await _helper.UpdateSuiteRunStatus(false);
                 return BadRequest("Timezone header is missing.");
+            }
 
             string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
 
@@ -258,6 +266,7 @@ namespace SeleniumReportAPI.Controllers
                     }
                 }
             }
+            await _helper.UpdateSuiteRunStatus(false);
             _result.Add(new { status = "Finished", message = "Test Suite execution completed!" });
             return Ok(_result);
         }
@@ -541,7 +550,7 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> AddUpdateUserOrganization([FromForm] Dto_UserOrganization model)
         {
             var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-            return Ok(await _helper.AddUpdateUserOrganization(model, CreatedBy));
+            return Ok(await _helper.AddUpdateUserOrganization(model, CreatedBy, Request.Scheme, Request.Host));
         }
 
         /// <summary>

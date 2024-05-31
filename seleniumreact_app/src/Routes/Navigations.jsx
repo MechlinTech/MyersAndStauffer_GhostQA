@@ -24,15 +24,26 @@ import ViewAgent from "../pages/MainSettings/Component/Performance/Location/View
 import Detail from "../pages/MainSettings/Component/UserAccount/Detail";
 import Organization from "../pages/MainSettings/Component/UserAccount/Organization";
 import Members from "../pages/MainSettings/Component/Organization/Members";
+import ExecutionEnvironment from "../pages/Settings/Component/ExecutionEnvironment/index";
+import TestLabSuitsDetails from "../pages/TestLab/Result/TestSuitsDetails/index";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
 const Environment = lazy(() =>
   import("../pages/Settings/Component/ExecutionEnvironment/index")
 );
+const Environment2 = lazy(() =>
+  import("../pages/MainSettings/Component/Functional/ExecutionEnvironment/index")
+);
 const Application = lazy(() =>
   import("../pages/Settings/Component/Application/index")
 );
+const Application2 = lazy(() =>
+  import("../pages/MainSettings/Component/Functional/Application/index")
+);
 const Browser = lazy(() => import("../pages/Settings/Component/Browser/index"));
+const Browser2 = lazy(() => import("../pages/MainSettings/Component/Functional/Browser/index"));
+
 const TestUser = lazy(() => import("../pages/Settings/Component/TestUser"));
+const TestUser2 = lazy(() => import("../pages/MainSettings/Component/Functional/TestUser/index"));
 const RoleManagement = lazy(() =>
   import("../pages/Settings/Component/RoleManagement/index")
 );
@@ -89,6 +100,10 @@ export default function Navigations() {
           />
           <Route path="testcase" element={<TestCase />} />
         </Route>
+        <Route
+            path="testLab-detail/:testSuiteName/:testRunId"
+            element={<TestLabSuitsDetails/>}
+          />
         <Route path="performance" element={<Performance />}></Route>
         <Route path="/result" element={<Results />}>
           <Route
@@ -156,6 +171,11 @@ export default function Navigations() {
           <Route path="organization" element={<Organization />} />
           <Route path="members" element={<Members />} />
           <Route path="add-member" element={<Organization />} />
+          <Route path="environment" element={<Environment2 />} />
+          <Route path="browser" element={<Browser2 />} />
+          <Route path="application" element={<Application2 />} />
+          <Route path="test-user" element={<TestUser2 />} />
+          <Route path="on-prem/integration" element={<h1>Integration</h1>} />
 
           <Route path="integration" element={<Integration />} />
           {/* <Route path="Application" element={<Application />} /> */}

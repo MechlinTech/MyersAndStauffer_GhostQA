@@ -23,6 +23,7 @@ from cypress.utils import (format_javascript,check_container_status, convert_to_
 
 from ..docker.containers import start_jmeter_test2,start_jmeter_test
 from agent_dynamic_location.models import Job, Agent, PrivateLocation, LoadDistribution, CustomToken
+from agent_dynamic_location.serializers import JobSerializer
 from django.utils import timezone
 
 class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
@@ -208,8 +209,6 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
         self.perform_create(serializer)
         instance = serializer.instance
         
-        
-        
         container_run = TestContainersRuns.objects.create(
             suite = instance,
             container_status= f"pending"
@@ -243,13 +242,30 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
                 "status": "error",
                 "message": f"Agent with ID {agent_id} does not exist"
             }, status=status.HTTP_400_BAD_REQUEST)
-        if instance.type == "jmeter":
-            job = Job.objects.create(
-                field_type = f'{instance.type}',
-                performance_test_suite = instance,
-                job_status = "queued",
-                agent = agent
-            )
+        try:
+            if instance.type == "jmeter":
+                job = Job.objects.create(
+                    field_type=f'{instance.type}',
+                    performance_test_suite=instance,
+                    job_status="queued",
+                    agent=agent
+                )
+                agent.agent_status = 'Occupied'
+                agent.save()
+        except Exception as e:
+            return Response({
+                "status": "error",
+                "message": f"Failed to create job: {str(e)}"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        # if instance.type == "jmeter":
+        #     job = Job.objects.create(
+        #         field_type = f'{instance.type}',
+        #         performance_test_suite = instance,
+        #         job_status = "queued",
+        #         agent = agent
+        #     )
+        #     agent.agent_status = 'Occupied'
+        #     agent.save()
             # expiry_date = timezone.now() + timezone.timedelta(hours=1)
             # custom_token = CustomToken.objects.create(agent=agent, expiry=expiry_date)
             
@@ -258,9 +274,9 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             "message": "queued",
             "location_id": location.ref,
             "agent_id": agent.ref,
-            # "token": custom_token.token,
+            "job": JobSerializer(job).data,
             "data":self.get_serializer(instance).data
-        })            
+        }, status=status.HTTP_201_CREATED)            
 
 
     @action(methods=['get'],detail=True)
@@ -333,3 +349,28 @@ class PerformaceViewSet(mixins.CreateModelMixin,viewsets.ReadOnlyModelViewSet):
             
         return agent
                 
+    
+    def combine_raw_data(self, request):
+        location_ref_id = request.query_params.get('location_ref_id', None)
+        if not location_ref_id:
+            return Response({"error": "location_ref_id parameter is required"}, status=400)
+        
+        # Filter jobs based on the location ref id
+        jobs = Job.objects.filter(location_ref_id=location_ref_id)
+
+        if not jobs.exists():
+            return Response({"error": "No jobs found for the given location ref id"}, status=404)
+        
+        # Retrieve and combine raw data
+        combined_data = self._combine_data(jobs)
+
+        return Response(combined_data, status=200)
+
+    def _combine_data(self, jobs):
+        combined_raw_data = []
+
+        for job in jobs:
+            raw_data = job.raw_data  # assuming raw_data is a list of dicts
+            combined_raw_data.extend(raw_data)
+
+        return combined_raw_data

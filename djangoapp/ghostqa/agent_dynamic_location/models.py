@@ -108,16 +108,16 @@ class Job(models.Model):
     #     return f"Job {self.job_id}"
     
     
-    def save(self, *args, **kwargs):
-        if self.pk:
-            orig_job = Job.objects.get(pk=self.pk)
-            if orig_job.job_status == 'completed':
-                self.agent.agent_status = 'available'
-                self.agent.save()
-            elif orig_job.job_status == 'queued':
-                self.agent.agent_status = 'occupied'
-                self.agent.save()
-        super(Job, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.pk:
+    #         orig_job = Job.objects.get(pk=self.pk)
+    #         if orig_job.job_status == 'completed':
+    #             self.agent.agent_status = 'available'
+    #             self.agent.save()
+    #         elif orig_job.job_status == 'queued':
+    #             self.agent.agent_status = 'occupied'
+    #             self.agent.save()
+    #     super(Job, self).save(*args, **kwargs)
 
 
 
@@ -163,3 +163,28 @@ class CustomToken(models.Model):
     def __str__(self):
         return self.token 
         
+
+class SystemInfo(models.Model):
+    INFO_TYPE = [
+        ('before', 'Before'),
+        ('after', 'After'),
+        ('on-execution', 'OnExecution'),
+    ]
+    location = models.ForeignKey(PrivateLocation, on_delete=models.CASCADE, related_name='location_system_info', blank=True, null=True)
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE, related_name='agent_system_info', blank=True, null=True)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='job_system_info')
+    ref = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    system_info_type = models.CharField(max_length=20, choices=INFO_TYPE, blank=True, null=True)
+    container_ref_id = models.CharField(max_length=200, blank=True, null=True)
+    cpu_usage = models.CharField(max_length=20, blank=True, null=True)
+    total_memory_gb = models.CharField(max_length=20, blank=True, null=True)
+    available_memory_gb = models.CharField(max_length=20, blank=True, null=True)
+    used_memory_gb = models.CharField(max_length=20, blank=True, null=True)
+    memory_usage_percent = models.CharField(max_length=20, blank=True, null=True)
+    bytes_sent_mb = models.CharField(max_length=20, blank=True, null=True)
+    bytes_received_mb = models.CharField(max_length=20, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f'{self.location} - {self.agent} - {self.job} - {self.system_info_type}'

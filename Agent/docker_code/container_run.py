@@ -21,6 +21,9 @@ from code_management.api_call import (
                                     upload_cypress_artifact_video
 )
 from code_management.utils import directory_exists, list_files_in_directory, list_recurssive_files_in_directory
+
+from system_info import get_system_info, construct_system_info_data
+
 import logging  
 logger = logging.getLogger(__name__)
 
@@ -35,16 +38,17 @@ def cypress_container(name, volume_path,job,container_run=None):
     print(f"{__name__}: volume_path: {volume_path}")
     
     # Build the Docker image from the Dockerfile
-    image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='ghost_qa_cypress')
-    try:
-        for log in build_logs:
-            print("LOGS:",log)
-    except Exception as e:
-        print("Exception",e)
+    # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='ghost_qa_cypress')
+    image = client.images.pull('ghostqa/cypress:latest')
+    # try:
+    #     for log in build_logs:
+    #         print("LOGS:",log)
+    # except Exception as e:
+    #     print("Exception",e)
         
         
     container = client.containers.run(
-        image="ghost_qa_cypress",
+        image=image,
         name=name,
         # remove=True,
         command='cypress run --reporter mochawesome --reporter-options reportDir="cypress/results",overwrite=false,html=false,json=true',
@@ -173,16 +177,17 @@ def monitor_jmx_docker_conatiner_With_live_reporting(container,container_run,vol
             break
 
 
-def jmeter_container(name, volume_path,Jthreads=10,Jrampup=10,container_run=None):
+def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_run=None):
     client = get_client()
     # print('volume_path',volume_path)
     print(f"{__name__}: volume_path: {volume_path}")
     
     # Build the Docker image from the Dockerfile
-    image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
+    # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
+    image = client.images.pull('ghostqa/performace:latest')
 
     container = client.containers.run(
-        image='jmeter_apline',
+        image=image,
         name=name,
         remove=False,
         command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t /jmeter-scripts/test.jmx -l /jmeter-scripts/log.csv -e -o /jmeter-scripts/html-results',
@@ -201,11 +206,14 @@ def jmeter_container(name, volume_path,Jthreads=10,Jrampup=10,container_run=None
     #     container_run.container_short_id = container.short_id
     #     container_run.save()
     
+    system_info = get_system_info()
+    construct_system_info_data(job['agent_details']['location']['id'], job['agent_details']['id'], job['id'], 'on-execution', container_run[0]['ref'], system_info)
+    
     container_id = container.id
     container_status = container.status
     container_short_id = container.short_id
-    update_container_after_run(container_run['ref'], container_id, container_status, container_short_id)
-    related_container_details = get_container_details(container, container_run['ref'], volume_path)
+    update_container_after_run(container_run[0]['ref'], container_id, container_status, container_short_id)
+    related_container_details = get_container_details(container, container_run[0]['ref'], volume_path)
                 # Start the threaded task
     # thread = threading.Thread(target=monitor_jmx_docker_conatiner_With_live_reporting, args=(container,container_run.id,volume_path,))
     # thread = threading.Thread(target=monitor_jmx_docker_conatiner_With_live_reporting, args=(container,container_run['ref'],volume_path,))

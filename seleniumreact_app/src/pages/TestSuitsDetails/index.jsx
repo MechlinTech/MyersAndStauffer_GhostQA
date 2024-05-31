@@ -31,6 +31,13 @@ import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { CircularProgress } from "@material-ui/core";
+import BugReportIcon from "@mui/icons-material/BugReport";
+import BugReport from "./CreateIssue";
+import { getUserId } from "../../redux/actions/authActions";
+import {
+  GetAllJiraIssue,
+  getPerformanceIntegrationList,
+} from "../../redux/actions/settingAction";
 
 export default function TestSuitsDetails() {
   const { testSuiteName, testRunName } = useParams();
@@ -40,6 +47,23 @@ export default function TestSuitsDetails() {
   const [activeRow, setActiveRow] = useState(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { performanceIntegration, jiraIssueList } = useSelector(
+    (state) => state.settings
+  );
+
+  const { userId } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(getUserId());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(getPerformanceIntegrationList(userId));
+      dispatch(GetAllJiraIssue(userId));
+    }
+  }, [userId, dispatch]);
+
   const { testCaseDetils, testCaseSteps } = useSelector(
     (state) => state.selenium
   );
@@ -54,6 +78,11 @@ export default function TestSuitsDetails() {
       dispatch(GetTestCaseDetails(data, setLoading));
     }
   }, [dispatch, testSuiteName, testRunName]);
+
+  // Check if Jira is integrated
+  const isJiraIntegrated = performanceIntegration?.some(
+    (integration) => integration.AppName === "Jira" && integration.IsIntegrated
+  );
 
   const handleRowClick = (payload) => {
     let data = {
@@ -160,7 +189,7 @@ export default function TestSuitsDetails() {
   }
 
   function extractDate(dateStr) {
-    if (typeof dateStr !== 'string') {
+    if (typeof dateStr !== "string") {
       return null; // Return null or some default value if dateStr is invalid
     }
     const [year, month, day] = dateStr?.split("-");
@@ -184,6 +213,15 @@ export default function TestSuitsDetails() {
 
     return formattedDate;
   }
+
+  // Helper function to check if a bug is logged for a specific test case
+  const isBugLogged = (testSuiteName, testRunName, testCaseName) => {
+    const issueIdentifier = `${testSuiteName}-${testRunName}-${testCaseName}`;
+    return jiraIssueList?.issues?.some((issue) =>
+      issue?.fields?.summary?.includes(issueIdentifier)
+    );
+  };
+  const [drawerOpen, setdrawerOpen] = useState(false);
   return (
     <>
       {" "}
@@ -225,7 +263,6 @@ export default function TestSuitsDetails() {
               </Stack>
             </Grid>
           </Grid>
-
           {/* main compoent */}
           <Grid container spacing={2}>
             {/* Left side content */}
@@ -405,6 +442,7 @@ export default function TestSuitsDetails() {
                         <TableRow style={{ backgroundColor: "#f0f0f0" }}>
                           <TableCell>Status</TableCell>
                           <TableCell>Test Case Name</TableCell>
+                          <TableCell></TableCell>
                           <TableCell>Video</TableCell>
                           <TableCell>Start Time</TableCell>
                         </TableRow>
@@ -434,6 +472,22 @@ export default function TestSuitsDetails() {
                               </TableCell>
                               <TableCell className={classess.tbodyFont}>
                                 {row.TestCaseName}
+                              </TableCell>
+                              <TableCell className={classess.tbodyFont}>
+                                {/* {row.TestCaseStatus === "Failed" && <BugReportIcon style={{color:'#dc3545'}} onClick={()=>setdrawerOpen(true)}/>} */}
+                                {/* <BugReport /> */}
+                                {/* {isJiraIntegrated && (
+                                <BugReport
+                                row={row}
+                                />
+                              )} */}
+                              {isJiraIntegrated && !isBugLogged(testSuiteName, testRunName, row.TestCaseName) && (
+                                  <BugReport row={row} />
+                                )}
+                                {/* Display bug icon if a bug is logged and Jira is integrated */}
+                                {isJiraIntegrated && isBugLogged(testSuiteName, testRunName, row.TestCaseName) && (
+                                  <BugReportIcon style={{ color: 'green' }} />
+                                )}
                               </TableCell>
                               <CustomVideoChell row={row} />
                               <TableCell className={classess.tbodyFont}>
@@ -529,7 +583,9 @@ export default function TestSuitsDetails() {
                               Start DateTime
                             </Typography>
                             <Chip
-                              label={`${extractDate(testCaseSteps.TestCaseStartDate)} ${testCaseSteps.TestCaseStartTime}`}
+                              label={`${extractDate(
+                                testCaseSteps.TestCaseStartDate
+                              )} ${testCaseSteps.TestCaseStartTime}`}
                               // label={formatDateStringWithTime(`${testCaseSteps.TestCaseStartDate}T${testCaseSteps.TestCaseStartTime}`)}
                               color="primary"
                               variant="outlined"
@@ -541,7 +597,9 @@ export default function TestSuitsDetails() {
                               End DateTime
                             </Typography>
                             <Chip
-                              label={`${extractDate(testCaseSteps.TestCaseEndDate)} ${testCaseSteps.TestCaseEndTime}`}
+                              label={`${extractDate(
+                                testCaseSteps.TestCaseEndDate
+                              )} ${testCaseSteps.TestCaseEndTime}`}
                               // label={formatDateStringWithTime(`${testCaseSteps.TestCaseEndDate}T${testCaseSteps.TestCaseEndTime}`)}
                               color="secondary"
                               variant="outlined"

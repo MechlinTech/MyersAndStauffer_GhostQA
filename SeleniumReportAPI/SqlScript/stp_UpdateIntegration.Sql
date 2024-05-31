@@ -1,8 +1,10 @@
 CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateIntegration]
-@Id                   INT,
 @UserId               VARCHAR(100),
 @IsIntegrated         Bit,
-@CreatedBy			  VARCHAR(100)
+@Domain				  VARCHAR(100),
+@Email				  VARCHAR(100),
+@APIKey				  VARCHAR(100),
+@AppName			  VARCHAR(100)
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_UpdateIntegration
@@ -14,14 +16,14 @@ PROC EXEC		:  EXEC stp_UpdateIntegration
 				
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS(SELECT 1 FROM tbl_Integration WHERE [Id] = @Id)
-	BEGIN
 		UPDATE tbl_Integration
-		SET [UserId]              = @UserId,
-			[IsIntegrated]        = @IsIntegrated,
-			[UpdatedBy]			  = @CreatedBy,
-			[UpdatedOn]			  = GETDATE()
-			WHERE [Id] = @Id
+		SET [IsIntegrated]        = @IsIntegrated,
+			[UpdatedBy]			  = @UserId,
+			[UpdatedOn]			  = GETDATE(),
+			[Domain]			  = @Domain,
+			[Email]				  = @Email,
+			[APIKey]			  = @APIKey
+			WHERE [AppName] = @AppName AND [UserId] = @UserId
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -36,7 +38,6 @@ BEGIN TRY
 				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 			))
 		END
-	END
 END TRY
 BEGIN CATCH
 	SELECT [result] = JSON_QUERY((

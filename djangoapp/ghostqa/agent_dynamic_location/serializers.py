@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from .models import Agent
-from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution, CustomToken
+from .models import AgentDetails, Job, PrivateLocation, Agent, LoadDistribution, CustomToken, SystemInfo
 from cypress.serializers.request import TestSuiteSerializer
 from cypress.models import TestSuite, TestContainersRuns as CypressContainersRun
 from performace_test.serializers.performace_tests import PerformaceTestSuiteSerializer, TestContainersRunsSerializer
@@ -244,3 +244,26 @@ class JobSerializer(serializers.ModelSerializer):
     #         container_run.save()
     #         job = Job.objects.create(test_suite=test_suite, **validated_data)
     #     return job
+
+
+class SystemInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SystemInfo
+        fields = [
+            'id',
+            'ref',
+            'location',
+            'agent',
+            'job',
+            'system_info_type',
+            'container_ref_id',
+            'cpu_usage',
+            'total_memory_gb',
+            'available_memory_gb',
+            'used_memory_gb',
+            'memory_usage_percent',
+            'bytes_sent_mb',
+            'bytes_received_mb',
+            'created_at',
+            'updated_at',
+        ]

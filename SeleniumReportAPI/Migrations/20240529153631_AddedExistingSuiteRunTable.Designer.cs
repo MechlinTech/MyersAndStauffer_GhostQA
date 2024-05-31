@@ -12,8 +12,8 @@ using SeleniumReportAPI.DBContext;
 namespace SeleniumReportAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240520131335_tbl_Integration")]
-    partial class tbl_Integration
+    [Migration("20240529153631_AddedExistingSuiteRunTable")]
+    partial class AddedExistingSuiteRunTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -444,6 +444,22 @@ namespace SeleniumReportAPI.Migrations
                     b.ToTable("tbl_Environments");
                 });
 
+            modelBuilder.Entity("SeleniumReportAPI.Models.ExistingSuiteRun", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsExistingSuiteRunning")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_ExistingSuiteRun");
+                });
+
             modelBuilder.Entity("SeleniumReportAPI.Models.FuncationalTest", b =>
                 {
                     b.Property<int>("RootId")
@@ -569,6 +585,9 @@ namespace SeleniumReportAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<byte[]>("APIKey")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("AppName")
                         .HasColumnType("nvarchar(max)");
 
@@ -576,6 +595,12 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedOn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Domain")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsIntegrated")
