@@ -17,7 +17,7 @@ export default function Functional() {
                         to="/"
                         className={`${classes.linkStyle} ${location.pathname === "/" && classes.activeLink}`}
                     >
-                        Home
+                        Local Testing
                     </Link>
                 </Grid>
                 {/* <Grid item>
