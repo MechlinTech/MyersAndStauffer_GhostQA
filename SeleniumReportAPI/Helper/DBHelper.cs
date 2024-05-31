@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OpenQA.Selenium;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Models;
 using System.Data;
@@ -3676,7 +3677,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<string> AddUpdateUserOrganization(Dto_UserOrganization model, string createdBy)
+        internal async Task<string> AddUpdateUserOrganization(Dto_UserOrganization model, string createdBy, string scheme, HostString host)
         {
             string result = string.Empty;
             try
@@ -3684,6 +3685,7 @@ namespace SeleniumReportAPI.Helper
                 string fileName = model.BinaryData.FileName;
                 string directoryPath = _configuration["LocationFile:LogoFileDev"];
                 string filePath = Path.Combine(directoryPath, fileName);
+                string dbFilePath = $"{scheme}://{host}/logos/{fileName}";
 
                 // Ensure directory exists
                 if (!Directory.Exists(directoryPath))
@@ -3711,7 +3713,7 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@UserId", model.UserId);
                         command.Parameters.AddWithValue("@Description", model.Description);
                         command.Parameters.AddWithValue("@CreatedBy", createdBy);
-                        command.Parameters.AddWithValue("@LogoPath", filePath);
+                        command.Parameters.AddWithValue("@LogoPath", dbFilePath);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -4123,5 +4125,56 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
+        internal async Task<bool> IsAnySuiteRunning()
+        {
+            bool result = false;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_CheckIfAnySuiteRunning", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                result = Convert.ToBoolean(reader["IsExistingSuiteRunning"]);
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        internal async Task UpdateSuiteRunStatus(bool isSuiteRunning)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("stp_UpdateSuiteRunStatus", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@IsSuiteRunning", isSuiteRunning);
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -28,9 +28,18 @@ BEGIN TRY
 	END
 	ELSE IF @TestSuiteId = 0
 	BEGIN
-		INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, Description) 
-		VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description, @TestUserId)
-
+		IF NOT EXISTS( SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId)
+		BEGIN
+			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, [Description], [TestUserId]) 
+			VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description, @TestUserId)
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+			SELECT 'fail' [status], 'In-Built Test Suite already have this Name' [message]
+			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+		))
+		END
 		IF @@ERROR = 0
 		BEGIN
 			SELECT [result] = JSON_QUERY((
@@ -47,7 +56,13 @@ BEGIN TRY
 		END
 	END
 	ELSE
-	BEGIN 
+	BEGIN
+		DECLARE @OldTestSuiteName VARCHAR(200);
+		SELECT 
+		@OldTestSuiteName = TestSuiteName 
+		FROM tbl_TestSuites
+		WHERE [TestSuiteId] = @TestSuiteId;
+
 		UPDATE tbl_TestSuites
 			SET [TestSuiteName]		= @TestSuiteName,
 				[TestSuiteType]		= @TestSuiteType,
@@ -58,6 +73,10 @@ BEGIN TRY
 				[Description]		= @Description,
 				[TestUserId]        = @TestUserId
 		WHERE [TestSuiteId] = @TestSuiteId
+
+		UPDATE tbl_TestCase
+		SET TestSuiteName = @TestSuiteName
+		WHERE TestSuiteName = @OldTestSuiteName
 
 		IF @@ERROR = 0
 		BEGIN

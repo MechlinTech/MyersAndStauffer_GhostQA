@@ -35,6 +35,33 @@ const Graph = (props) => {
       colors: ["#0000ff", "#008000", "#ff0000"],
       xaxis: {
         categories: [],
+        // labels: {
+        //   formatter: function (value) {
+        //     if (typeof value === 'string') {
+        //       const [date, name] = value.split(' | ');
+        //       return `${date}\n${name}`;
+        //     }
+        //     return value;
+        //   },
+        //   style: {
+        //     fontSize: '12px',
+        //     fontFamily: 'Lexend Deca',
+        //   },
+        // },
+        labels: {
+          formatter: function (value) {
+            if (typeof value === 'string') {
+              const [date, name] = value.split(' | ');
+              if (name) {
+                return `${date} : ${name}`; 
+              } else {
+                return date; // Only return the date if name is undefined
+              }
+            }
+            return value;
+          },
+          escapeHTML: false, 
+        },
       },
       // plotOptions: {   
       //   bar: {
@@ -121,7 +148,10 @@ const Graph = (props) => {
             //   year: "numeric", // full year
             // });
             const formattedDate = extractDate(item.TestRunStartDate)
-            TestRunStartDate.push(formattedDate);
+            // TestRunStartDate.push(formattedDate);
+            // TestRunStartDate.push(`${formattedDate} | ${item.TestRunName}`);
+            const testRunName = item.SuiteType === "Custom" ? ` | ${item.TestRunName}` : "";
+            TestRunStartDate.push(`${formattedDate}${testRunName}`);
             TotalFailedTestCase.push(item.TotalFailedTestCase);
             TotalPassedTestCase.push(item.TotalPassedTestCase);
             TotalTestCase.push(item.TotalTestCase);
@@ -138,6 +168,7 @@ const Graph = (props) => {
             xaxis: {
               categories: TestRunStartDate,
             }
+           
           },
           series: [
             {

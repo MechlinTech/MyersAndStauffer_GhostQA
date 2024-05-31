@@ -131,12 +131,12 @@ export default function Settings() {
         },
         {
           title: "Integration",
-          path: "/main-settings/integration",
+          path: "/main-settings/on-prem/integration",
         },
       ],
     },
     {
-      title: "Functional",
+      title: "Functional - Local Testing",
       path: "/main-settings",
       children: [
         {
@@ -157,7 +157,8 @@ export default function Settings() {
         },
         {
           title: "Integration",
-          path: "/main-settings/on-prem/integration",
+          path: "",
+          path: "/main-settings/integration",
         },
       ],
     },
