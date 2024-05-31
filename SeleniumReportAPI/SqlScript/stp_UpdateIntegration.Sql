@@ -3,7 +3,7 @@ CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateIntegration]
 @IsIntegrated         Bit,
 @Domain				  VARCHAR(100),
 @Email				  VARCHAR(100),
-@APIKey				  VARCHAR(100),
+@APIKey				  VARBINARY(MAX),
 @AppName			  VARCHAR(100)
 AS
 /**************************************************************************************
