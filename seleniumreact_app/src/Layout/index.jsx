@@ -226,7 +226,7 @@ export default function MiniDrawer() {
                           >
                             <SettingsIcon style={{ color: 'rgb(115, 115, 115' }} />
                             <span style={{ marginLeft: "10px" }}>Settings</span>
-                          </MenuItem> */}
+                          </MenuItem> 
                           <MenuItem
                             onClick={() => {
                               setShowMenu(false);

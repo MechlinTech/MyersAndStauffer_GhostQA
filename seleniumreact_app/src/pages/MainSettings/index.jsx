@@ -129,10 +129,10 @@ export default function Settings() {
           title: "In-Private Locations",
           path: "/main-settings/location",
         },
-        {
-          title: "Integration",
-          path: "/main-settings/on-prem/integration",
-        },
+        // {
+        //   title: "Integration",
+        //   path: "/main-settings/on-prem/integration",
+        // },
       ],
     },
     {
@@ -155,11 +155,11 @@ export default function Settings() {
           title: "Test Users",
           path: "/main-settings/test-user",
         },
-        {
-          title: "Integration",
-          path: "",
-          path: "/main-settings/integration",
-        },
+        // {
+        //   title: "Integration",
+        //   path: "",
+        //   path: "/main-settings/integration",
+        // },
       ],
     },
   ];
