@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
@@ -105,6 +106,16 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles(); // Serve files from wwwroot by default
+
+// Serve static files from UploadedLogos
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "UploadedLogos")),
+    RequestPath = "/logos"
+});
 
 // Exception handling should be very early in the pipeline
 app.UseExceptionHandler("/error");

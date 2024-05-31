@@ -12,9 +12,7 @@ import { StyledFormControl, useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography } from "./style";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getUserId,
-} from "../../../../../redux/actions/authActions";
+import { getUserId } from "../../../../../redux/actions/authActions";
 import TextField from "@mui/material/TextField";
 import {
   fetchOrganizationDetail,
@@ -62,7 +60,7 @@ export default function Organization() {
   };
   const handleSave = () => {
     const formData = new FormData();
-    formData.append("Id", organizationDetails?organizationDetails.Id:0);
+    formData.append("Id", organizationDetails ? organizationDetails.Id : 0);
     formData.append("UserId", userId);
     formData.append("Description", description);
     formData.append("BinaryData", selectedImage);
@@ -74,7 +72,7 @@ export default function Organization() {
 
     setError(error);
     if (Object.keys(error).length === 0) {
-      dispatch(updateOrganizationDetails(formData,userId));
+      dispatch(updateOrganizationDetails(formData, userId));
       setisEditable(false);
     } else {
       console.log("some field are empty or not valid");
@@ -114,47 +112,63 @@ export default function Organization() {
                 sx={{ padding: "20px", marginBottom: "20px" }}
               >
                 <Grid container justifyContent="center" spacing={1}>
-                
-                  <Grid item xs={12} style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom:'10px'
-                }}>
-                  <CustomeImgView ScreenshotUrl={organizationDetails?.LogoPath}/>
-                  {/* <Avatar
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <CustomeImgView
+                      ScreenshotUrl={organizationDetails?.LogoPath}
+                    />
+                    {/* <Avatar
                   style={{ marginRight: "10px", backgroundColor: "#654DF7" }}
                   src="http://65.1.188.67:8010/codeengine/api/test-suitesV2/29/get_file/"
                 /> */}
-                {/* <Box>
+                    {/* <Box>
                   <img
                   src="http://65.1.188.67:8010/codeengine/api/test-suitesV2/29/get_file/"
                   className={classes.imgStyle}/>
                 </Box> */}
-                <Typography fontSize="18px" fontFamily="Lexend Deca">
-                  {getName()}
-                </Typography>
+                    <Typography fontSize="18px" fontFamily="Lexend Deca">
+                      {getName()}
+                    </Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <StyledTypography>About</StyledTypography>
-                    <StyledFormControl fullWidth>
-                      <TextField
-                        id="outlined-adornment-name"
-                        type="text"
-                        multiline={true}
-                        rows={3}
-                        placeholder="Enter description"
-                        disabled={!isEditable}
-                        error={Error.descriptionError ? true : false}
-                        value={description}
-                        onChange={(e) => {
-                          setDescription(e.target.value);
-                          setError((prev) => ({
-                            ...prev,
-                            ["descriptionError"]: "",
-                          }));
-                        }}
-                      />
-                    </StyledFormControl>
+                    {!isEditable ? (
+                      <StyledTypography>&nbsp;{description}</StyledTypography>
+                    ) : (
+                      <StyledFormControl fullWidth>
+                        <TextField
+                          id="outlined-adornment-name"
+                          type="text"
+                          multiline={true}
+                          rows={3}
+                          placeholder="Enter description"
+                          disabled={!isEditable}
+                          error={Error.descriptionError ? true : false}
+                          value={description}
+                          onChange={(e) => {
+                            setDescription(e.target.value);
+                            setError((prev) => ({
+                              ...prev,
+                              ["descriptionError"]: "",
+                            }));
+                          }}
+                          sx={{ color: "black" }}
+                          InputProps={{
+                            classes: {
+                              disabled: classes.disabledText,
+                            },
+                          }}
+                        />
+                      </StyledFormControl>
+                    )}
+
                     {Error.descriptionError && (
                       <StyledTypography
                         style={{ color: "red", textAlign: "left" }}
@@ -167,7 +181,7 @@ export default function Organization() {
                     item
                     xs={12}
                     style={{
-                      display: isEditable?"flex":'none',
+                      display: isEditable ? "flex" : "none",
                       alignItems: "center",
                       justifyContent: "space-between",
                     }}
@@ -180,7 +194,7 @@ export default function Organization() {
                       onChange={handleFileChange}
                       disabled={!isEditable}
                       style={{ display: "none" }}
-                      accept="image/jpeg, image/png, image/gif, image/bmp, image/tiff, image/webp, image/x-raw"
+                      accept="image/jpeg, image/png, image/jpg"
                       id="logoupload"
                     />
                     {/* Button to trigger the file input */}
@@ -199,7 +213,7 @@ export default function Organization() {
                       +
                     </label>
                   </Grid>
-                  {Error.imageError  && isEditable && (
+                  {Error.imageError && isEditable && (
                     <Grid item xs={12}>
                       <StyledTypography
                         style={{ color: "red", textAlign: "left" }}
