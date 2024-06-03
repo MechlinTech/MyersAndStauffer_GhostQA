@@ -7,7 +7,7 @@ namespace MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile
         private static string _browsername = "Chrome";
         private static string _environmentname = "dev";
         private static string _baseurl = "https://mechlintech.stage.clocksession.com/app";
-        private static string _basepath = @"C:\Published_Projects\React_App\images\data\";
+        private static string _basepath = @"/app/C:/Published_Projects/React_App/images/data/";
         private static string _driverpath = @"C:\Published_Projects\GhostQA_WebAPI\wwwroot\Driver";
         private static string _ApiUrl = @"https://dev.ghostqa.com/api/AddInBuildTestSuite/SaveInBuiltTestSuites";
         private static bool _isRunHeadless = false;
