@@ -50,6 +50,7 @@ services:
       - ./app/dotnet/wwwroot/TestDataCSVFile:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataCSVFile
       - ./app/dotnet/wwwroot/TestDataFileDev:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFileDev
       - ./app/UploadedLogos:/app/UploadedLogos/
+      - ./app/data:/app/C:/Published_Projects/React_App/images/data
     depends_on:
       - db
       - migrations
