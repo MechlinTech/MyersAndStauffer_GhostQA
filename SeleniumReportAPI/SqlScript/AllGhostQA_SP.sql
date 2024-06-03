@@ -1765,7 +1765,7 @@ BEGIN TRY
 					tr.[TestRunName],
 					Cast(tr.[TestRunStartDate] As Date)
 				ORDER BY 
-					tr.[TestRunName], Cast(tr.[TestRunStartDate] As Date) DESC
+					Cast(tr.[TestRunStartDate] As Date) DESC, tr.[TestRunName] DESC
         FOR JSON PATH))'
 	PRINT @SQLQuery
 
@@ -1813,7 +1813,7 @@ BEGIN TRY
 			FROM TestRuns tr
 			WHERE CAST(tr.[TestRunStartDate] AS DATE) >= CAST(DATEADD(DAY, -@FilterValue, GETDATE() AT TIME ZONE @TimeZone) AS DATE)
 			GROUP BY tr.[TestSuiteName], tr.[TestRunName], Cast(tr.[TestRunStartDate] As Date)
-			ORDER BY tr.[TestRunName], Cast(tr.[TestRunStartDate] As Date) DESC
+			ORDER BY Cast(tr.[TestRunStartDate] As Date) DESC, tr.[TestRunName] DESC
         FOR JSON PATH))
 END TRY
 BEGIN CATCH

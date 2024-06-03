@@ -237,7 +237,7 @@ namespace SeleniumReportAPI.Controllers
                                     var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
                                     if (_testSuiteNameData.SendEmail == true)
                                     {
-                                        var obj = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url, mapping);
+                                        var obj = await _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url, mapping);
                                         _result.Add(obj);
                                     }
                                     else
@@ -249,7 +249,7 @@ namespace SeleniumReportAPI.Controllers
                                         // Convert to comma-separated string
                                         string commaSeparatedEmails = string.Join(", ", emails);
 
-                                        var obj1 = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
+                                        var obj1 = await _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
                                         _result.Add(obj1);
                                     }
                                 }

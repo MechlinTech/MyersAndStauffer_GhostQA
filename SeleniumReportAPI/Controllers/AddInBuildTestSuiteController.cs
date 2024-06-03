@@ -45,7 +45,7 @@ namespace SeleniumReportAPI.Controllers
                 string originalUrl = Request.Headers.Referer.ToString();
                 int lastSlashIndex = originalUrl.LastIndexOf('/');
                 var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
-                var result = _helper.SendEmail(toEmail, "Invitation", Url, GeneratorPassword);
+                var result = await _helper.SendEmail(toEmail, "Invitation", Url, GeneratorPassword);
                 return Ok(result);
             }
             catch (Exception ex)
