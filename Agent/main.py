@@ -51,8 +51,8 @@ def main(agent_id, token):
                 
     
 if __name__ == "__main__":
-    # agent_id = '45356034-33b8-4859-8762-542aac24256c'
-    # token = '385df753-a539-4448-8099-ac523cb5e008'
+    # agent_id = 'f467512c-5349-4b75-8784-23a5e580b9c1'
+    # token = '2f601f56-eb1a-4b9e-9134-fdedb3265246'
     agent_id = os.getenv('AGENT_ID')
     token = os.getenv('TOKEN')
     if not agent_id or not token:
@@ -67,3 +67,4 @@ if __name__ == "__main__":
     main(agent_id, token)
 # job['performance_details']['jthreads_total_user']
 # python main.py  agent token
+# this is testing
