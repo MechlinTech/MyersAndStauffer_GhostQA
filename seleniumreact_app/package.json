@@ -34,7 +34,7 @@
     "react-map-gl": "5.2.11",
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.13.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.1",
     "react-select": "^5.2.2",
     "react-swipeable-views": "^0.14.0",
     "react-table": "^7.7.0",
