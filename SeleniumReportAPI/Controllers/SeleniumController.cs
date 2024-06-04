@@ -187,8 +187,16 @@ namespace SeleniumReportAPI.Controllers
         [HttpOptions("ExecuteTestSuite")]
         public async Task<ActionResult> ExecuteTestSuite(string TestSuiteName)
         {
+            if (await _helper.IsAnySuiteRunning())
+                return Ok(new { status = "Conflict", message = "Another test is already running on GhostQA. Please try after some time." });
+
+            await _helper.UpdateSuiteRunStatus(true);
+
             if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
+            {
+                await _helper.UpdateSuiteRunStatus(false);
                 return BadRequest("Timezone header is missing.");
+            }
 
             string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
 
@@ -229,7 +237,7 @@ namespace SeleniumReportAPI.Controllers
                                     var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
                                     if (_testSuiteNameData.SendEmail == true)
                                     {
-                                        var obj = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url, mapping);
+                                        var obj = await _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url, mapping);
                                         _result.Add(obj);
                                     }
                                     else
@@ -241,7 +249,7 @@ namespace SeleniumReportAPI.Controllers
                                         // Convert to comma-separated string
                                         string commaSeparatedEmails = string.Join(", ", emails);
 
-                                        var obj1 = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
+                                        var obj1 = await _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
                                         _result.Add(obj1);
                                     }
                                 }
@@ -258,6 +266,7 @@ namespace SeleniumReportAPI.Controllers
                     }
                 }
             }
+            await _helper.UpdateSuiteRunStatus(false);
             _result.Add(new { status = "Finished", message = "Test Suite execution completed!" });
             return Ok(_result);
         }
@@ -534,7 +543,7 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> AddUpdateUserOrganization([FromForm] Dto_UserOrganization model)
         {
             var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-            return Ok(await _helper.AddUpdateUserOrganization(model, CreatedBy));
+            return Ok(await _helper.AddUpdateUserOrganization(model, CreatedBy, Request.Scheme, Request.Host));
         }
 
         /// <summary>
