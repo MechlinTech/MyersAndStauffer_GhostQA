@@ -28,6 +28,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*','65.1.188.67']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://app.ghostqa.com",
+    "https://dev.ghostqa.com",
+    "https://stage.ghostqa.com",
+    # Add more trusted origins if needed
+]
+
 
 # Application definition
 
