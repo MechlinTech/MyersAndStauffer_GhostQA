@@ -2535,7 +2535,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<Dto_LoadExecuteResponse> ExecutePerformanceJMX(Dto_LoadExecuteResponse model)
+        internal async Task<Dto_LoadExecuteResponse> ExecutePerformanceJMX(Dto_LoadExecuteResponse model, string url)
         {
             string result = string.Empty;
             var guid = Guid.NewGuid().ToString();
@@ -2594,7 +2594,7 @@ namespace SeleniumReportAPI.Helper
                             formData.Add(new StringContent(data.RampUpSteps.ToString()), "jrampup_steps");
                             formData.Add(new StringContent(data.DurationInMinutes.ToString()), "durations");
                             formData.Add(new StringContent(guid), "client_reference_id");
-                            using (var response = await httpClient.PostAsync(_configuration["CypressAPI:PerformanceExecutor"], formData))
+                            using (var response = await httpClient.PostAsync(url, formData))
                             {
                                 var res1 = await response.Content.ReadAsStringAsync();
                             }
@@ -3382,7 +3382,7 @@ namespace SeleniumReportAPI.Helper
             return new string(array);
         }
 
-        public async Task<Dto_Response> SendPasswordResetMailAsync(string Email)
+        public async Task<Dto_Response> SendPasswordResetMailAsync(string Email, string Url)
         {
             var user = await _userManager.FindByEmailAsync(Email);
 
@@ -3391,7 +3391,7 @@ namespace SeleniumReportAPI.Helper
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var result = await SendEmail("Ghost-QA - Password Reset Request", $"Please click the following button to reset your password: <br><br> <a href={_configuration["EmailDetails:ResetPasswordLink"]}?token={token}&email={Email}><button>Reset Password</button></a>", Email);
+            var result = await SendEmail("Ghost-QA - Password Reset Request", $"Please click the following button to reset your password: <br><br> <a href={Url}reset-password/?token={token}&email={Email}><button>Reset Password</button></a>", Email);
 
             return new Dto_Response() { status = result.status, message = result.message };
         }
@@ -3692,7 +3692,8 @@ namespace SeleniumReportAPI.Helper
         internal async Task<string> GetAllUserIntegration(string userId)
         {
             string result = string.Empty;
-            List<Integration> jiraDetails;
+            List<Integration> jiraDetails = new List<Integration>();
+            List<Dto_IntegrationRespnse> jiraRespnse = new List<Dto_IntegrationRespnse>();
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -3709,14 +3710,6 @@ namespace SeleniumReportAPI.Helper
                                 reader.Read();
                                 result = reader["result"].ToString();
                                 jiraDetails = JsonConvert.DeserializeObject<List<Integration>>(result);
-                                foreach (Integration integration in jiraDetails)
-                                {
-                                    if (integration.APIKey != null)
-                                    {
-                                        var str = DecompressString(integration.APIKey);
-
-                                    }
-                                }
                             }
                         }
                     }
@@ -3727,7 +3720,30 @@ namespace SeleniumReportAPI.Helper
             {
                 throw ex;
             }
-            return result;
+
+            var apikey = DecompressString(jiraDetails[0].APIKey);
+
+            foreach (var integration in jiraDetails)
+            {
+                Dto_IntegrationRespnse jira = new Dto_IntegrationRespnse
+                {
+                    Id = integration.Id,
+                    AppName = integration.AppName,
+                    UserId = integration.UserId,
+                    CreatedBy = integration.CreatedBy,
+                    CreatedOn = integration.CreatedOn,
+                    UpdatedBy = integration.UpdatedBy,
+                    UpdatedOn = integration.UpdatedOn,
+                    APIKey = apikey,
+                    Domain = integration.Domain,
+                    Email = integration.Email,
+                    IsIntegrated = integration.IsIntegrated
+                };
+                jiraRespnse.Add(jira);
+            }
+            jiraRespnse[1].APIKey = null;
+
+            return JsonConvert.SerializeObject(jiraRespnse);
         }
 
         internal async Task<object> UpdateIntegration(Dto_Integration model)
