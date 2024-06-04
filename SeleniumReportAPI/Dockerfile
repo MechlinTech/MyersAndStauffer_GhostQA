@@ -6,6 +6,34 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+#installing chrome
+RUN apt-get update \
+    && apt-get install -y wget gnupg2 unzip\
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable
+# Install Chromedriver
+
+# Change working directory
+RUN mkdir -p /usr/local/bin
+WORKDIR /usr/local/bin/
+
+# Download ChromeDriver
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip
+
+# Unzip ChromeDriver
+RUN apt-get install -y unzip && \
+    unzip chromedriver-linux64.zip 
+ 
+# Set execute permissions for ChromeDriver
+RUN chmod +x /usr/local/bin/chromedriver-linux64/chromedriver
+
+# Verify installation
+CMD ["chromedriver", "--version"]
+
+WORKDIR /app
+
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -41,7 +69,7 @@ COPY ["SeleniumReportAPI/SqlScript/Insert_FirstUser.sql", "./SqlScript/Insert_Fi
 
 # Copy and set permissions for the entrypoint script
 COPY ["SeleniumReportAPI/entrypoint.sh", "/app/"]
-
+RUN apt install ffmpeg -y
 # Use the entrypoint script to start the application
 RUN sed -i 's/\r//' /app/entrypoint.sh \
 	&& chmod +x /app/entrypoint.sh
