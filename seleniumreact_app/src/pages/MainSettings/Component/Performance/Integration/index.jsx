@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useStyles } from "./styles";
 import AddJira from "./Jira/AddJira";
+import AddTeams from "./Teams";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPerformanceIntegrationList,
@@ -27,6 +28,7 @@ export default function Integration() {
   const [confirmApiKey, setConfirmApiKey] = useState("");
   const [switchState, setSwitchState] = useState({});
   const [openModal, setOpenModal] = useState(false);
+  const [openTeamsModal, setOpenTeamsModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
@@ -42,6 +44,12 @@ export default function Integration() {
   useEffect(() => {
     if (userId) dispatch(getPerformanceIntegrationList(userId));
   }, [userId, dispatch]);
+
+  const handleCloseTeamsModal = () => {
+    resetFormData();
+    setOpenTeamsModal(false);
+    setSelectedCard(null);
+  };
 
   useEffect(() => {
     if (performanceIntegration) {
@@ -81,6 +89,8 @@ export default function Integration() {
     setSelectedCard(name);
     if (name === "Jira" && !switchState[name]) {
       setOpenModal(true);
+    } else if (name === "MS Teams/Slack" && !switchState[name]) {
+      setOpenTeamsModal(true);
     } else {
       setSwitchState((prevState) => ({
         ...prevState,
@@ -88,6 +98,7 @@ export default function Integration() {
       }));
     }
   };
+
 
   const resetFormData = () => {
     setAccountUrl("");
@@ -157,6 +168,12 @@ export default function Integration() {
         setApiKey={setApiKey}
         confirmApiKey={confirmApiKey}
         setConfirmApiKey={setConfirmApiKey}
+        loading={loading}
+      />
+       <AddTeams
+        open={openTeamsModal}
+        onClose={handleCloseTeamsModal}
+        errors={errors}
         loading={loading}
       />
       <Grid

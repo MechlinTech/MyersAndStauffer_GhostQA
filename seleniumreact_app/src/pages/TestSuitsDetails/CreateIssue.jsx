@@ -13,6 +13,7 @@ import {
 } from "../../redux/actions/settingAction";
 import { getUserId } from "../../redux/actions/authActions";
 import { toast } from "react-toastify";
+import { getVideoUrl, getImageUrl } from "../../utils/configService";
 
 export default function BugReport({ row }) {
   const classes = useStyles();
@@ -22,6 +23,11 @@ export default function BugReport({ row }) {
   const { jiraProjectList, jiraIssueTypes } = useSelector(
     (state) => state.settings
   );
+
+  const { testCaseSteps } = useSelector(
+    (state) => state.selenium
+  );
+  const [imageBaseUrl, setImageBaseUrl] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
@@ -36,18 +42,132 @@ export default function BugReport({ row }) {
       dispatch(GetAllJiraIssueTypes(userId));
     }
   }, [userId, dispatch]);
+  const [baseUrl, setBaseUrl] = useState("");
+
+  // Load baseUrl when the component mounts
+  useEffect(() => {
+    const loadBaseUrl = async () => {
+      const fetchedBaseUrl = await getVideoUrl();
+      setBaseUrl(fetchedBaseUrl);
+    };
+    loadBaseUrl();
+  }, []);
+
+  // Fetch image base URL
+  useEffect(() => {
+    const fetchBaseUrl = async () => {
+      const url = await getImageUrl();
+      setImageBaseUrl(url);
+    };
+    fetchBaseUrl();
+  }, []);
+
+  const imageUrl = (apiPath) => {
+    return `${imageBaseUrl}${apiPath?.replace(/\\/g, "/")}`;
+  };
+
+  const videoUrl = (apiPath) => {
+    return `${baseUrl}${apiPath?.replace(/\\/g, "/")}`;
+  };
 
   const handleCreate = () => {
     if (!selectedIssue || !selectedProject) {
       toast.error("Both issue type and project must be selected");
       return;
     }
+
+    // Parse testCaseSteps
+    const testSteps = JSON.parse(testCaseSteps?.TestCaseSteps) || [];
+
+    // Generate content for testCaseSteps
+    const testCaseStepsContent = testSteps.map((step) => {
+      // Check if step is an object and extract the necessary text content
+      const stepText = typeof step === "object" ? JSON.stringify(step) : step;
+
+      return {
+        text: `${stepText}\n`,
+        type: "text",
+        marks: [],
+      };
+    });
+
+    // Filter and map failure screenshots
+    const failureScreenshots = testSteps
+      .map((step) => step.FailureScreenShots)
+      .filter((screenshot) => screenshot && screenshot.trim() !== "");
+
+      const screenshotContent = failureScreenshots.map((screenshot) => {
+        const url = imageUrl(screenshot);
+        return {
+          text: `Click here for image result\n`,
+          type: "text",
+          marks: [
+            {
+              type: "link",
+              attrs: {
+                href: url,
+              },
+            },
+          ],
+        };
+      });
+
+    // Combine testCaseSteps content and screenshot content
+    const combinedContent = [
+      ...testCaseStepsContent,
+      {
+        text: `Click here for video result\n`,
+        type: "text",
+        marks: [
+          {
+            type: "link",
+            attrs: {
+              href: videoUrl(row.TestCaseVideoURL),
+            },
+          },
+        ],
+      },
+      ...screenshotContent,
+    ];
+
     const payload = {
       jiraCreateIssueModel: {
         fields: {
           issuetype: { id: selectedIssue },
           project: { id: selectedProject },
           summary: `${testSuiteName}-${testRunName}-${row.TestCaseName}`,
+          description: {
+            content: [
+              {
+                // content: [
+                //   {
+                //     text: "Order entry fails when selecting. supplier.\n",
+                //     type: "text",
+                //     marks: [],
+                //   },
+                //   {
+                //     text: `${videoUrl(row.TestCaseVideoURL)}\n`,
+                //     type: "text",
+                //     marks: [
+                //       {
+                //         type: "link",
+                //         attrs: {
+                //           href: videoUrl(row.TestCaseVideoURL),
+                //         },
+                //       },
+                //     ],
+                //   },
+                //   ...screenshotContent,
+                // ],
+
+                content: combinedContent,
+
+                type: "paragraph",
+              },
+            ],
+            type: "doc",
+            version: 1,
+          },
         },
       },
       userId,
@@ -116,12 +236,11 @@ export default function BugReport({ row }) {
               </Box>
             </Grid>
             <Grid item xs={12}>
-              <Grid container style={{ display: 'flex', alignItems: 'center'}}>
-                <Grid item xs={12} lg={6} style={{padding:'10px'}}
-                >
+              <Grid container style={{ display: "flex", alignItems: "center" }}>
+                <Grid item xs={12} lg={6} style={{ padding: "10px" }}>
                   <StyledTypography>Create New Issue</StyledTypography>
                 </Grid>
-                <Grid item xs={12} md={6} lg={3} style={{padding:'10px'}}>
+                <Grid item xs={12} md={6} lg={3} style={{ padding: "10px" }}>
                   <Select
                     isClearable
                     options={jiraIssueTypes}
@@ -133,7 +252,7 @@ export default function BugReport({ row }) {
                     menuPosition="fixed"
                   />
                 </Grid>
-                <Grid item xs={12} md={6} lg={3} style={{padding:'10px'}}>
+                <Grid item xs={12} md={6} lg={3} style={{ padding: "10px" }}>
                   <Select
                     isClearable
                     options={jiraProjectList}
