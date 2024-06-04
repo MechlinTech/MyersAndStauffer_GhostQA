@@ -105,7 +105,7 @@ services:
     ports:
       - "5433:5432"  # Expose PostgreSQL port
     volumes:
-      - ~/ghostqa/postgres-data:/var/lib/postgresql/data 
+      - ./ghostqa/postgres-data:/var/lib/postgresql/data 
   
   codeengine: &django_app
     image: ghostqa/codeengine:${COMMITHASH}
