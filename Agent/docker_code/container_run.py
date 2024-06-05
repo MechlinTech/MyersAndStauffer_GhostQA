@@ -224,15 +224,94 @@ def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_ru
     # thread.start()
     return container, related_container_details
 
+# def get_container_details(container, ref, volume_path):
+#     container_run = get_container_from_codeengine(ref)
+#     container_details =  get_container(container_run['container_id'])
+    
+#     while container_details.status != "exited":
+#         time.sleep(30)  # Wait for 30 seconds
+#         container_details = get_container(container_run['container_id'])
+        
+        
+#     container_status = container_details.status
+#     container_labels = container_details.labels
+    
+#     update_container_reporting(container_run['ref'], container_status, container_labels)
+    
+#     logs_path = f"{volume_path}/log.csv"
+#     statistics_path = f"{volume_path}/html-results/statistics.json"
+#     html_path = f"{volume_path}/html-results"
+    
+#     raw_data = csv_to_json(logs_path)
+#     raw_data = json.dumps(raw_data)
+#     update_container_for_raw_data(container_run['ref'], raw_data)
+    
+#     data = get_json_metrics(logs_path)
+#     json_data = json.dumps(data)
+#     update_container_for_json_data(container_run['ref'], json_data)
+    
+    
+#     with open(logs_path, 'rb') as file:
+#         print('monitor_jmx_docker_conatiner: file:', file.read())
+#         # raw_data = csv_to_json(logs_path)
+#         # container_run.raw_data = raw_data
+#         # update the container for raw data
+
+#     with open(statistics_path, 'rb') as file:
+#         print('monitor_jmx_docker_conatiner: file:', file.read())
+#         # file_data = file.read().decode('utf-8')
+#         # data = json.loads(file_data)
+#         # container_run.json = data
+#         # update the container for json data
+        
+        
+        
+
+#     # with open(html_path, 'rb') as file:
+#     #     print('monitor_jmx_docker_conatiner: file:', file.read())
+#     container_status = container_details.status
+#     final_update_container_after_execution(container_run['ref'], container_status)  
+#     container.remove()
+#     print(container.status)
+#     return True
+
 def get_container_details(container, ref, volume_path):
     container_run = get_container_from_codeengine(ref)
-    container_details =  get_container(container_run['container_id'])
+    container_details = get_container(container_run['container_id'])
     
     while container_details.status != "exited":
-        time.sleep(30)  # Wait for 30 seconds
+        # Perform live reporting while container is running
+        container_status = container_details.status
+        container_labels = container_details.labels
+        
+        update_container_reporting(container_run['ref'], container_status, container_labels)
+        
+        logs_path = f"{volume_path}/log.csv"
+        statistics_path = f"{volume_path}/html-results/statistics.json"
+        html_path = f"{volume_path}/html-results"
+        
+        if os.path.exists(logs_path):
+            try:
+                raw_data = csv_to_json(logs_path)
+                raw_data = json.dumps(raw_data)
+                update_container_for_raw_data(container_run['ref'], raw_data)
+                
+                data = get_json_metrics(logs_path)
+                json_data = json.dumps(data)
+                update_container_for_json_data(container_run['ref'], json_data)
+                
+                with open(logs_path, 'rb') as file:
+                    print('monitor_jmx_docker_conatiner: file:', file.read())
+                
+                with open(statistics_path, 'rb') as file:
+                    print('monitor_jmx_docker_conatiner: file:', file.read())
+            except Exception as e:
+                print(f"Error during live reporting: {e}")
+        
+        time.sleep(30)  # Wait for 30 seconds before the next status check
         container_details = get_container(container_run['container_id'])
-        
-        
+    time.sleep(30) 
+    # Final reporting once the container has exited
     container_status = container_details.status
     container_labels = container_details.labels
     
@@ -242,35 +321,23 @@ def get_container_details(container, ref, volume_path):
     statistics_path = f"{volume_path}/html-results/statistics.json"
     html_path = f"{volume_path}/html-results"
     
-    raw_data = csv_to_json(logs_path)
-    raw_data = json.dumps(raw_data)
-    update_container_for_raw_data(container_run['ref'], raw_data)
-    
-    data = get_json_metrics(logs_path)
-    json_data = json.dumps(data)
-    update_container_for_json_data(container_run['ref'], json_data)
-    
-    
-    with open(logs_path, 'rb') as file:
-        print('monitor_jmx_docker_conatiner: file:', file.read())
-        # raw_data = csv_to_json(logs_path)
-        # container_run.raw_data = raw_data
-        # update the container for raw data
-
-    with open(statistics_path, 'rb') as file:
-        print('monitor_jmx_docker_conatiner: file:', file.read())
-        # file_data = file.read().decode('utf-8')
-        # data = json.loads(file_data)
-        # container_run.json = data
-        # update the container for json data
+    if os.path.exists(logs_path):
+        raw_data = csv_to_json(logs_path)
+        raw_data = json.dumps(raw_data)
+        update_container_for_raw_data(container_run['ref'], raw_data)
         
+        data = get_json_metrics(logs_path)
+        json_data = json.dumps(data)
+        update_container_for_json_data(container_run['ref'], json_data)
         
+        with open(logs_path, 'rb') as file:
+            print('monitor_jmx_docker_conatiner: file:', file.read())
         
-
-    # with open(html_path, 'rb') as file:
-    #     print('monitor_jmx_docker_conatiner: file:', file.read())
+        with open(statistics_path, 'rb') as file:
+            print('monitor_jmx_docker_conatiner: file:', file.read())
+    
     container_status = container_details.status
-    final_update_container_after_execution(container_run['ref'], container_status)  
+    final_update_container_after_execution(container_run['ref'], container_status)
     container.remove()
     print(container.status)
     return True
