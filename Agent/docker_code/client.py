@@ -7,7 +7,8 @@ def get_client():
     
     if DOCKER_HOST:
 
-        client = docker.DockerClient(base_url=DOCKER_HOST)
+        # client = docker.DockerClient(base_url=DOCKER_HOST)
+        client = docker.from_env()
         return client
     else:
         client = docker.from_env()
