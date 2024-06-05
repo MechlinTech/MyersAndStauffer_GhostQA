@@ -287,11 +287,15 @@ def get_container_details(container, ref, volume_path):
         update_container_reporting(container_run['ref'], container_status, container_labels)
         
         logs_path = f"{volume_path}/log.csv"
+        logger.info(f"logs_path: {logs_path}")
         statistics_path = f"{volume_path}/html-results/statistics.json"
+        logger.info(f"statistics_path: {statistics_path}")
         html_path = f"{volume_path}/html-results"
+        logger.info(f"html_path: {html_path}")
         
         if os.path.exists(logs_path):
             try:
+                logger.info("Performing live reporting...")
                 raw_data = csv_to_json(logs_path)
                 raw_data = json.dumps(raw_data)
                 update_container_for_raw_data(container_run['ref'], raw_data)
@@ -318,23 +322,30 @@ def get_container_details(container, ref, volume_path):
     update_container_reporting(container_run['ref'], container_status, container_labels)
     
     logs_path = f"{volume_path}/log.csv"
+    logger.info(f"logs_path: {logs_path}")
     statistics_path = f"{volume_path}/html-results/statistics.json"
+    logger.info(f"statistics_path: {statistics_path}")
     html_path = f"{volume_path}/html-results"
+    logger.info(f"html_path: {html_path}")
     
     if os.path.exists(logs_path):
-        raw_data = csv_to_json(logs_path)
-        raw_data = json.dumps(raw_data)
-        update_container_for_raw_data(container_run['ref'], raw_data)
-        
-        data = get_json_metrics(logs_path)
-        json_data = json.dumps(data)
-        update_container_for_json_data(container_run['ref'], json_data)
-        
-        with open(logs_path, 'rb') as file:
-            print('monitor_jmx_docker_conatiner: file:', file.read())
-        
-        with open(statistics_path, 'rb') as file:
-            print('monitor_jmx_docker_conatiner: file:', file.read())
+        try:
+            logger.info("Performing final reporting...")
+            raw_data = csv_to_json(logs_path)
+            raw_data = json.dumps(raw_data)
+            update_container_for_raw_data(container_run['ref'], raw_data)
+            
+            data = get_json_metrics(logs_path)
+            json_data = json.dumps(data)
+            update_container_for_json_data(container_run['ref'], json_data)
+            
+            with open(logs_path, 'rb') as file:
+                print('monitor_jmx_docker_conatiner: file:', file.read())
+            
+            with open(statistics_path, 'rb') as file:
+                print('monitor_jmx_docker_conatiner: file:', file.read())
+        except Exception as e:
+            print(f"Error during final reporting: {e}")
     
     container_status = container_details.status
     final_update_container_after_execution(container_run['ref'], container_status)
