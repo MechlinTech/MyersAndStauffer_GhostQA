@@ -2988,25 +2988,21 @@ namespace SeleniumReportAPI.Helper
             List<object> result = new List<object>();
             var testrunData = GetTestRunData(testSuiteName, testRunName, timeZone);
             var data = JsonConvert.DeserializeObject<Dto_TestRunData>(testrunData.Result);
-            if (!string.IsNullOrEmpty(testerName))
-            {
-                if (testerName.Length > 0)
-                {
-                    foreach (string toEmail in testerName.Split(","))
-                    {
-                        if (!IsValidEmail(toEmail))
-                        {
-                            result.Add(new { status = "Failed", message = "Invalid email address format.", email = toEmail });
-                        }
-                        var fromEmail = _configuration["EmailDetails:EmailUsername"];
-                        var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
-                        var hostName = _configuration["EmailDetails:EmailHost"];
-                        var subject = "Test Suite Execution Result";
-                        var user = GetProfilByEmail(toEmail);
-                        var passWord = _configuration["EmailDetails:EmailPassword"];
-                        var port = Convert.ToInt32(_configuration["EmailDetails:Port"]);
+            var fromEmail = _configuration["EmailDetails:EmailUsername"];
+            var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
+            var subject = "Test Suite Execution Result";
+            var passWord = _configuration["EmailDetails:EmailPassword"];
+            Response response = null;
 
-                        var BodyString = $@"<!DOCTYPE html>
+            if (testerName.Contains(","))
+            {
+                foreach (string toEmail in testerName.Split(","))
+                {
+                    if (!IsValidEmail(toEmail))
+                    {
+                        result.Add(new { status = "Failed", message = "Invalid email address format.", email = toEmail });
+                    }
+                    var BodyString = $@"<!DOCTYPE html>
                                         <html lang=""en""> 
 			                            <head>         
 			                            <body style=""font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0;"">
@@ -3041,15 +3037,64 @@ namespace SeleniumReportAPI.Helper
                                         <H2>Thank you</H2>
                                         </body>
 			                            </html>";
-
-                        var client = new SendGridClient(passWord);
-                        var from = new EmailAddress(fromEmail, senderDisplayName);
-                        var to = new EmailAddress(toEmail, toEmail);
-                        var msg = MailHelper.CreateSingleEmail(from, to, subject, "", BodyString);
-                        var response = await client.SendEmailAsync(msg);
-                    }
+                    var client = new SendGridClient(passWord);
+                    var from = new EmailAddress(fromEmail, senderDisplayName);
+                    var to = new EmailAddress(toEmail, toEmail);
+                    var msg = MailHelper.CreateSingleEmail(from, to, subject, "", BodyString);
+                    response = await client.SendEmailAsync(msg);
                 }
+
             }
+            else
+            {
+                if (!IsValidEmail(testerName))
+                {
+                    result.Add(new { status = "Failed", message = "Invalid email address format.", email = testerName });
+                }
+                var BodyString = $@"<!DOCTYPE html>
+                                        <html lang=""en""> 
+			                            <head>         
+			                            <body style=""font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0;"">
+                                        <H2>Hi {testerName},</H2>
+                                        <p>Below is the test execution result for Test-Suite {testSuiteName}:</p>
+                                        <table style=""width: 100%; border-collapse: collapse; margin-bottom: 20px;"">
+                                        <thead>
+                                        <tr>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Run Id</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Start Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">End Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Status</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Total</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Passed</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Failed</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #fff;"">
+                                        <a href=""{Url}test/{testSuiteName}/{data.TestRunName}"" style=""text-decoration: none; color: #654DF7;"">{data.TestRunName}</a>
+                                        </td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunStartDateTime:dd-MMM-yyyy HH:mm:ss}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunEndDateTime}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunStatus}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TotalTestCases}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.PassedTestCases}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.FailedTestCases}</td>
+                                        </tr>
+                                        </tbody>
+                                        </table>
+                                        <H2>Thank you</H2>
+                                        </body>
+			                            </html>";
+                var client = new SendGridClient(passWord);
+                var from = new EmailAddress(fromEmail, senderDisplayName);
+                var to = new EmailAddress(testerName, testerName);
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, "", BodyString);
+                response = await client.SendEmailAsync(msg);
+            }
+            if (!response.IsSuccessStatusCode)
+                result.Add(new { status = "Failed", message = await response.Body.ReadAsStringAsync() });
+            result.Add(new { status = "Success", message = "Email sent successfully" });
             return result;
         }
 
