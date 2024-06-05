@@ -17,10 +17,10 @@ export default function Functional() {
                         to="/"
                         className={`${classes.linkStyle} ${location.pathname === "/" && classes.activeLink}`}
                     >
-                        Home
+                        Local Testing
                     </Link>
                 </Grid>
-                <Grid item>
+                {/* <Grid item>
                     <Link
                         to="/settings/Environment"
                         className={`${classes.linkStyle} ${location.pathname.startsWith("/settings") && classes.activeLink}`}
@@ -35,7 +35,7 @@ export default function Functional() {
                     >
                         Settings
                     </Link>
-                </Grid>
+                </Grid> */}
                 <Grid item>
                    
                     <Link

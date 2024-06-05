@@ -175,7 +175,7 @@ export default function Navigations() {
           <Route path="browser" element={<Browser2 />} />
           <Route path="application" element={<Application2 />} />
           <Route path="test-user" element={<TestUser2 />} />
-          <Route path="on-prem/ntegration" element={<h1>integaration</h1>} />
+          <Route path="on-prem/integration" element={<h1>Integration</h1>} />
 
           <Route path="integration" element={<Integration />} />
           {/* <Route path="Application" element={<Application />} /> */}

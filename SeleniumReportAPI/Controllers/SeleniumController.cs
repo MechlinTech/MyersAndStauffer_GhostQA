@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GitHub;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -187,8 +188,16 @@ namespace SeleniumReportAPI.Controllers
         [HttpOptions("ExecuteTestSuite")]
         public async Task<ActionResult> ExecuteTestSuite(string TestSuiteName)
         {
+            if (await _helper.IsAnySuiteRunning())
+                return Ok(new { status = "Conflict", message = "Another test is already running on GhostQA. Please try after some time." });
+
+            await _helper.UpdateSuiteRunStatus(true);
+
             if (!Request.Headers.TryGetValue("X-Api-Timezone", out StringValues timeZoneHeader))
+            {
+                await _helper.UpdateSuiteRunStatus(false);
                 return BadRequest("Timezone header is missing.");
+            }
 
             string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
 
@@ -196,68 +205,51 @@ namespace SeleniumReportAPI.Controllers
             string _testRunName = await _helper.GetRunId(TestSuiteName);
             string _testSuiteDetailsJson = await _helper.GetTestSuiteByName(TestSuiteName);
             TestSuiteNameData _testSuiteNameData = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuiteNameData>(_testSuiteDetailsJson);
-            string? testerName = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            string testerName = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
+            string result = string.Empty;
 
             Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteNameData.Environment.EnvironmentId));
             if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Length > 0)
             {
                 foreach (var testCaseName in _testSuiteNameData.SelectedTestCases.Split(","))
                 {
-                    try
+                    string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName, _testSuiteNameData.TestUser.Password);
+                    if (!string.IsNullOrEmpty(_testCaseJsonData))
                     {
-                        string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName, _testSuiteNameData.TestUser.Password);
-                        if (!string.IsNullOrEmpty(_testCaseJsonData))
-                        {
-                            try
-                            {
-                                Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
-                                _testSuiteData.TestSuiteName = TestSuiteName;
-                                _testSuiteData.TesterName = testerName;
-                                _testSuiteData.TestRunName = _testRunName;
-                                _testSuiteData.TestEnvironment = _environmentDetails.EnvironmentName;
-                                _testSuiteData.TestBrowserName = _environmentDetails?.BrowserName;
-                                _testSuiteData.TestCaseName = testCaseName.ToString();
-
-                                //Save Data into table for custom test suite
-                                var result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
-                                _result.Add(result);
-                                //Send Email
-                                if (result.Contains("success"))
-                                {
-                                    string originalUrl = Request.Headers.Referer.ToString();
-                                    int lastSlashIndex = originalUrl.LastIndexOf('/');
-                                    var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
-                                    if (_testSuiteNameData.SendEmail == true)
-                                    {
-                                        var obj = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url, mapping);
-                                        _result.Add(obj);
-                                    }
-                                    else
-                                    {
-                                        string AllUsers = await _helper.GetUserDetails();
-                                        JArray jsonArray = JArray.Parse(AllUsers);
-                                        // Extract email addresses
-                                        List<string> emails = jsonArray.Where(j => !(bool)j["IsDisabled"]).Select(j => (string)j["Email"]).ToList();
-                                        // Convert to comma-separated string
-                                        string commaSeparatedEmails = string.Join(", ", emails);
-
-                                        var obj1 = _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
-                                        _result.Add(obj1);
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                _result.Add(new { status = "Failed", message = ex.Message });
-                            }
-                        }
+                        Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
+                        _testSuiteData.TestSuiteName = TestSuiteName;
+                        _testSuiteData.TesterName = testerName;
+                        _testSuiteData.TestRunName = _testRunName;
+                        _testSuiteData.TestEnvironment = _environmentDetails.EnvironmentName;
+                        _testSuiteData.TestBrowserName = _environmentDetails?.BrowserName;
+                        _testSuiteData.TestCaseName = testCaseName.ToString();
+                        result = await _helper.SaveTestCaseData(Newtonsoft.Json.JsonConvert.SerializeObject(_testSuiteData));
+                        _result.Add(result);
                     }
-                    catch (Exception ex)
+                }
+                if (result.Contains("success"))
+                {
+                    string originalUrl = Request.Headers.Referer.ToString();
+                    int lastSlashIndex = originalUrl.LastIndexOf('/');
+                    var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
+                    if (_testSuiteNameData.SendEmail == true)
                     {
-                        _result.Add(new { status = "Failed", message = ex.Message });
+                        var obj = await _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url, mapping);
+                        _result.Add(obj);
+                    }
+                    else
+                    {
+                        string AllUsers = await _helper.GetUserDetails();
+                        JArray jsonArray = JArray.Parse(AllUsers);
+                        List<string> emails = jsonArray.Where(j => !(bool)j["IsDisabled"]).Select(j => (string)j["Email"]).ToList();
+                        string commaSeparatedEmails = string.Join(", ", emails);
+
+                        var obj1 = await _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
+                        _result.Add(obj1);
                     }
                 }
             }
+            await _helper.UpdateSuiteRunStatus(false);
             _result.Add(new { status = "Finished", message = "Test Suite execution completed!" });
             return Ok(_result);
         }
@@ -534,7 +526,7 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> AddUpdateUserOrganization([FromForm] Dto_UserOrganization model)
         {
             var CreatedBy = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
-            return Ok(await _helper.AddUpdateUserOrganization(model, CreatedBy));
+            return Ok(await _helper.AddUpdateUserOrganization(model, CreatedBy, Request.Scheme, Request.Host));
         }
 
         /// <summary>

@@ -442,6 +442,22 @@ namespace SeleniumReportAPI.Migrations
                     b.ToTable("tbl_Environments");
                 });
 
+            modelBuilder.Entity("SeleniumReportAPI.Models.ExistingSuiteRun", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsExistingSuiteRunning")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_ExistingSuiteRun");
+                });
+
             modelBuilder.Entity("SeleniumReportAPI.Models.FuncationalTest", b =>
                 {
                     b.Property<int>("RootId")
