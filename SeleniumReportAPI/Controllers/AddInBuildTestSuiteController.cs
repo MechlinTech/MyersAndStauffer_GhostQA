@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
 using SeleniumReportAPI.Models;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 
 namespace SeleniumReportAPI.Controllers
@@ -140,7 +142,10 @@ namespace SeleniumReportAPI.Controllers
         [HttpPost("SendPasswordResetMail")]
         public async Task<IActionResult> SendPasswordResetMail(Dto_ForgotPassword model)
         {
-            var result = await _helper.SendPasswordResetMailAsync(model.Email);
+            string originalUrl = Request.Headers.Referer.ToString();
+            int lastSlashIndex = originalUrl.LastIndexOf('/');
+            var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
+            var result = await _helper.SendPasswordResetMailAsync(model.Email, Url);
 
             return result.status == "Success" ? Ok(new { status = result.status, message = "Password reset information has been sent to the user's email." }) : result.status == "NotFound" ? StatusCode(404, new { status = "Failed", message = result.message }) : StatusCode(550, new { status = "Failed", message = result.message });
         }

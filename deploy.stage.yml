@@ -1,13 +1,13 @@
 version: '3.8'
 
 volumes:
-  ms_data:
-  ms_logs:
+  ms_data_stage:
+  ms_logs_stage:
 
 services:
 
   caddy:
-    image: ghostqa/caddy:latest
+    image: ghostqa/caddy:${COMMITHASH}
     ports:
       - "30002:30001"
       - "80"
@@ -19,7 +19,7 @@ services:
       - ~/caddy/config:/config
 
   webui:
-    image: ghostqa/webui:latest
+    image: ghostqa/webui:${COMMITHASH}
     ports:
       - "80"
     environment:
@@ -29,7 +29,7 @@ services:
       - host.docker.internal:host-gateway
 
   dotnetapi:
-    image: ghostqa/dotnetapi:latest
+    image: ghostqa/dotnetapi:${COMMITHASH}
     ports:
       - "80"
     environment:
@@ -57,7 +57,7 @@ services:
       - host.docker.internal:host-gateway
       
   migrations:
-    image: ghostqa/dotnetapi-migrations:latest
+    image: ghostqa/dotnetapi-migrations:${COMMITHASH}
     ports:
       - "80"
     extra_hosts:
@@ -86,8 +86,8 @@ services:
     container_name: db-stage
     restart: unless-stopped
     volumes:
-      - ms_data:/var/opt/mssql/data
-      - ms_logs:/var/opt/mssql/log
+      - ms_data_stage:/var/opt/mssql/data
+      - ms_logs_stage:/var/opt/mssql/log
     healthcheck:
       test: ["CMD", "sqlcmd", "-U", "sa", "-P", "P@ssw0rd@123###", "-Q", "SELECT 1"]
       interval: 30s
@@ -104,10 +104,10 @@ services:
     ports:
       - "5432"  # Expose PostgreSQL port
     volumes:
-      - ~/ghostqa/postgres-data:/var/lib/postgresql/data 
+      - ./ghostqa/postgres-data:/var/lib/postgresql/data 
   
   codeengine: &django_app
-    image: ghostqa/codeengine:latest
+    image: ghostqa/codeengine:${COMMITHASH}
     command:  pipenv run gunicorn ghostqa.wsgi -w 4 -b 0.0.0.0:8000 -t 1000000000
     extra_hosts:
       - host.docker.internal:host-gateway
