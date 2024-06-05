@@ -179,6 +179,10 @@ def monitor_jmx_docker_conatiner_With_live_reporting(container,container_run,vol
 
 def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_run=None):
     client = get_client()
+    if client:
+        logger.info("Docker client is available")
+    else:
+        logger.error("Docker client is not available")
     # print('volume_path',volume_path)
     print(f"{__name__}: volume_path: {volume_path}")
     
