@@ -14,7 +14,11 @@ import { useStyles } from "./styles";
 const AddTeams = ({
   open,
   onClose,
-  loading
+  handleSave,
+  loading,
+  setwebHookUrl, 
+  webhooksUrl, 
+  errors
 }) => {
   const classes = useStyles();
 
@@ -40,13 +44,25 @@ const AddTeams = ({
             <FormControl
               fullWidth
               className={clsx(classes.margin, classes.textField)}
-             
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderColor: errors.accountUrl ? "red" : "transparent",
+                  "&:hover fieldset": {
+                    borderColor: errors.accountUrl ? "red" : "#654DF7",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: errors.accountUrl ? "red" : "#654DF7",
+                  },
+                },
+              }}
             >
               <OutlinedInput
                 className={classes.Outlined}
                 type="text"
-              
-                placeholder="Enter Webhook URL"
+                value={webhooksUrl} 
+                onChange={(e) => setwebHookUrl(e.target.value)} 
+                placeholder="Enter Webhooks URL"
+                error={errors.webhooksUrl}
               />
             </FormControl>
           </Grid>
@@ -65,6 +81,7 @@ const AddTeams = ({
           <Button
             variant="contained"
             color="primary"
+            onClick={handleSave}
             className={classes.button}
             style={{ background: "#654DF7" }}
             endIcon={loading && <CircularProgress size={20} color="inherit" />}
