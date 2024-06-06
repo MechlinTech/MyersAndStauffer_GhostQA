@@ -194,10 +194,10 @@ def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_ru
         image=image,
         name=name,
         remove=False,
-        command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t {volume_path}/test.jmx -l {volume_path}/log.csv -e -o {volume_path}/html-results',
+        command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t /jmeter-scripts/test.jmx -l /jmeter-scripts/log.csv -e -o /jmeter-scripts/html-results',
         tty=True,
          volumes={
-        volume_path: {'bind': volume_path, 'mode': 'rw'},
+        volume_path: {'bind': '/jmeter-scripts/', 'mode': 'rw'},
         # f"{volume_path}/bin/filename.csv": {'bind': '/opt/apache-jmeter-5.6.3/bin/filename.csv', 'mode': 'rw'}
         },
         detach=True,
