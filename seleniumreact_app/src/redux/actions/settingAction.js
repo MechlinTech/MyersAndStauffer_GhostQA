@@ -346,11 +346,11 @@ export const updateZiraIntegration = (
         dispatch(getPerformanceIntegrationList(data.userId));
         callback(true);
       } else if (response.data.message == "Not Found") {
-        toast.warn("Invalid Informtion Entered");
+        toast.warn("Invalid Information Entered");
         setLoading(false);
         callback(false);
       } else if (response.data.message == "Unauthorized") {
-        toast.warn("Invalid Informtion Entered");
+        toast.warn("Invalid Information Entered");
         setLoading(false);
         callback(false);
       }
@@ -401,11 +401,11 @@ export const updateTeamsIntegration = (
         dispatch(getPerformanceIntegrationList(data.userId));
         callback(true);
       } else if (response.data.message == "Not Found") {
-        toast.warn("Invalid Informtion Entered");
+        toast.warn("Invalid Information Entered");
         setLoading(false);
         callback(false);
       } else if (response.data.message == "Unauthorized") {
-        toast.warn("Invalid Informtion Entered");
+        toast.warn("Invalid Information Entered");
         setLoading(false);
         callback(false);
       }
