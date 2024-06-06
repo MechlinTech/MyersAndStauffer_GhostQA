@@ -194,7 +194,7 @@ def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_ru
         image=image,
         name=name,
         remove=False,
-        command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t /jmeter-scripts/test.jmx -l /jmeter-scripts/log.csv -e -o /jmeter-scripts/html-results',
+        command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t {volume_path}/test.jmx -l {volume_path}/log.csv -e -o {volume_path}/html-results',
         tty=True,
          volumes={
         volume_path: {'bind': '/jmeter-scripts', 'mode': 'rw'},
@@ -284,6 +284,7 @@ def get_container_details(container, ref, volume_path):
     # html_path = f"{volume_path}/html-results"
     
     while True:
+        time.sleep(30)
         logger.info("Liver reporting result")
         # Perform live reporting while container is running
         container_status = container_details.status
@@ -323,7 +324,7 @@ def get_container_details(container, ref, volume_path):
             break
     
     # Final reporting once the container has exited
-    time.sleep(10)
+    time.sleep(30)
     try:
         logger.info("Final reporting result")
         logs_path = f"{volume_path}/log.csv"
