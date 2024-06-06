@@ -134,6 +134,12 @@ services:
       - postgres
     ports:
       - "5000"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
   
   adminuser:
     <<: *django_app
@@ -145,5 +151,11 @@ services:
       DJANGO_SUPERUSER_EMAIL: dev@ghostqa.com
       DJANGO_SUPERUSER_PASSWORD: Admin@1234
       DATABASE_URL: postgres://yourusername:yourpassword@postgres:5432/yourdatabase
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s 
 
   
