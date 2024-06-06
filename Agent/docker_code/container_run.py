@@ -189,7 +189,7 @@ def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_ru
     # Build the Docker image from the Dockerfile
     # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
     image = client.images.pull('ghostqa/performace:latest')
-    volume_path = volume_path[len('/tests'):]
+    # volume_path = volume_path[len('/tests'):]
     container = client.containers.run(
         image=image,
         name=name,
@@ -197,7 +197,7 @@ def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_ru
         command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t {volume_path}/test.jmx -l {volume_path}/log.csv -e -o {volume_path}/html-results',
         tty=True,
          volumes={
-        'agent-data': {'bind': '/performace/', 'mode': 'rw'},
+        '~/agent-data': {'bind': '/tests/', 'mode': 'rw'},
         # f"{volume_path}/bin/filename.csv": {'bind': '/opt/apache-jmeter-5.6.3/bin/filename.csv', 'mode': 'rw'}
         },
         detach=True,
