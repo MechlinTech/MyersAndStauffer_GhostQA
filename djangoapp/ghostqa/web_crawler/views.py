@@ -61,6 +61,7 @@ def is_same_site(url1, url2):
 class CrawlViewSet(viewsets.ModelViewSet):
     queryset = CrawlRequest.objects.all()
     serializer_class = CrawlRequestSerializers
+    
     @action(detail=True, methods=['get'])
     def get_all_possible_paths(self,request,*args, **kwargs):
         object = self.get_object()
@@ -71,7 +72,43 @@ class CrawlViewSet(viewsets.ModelViewSet):
             paths.append(' ---> '.join([node.url for node in backtrace_path]))
         
         return Response({'paths': paths}, status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=['get'])
+    def get_all_possible_workflows(self,request,*args, **kwargs):
+        object = self.get_object()
+        leaf_nodes = object.list_leaf_nodes()
+        paths = []
         
+        index = 0
+        testSuites =[]
+        for node in leaf_nodes:
+            backtrace_path = node.backtrace_path()
+            index = index +1
+            testSuite= {
+                "name": f"crawl request: {object.id}",
+                'beforeEach': [],
+                'testCases':[]
+            }
+            test_case = {
+                'name' : f"Workflow Name: {index}",
+                'actions':[]
+            }
+            for node in backtrace_path:
+                if node.is_start_node:
+                    testSuite['beforeEach'] = [{'type':'visit',"selector":node.url}]
+                else:
+                    test_case['actions'].append({
+                        "type":node.action,
+                        "selector":node.selector,
+                        # "description": f"When you {node.action} on {node.element_info}  from the page {node.previous_node.url} it should open {node.url}"
+                    })
+            
+            testSuite['testCases'].append(test_case)
+            testSuites.append(testSuite)
+            if index > 3:
+                break
+                
+        return Response({'testSuite': testSuites}, status=status.HTTP_200_OK)        
     @action(detail=False, methods=['post'])
     def crawl_website(self, request):
         start_url = request.data.get('start_url')
