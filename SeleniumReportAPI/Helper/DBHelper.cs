@@ -4,23 +4,21 @@ using Microsoft.IdentityModel.Tokens;
 using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using OpenQA.Selenium;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Models;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO.Compression;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using TestSeleniumReport.DTO_s;
 using Environments = SeleniumReportAPI.Models.Environments;
-using SmtpClient = System.Net.Mail.SmtpClient;
 
 namespace SeleniumReportAPI.Helper
 {
@@ -974,23 +972,19 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        public object SendEmail(string toEmail, string Mailtype, string Url, string GenratePassword)
+        public async Task<object> SendEmail(string toEmail, string Mailtype, string Url, string GenratePassword)
         {
             if (!IsValidEmail(toEmail))
             {
                 return new { message = "Invalid email address format." };
             }
 
-            string result = string.Empty;
-            var BodyString = string.Empty;
             var fromEmail = _configuration["EmailDetails:EmailUsername"];
             var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
-            var hostName = _configuration["EmailDetails:EmailHost"];
             var subject = "Invitation to Join Our Platform";
             var user = GetProfilByEmail(toEmail);
             var passWord = _configuration["EmailDetails:EmailPassword"];
-            var port = Convert.ToInt32(_configuration["EmailDetails:Port"]);
-            BodyString = Mailtype.Equals("Invitation")
+            var BodyString = Mailtype.Equals("Invitation")
                 ? @"<!DOCTYPE html>
                                 <html lang=""en"">
                                 <body style=""font-family: Arial, sans-serif; margin: 0; padding: 0;"">
@@ -1036,47 +1030,18 @@ namespace SeleniumReportAPI.Helper
                                 </html>" : "";
 
             if (Mailtype.Equals("Invitation") && !string.IsNullOrEmpty(user.Result))
-            {
-                return new
-                {
-                    status = "Failed",
-                    message = "User Already Exist"
-                };
-            }
+                return new { status = "Failed", message = "User Already Exist" };
 
-            var smtpClient = new SmtpClient(hostName)
-            {
-                Port = port,
-                Credentials = new NetworkCredential(fromEmail, passWord),
-                EnableSsl = true,
-            };
+            var client = new SendGridClient(passWord);
+            var from = new EmailAddress(fromEmail, senderDisplayName);
+            var to = new EmailAddress(toEmail, toEmail);
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, "", BodyString);
+            var response = await client.SendEmailAsync(msg);
 
-            var fromEmailAddress = new MailAddress(fromEmail, senderDisplayName);
-            var mailMessage = new MailMessage()
-            {
-                From = fromEmailAddress,
-                Subject = subject,
-                IsBodyHtml = true,
-                Body = BodyString
-            };
-            mailMessage.To.Add(toEmail);
+            if (!response.IsSuccessStatusCode)
+                return new { status = "Failed", message = await response.Body.ReadAsStringAsync() };
 
-            try
-            {
-                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                smtpClient.Send(mailMessage);
-                result = "Email sent successfully!";
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return new
-            {
-                status = "Success",
-                message = result
-            };
+            return new { status = "Success", message = "Email sent successfully!" };
         }
 
         public async Task<object> AcceptInvitation(string Email, string Url)
@@ -1104,7 +1069,7 @@ namespace SeleniumReportAPI.Helper
                 }
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 await _userManager.ConfirmEmailAsync(user, token);
-                EmailStatus = SendEmail(Email, "Accept", Url, GeneratorPassword);
+                EmailStatus = await SendEmail(Email, "Accept", Url, GeneratorPassword);
             }
             catch (Exception ex)
             {
@@ -2570,7 +2535,7 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal async Task<Dto_LoadExecuteResponse> ExecutePerformanceJMX(Dto_LoadExecuteResponse model)
+        internal async Task<Dto_LoadExecuteResponse> ExecutePerformanceJMX(Dto_LoadExecuteResponse model, string url)
         {
             string result = string.Empty;
             var guid = Guid.NewGuid().ToString();
@@ -2629,7 +2594,7 @@ namespace SeleniumReportAPI.Helper
                             formData.Add(new StringContent(data.RampUpSteps.ToString()), "jrampup_steps");
                             formData.Add(new StringContent(data.DurationInMinutes.ToString()), "durations");
                             formData.Add(new StringContent(guid), "client_reference_id");
-                            using (var response = await httpClient.PostAsync(_configuration["CypressAPI:PerformanceExecutor"], formData))
+                            using (var response = await httpClient.PostAsync(url, formData))
                             {
                                 var res1 = await response.Content.ReadAsStringAsync();
                             }
@@ -3018,31 +2983,26 @@ namespace SeleniumReportAPI.Helper
             return result;
         }
 
-        internal List<object> SendExecutionDataMail(string testSuiteName, string testRunName, string testerName, string Url, string timeZone)
+        internal async Task<List<object>> SendExecutionDataMail(string testSuiteName, string testRunName, string testerName, string Url, string timeZone)
         {
             List<object> result = new List<object>();
             var testrunData = GetTestRunData(testSuiteName, testRunName, timeZone);
             var data = JsonConvert.DeserializeObject<Dto_TestRunData>(testrunData.Result);
-            if (!string.IsNullOrEmpty(testerName))
-            {
-                if (testerName.Length > 0)
-                {
-                    foreach (string toEmail in testerName.Split(","))
-                    {
-                        if (!IsValidEmail(toEmail))
-                        {
-                            result.Add(new { status = "Failed", message = "Invalid email address format.", email = toEmail });
-                        }
-                        var BodyString = string.Empty;
-                        var fromEmail = _configuration["EmailDetails:EmailUsername"];
-                        var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
-                        var hostName = _configuration["EmailDetails:EmailHost"];
-                        var subject = "Test Suite Execution Result";
-                        var user = GetProfilByEmail(toEmail);
-                        var passWord = _configuration["EmailDetails:EmailPassword"];
-                        var port = Convert.ToInt32(_configuration["EmailDetails:Port"]);
+            var fromEmail = _configuration["EmailDetails:EmailUsername"];
+            var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
+            var subject = "Test Suite Execution Result";
+            var passWord = _configuration["EmailDetails:EmailPassword"];
+            Response response = null;
 
-                        BodyString = $@"<!DOCTYPE html>
+            if (testerName.Contains(","))
+            {
+                foreach (string toEmail in testerName.Split(","))
+                {
+                    if (!IsValidEmail(toEmail))
+                    {
+                        result.Add(new { status = "Failed", message = "Invalid email address format.", email = toEmail });
+                    }
+                    var BodyString = $@"<!DOCTYPE html>
                                         <html lang=""en""> 
 			                            <head>         
 			                            <body style=""font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0;"">
@@ -3077,37 +3037,64 @@ namespace SeleniumReportAPI.Helper
                                         <H2>Thank you</H2>
                                         </body>
 			                            </html>";
-
-                        var smtpClient = new SmtpClient(hostName)
-                        {
-                            Port = port,
-                            Credentials = new NetworkCredential(fromEmail, passWord),
-                            EnableSsl = true,
-                        };
-
-                        var fromEmailAddress = new MailAddress(fromEmail, senderDisplayName);
-                        var mailMessage = new MailMessage()
-                        {
-                            From = fromEmailAddress,
-                            Subject = subject,
-                            IsBodyHtml = true,
-                            Body = BodyString
-                        };
-                        mailMessage.To.Add(toEmail);
-
-                        try
-                        {
-                            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                            smtpClient.Send(mailMessage);
-                            result.Add(new { status = "Success", message = "Mail Sent Successfully", email = toEmail });
-                        }
-                        catch (Exception ex)
-                        {
-                            result.Add(new { status = "Failed", message = ex.Message, email = toEmail });
-                        }
-                    }
+                    var client = new SendGridClient(passWord);
+                    var from = new EmailAddress(fromEmail, senderDisplayName);
+                    var to = new EmailAddress(toEmail, toEmail);
+                    var msg = MailHelper.CreateSingleEmail(from, to, subject, "", BodyString);
+                    response = await client.SendEmailAsync(msg);
                 }
+
             }
+            else
+            {
+                if (!IsValidEmail(testerName))
+                {
+                    result.Add(new { status = "Failed", message = "Invalid email address format.", email = testerName });
+                }
+                var BodyString = $@"<!DOCTYPE html>
+                                        <html lang=""en""> 
+			                            <head>         
+			                            <body style=""font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0;"">
+                                        <H2>Hi {testerName},</H2>
+                                        <p>Below is the test execution result for Test-Suite {testSuiteName}:</p>
+                                        <table style=""width: 100%; border-collapse: collapse; margin-bottom: 20px;"">
+                                        <thead>
+                                        <tr>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Run Id</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Start Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">End Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Status</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Total</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Passed</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Failed</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #fff;"">
+                                        <a href=""{Url}test/{testSuiteName}/{data.TestRunName}"" style=""text-decoration: none; color: #654DF7;"">{data.TestRunName}</a>
+                                        </td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunStartDateTime:dd-MMM-yyyy HH:mm:ss}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunEndDateTime}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunStatus}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TotalTestCases}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.PassedTestCases}</td>
+                                        <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.FailedTestCases}</td>
+                                        </tr>
+                                        </tbody>
+                                        </table>
+                                        <H2>Thank you</H2>
+                                        </body>
+			                            </html>";
+                var client = new SendGridClient(passWord);
+                var from = new EmailAddress(fromEmail, senderDisplayName);
+                var to = new EmailAddress(testerName, testerName);
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, "", BodyString);
+                response = await client.SendEmailAsync(msg);
+            }
+            if (!response.IsSuccessStatusCode)
+                result.Add(new { status = "Failed", message = await response.Body.ReadAsStringAsync() });
+            result.Add(new { status = "Success", message = "Email sent successfully" });
             return result;
         }
 
@@ -3440,7 +3427,7 @@ namespace SeleniumReportAPI.Helper
             return new string(array);
         }
 
-        public async Task<Dto_Response> SendPasswordResetMailAsync(string Email)
+        public async Task<Dto_Response> SendPasswordResetMailAsync(string Email, string Url)
         {
             var user = await _userManager.FindByEmailAsync(Email);
 
@@ -3449,7 +3436,7 @@ namespace SeleniumReportAPI.Helper
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var result = SendEmail("Ghost-QA - Password Reset Request", $"Please click the following button to reset your password: <br><br> <a href={_configuration["EmailDetails:ResetPasswordLink"]}?token={token}&email={Email}><button>Reset Password</button></a>", true, Email);
+            var result = await SendEmail("Ghost-QA - Password Reset Request", $"Please click the following button to reset your password: <br><br> <a href={Url}reset-password/?token={token}&email={Email}><button>Reset Password</button></a>", Email);
 
             return new Dto_Response() { status = result.status, message = result.message };
         }
@@ -3469,36 +3456,18 @@ namespace SeleniumReportAPI.Helper
             return new Dto_Response() { status = "Success", message = "Password has been reset successfully!" };
         }
 
-        public Dto_Response SendEmail(string subject, string body, bool isBodyHtml, string toEmail)
+        public async Task<Dto_Response> SendEmail(string subject, string body, string toEmail)
         {
-            var smtpClient = new SmtpClient(_configuration["EmailDetails:EmailHost"])
-            {
-                Port = Convert.ToInt32(_configuration["EmailDetails:Port"]),
-                Credentials = new NetworkCredential(_configuration["EmailDetails:EmailUsername"], _configuration["EmailDetails:EmailPassword"]),
-                EnableSsl = true,
-            };
+            var client = new SendGridClient(_configuration["EmailDetails:EmailPassword"]);
+            var from = new EmailAddress(_configuration["EmailDetails:EmailUsername"], _configuration["EmailDetails:SenderDisplayName"]);
+            var to = new EmailAddress(toEmail, toEmail);
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, "", body);
+            var response = await client.SendEmailAsync(msg);
 
-            var fromEmailAddress = new MailAddress(_configuration["EmailDetails:EmailUsername"], _configuration["EmailDetails:SenderDisplayName"]);
+            if (!response.IsSuccessStatusCode)
+                return new Dto_Response() { status = "Failed", message = await response.Body.ReadAsStringAsync() };
 
-            var mailMessage = new MailMessage()
-            {
-                From = fromEmailAddress,
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = isBodyHtml
-            };
-
-            mailMessage.To.Add(toEmail);
-
-            try
-            {
-                smtpClient.Send(mailMessage);
-                return new Dto_Response() { status = "Success", message = "Email sent successfully!" };
-            }
-            catch (Exception ex)
-            {
-                return new Dto_Response { status = "EmailFailed", message = ex.Message };
-            }
+            return new Dto_Response() { status = "Success", message = "Email sent successfully!" };
         }
 
         internal async Task<string> GetAllActiveUserDetails()
@@ -3768,6 +3737,8 @@ namespace SeleniumReportAPI.Helper
         internal async Task<string> GetAllUserIntegration(string userId)
         {
             string result = string.Empty;
+            List<Integration> jiraDetails = new List<Integration>();
+            List<Dto_IntegrationRespnse> jiraRespnse = new List<Dto_IntegrationRespnse>();
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -3783,6 +3754,7 @@ namespace SeleniumReportAPI.Helper
                             {
                                 reader.Read();
                                 result = reader["result"].ToString();
+                                jiraDetails = JsonConvert.DeserializeObject<List<Integration>>(result);
                             }
                         }
                     }
@@ -3793,14 +3765,34 @@ namespace SeleniumReportAPI.Helper
             {
                 throw ex;
             }
-            return result;
+
+            foreach (var integration in jiraDetails)
+            {
+                Dto_IntegrationRespnse jira = new Dto_IntegrationRespnse
+                {
+                    Id = integration.Id,
+                    AppName = integration.AppName,
+                    UserId = integration.UserId,
+                    CreatedBy = integration.CreatedBy,
+                    CreatedOn = integration.CreatedOn,
+                    UpdatedBy = integration.UpdatedBy,
+                    UpdatedOn = integration.UpdatedOn,
+                    APIKey = integration.APIKey != null ? DecompressString(integration.APIKey) : string.Empty,
+                    Domain = integration.Domain,
+                    Email = integration.Email,
+                    IsIntegrated = integration.IsIntegrated
+                };
+                jiraRespnse.Add(jira);
+            }
+
+            return JsonConvert.SerializeObject(jiraRespnse);
         }
 
         internal async Task<object> UpdateIntegration(Dto_Integration model)
         {
             string result = string.Empty;
             var str = CompressString(model.APIKey);
-            if (model.IsIntegrated)
+            if (model.IsIntegrated && model.AppName == "Jira")
             {
                 using (var httpClient = new HttpClient())
                 {
@@ -3942,6 +3934,9 @@ namespace SeleniumReportAPI.Helper
                 }
 
                 Dto_JiraDetails jiraDetails = JsonConvert.DeserializeObject<Dto_JiraDetails>(result1);
+
+                if (string.IsNullOrEmpty(jiraDetails.Email))
+                    return new Dto_GetAllJiraIssue();
 
                 using (var httpClient = new HttpClient())
                 {

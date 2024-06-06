@@ -1765,7 +1765,7 @@ BEGIN TRY
 					tr.[TestRunName],
 					Cast(tr.[TestRunStartDate] As Date)
 				ORDER BY 
-					tr.[TestRunName], Cast(tr.[TestRunStartDate] As Date) DESC
+					Cast(tr.[TestRunStartDate] As Date) DESC, tr.[TestRunName] DESC
         FOR JSON PATH))'
 	PRINT @SQLQuery
 
@@ -1813,7 +1813,7 @@ BEGIN TRY
 			FROM TestRuns tr
 			WHERE CAST(tr.[TestRunStartDate] AS DATE) >= CAST(DATEADD(DAY, -@FilterValue, GETDATE() AT TIME ZONE @TimeZone) AS DATE)
 			GROUP BY tr.[TestSuiteName], tr.[TestRunName], Cast(tr.[TestRunStartDate] As Date)
-			ORDER BY tr.[TestRunName], Cast(tr.[TestRunStartDate] As Date) DESC
+			ORDER BY Cast(tr.[TestRunStartDate] As Date) DESC, tr.[TestRunName] DESC
         FOR JSON PATH))
 END TRY
 BEGIN CATCH
@@ -4641,8 +4641,8 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[stp_UpdateIntegration]
 @UserId               VARCHAR(100),
 @IsIntegrated         Bit,
-@Domain				  VARCHAR(100),
-@Email				  VARCHAR(100),
+@Domain				  VARCHAR(100) = '',
+@Email				  VARCHAR(100) = '',
 @APIKey				  VARBINARY(MAX),
 @AppName			  VARCHAR(100)
 AS

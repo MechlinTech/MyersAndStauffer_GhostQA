@@ -7,7 +7,7 @@ volumes:
 services:
 
   caddy:
-    image: ghostqa/caddy:latest
+    image: ghostqa/caddy:${COMMITHASH}
     ports:
       - "30001:30001"
       - "80:80"
@@ -19,7 +19,7 @@ services:
       - ~/caddy/config:/config
 
   webui:
-    image: ghostqa/webui:latest
+    image: ghostqa/webui:${COMMITHASH}
     ports:
       - "3000:80"
     environment:
@@ -29,7 +29,7 @@ services:
       - host.docker.internal:host-gateway
 
   dotnetapi:
-    image: ghostqa/dotnetapi:latest
+    image: ghostqa/dotnetapi:${COMMITHASH}
     ports:
       - "5000:80"
     environment:
@@ -50,6 +50,7 @@ services:
       - ./app/dotnet/wwwroot/TestDataCSVFile:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataCSVFile
       - ./app/dotnet/wwwroot/TestDataFileDev:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFileDev
       - ./app/UploadedLogos:/app/UploadedLogos/
+      - ./app/data:/app/C:/Published_Projects/React_App/images/data
     depends_on:
       - db
       - migrations
@@ -57,7 +58,7 @@ services:
       - host.docker.internal:host-gateway
       
   migrations:
-    image: ghostqa/dotnetapi-migrations:latest
+    image: ghostqa/dotnetapi-migrations:${COMMITHASH}
     ports:
       - "5001:80"
     extra_hosts:
@@ -104,10 +105,10 @@ services:
     ports:
       - "5433:5432"  # Expose PostgreSQL port
     volumes:
-      - ~/ghostqa/postgres-data:/var/lib/postgresql/data 
+      - ./ghostqa/postgres-data:/var/lib/postgresql/data 
   
   codeengine: &django_app
-    image: ghostqa/codeengine:latest
+    image: ghostqa/codeengine:${COMMITHASH}
     command:  pipenv run gunicorn ghostqa.wsgi -w 4 -b 0.0.0.0:8000 -t 1000000000
     extra_hosts:
       - host.docker.internal:host-gateway
@@ -155,4 +156,6 @@ services:
         condition: on-failure
         delay: 5s
         max_attempts: 3
-        window: 120s  
+        window: 120s 
+
+  

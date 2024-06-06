@@ -1,4 +1,5 @@
-﻿using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
+﻿
+using MyersAndStaufferSeleniumTests.Arum.Mississippi.TestFile;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
@@ -34,7 +35,8 @@ namespace MyersAndStaufferSeleniumTests.Utils
                     chromeOptions.AddArgument("--incognito");
                     chromeOptions.AddArgument("test-type");
                     chromeOptions.AddArgument("--ignore-certificate-errors");
-
+                    chromeOptions.AddArgument("--disable-dev-shm-usage"); // overcome limited resource problems
+                    chromeOptions.AddArgument("--no-sandbox"); // Bypass OS security model
                     var timestamp = DateTime.Now.ToFileTime();
                     downloadDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SeleniumDownload", timestamp.ToString());
                     Directory.CreateDirectory(downloadDirectory);
@@ -43,8 +45,8 @@ namespace MyersAndStaufferSeleniumTests.Utils
                     chromeOptions.AddUserProfilePreference("download.prompt_for_download", false);
                     chromeOptions.AddUserProfilePreference("disable-popup-blocking", "true");
 
-                    if (isRunHeadless)
-                        chromeOptions.AddArguments("headless");
+                    if (true)
+                        chromeOptions.AddArguments("--headless");
 
                     _driver = new ChromeDriver(driverpath, chromeOptions);
                     if (windowSize != null)

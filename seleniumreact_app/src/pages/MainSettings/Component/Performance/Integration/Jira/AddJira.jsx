@@ -128,34 +128,6 @@ const AddJira = ({
               />
             </FormControl>
           </Grid>
-
-          {/* <Grid item xs={12} sx={{ marginTop: "10px" }}>
-            <Typography variant="subtitle1">Confirm API Key</Typography>
-            <FormControl
-              fullWidth
-              className={clsx(classes.margin, classes.textField)}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderColor: errors.confirmApiKey ? "red" : "transparent",
-                  "&:hover fieldset": {
-                    borderColor: errors.confirmApiKey ? "red" : "#654DF7",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: errors.confirmApiKey ? "red" : "#654DF7",
-                  },
-                },
-              }}
-            >
-              <OutlinedInput
-                className={classes.Outlined}
-                type="text"
-                value={confirmApiKey}
-                onChange={(e) => setConfirmApiKey(e.target.value)}
-                placeholder="Enter Confirm API Key"
-                error={errors.confirmApiKey}
-              />
-            </FormControl>
-          </Grid> */}
         </div>
 
         <div className={classes.modalFooter}>

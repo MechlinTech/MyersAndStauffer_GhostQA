@@ -346,11 +346,11 @@ export const updateZiraIntegration = (
         dispatch(getPerformanceIntegrationList(data.userId));
         callback(true);
       } else if (response.data.message == "Not Found") {
-        toast.warn("Invalid Informtion Entered");
+        toast.warn("Invalid Information Entered");
         setLoading(false);
         callback(false);
       } else if (response.data.message == "Unauthorized") {
-        toast.warn("Invalid Informtion Entered");
+        toast.warn("Invalid Information Entered");
         setLoading(false);
         callback(false);
       }
@@ -362,6 +362,62 @@ export const updateZiraIntegration = (
     }
   };
 };
+
+export const updateTeamsIntegration = (
+  data,
+  setOpenTeamsModal,
+  setLoading,
+  callback
+) => {
+  setLoading(true);
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/UpdateIntegration`,
+        data,
+        header()
+      );
+      if (response.data.message == "Success") {
+        if (data.isIntegrated == true) {
+          toast.info("Successfully Teams Integrated", {
+            style: {
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
+            },
+          });
+          setOpenTeamsModal(false);
+          setLoading(false);
+        } else {
+          toast.info("Successfully Teams Integration Removed", {
+            style: {
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
+            },
+          });
+          setOpenTeamsModal(false);
+          setLoading(false);
+        }
+        dispatch(getPerformanceIntegrationList(data.userId));
+        callback(true);
+      } else if (response.data.message == "Not Found") {
+        toast.warn("Invalid Information Entered");
+        setLoading(false);
+        callback(false);
+      } else if (response.data.message == "Unauthorized") {
+        toast.warn("Invalid Information Entered");
+        setLoading(false);
+        callback(false);
+      }
+    } catch (error) {
+      console.error("Error in updateZiraIntegration:", error);
+      setOpenTeamsModal(false);
+      setLoading(false);
+      callback(false);
+    }
+  };
+};
+
 
 export const GetAllJiraIssueTypes = (userId) => {
   return async (dispatch) => {
