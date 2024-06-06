@@ -3766,8 +3766,6 @@ namespace SeleniumReportAPI.Helper
                 throw ex;
             }
 
-            var apikey = DecompressString(jiraDetails[0].APIKey);
-
             foreach (var integration in jiraDetails)
             {
                 Dto_IntegrationRespnse jira = new Dto_IntegrationRespnse
@@ -3779,14 +3777,13 @@ namespace SeleniumReportAPI.Helper
                     CreatedOn = integration.CreatedOn,
                     UpdatedBy = integration.UpdatedBy,
                     UpdatedOn = integration.UpdatedOn,
-                    APIKey = apikey,
+                    APIKey = DecompressString(integration.APIKey),
                     Domain = integration.Domain,
                     Email = integration.Email,
                     IsIntegrated = integration.IsIntegrated
                 };
                 jiraRespnse.Add(jira);
             }
-            jiraRespnse[1].APIKey = null;
 
             return JsonConvert.SerializeObject(jiraRespnse);
         }
@@ -3795,7 +3792,7 @@ namespace SeleniumReportAPI.Helper
         {
             string result = string.Empty;
             var str = CompressString(model.APIKey);
-            if (model.IsIntegrated)
+            if (model.IsIntegrated && model.AppName == "Jira")
             {
                 using (var httpClient = new HttpClient())
                 {
