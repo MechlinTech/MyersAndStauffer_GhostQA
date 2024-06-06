@@ -3935,6 +3935,9 @@ namespace SeleniumReportAPI.Helper
 
                 Dto_JiraDetails jiraDetails = JsonConvert.DeserializeObject<Dto_JiraDetails>(result1);
 
+                if (string.IsNullOrEmpty(jiraDetails.Email))
+                    return new Dto_GetAllJiraIssue();
+
                 using (var httpClient = new HttpClient())
                 {
                     string baseUrl = _configuration["Integration:JiraBaseUrl"];

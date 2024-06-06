@@ -219,7 +219,6 @@ namespace SeleniumReportAPI.Controllers
 
                     if(string.IsNullOrEmpty(_testCaseJsonData))
                         counter++;
-                    
                     else
                     {
                         Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
