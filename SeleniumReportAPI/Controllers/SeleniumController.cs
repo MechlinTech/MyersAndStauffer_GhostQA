@@ -211,10 +211,16 @@ namespace SeleniumReportAPI.Controllers
             Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteNameData.Environment.EnvironmentId));
             if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Length > 0)
             {
+                int totalTestCases = _testSuiteNameData.SelectedTestCases.Length;
+                int counter = 0;
                 foreach (var testCaseName in _testSuiteNameData.SelectedTestCases.Split(","))
                 {
                     string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName, _testSuiteNameData.TestUser.Password);
-                    if (!string.IsNullOrEmpty(_testCaseJsonData))
+
+                    if(string.IsNullOrEmpty(_testCaseJsonData))
+                        counter++;
+                    
+                    else
                     {
                         Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
                         _testSuiteData.TestSuiteName = TestSuiteName;
@@ -227,6 +233,10 @@ namespace SeleniumReportAPI.Controllers
                         _result.Add(result);
                     }
                 }
+
+                if(counter == totalTestCases)
+                    _result.Add(new { status = "Failed", message = "TestCases Failed to execute" });
+
                 if (result.Contains("success"))
                 {
                     string originalUrl = Request.Headers.Referer.ToString();
