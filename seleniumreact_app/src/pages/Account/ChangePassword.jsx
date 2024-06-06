@@ -14,62 +14,79 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ChangePasswordReq } from "../../redux/actions/authActions";
+
 export default function ChangePassword() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {emailId} = useParams()
+  const { emailId } = useParams();
   const [email, setEmail] = useState(emailId);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(true);
-
   const [Error, setError] = useState({
     emailError: "",
     oldPasswordError: "",
     newPasswordError: "",
   });
 
-  const redirectToLogin=()=>{
-    navigate("/")
-  }
+  const redirectToLogin = () => {
+    navigate("/");
+  };
+
   const handleSave = () => {
     const payload = {
       email,
       oldPassword,
-      newPassword
+      newPassword,
     };
-   console.log(payload)
+
+    console.log("Payload:", payload);
+
     let error = {};
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
-    // if (!email.trim()) error.emailError = "email required";
-    if (!oldPassword.trim())
-      error.oldPasswordError = "old password required";
-    else if(!passwordRegex.test(oldPassword))
-      error.oldPasswordError = "at least one lowercase, one uppercase, one number, one special character is required"
-    if (!newPassword.trim())
-      error.newPasswordError = "new password required";
-    else if(!passwordRegex.test(newPassword))
-      error.newPasswordError = "at least one lowercase, one uppercase, one number, one special character is required"
-    
-    if(oldPassword === newPassword){
-      toast.error("New password must be different from old password")
-    }
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // setIsEmailValid(emailRegex.test(email));
-    // if (!isEmailValid) {
-    //   error.emailError = "enter valid email";
-    // }
-    //updating error state before submitting
-    setError(error);
-    if (Object.keys(error).length === 0 && (oldPassword !== newPassword)) {
-      setNewPassword("")
-      setOldPassword("")
-    dispatch(ChangePasswordReq(payload,redirectToLogin))
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
+    // Validate old password
+    if (!oldPassword.trim()) {
+      error.oldPasswordError = "Old password required";
+    } else if (!passwordRegex.test(oldPassword)) {
+      error.oldPasswordError =
+        "Old password must contain at least one lowercase letter, one uppercase letter, one number, and one special character, and must be atleast 8 character long";
     } else {
-      console.log("some field are empty");
+      console.log("Old password validation passed:", oldPassword);
+    }
+
+    // Validate new password
+    if (!newPassword.trim()) {
+      error.newPasswordError = "New password required";
+    } else if (!passwordRegex.test(newPassword)) {
+      error.newPasswordError =
+        "New password must contain at least one lowercase letter, one uppercase letter, one number, and one special character, and must be atleast 8 character long";
+    } else {
+      console.log("New password validation passed:", newPassword);
+    }
+
+    // Ensure new password is different from old password
+    if (oldPassword === newPassword) {
+      toast.error("New password must be different from old password");
+      error.newPasswordError = "New password must be different from old password";
+    }
+
+    // Updating error state before submitting
+    setError(error);
+    console.log("Errors:", error);
+
+    // Check if there are no errors and the new password is different from the old password
+    if (Object.keys(error).length === 0 && oldPassword !== newPassword) {
+      // Clear the password fields
+      setNewPassword("");
+      setOldPassword("");
+      // Dispatch the change password request
+      dispatch(ChangePasswordReq(payload, redirectToLogin));
+    } else {
+      console.log("Some fields are empty or invalid");
     }
   };
+  
   return (
     <Grid container display='flex' justifyContent="center" alignItems="center" height='100vh' spacing={0}>
       

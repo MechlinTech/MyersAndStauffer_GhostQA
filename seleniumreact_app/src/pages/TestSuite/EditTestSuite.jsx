@@ -58,8 +58,13 @@ export default function EditTestSuite() {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   // const [openLoadingModal, setopenLoadingModal] = useState(false);
-  const { applicationList, environementList, suiteToEdit, testCasesList,executingSuite} =
-    useSelector((state) => state.selenium);
+  const {
+    applicationList,
+    environementList,
+    suiteToEdit,
+    testCasesList,
+    executingSuite,
+  } = useSelector((state) => state.selenium);
 
   const { testUserList } = useSelector((state) => state.settings);
   const [isExecuting, setisExecuting] = useState(false);
@@ -101,22 +106,33 @@ export default function EditTestSuite() {
     });
     setDescription(suiteToEdit?.Description);
     // setSelectedRows(() => {
+    //   const selectedTestCasesArray = suiteToEdit?.SelectedTestCases
+    //     ? suiteToEdit.SelectedTestCases.split(",")
+    //     : [];
+    //   console.log("suiteToEdit", selectedTestCasesArray, testCasesList);
     //   return testCasesList.filter((test) =>
-    //     suiteToEdit?.SelectedTestCases?.includes(test.TestCaseName)
+    //     selectedTestCasesArray.some(
+    //       (selectedTestCase) => selectedTestCase.trim() === test.TestCaseName
+    //     )
     //   );
     // });
-    setSelectedRows(() => {
-      const selectedTestCasesArray = suiteToEdit?.SelectedTestCases
-        ? suiteToEdit.SelectedTestCases.split(",")
-        : [];
-
-      return testCasesList.filter((test) =>
-        selectedTestCasesArray.some(
-          (selectedTestCase) => selectedTestCase.trim() === test.TestCaseName
-        )
-      );
-    });
   }, [dispatch, suiteToEdit]);
+
+  useEffect(() => {
+    if (suiteToEdit && testCasesList.length > 0) {
+      setSelectedRows(() => {
+        const selectedTestCasesArray = suiteToEdit.SelectedTestCases
+          ? suiteToEdit.SelectedTestCases.split(",")
+          : [];
+        return testCasesList.filter((test) =>
+          selectedTestCasesArray.some(
+            (selectedTestCase) => selectedTestCase.trim() === test.TestCaseName
+          )
+        );
+      });
+    }
+  }, [suiteToEdit, testCasesList]);
+
   const handleRadioChange = (event) => {
     setSelectedSuiteValue(event.target.value);
   };
@@ -375,9 +391,7 @@ export default function EditTestSuite() {
                             </StyledTypography>
                           )}
                           {Error.name && (
-                            <StyledTypography>
-                              {Error.name}
-                            </StyledTypography>
+                            <StyledTypography>{Error.name}</StyledTypography>
                           )}
                         </div>
                       </Grid>
@@ -421,7 +435,10 @@ export default function EditTestSuite() {
                               value={description}
                               onChange={(e) => {
                                 setDescription(e.target.value);
-                                setError((prev) => ({ ...prev, description: "" }));
+                                setError((prev) => ({
+                                  ...prev,
+                                  description: "",
+                                }));
                               }}
                               InputProps={{
                                 sx: {
@@ -455,10 +472,7 @@ export default function EditTestSuite() {
                     <b>Run Settings</b>
                   </Box>
 
-                  <div
-                  // style={{ overflow: "auto", maxHeight: "calc(42vh - 50px)" }}
-                  // style={{ padding: "10px 0px" }}
-                  >
+                  <div>
                     {/* Your existing content */}
                     <Grid container className={classes.body}>
                       <Grid container className={classes.body}>
@@ -543,49 +557,6 @@ export default function EditTestSuite() {
                                 ? selectedApplication.ApplicationName
                                 : ""}
                             </Typography>
-                            {/* <Select
-                              getOptionLabel={(option) =>
-                                option.ApplicationName
-                              }
-                              getOptionValue={(option) => option.ApplicationId}
-                              options={applicationList}
-                              value={selectedApplication}
-                              // onChange={(newValue) => {
-                              //   setSelectedApplication(newValue);
-                              // }}
-                              onChange={selectedApplication}
-                              styles={{
-                                container: (provided) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  zIndex: 999, // Adjust the zIndex value
-                                }),
-                                control: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  "&:hover": {
-                                    borderColor: "#654DF7",
-                                  },
-                                  borderColor: Error.application
-                                    ? "red"
-                                    : state.isFocused
-                                    ? "#654DF7"
-                                    : "rgb(242, 242, 242)",
-                                }),
-                                option: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: state.isSelected
-                                    ? "#654DF7"
-                                    : "transparent",
-                                }),
-                              }}
-                              menuPosition={"fixed"} // Set menuPosition to fixed
-                            />
-                            {Error.application && (
-                              <Typography className={classes.inputError}>
-                                {Error.application}
-                              </Typography>
-                            )} */}
                           </div>
                         </Grid>
 
@@ -610,7 +581,6 @@ export default function EditTestSuite() {
                                   ...prev,
                                   ["test_user"]: "",
                                 }));
-                                // handleApplication(newValue);
                               }}
                               styles={selectStyle}
                               menuPosition={"fixed"} // Set menuPosition to fixed
@@ -683,58 +653,6 @@ export default function EditTestSuite() {
                             </FormControl>
                           </Grid>
                         </Grid>
-
-                        {/* Row 6: Browser Dropdown */}
-                        {/* <Grid item>
-                          <div className={classes.input}>
-                            <Typography
-                              variant="subtitle1"
-                              className={clsx(classes.customFontSize)}
-                            >
-                              Browser
-                            </Typography>
-                            <Select
-                              getOptionLabel={(option) => option.BrowserName}
-                              getOptionValue={(option) => option.BrowserId}
-                              options={browserList}
-                              value={selectedBrowser}
-                              onChange={(newValue) =>
-                                setSelectedBrowser(newValue)
-                              }
-                              styles={{
-                                container: (provided) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  zIndex: 999,
-                                }),
-                                control: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: "rgb(242, 242, 242)",
-                                  "&:hover": {
-                                    borderColor: "#654DF7",
-                                  },
-                                  borderColor: Error.browser
-                                    ? "red"
-                                    : state.isFocused
-                                    ? "#654DF7"
-                                    : "rgb(242, 242, 242)",
-                                }),
-                                option: (provided, state) => ({
-                                  ...provided,
-                                  backgroundColor: state.isSelected
-                                    ? "#654DF7"
-                                    : "transparent",
-                                }),
-                              }}
-                              menuPortalTarget={document.body}
-                            />
-                            {Error.browser && (
-                              <Typography className={classes.inputError}>
-                                {Error.browser}
-                              </Typography>
-                            )}
-                          </div>
-                        </Grid> */}
                       </Grid>
                     </Grid>
                   </div>
@@ -774,7 +692,6 @@ export default function EditTestSuite() {
                     style={{
                       overflow: "auto",
                       maxHeight: "calc(100vh - 50px)",
-                      // marginBottom: "20px",
                       border: Error.testCaseError,
                     }}
                   >
@@ -796,13 +713,6 @@ export default function EditTestSuite() {
 
             <Grid container style={{ paddingTop: "10px" }}>
               <Grid item xs={12}>
-                {/* <Card
-                  style={{
-                    // paddingBottom: "30px",
-                    height: "8vh",
-                  }}
-                  className={classes.buttonContainer}
-                > */}
                 <Box className={classes.buttonContainer}>
                   <Button
                     variant="contained"
@@ -825,7 +735,7 @@ export default function EditTestSuite() {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleSubmit("SaveAndExecute")}
-                    disabled={executingSuite?true:false}
+                    disabled={executingSuite ? true : false}
                     sx={{
                       backgroundColor: "rgb(101, 77, 247)",
                       "&:hover": {
@@ -834,17 +744,6 @@ export default function EditTestSuite() {
                       },
                     }}
                   >
-                    {/* {!isExecuting ? (
-                      "Save & Execute"
-                    ) : (
-                      <CircularProgress
-                        size={25}
-                        style={{
-                          marginRight: "8px",
-                          color: "#fff",
-                        }}
-                      />
-                    )} */}
                     Save & Execute
                   </Button>
 
