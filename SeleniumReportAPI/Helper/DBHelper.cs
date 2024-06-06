@@ -3777,7 +3777,7 @@ namespace SeleniumReportAPI.Helper
                     CreatedOn = integration.CreatedOn,
                     UpdatedBy = integration.UpdatedBy,
                     UpdatedOn = integration.UpdatedOn,
-                    APIKey = DecompressString(integration.APIKey),
+                    APIKey = integration.APIKey != null ? DecompressString(integration.APIKey) : string.Empty,
                     Domain = integration.Domain,
                     Email = integration.Email,
                     IsIntegrated = integration.IsIntegrated
