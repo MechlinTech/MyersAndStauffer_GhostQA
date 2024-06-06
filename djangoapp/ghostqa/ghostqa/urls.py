@@ -24,7 +24,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 from performace_test.viewsets.performace_tests import PerformaceViewSet
 from performace_test.viewsets.container_runs import ContainersRunsViewSet as PerformanceContainersRunsViewSet
 from agent_dynamic_location.views import NewAgentViewSet, JobViewSet, JmeterTestContainerRunsViewSet, PrivateLocationViewSet, LoadDistributionViewSet, SystemInfoViewSet
-
+from web_crawler.views import CrawlViewSet
 
 router = DefaultRouter()
 # router.register(r'testsuites', TestSuiteViewSet)
@@ -40,7 +40,7 @@ router.register(r"private-location", PrivateLocationViewSet)
 router.register(r"load-distribution", LoadDistributionViewSet)
 router.register(r"system-info", SystemInfoViewSet)
 # router.register(r'container-runs', TestContainersRunsViewset)
-
+router.register(r"advanced-automation", CrawlViewSet,basename='CrawlViewSet')
 
 urlpatterns = [
     path('codeengine/admin/', admin.site.urls),
