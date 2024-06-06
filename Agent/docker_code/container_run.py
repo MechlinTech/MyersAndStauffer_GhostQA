@@ -189,7 +189,7 @@ def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_ru
     # Build the Docker image from the Dockerfile
     # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
     image = client.images.pull('ghostqa/performace:latest')
-
+    volume_path = volume_path[len('/tests'):]
     container = client.containers.run(
         image=image,
         name=name,
