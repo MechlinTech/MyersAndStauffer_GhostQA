@@ -211,7 +211,7 @@ namespace SeleniumReportAPI.Controllers
             Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteNameData.Environment.EnvironmentId));
             if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Length > 0)
             {
-                int totalTestCases = _testSuiteNameData.SelectedTestCases.Length;
+                int totalTestCases = _testSuiteNameData.SelectedTestCases.Split(",").Length;
                 int counter = 0;
                 foreach (var testCaseName in _testSuiteNameData.SelectedTestCases.Split(","))
                 {
