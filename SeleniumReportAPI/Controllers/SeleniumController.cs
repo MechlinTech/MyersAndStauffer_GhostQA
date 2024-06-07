@@ -211,13 +211,13 @@ namespace SeleniumReportAPI.Controllers
             Models.Environments _environmentDetails = await _helper.GetEnvironmentById(Convert.ToInt32(_testSuiteNameData.Environment.EnvironmentId));
             if (_testSuiteNameData.SelectedTestCases != null && _testSuiteNameData.SelectedTestCases.Length > 0)
             {
-                int totalTestCases = _testSuiteNameData.SelectedTestCases.Length;
+                int totalTestCases = _testSuiteNameData.SelectedTestCases.Split(",").Length;
                 int counter = 0;
                 foreach (var testCaseName in _testSuiteNameData.SelectedTestCases.Split(","))
                 {
                     string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName, _testSuiteNameData.TestUser.Password);
 
-                    if(string.IsNullOrEmpty(_testCaseJsonData))
+                    if (string.IsNullOrEmpty(_testCaseJsonData))
                         counter++;
                     else
                     {
@@ -233,8 +233,12 @@ namespace SeleniumReportAPI.Controllers
                     }
                 }
 
-                if(counter == totalTestCases)
-                    _result.Add(new { status = "Failed", message = "TestCases Failed to execute" });
+                if (counter == totalTestCases)
+                {
+                    await _helper.UpdateSuiteRunStatus(false);
+                    _result.Add(new { status = "Failed", message = "TestCases failed to execute" });
+                    return Ok(_result);
+                }
 
                 if (result.Contains("success"))
                 {
