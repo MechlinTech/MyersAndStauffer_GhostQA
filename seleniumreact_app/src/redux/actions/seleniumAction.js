@@ -86,9 +86,10 @@ export const ExecuteTestCasesByTestSuite = (data) => {
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
-      const response = await axios.options(
-        `${BASE_URL}/Selenium/ExecuteTestSuite?TestSuiteName=${data}`,
+      const response = await axios.post(
+        `${BASE_URL}/Selenium/ExecuteTestSuite`,
         // `${BASE_URL}/Selenium/ExecuteTestSuite`,
+        data,
         header()
       );
 

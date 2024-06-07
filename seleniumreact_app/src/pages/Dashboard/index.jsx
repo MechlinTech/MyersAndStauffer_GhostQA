@@ -33,6 +33,7 @@ export default function Dashboard() {
   const classess = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { userId } = useSelector((store) => store.auth);
   const {
     testSuits,
     testSuiteAdded,
@@ -48,6 +49,7 @@ export default function Dashboard() {
   const [suitToDelete, setsuitToDelete] = useState("");
   // const [executingSuite, setexecutingSuite] = useState({});
   const [inprogress, setInProgress] = useState(false);
+ 
 
   useEffect(() => {
     // dispatch(ExecuteTestCasesByTestSuite(data, controlLoading));
@@ -125,8 +127,11 @@ export default function Dashboard() {
   // };
 
   const handleExecuteClick = (suite) => {
-    let data = suite.TestSuiteName;
     dispatch(setExecutingSuite(suite.TestSuiteName));
+    let data = {
+        testSuiteName:suite.TestSuiteName,
+        userId: userId
+    }
     dispatch(ExecuteTestCasesByTestSuite(data));
   };
 
