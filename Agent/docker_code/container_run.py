@@ -197,7 +197,7 @@ def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_ru
         command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t {volume_path}/test.jmx -l {volume_path}/log.csv -e -o {volume_path}/html-results',
         tty=True,
          volumes={
-        'agent-data': {'bind': '/tests/', 'mode': 'rw'},
+        'agent-data': {'bind': volume_path, 'mode': 'rw'},
         # f"{volume_path}/bin/filename.csv": {'bind': '/opt/apache-jmeter-5.6.3/bin/filename.csv', 'mode': 'rw'}
         },
         detach=True,
