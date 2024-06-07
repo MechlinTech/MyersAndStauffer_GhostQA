@@ -91,16 +91,24 @@ export const ExecuteTestCasesByTestSuite = (data) => {
         // `${BASE_URL}/Selenium/ExecuteTestSuite`,
         header()
       );
-      if(response.data?.status === "Conflict"){
-        toast.error(response.data.message)
-      }else{
-        const finishedItem = response.data?.find(item => item?.status === "Finished")
-        toast.info(finishedItem.message, {
-          style: {
-            background: "rgb(101, 77, 247)",
-            color: "rgb(255, 255, 255)",
-          },
-        });
+
+      if (Array.isArray(response.data)) {
+        const failedItem = response.data.find(item => item?.status === "Failed");
+        if (failedItem) {
+          toast.error(failedItem.message);
+        } else {
+          const finishedItem = response.data.find(item => item?.status === "Finished");
+          if (finishedItem) {
+            toast.info(finishedItem.message, {
+              style: {
+                background: "rgb(101, 77, 247)",
+                color: "rgb(255, 255, 255)",
+              },
+            });
+          }
+        }
+      } else if (response.data?.status === "Conflict") {
+        toast.error(response.data.message);
       }
       
       dispatch({
