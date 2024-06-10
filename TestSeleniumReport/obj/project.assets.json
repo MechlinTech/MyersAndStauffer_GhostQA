@@ -3893,12 +3893,6 @@
           }
         }
       },
-      "ScreenRecorderLib/5.4.0": {
-        "type": "package",
-        "build": {
-          "build/_._": {}
-        }
-      },
       "Selenium.Support/4.8.2": {
         "type": "package",
         "dependencies": {
@@ -5995,7 +5989,6 @@
           "NLogger": "1.1.0",
           "Newtonsoft.Json": "13.0.3",
           "NunitXml.TestLogger": "3.0.131",
-          "ScreenRecorderLib": "5.4.0",
           "System.Data.DataSetExtensions": "4.5.0",
           "System.Runtime.Caching": "7.0.0",
           "System.ServiceModel.Primitives": "4.10.2",
@@ -11063,22 +11056,6 @@
         "scientist.nuspec"
       ]
     },
-    "ScreenRecorderLib/5.4.0": {
-      "sha512": "gvVaDWgaA0dIou7ORBuFevAma1Bnk/V2l2fp1zkQS2LgNhGdK4jWlP3CI05rjWSKFVPVImtvKfFn+qNJzem6uA==",
-      "type": "package",
-      "path": "screenrecorderlib/5.4.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "build/ScreenRecorderLib.targets",
-        "build/x64/ScreenRecorderLib.dll",
-        "build/x64/ScreenRecorderLib.xml",
-        "build/x86/ScreenRecorderLib.dll",
-        "build/x86/ScreenRecorderLib.xml",
-        "screenrecorderlib.5.4.0.nupkg.sha512",
-        "screenrecorderlib.nuspec"
-      ]
-    },
     "Selenium.Support/4.8.2": {
       "sha512": "tS51BJC22gQBSW2VYFAxJ7GwPQguzel41bnQyXkgoShAUO5P48lxQ83EBZe8isISjMKCDsHWOv95aUNVQaEFGA==",
       "type": "package",
@@ -16061,39 +16038,33 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Hosting\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/shivprasad/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\GhostQA\\TestSeleniumReport\\TestSeleniumReport.csproj",
+      "projectUniqueName": "/Users/shivprasad/Documents/MechlinTech/GhostQA/MyersAndStauffer_GhostQA/TestSeleniumReport/TestSeleniumReport.csproj",
       "projectName": "TestSeleniumReport",
-      "projectPath": "C:\\GhostQA\\TestSeleniumReport\\TestSeleniumReport.csproj",
-      "packagesPath": "C:\\Users\\Hosting\\.nuget\\packages\\",
-      "outputPath": "C:\\GhostQA\\TestSeleniumReport\\obj\\",
+      "projectPath": "/Users/shivprasad/Documents/MechlinTech/GhostQA/MyersAndStauffer_GhostQA/TestSeleniumReport/TestSeleniumReport.csproj",
+      "packagesPath": "/Users/shivprasad/.nuget/packages/",
+      "outputPath": "/Users/shivprasad/Documents/MechlinTech/GhostQA/MyersAndStauffer_GhostQA/TestSeleniumReport/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Hosting\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/shivprasad/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj": {
-              "projectPath": "C:\\GhostQA\\MyersAndStaufferAutomation\\MyersAndStaufferSeleniumTests\\MyersAndStaufferSeleniumTests.csproj"
+            "/Users/shivprasad/Documents/MechlinTech/GhostQA/MyersAndStauffer_GhostQA/MyersAndStaufferAutomation/MyersAndStaufferSeleniumTests/MyersAndStaufferSeleniumTests.csproj": {
+              "projectPath": "/Users/shivprasad/Documents/MechlinTech/GhostQA/MyersAndStauffer_GhostQA/MyersAndStaufferAutomation/MyersAndStaufferSeleniumTests/MyersAndStaufferSeleniumTests.csproj"
             }
           }
         }
@@ -16102,6 +16073,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -16153,19 +16129,15 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.26, 6.0.26]"
+            "version": "[6.0.29, 6.0.29]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[6.0.26, 6.0.26]"
+            "name": "Microsoft.NETCore.App.Host.osx-arm64",
+            "version": "[6.0.29, 6.0.29]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.26, 6.0.26]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[6.0.26, 6.0.26]"
+            "version": "[6.0.29, 6.0.29]"
           }
         ],
         "frameworkReferences": {
@@ -16176,8 +16148,16 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.204/RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Error occurred while getting package vulnerability data: Access to the path '/Users/shivprasad/.local/share/NuGet/http-cache' is denied."
+    }
+  ]
 }
