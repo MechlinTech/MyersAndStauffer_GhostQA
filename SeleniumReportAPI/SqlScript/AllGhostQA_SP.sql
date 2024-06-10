@@ -3895,6 +3895,8 @@ BEGIN TRY
 										SELECT
 												t1.[TestSuiteName],
 												t1.[TestRunName],
+												FORMAT(MIN(CAST(t1.[TestSuiteStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone),'dd-MMM-yyyy HH:mm:ss') AS [TestSuiteStartDateTime],
+												FORMAT(MAX(CAST(t1.[TestSuiteEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss') AS [TestSuiteEndDateTime],
 												FORMAT(MIN(CAST(t1.[TestRunStartDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone),'dd-MMM-yyyy HH:mm:ss') AS [TestRunStartDateTime],
 												FORMAT(MAX(CAST(t1.[TestRunEndDateTime] AS DATETIMEOFFSET) AT TIME ZONE @TimeZone), 'dd-MMM-yyyy HH:mm:ss') AS [TestRunEndDateTime],
 												COUNT(t1.[TestCaseName]) AS [TotalTestCases],

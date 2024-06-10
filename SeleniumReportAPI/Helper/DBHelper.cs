@@ -17,6 +17,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using TestSeleniumReport.DTO_s;
 using Environments = SeleniumReportAPI.Models.Environments;
 
@@ -2992,6 +2993,9 @@ namespace SeleniumReportAPI.Helper
             var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
             var subject = "Test Suite Execution Result";
             var passWord = _configuration["EmailDetails:EmailPassword"];
+            //var htmlTestSuiteName = Uri.EscapeDataString(testSuiteName);
+            string encodedQueryParameter = HttpUtility.UrlEncode(testSuiteName);
+            var htmlTestSuiteName = encodedQueryParameter.Replace("+", "%20");
             Response response = null;
 
             if (testerName.Contains(","))
@@ -3023,7 +3027,7 @@ namespace SeleniumReportAPI.Helper
                                         <tbody>
                                         <tr>
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #fff;"">
-                                        <a href=""{Url}test/{testSuiteName}/{data.TestRunName}"" style=""text-decoration: none; color: #654DF7;"">{data.TestRunName}</a>
+                                        <a href=""{Url}test/{htmlTestSuiteName}/{data.TestRunName}"" style=""text-decoration: none; color: #654DF7;"">{data.TestRunName}</a>
                                         </td>
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunStartDateTime:dd-MMM-yyyy HH:mm:ss}</td>
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunEndDateTime}</td>
@@ -4170,6 +4174,40 @@ namespace SeleniumReportAPI.Helper
             {
                 throw ex;
             }
+        }
+
+        internal async Task<object> PostReportInTeams(string TestSuiteName, string TestRunName, string TesterName, string Environment, string Webhook, string TimeZone)
+        {
+            var testrunData = GetTestRunData(TestSuiteName, TestRunName, TimeZone);
+            var data = JsonConvert.DeserializeObject<Dto_TestRunData>(testrunData.Result);
+
+            string summary = $@"
+**Suite Run Report**
+
+**Suite Name:** {TestSuiteName}  
+**Environment:** {Environment}  
+**Start Time:** {data.TestSuiteStartDateTime}  
+**End Time:** {data.TestSuiteEndDateTime}  
+**Tester Name:** {TesterName}  
+**Duration:** {Convert.ToDateTime(data.TestSuiteEndDateTime) - Convert.ToDateTime(data.TestSuiteStartDateTime)}  
+**Total Tests:** {data.TotalTestCases}  
+**Passed Tests:** {data.PassedTestCases}  
+**Failed Tests:** {data.FailedTestCases}  
+**Status:** {(Convert.ToInt32(data.FailedTestCases) > 0 ? "Failed" : "Passed")}  
+";
+
+            var payload = new { text = summary };
+            var payloadJson = JsonConvert.SerializeObject(payload);
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var content = new StringContent(payloadJson, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(Webhook, content);
+
+            if (!response.IsSuccessStatusCode)
+                return new { status = response.StatusCode, message = response.RequestMessage, data = await response.Content.ReadAsStringAsync() };
+
+            return new { status = response.StatusCode, message = "Report posted successfully", data = await response.Content.ReadAsStringAsync() };
         }
     }
 }

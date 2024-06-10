@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using MongoDB.Bson.IO;
 using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
@@ -185,8 +186,8 @@ namespace SeleniumReportAPI.Controllers
         /// </summary>
         /// <param name="TestSuiteName"></param>
         /// <returns></returns>
-        [HttpOptions("ExecuteTestSuite")]
-        public async Task<ActionResult> ExecuteTestSuite(string TestSuiteName)
+        [HttpPost("ExecuteTestSuite")]
+        public async Task<ActionResult> ExecuteTestSuite(Dto_Execution model)
         {
             if (await _helper.IsAnySuiteRunning())
                 return Ok(new { status = "Conflict", message = "Another test is already running on GhostQA. Please try after some time." });
@@ -202,8 +203,8 @@ namespace SeleniumReportAPI.Controllers
             string mapping = TimeZoneMappings.GetDBTimeZone(timeZoneHeader.ToString());
 
             List<object> _result = new List<object>();
-            string _testRunName = await _helper.GetRunId(TestSuiteName);
-            string _testSuiteDetailsJson = await _helper.GetTestSuiteByName(TestSuiteName);
+            string _testRunName = await _helper.GetRunId(model.testSuiteName);
+            string _testSuiteDetailsJson = await _helper.GetTestSuiteByName(model.testSuiteName);
             TestSuiteNameData _testSuiteNameData = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuiteNameData>(_testSuiteDetailsJson);
             string testerName = User.FindFirst(ClaimTypes.Email)?.Value.ToString();
             string result = string.Empty;
@@ -215,14 +216,14 @@ namespace SeleniumReportAPI.Controllers
                 int counter = 0;
                 foreach (var testCaseName in _testSuiteNameData.SelectedTestCases.Split(","))
                 {
-                    string _testCaseJsonData = await _helper.RunTestCase(TestSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName, _testSuiteNameData.TestUser.Password);
+                    string _testCaseJsonData = await _helper.RunTestCase(model.testSuiteName, testCaseName.ToString(), _testRunName, testerName, _testSuiteNameData.Environment.BaseUrl, _testSuiteNameData.Environment.BasePath, _testSuiteNameData.Environment.EnvironmentName, _environmentDetails.BrowserName, _testSuiteNameData.Environment.DriverPath, _testSuiteNameData.TestUser.UserName, _testSuiteNameData.TestUser.Password);
 
                     if (string.IsNullOrEmpty(_testCaseJsonData))
                         counter++;
                     else
                     {
                         Dto_TestCaseData _testSuiteData = Newtonsoft.Json.JsonConvert.DeserializeObject<Dto_TestCaseData>(_testCaseJsonData);
-                        _testSuiteData.TestSuiteName = TestSuiteName;
+                        _testSuiteData.TestSuiteName = model.testSuiteName;
                         _testSuiteData.TesterName = testerName;
                         _testSuiteData.TestRunName = _testRunName;
                         _testSuiteData.TestEnvironment = _environmentDetails.EnvironmentName;
@@ -247,7 +248,7 @@ namespace SeleniumReportAPI.Controllers
                     var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
                     if (_testSuiteNameData.SendEmail == true)
                     {
-                        var obj = await _helper.SendExecutionDataMail(TestSuiteName, _testRunName, testerName, Url, mapping);
+                        var obj = await _helper.SendExecutionDataMail(model.testSuiteName, _testRunName, testerName, Url, mapping);
                         _result.Add(obj);
                     }
                     else
@@ -257,11 +258,18 @@ namespace SeleniumReportAPI.Controllers
                         List<string> emails = jsonArray.Where(j => !(bool)j["IsDisabled"]).Select(j => (string)j["Email"]).ToList();
                         string commaSeparatedEmails = string.Join(", ", emails);
 
-                        var obj1 = await _helper.SendExecutionDataMail(TestSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
+                        var obj1 = await _helper.SendExecutionDataMail(model.testSuiteName, _testRunName, commaSeparatedEmails, Url, mapping);
                         _result.Add(obj1);
                     }
+
+                    var teamDetail = await _helper.GetAllUserIntegration(model.userId);
+                    var webhookUrl = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dto_IntegrationRespnse>>(teamDetail);
+
+                    if (webhookUrl[1].IsIntegrated)
+                        await _helper.PostReportInTeams(model.testSuiteName, _testRunName, testerName, _environmentDetails.EnvironmentName, webhookUrl[1].APIKey, mapping);
                 }
             }
+
             await _helper.UpdateSuiteRunStatus(false);
             _result.Add(new { status = "Finished", message = "Test Suite execution completed!" });
             return Ok(_result);
