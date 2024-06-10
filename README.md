@@ -1,5 +1,16 @@
 #  GhostQA
 
+# Feature we are offering
+
+## Pre Requiestes 
+
+1. Fuctional Testing  - Local Testing
+    1. Your Framework Code  and Ghost QA Team needs to make CHange in that code    
+2. Fuctional Testing  - Test Labs
+    1. Docker COmpantible Machine
+3. Perforamce Testing
+     1. Docker Compantible Machine
+  
 
 # Open Prem Deployment Using IIS
 
