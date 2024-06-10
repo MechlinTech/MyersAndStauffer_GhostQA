@@ -10,7 +10,8 @@
     1. Docker COmpantible Machine
 3. Perforamce Testing
      1. Docker Compantible Machine
-  
+
+  Hardware Requirements
 
 # Open Prem Deployment Using IIS
 
