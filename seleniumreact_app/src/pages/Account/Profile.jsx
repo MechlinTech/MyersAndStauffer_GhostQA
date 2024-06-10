@@ -35,7 +35,7 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    const emailFromSession = sessionStorage.getItem("email");
+    const emailFromSession = localStorage.getItem("email");
     const updateUserByEmail = async () => {
       try {
         const BASE_URL = await getBaseUrl();
@@ -55,9 +55,10 @@ export default function Profile() {
 
     updateUserByEmail();
   }, []);
+  
   // Extracting the name of user
   const getName = () => {
-    const email = sessionStorage.getItem("email");
+    const email = localStorage.getItem("email");
     const i = email.indexOf("@");
     const name = email.substring(0, i);
     return name.charAt(0).toUpperCase() + name.slice(1);

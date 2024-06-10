@@ -11,7 +11,7 @@ function App() {
   const dispatch = useDispatch()
   const { isLogedIn } = useSelector(state => state.auth)
   useEffect(() => {
-    let data = JSON.parse(sessionStorage.getItem("userData"))
+    let data = JSON.parse(localStorage.getItem("userData"));
     if (data) {
       dispatch({ type: LOG_IN, payload: data  })
     }
