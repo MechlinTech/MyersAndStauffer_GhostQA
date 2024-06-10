@@ -263,7 +263,7 @@ namespace SeleniumReportAPI.Controllers
                     }
 
                     var teamDetail = await _helper.GetAllUserIntegration(model.userId);
-                    var webhookUrl = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Integration>>(teamDetail);
+                    var webhookUrl = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dto_IntegrationRespnse>>(teamDetail);
 
                     if (webhookUrl[1].IsIntegrated)
                         await _helper.PostReportInTeams(model.testSuiteName, _testRunName, testerName, _environmentDetails.EnvironmentName, webhookUrl[1].APIKey, mapping);
