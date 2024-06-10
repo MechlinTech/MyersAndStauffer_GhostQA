@@ -6,7 +6,6 @@ export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
 export const SET_USER_ID = "SET_USER_ID";
 
-
 export const login = (data, setLoading) => {
   // console.log("BASE_URL",BASE_URL,config.REACT_APP_BASE_URL)
   return async (dispatch) => {
@@ -15,24 +14,28 @@ export const login = (data, setLoading) => {
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(`${BASE_URL}/Login`, data);
       const response = res.data;
-      if (response?.result === 'Success') {
-        toast.info('Successfully logged in', {
+      if (response?.result === "Success") {
+        toast.info("Successfully logged in", {
           style: {
-            background: 'rgb(101, 77, 247)',
-            color: 'rgb(255, 255, 255)',
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
           },
         });
         const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        sessionStorage.setItem(
+      
+        localStorage.setItem(
           "userData",
-          JSON.stringify({ ...response.data, token: response.token, TimeZone: localTimeZone })
+          JSON.stringify({
+            ...response.data,
+            token: response.token,
+            TimeZone: localTimeZone,
+          })
         );
-        
-        sessionStorage.setItem(
+        localStorage.setItem(
           "tokenExpiry",
           JSON.stringify({ ...response.data, expiration: response.expiration })
         );
-        sessionStorage.setItem('email', data.email.toString())
+        localStorage.setItem("email", data.email.toString());
         dispatch({
           type: LOG_IN,
           payload: { ...response.data, token: response.token },
@@ -58,19 +61,24 @@ export const forgotPassword = (data, setLoading, navigate) => {
     try {
       setLoading(true);
       const BASE_URL = await getBaseUrl();
-      const res = await axios.post(`${BASE_URL}/AddInBuildTestSuite/SendPasswordResetMail`, data);
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/SendPasswordResetMail`,
+        data
+      );
       const response = res.data;
-      if (response?.status === 'Success') {
-        toast.info(`Password reset information has been sent to the ${data.email} email`, {
-          style: {
-            background: 'rgb(101, 77, 247)',
-            color: 'rgb(255, 255, 255)',
-          
-          },
-        });
-        navigate("/")
+      if (response?.status === "Success") {
+        toast.info(
+          `Password reset information has been sent to the ${data.email} email`,
+          {
+            style: {
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
+            },
+          }
+        );
+        navigate("/");
       } else {
-       console.log("somethings wrong")
+        console.log("somethings wrong");
       }
     } catch (err) {
       toast.error(err.response.data.message);
@@ -85,20 +93,22 @@ export const resetPassword = (payload, navigate) => {
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
-      const res = await axios.post(`${BASE_URL}/AddInBuildTestSuite/ResetPassword`, payload);
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/ResetPassword`,
+        payload
+      );
       const response = res.data;
-      console.log("response",response)
-      if (response?.status === 'Success') {
+      console.log("response", response);
+      if (response?.status === "Success") {
         toast.info(`${response.message}`, {
           style: {
-            background: 'rgb(101, 77, 247)',
-            color: 'rgb(255, 255, 255)',
-          
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
           },
         });
-        navigate("/")
+        navigate("/");
       } else {
-       console.log("somethings wrong")
+        console.log("somethings wrong");
       }
     } catch (err) {
       toast.error(err.response.data.message);
@@ -114,89 +124,90 @@ export const logout = () => {
   };
 };
 
-
-export const InviteUser = (email)=>{
-  return async (dispatch)=>{
+export const InviteUser = (email) => {
+  return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(
-        `${BASE_URL}/AddInBuildTestSuite/InviteUser?toEmail=${email}`,email);
-      console.log('response ' ,res)
+        `${BASE_URL}/AddInBuildTestSuite/InviteUser?toEmail=${email}`,
+        email
+      );
       if (res.data.status === "Success") {
-        toast.info('Successfully invited', {
+        toast.info("Successfully invited", {
           style: {
-            background: 'rgb(101, 77, 247)', 
-            color: 'rgb(255, 255, 255)', 
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
           },
         });
-    } else{
-      toast.warn(res.data.message)
-    }
-    }catch (error) {
-      console.log("error inviting ",error);
-      toast.error('Network error')
-    }
-  }
-}
-
-export const AcceptInvitation = (email,handeSetAccept)=>{
-  return async (dispatch)=>{
-    try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.post(
-        `${BASE_URL}/AddInBuildTestSuite/AcceptInvitation?toEmail=${email}`,email);
-      console.log('response ' ,res)
-      if (res.data.emailStatus.status === "Success") {
-        handeSetAccept()
-        toast.info('Successfully accept', {
-          style: {
-            background: 'rgb(101, 77, 247)', 
-            color: 'rgb(255, 255, 255)', 
-          },
-        });
-    } 
-    }catch (error) {
-      console.log("error inviting ",error);
-      toast('accept fail')
-    }
-  }
-}
-
-export const ChangePasswordReq = (payload,redirectToLogin)=>{
-  return async (dispatch)=>{
-    try {
-      const BASE_URL = await getBaseUrl();
-      const res = await axios.post(
-        `${BASE_URL}/AddInBuildTestSuite/ChangePassword`,payload);
-      console.log('res ' ,res)
-      if(res.data.status === "Success"){
-        toast.info('Password Changed Successfully', {
-          style: {
-            background: 'rgb(101, 77, 247)', 
-            color: 'rgb(255, 255, 255)', 
-          },
-        });
-        redirectToLogin()
-      }else{
-        toast.error(res.data.message)
+      } else {
+        toast.warn(res.data.message);
       }
-    }catch (error) {
-      console.log("error changing password ",error);
-      toast.error('Network error')
+    } catch (error) {
+      console.log("error inviting ", error);
+      toast.error("Network error");
     }
-  }
-}
+  };
+};
+
+export const AcceptInvitation = (email, handeSetAccept) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/AcceptInvitation?toEmail=${email}`,
+        email
+      );
+      if (res.data.emailStatus.status === "Success") {
+        handeSetAccept();
+        toast.info("Successfully accept", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+      }
+    } catch (error) {
+      console.log("error inviting ", error);
+      toast("accept fail");
+    }
+  };
+};
+
+export const ChangePasswordReq = (payload, redirectToLogin) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/ChangePassword`,
+        payload
+      );
+      console.log("res ", res);
+      if (res.data.status === "Success") {
+        toast.info("Password Changed Successfully", {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+        redirectToLogin();
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      console.log("error changing password ", error);
+      toast.error("Network error");
+    }
+  };
+};
 
 export const setUserId = (id) => {
   return (dispatch) => {
-    dispatch({ type: SET_USER_ID ,
-      payload:id
-    });
+    dispatch({ type: SET_USER_ID, payload: id });
   };
 };
-export const getUserId = ()=>{
-  const emailFromSession = sessionStorage.getItem("email");
-  return async (dispatch)=>{
+export const getUserId = () => {
+  const emailFromSession = localStorage.getItem("email");
+  return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
       const res = await axios.post(
@@ -204,9 +215,9 @@ export const getUserId = ()=>{
         emailFromSession,
         header()
       );
-      dispatch(setUserId(res.data?.Id))
+      dispatch(setUserId(res.data?.Id));
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
-  }
-}
+  };
+};

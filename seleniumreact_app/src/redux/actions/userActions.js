@@ -31,7 +31,7 @@ const fetchOrganization = (detail) => ({
 
 export const fetchUserByEmail = () => {
   return async (dispatch) => {
-    const emailFromSession = sessionStorage.getItem("email");
+    const emailFromSession = localStorage.getItem("email");
     dispatch(fetchRequest());
     try {
       const BASE_URL = await getBaseUrl();
@@ -59,7 +59,7 @@ export const UpdateUserProfile = (payload) => {
       );
       console.log("res", res);
       if (res.data.status === "success") {
-        sessionStorage.setItem("email", payload.email);
+        localStorage.setItem("email", payload.email);
         toast.info("Successfully updated", {
           style: {
             background: "rgb(101, 77, 247)",
@@ -123,7 +123,7 @@ export const updateOrganizationDetails = (formData,userId) => {
 
 export const fetchUsers = () => {
   return async (dispatch) => {
-    const emailFromSession = sessionStorage.getItem("email");
+    const emailFromSession = localStorage.getItem("email");
     dispatch(fetchRequest());
     try {
       const BASE_URL = await getBaseUrl();

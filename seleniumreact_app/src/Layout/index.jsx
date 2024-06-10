@@ -44,10 +44,10 @@ export default function MiniDrawer() {
   const {userData, userId} = useSelector((store) => store.auth);
   const { organizationDetails } = useSelector((state) => state.user);
   const getName = () => {
-    const email = sessionStorage.getItem("email");
-    const i = email.indexOf("@");
-    const name = email.substring(0, i);
-    return name.charAt(0).toUpperCase() + name.slice(1);
+    const email = localStorage?.getItem("email");
+    const i = email?.indexOf("@");
+    const name = email?.substring(0, i);
+    return name?.charAt(0)?.toUpperCase() + name?.slice(1);
   };
  
   useEffect(()=>{
@@ -59,7 +59,7 @@ export default function MiniDrawer() {
   },[userId])
   // to logout when token expired
   useEffect(()=>{
-    const expiry = JSON.parse(sessionStorage.getItem("tokenExpiry"))
+    const expiry = JSON.parse(localStorage.getItem("tokenExpiry"))
     const expiryTime =  new Date(expiry?.expiration).getTime();
     const checkTokenExpiry = () => {
       const currentTime =new Date().getTime();
@@ -76,8 +76,8 @@ export default function MiniDrawer() {
   })
   const handleLogout = () => {
     dispatch(logout());
-    sessionStorage.removeItem("userData");
-    sessionStorage.removeItem("tokenExpiry");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("tokenExpiry");
     navigate("/");
   };
   const handleMouseOver = () => {
