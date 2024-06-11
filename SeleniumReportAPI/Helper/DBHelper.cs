@@ -17,7 +17,6 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 using TestSeleniumReport.DTO_s;
 using Environments = SeleniumReportAPI.Models.Environments;
 
@@ -1357,6 +1356,7 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+
         internal async Task<string> AddTestCaseDetails(TestCaseDetails model)
         {
             string result = string.Empty;
@@ -2991,11 +2991,14 @@ namespace SeleniumReportAPI.Helper
             var data = JsonConvert.DeserializeObject<Dto_TestRunData>(testrunData.Result);
             var fromEmail = _configuration["EmailDetails:EmailUsername"];
             var senderDisplayName = _configuration["EmailDetails:SenderDisplayName"];
-            var subject = "Test Suite Execution Result";
+            DateTime parsedDate = DateTime.ParseExact(data.TestSuiteEndDateTime, "dd-MMM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            string EndDate = parsedDate.ToString("MMM dd, yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            var subject = $"[Completed] Test Suite: {testSuiteName} {EndDate}";
             var passWord = _configuration["EmailDetails:EmailPassword"];
-            //var htmlTestSuiteName = Uri.EscapeDataString(testSuiteName);
-            string encodedQueryParameter = HttpUtility.UrlEncode(testSuiteName);
-            var htmlTestSuiteName = encodedQueryParameter.Replace("+", "%20");
+            string encodedQueryParameter = testSuiteName.Replace(" ", "%20");
+            var logoUrl = "UploadedLogos/GhostQALogo.png";
+            var ghostQaUrl = "http://www.ghostqa.com/";
+
             Response response = null;
 
             if (testerName.Contains(","))
@@ -3010,24 +3013,24 @@ namespace SeleniumReportAPI.Helper
                                         <html lang=""en""> 
 			                            <head>         
 			                            <body style=""font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0;"">
-                                        <H2>Hi {toEmail},</H2>
+                                        <H4>Hi {toEmail},</H4>
                                         <p>Below is the test execution result for Test-Suite {testSuiteName}:</p>
                                         <table style=""width: 100%; border-collapse: collapse; margin-bottom: 20px;"">
                                         <thead>
                                         <tr>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Run Id</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Start Date</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">End Date</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Status</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Total</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Passed</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Failed</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Run Id</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Start Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">End Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Status</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Total</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Passed</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Failed</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #fff;"">
-                                        <a href=""{Url}test/{htmlTestSuiteName}/{data.TestRunName}"" style=""text-decoration: none; color: #654DF7;"">{data.TestRunName}</a>
+                                        <a href=""{Url}test/{encodedQueryParameter}/{data.TestRunName}"" style=""text-decoration: none; color: #654DF7;"">{data.TestRunName}</a>
                                         </td>
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunStartDateTime:dd-MMM-yyyy HH:mm:ss}</td>
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunEndDateTime}</td>
@@ -3037,14 +3040,28 @@ namespace SeleniumReportAPI.Helper
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.FailedTestCases}</td>
                                         </tr>
                                         </tbody>
-                                        </table>
-                                        <H2>Thank you</H2>
+                                        </table> 
+                                        <div style=""text-align: left; margin-top: 10px;"">
+                                        <img src=""cid:logoImage"" alt=""logo"" style=""max-width: 200px; height: auto;"">
+                                        <a href=""{ghostQaUrl}"" style=""text-decoration: none; color: #654DF7;"">www.ghostqa.com</a>
+                                        </div>
                                         </body>
 			                            </html>";
                     var client = new SendGridClient(passWord);
                     var from = new EmailAddress(fromEmail, senderDisplayName);
                     var to = new EmailAddress(toEmail, toEmail);
                     var msg = MailHelper.CreateSingleEmail(from, to, subject, "", BodyString);
+                    var logoPath = logoUrl; // Path to the logo on the server
+                    var logoBytes = File.ReadAllBytes(logoPath);
+                    var logoAttachment = new Attachment
+                    {
+                        Content = Convert.ToBase64String(logoBytes),
+                        Type = "image/png",
+                        Filename = "GhostQALogo.png",
+                        Disposition = "inline",
+                        ContentId = "logoImage"
+                    };
+                    msg.AddAttachment(logoAttachment);
                     response = await client.SendEmailAsync(msg);
                 }
 
@@ -3059,24 +3076,24 @@ namespace SeleniumReportAPI.Helper
                                         <html lang=""en""> 
 			                            <head>         
 			                            <body style=""font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0;"">
-                                        <H2>Hi {testerName},</H2>
+                                        <H4>Hi {testerName},</H4>
                                         <p>Below is the test execution result for Test-Suite {testSuiteName}:</p>
                                         <table style=""width: 100%; border-collapse: collapse; margin-bottom: 20px;"">
                                         <thead>
                                         <tr>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Run Id</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Start Date</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">End Date</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Status</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Total</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Passed</th>
-                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;"">Failed</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Run Id</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Start Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">End Date</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Status</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Total</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Passed</th>
+                                        <th style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #f2f2f2;"">Failed</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center; background-color: #fff;"">
-                                        <a href=""{Url}test/{testSuiteName}/{data.TestRunName}"" style=""text-decoration: none; color: #654DF7;"">{data.TestRunName}</a>
+                                        <a href=""{Url}test/{encodedQueryParameter}/{data.TestRunName}"" style=""text-decoration: none; color: #654DF7;"">{data.TestRunName}</a>
                                         </td>
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunStartDateTime:dd-MMM-yyyy HH:mm:ss}</td>
                                         <td style=""border: 1px solid #ddd; padding: 8px; text-align: center;"">{data.TestRunEndDateTime}</td>
@@ -3087,13 +3104,27 @@ namespace SeleniumReportAPI.Helper
                                         </tr>
                                         </tbody>
                                         </table>
-                                        <H2>Thank you</H2>
+                                         <div style=""text-align: left; margin-top: 10px;"">
+                                            <img src=""cid:logoImage"" alt=""logo"" style=""max-width: 200px; height: auto;"">
+                                            <a href=""{ghostQaUrl}"" style=""text-decoration: none; color: #654DF7;"">www.ghostqa.com</a>
+                                        </div>
                                         </body>
 			                            </html>";
                 var client = new SendGridClient(passWord);
                 var from = new EmailAddress(fromEmail, senderDisplayName);
                 var to = new EmailAddress(testerName, testerName);
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, "", BodyString);
+                var logoPath = logoUrl; // Path to the logo on the server
+                var logoBytes = File.ReadAllBytes(logoPath);
+                var logoAttachment = new Attachment
+                {
+                    Content = Convert.ToBase64String(logoBytes),
+                    Type = "image/png",
+                    Filename = "GhostQALogo.png",
+                    Disposition = "inline",
+                    ContentId = "logoImage"
+                };
+                msg.AddAttachment(logoAttachment);
                 response = await client.SendEmailAsync(msg);
             }
             if (!response.IsSuccessStatusCode)
@@ -4208,6 +4239,54 @@ namespace SeleniumReportAPI.Helper
                 return new { status = response.StatusCode, message = response.RequestMessage, data = await response.Content.ReadAsStringAsync() };
 
             return new { status = response.StatusCode, message = "Report posted successfully", data = await response.Content.ReadAsStringAsync() };
+        }
+
+        internal async Task<string> AddFunctionalSuiteRelation(FunctionalSuiteRelation model)
+        {
+            string result = string.Empty;
+            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("stp_AddFunctionalSuiteRelation", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Parent", model.Parent);
+                    command.Parameters.AddWithValue("@Name", model.Name);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            result = reader["result"].ToString();
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return result;
+        }
+
+        internal async Task<string> GetFunctionalSuiteRelation()
+        {
+            string result = string.Empty;
+            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("stp_GetFunctionalSuiteRelation", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            result = reader["result"].ToString();
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return result;
         }
     }
 }

@@ -560,5 +560,23 @@ namespace SeleniumReportAPI.Controllers
         {
             return Ok(await _helper.GetUsersOrganizationByUserId(UserId));
         }
+
+        /// <summary>
+        /// Add Functional Suite Relation
+        /// </summary>
+        [HttpPost("AddFunctionalSuiteRelation")]
+        public async Task<ActionResult> AddFunctionalSuiteRelation(FunctionalSuiteRelation model)
+        {
+            return Ok(await _helper.AddFunctionalSuiteRelation(model));
+        }
+
+        /// <summary>
+        /// Get Functional Suite Relation
+        /// </summary>
+        [HttpGet("GetFunctionalSuiteRelation")]
+        public async Task<ActionResult> GetFunctionalSuiteRelation()
+        {
+            return Ok(await _helper.GetFunctionalSuiteRelation());
+        }
     }
 }

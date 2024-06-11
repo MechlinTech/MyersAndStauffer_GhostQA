@@ -2976,12 +2976,8 @@ BEGIN TRY
 	SELECT [TestSuites] = JSON_QUERY((
 		SELECT [TestSuiteName],[TestSuiteFlag] FROM
 		(SELECT DISTINCT [TestSuiteName] [TestSuiteName], 'InBuilt' [TestSuiteFlag]
-		FROM tbl_TestCase WHERE [TestSuiteName] NOT IN (SELECT DISTINCT [TestSuiteName]
-		FROM tbl_TestSuites)
-		UNION
-		SELECT DISTINCT [TestSuiteName] [TestSuiteName], 'Custom' [TestSuiteFlag]
-		FROM tbl_TestSuites) tbl
-	FOR JSON PATH)) 
+		FROM tbl_TestCase) tbl
+	FOR JSON PATH))
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuites]
@@ -4745,5 +4741,78 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	--Error handling
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_AddFunctionalSuiteRelation]
+@Parent	        INT,
+@Name           NVARCHAR(MAX)
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_AddFunctionalSuiteRelation
+CREATED BY		:	Lokesh
+CREATED DATE	:	1th June, 2024
+PROC EXEC		:  EXEC stp_AddRootRelation
+				
+**************************************************************************************/
+BEGIN TRY
+ IF EXISTS( SELECT 1 FROM [dbo].[tbl_FunctionalSuiteRelation] WHERE [Parent] = @Parent AND [Name] = @Name)
+BEGIN
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], 'Duplicate Name' [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END
+ELSE
+	BEGIN
+		INSERT INTO [dbo].[tbl_FunctionalSuiteRelation] (Parent, [Name]) 
+		VALUES (@Parent, @Name)
+
+		IF @@ERROR = 0
+		BEGIN
+			SELECT [Result] = JSON_QUERY((
+				SELECT 'success' [status], '' [message],
+					[Data] = JSON_QUERY((
+						SELECT Id [id], Parent [parentId], [Name] [name]
+						FROM [dbo].[tbl_FunctionalSuiteRelation] where Id = SCOPE_IDENTITY()
+						FOR JSON PATH
+					))
+			FOR JSON PATH,WITHOUT_ARRAY_WRAPPER 
+			))
+		END
+		ELSE
+		BEGIN
+			SELECT [result] = JSON_QUERY((
+				SELECT 'fail' [status], CAST(@@ERROR AS NVARCHAR(20)) [message]
+				FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+			))
+		END
+	END
+END TRY
+BEGIN CATCH
+	SELECT [result] = JSON_QUERY((
+		SELECT 'fail' [status], ERROR_MESSAGE() [message]
+		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+	))
+END CATCH
+GO
+CREATE OR ALTER PROCEDURE [dbo].[stp_GetFunctionalSuiteRelation]
+AS
+/**************************************************************************************
+PROCEDURE NAME	:	stp_GetFunctionalSuiteRelation
+CREATED BY		:	Lokesh
+CREATED DATE	:	11th June, 2024	
+PROC EXEC		:	EXEC stp_GetFunctionalSuiteRelation
+**************************************************************************************/
+BEGIN TRY
+	SELECT [result] = JSON_QUERY((
+		SELECT
+			[Id] AS [id],
+			ISNULL([Parent], '') AS [parentId],
+			ISNULL([Name], '') AS [name]
+		FROM [dbo].[tbl_FunctionalSuiteRelation]
+	FOR JSON PATH))
+END TRY
+BEGIN CATCH
+	SELECT ERROR_MESSAGE() [RootRelation]
 END CATCH
 GO
