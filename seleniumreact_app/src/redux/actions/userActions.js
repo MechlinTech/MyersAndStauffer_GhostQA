@@ -31,7 +31,7 @@ const fetchOrganization = (detail) => ({
 
 export const fetchUserByEmail = () => {
   return async (dispatch) => {
-    const emailFromSession = sessionStorage.getItem("email");
+    const emailFromSession = localStorage.getItem("email");
     dispatch(fetchRequest());
     try {
       const BASE_URL = await getBaseUrl();
@@ -59,7 +59,7 @@ export const UpdateUserProfile = (payload) => {
       );
       console.log("res", res);
       if (res.data.status === "success") {
-        sessionStorage.setItem("email", payload.email);
+        localStorage.setItem("email", payload.email);
         toast.info("Successfully updated", {
           style: {
             background: "rgb(101, 77, 247)",
@@ -83,8 +83,12 @@ export const fetchOrganizationDetail = (userId) => {
         `${BASE_URL}/Selenium/GetUsersOrganizationByUserId?UserId=${userId}`,
         header()
       );
-      console.log(res);
+      console.log('response',res)
+      if(Array.isArray(res.data))
       dispatch(fetchOrganization(res.data[0]));
+      else{
+        dispatch(fetchOrganization(null))
+      }
     } catch (error) {
       dispatch(fetchFailure(error.message));
       toast.error(error.message);
@@ -92,7 +96,7 @@ export const fetchOrganizationDetail = (userId) => {
   };
 };
 
-export const updateOrganizationDetails = (formData) => {
+export const updateOrganizationDetails = (formData,userId) => {
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
@@ -102,6 +106,7 @@ export const updateOrganizationDetails = (formData) => {
         headerForm()
       );
       if (res.data.status === "success") {
+        dispatch(fetchOrganizationDetail(userId));
         toast.info("Successfully saved", {
           style: {
             background: "rgb(101, 77, 247)",
@@ -118,7 +123,7 @@ export const updateOrganizationDetails = (formData) => {
 
 export const fetchUsers = () => {
   return async (dispatch) => {
-    const emailFromSession = sessionStorage.getItem("email");
+    const emailFromSession = localStorage.getItem("email");
     dispatch(fetchRequest());
     try {
       const BASE_URL = await getBaseUrl();

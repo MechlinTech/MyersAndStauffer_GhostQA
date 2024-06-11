@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace SeleniumReportAPI.DTO_s
+﻿namespace SeleniumReportAPI.DTO_s
 {
     public class Dto_TestRunData
     {
@@ -12,6 +10,7 @@ namespace SeleniumReportAPI.DTO_s
         public string PassedTestCases { get; set; }
         public string FailedTestCases { get; set; }
         public string TestRunStatus { get; set; }
-
+        public string TestSuiteStartDateTime { get; set; }
+        public string TestSuiteEndDateTime { get; set; }
     }
 }

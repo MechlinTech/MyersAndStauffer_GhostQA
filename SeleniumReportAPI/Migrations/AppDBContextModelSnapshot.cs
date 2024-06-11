@@ -442,6 +442,22 @@ namespace SeleniumReportAPI.Migrations
                     b.ToTable("tbl_Environments");
                 });
 
+            modelBuilder.Entity("SeleniumReportAPI.Models.ExistingSuiteRun", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsExistingSuiteRunning")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_ExistingSuiteRun");
+                });
+
             modelBuilder.Entity("SeleniumReportAPI.Models.FuncationalTest", b =>
                 {
                     b.Property<int>("RootId")
@@ -462,6 +478,25 @@ namespace SeleniumReportAPI.Migrations
                     b.HasKey("RootId");
 
                     b.ToTable("tbl_FuncationalTest");
+                });
+
+            modelBuilder.Entity("SeleniumReportAPI.Models.FunctionalSuiteRelation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Parent")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_FunctionalSuiteRelation");
                 });
 
             modelBuilder.Entity("SeleniumReportAPI.Models.FunctionalTestCase", b =>
@@ -1054,6 +1089,9 @@ namespace SeleniumReportAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EnvironmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RootId")
                         .HasColumnType("int");
 
                     b.Property<string>("SelectedTestCases")

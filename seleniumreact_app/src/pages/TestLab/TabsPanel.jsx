@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import { StyledTypography } from "./styles";
 import AddTestCase from "./Design/AddTestCase";
 import Result from "./Result";
+import Scheduler from "./scheduler";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -88,6 +89,7 @@ export default function TabsPanel() {
 
       <TabPanel value={value} index={"Design"}>
         <AddTestCase />
+        {/* <Scheduler/> */}
       </TabPanel>
       <TabPanel value={value} index={"Result"}>
         {/* <div>Result</div> */}

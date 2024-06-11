@@ -131,12 +131,12 @@ export default function Settings() {
         },
         {
           title: "Integration",
-          path: "/main-settings/integration",
+          path: "/main-settings/on-prem/integration",
         },
       ],
     },
     {
-      title: "Functional",
+      title: "Functional - Local Testing",
       path: "/main-settings",
       children: [
         {
@@ -152,12 +152,13 @@ export default function Settings() {
           path: "/main-settings/environment",
         },
         {
-          title: "Test User",
+          title: "Test Users",
           path: "/main-settings/test-user",
         },
         {
-          title: "Integration (Jira & Teams)",
-          path: "/main-settings/on-prem/ntegration",
+          title: "Integration",
+          path: "",
+          path: "/main-settings/integration",
         },
       ],
     },
@@ -217,9 +218,13 @@ export default function Settings() {
           >
             <Box className={classes.subMenu}>
               {category.children?.map((child, childIndex) => (
-                  <Link to={child.path} className={classes.linkStyle} key={childIndex}>
+                <Link
+                  to={child.path}
+                  className={classes.linkStyle}
+                  key={childIndex}
+                >
                   <Paper
-                  className={`
+                    className={`
                     ${classes.paper}
                     ${classes.subPaper}
                     ${
@@ -228,8 +233,8 @@ export default function Settings() {
                         : ""
                     }
                   `}
-                  onClick={() => handleChildClick(child)}
-                >
+                    onClick={() => handleChildClick(child)}
+                  >
                     <Grid container alignItems="left">
                       <Typography
                         className={`
@@ -245,8 +250,8 @@ export default function Settings() {
                         {child.title}
                       </Typography>
                     </Grid>
-                </Paper>
-                  </Link>
+                  </Paper>
+                </Link>
               ))}
             </Box>
           </Grid>
@@ -269,13 +274,7 @@ export default function Settings() {
         <Grid item xs={12} sm={9} xl={10}>
           <Card style={{ maxHeight: "84vh" }}>
             <Grid container>
-              {selectedItem ? (
-                <Outlet />
-              ) : (
-                <Box style={tabLabelStyle}>
-                  {selectedItem ? selectedItem?.title : "Test Case"}
-                </Box>
-              )}
+              <Outlet />
             </Grid>
           </Card>
         </Grid>

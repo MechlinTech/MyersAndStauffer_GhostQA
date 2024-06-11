@@ -24,5 +24,5 @@ RUN if [ ! -f /opt/apache-jmeter-5.6.3/lib/PluginsManagerCMD.sh ] && [ ! -f /opt
 
 WORKDIR  /opt/apache-jmeter-5.6.3/bin
 
-RUN PluginsManagerCMD.sh install jpgc-json=2.2,jpgc-casutg
+RUN PluginsManagerCMD.sh install jpgc-json,jpgc-casutg
 RUN PluginsManagerCMD.sh install jpgc-synthesis

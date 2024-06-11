@@ -86,18 +86,32 @@ export const ExecuteTestCasesByTestSuite = (data) => {
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
-      const response = await axios.options(
-        `${BASE_URL}/Selenium/ExecuteTestSuite?TestSuiteName=${data}`,
+      const response = await axios.post(
+        `${BASE_URL}/Selenium/ExecuteTestSuite`,
         // `${BASE_URL}/Selenium/ExecuteTestSuite`,
+        data,
         header()
       );
-      const finishedItem = response.data.find(item => item?.status === "Finished")
-        toast.info(finishedItem.message, {
-          style: {
-            background: "rgb(101, 77, 247)",
-            color: "rgb(255, 255, 255)",
-          },
-        });
+
+      if (Array.isArray(response.data)) {
+        const failedItem = response.data.find(item => item?.status === "Failed");
+        if (failedItem) {
+          toast.error(failedItem.message);
+        } else {
+          const finishedItem = response.data.find(item => item?.status === "Finished");
+          if (finishedItem) {
+            toast.info(finishedItem.message, {
+              style: {
+                background: "rgb(101, 77, 247)",
+                color: "rgb(255, 255, 255)",
+              },
+            });
+          }
+        }
+      } else if (response.data?.status === "Conflict") {
+        toast.error(response.data.message);
+      }
+      
       dispatch({
         type:EXECUTING_SUITE,
         payload:null

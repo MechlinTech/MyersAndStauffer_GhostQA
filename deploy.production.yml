@@ -1,0 +1,160 @@
+version: '3.8'
+
+volumes:
+  ms_data_prod:
+  ms_logs_prod:
+
+services:
+
+  caddy:
+    image: ghostqa/caddy:${COMMITHASH}
+    ports:
+      - "30003:30001"
+      - "80"
+      - "443"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ~/caddy/data:/data
+      - ~/caddy/config:/config
+
+  webui:
+    image: ghostqa/webui:${COMMITHASH}
+    ports:
+      - "80"
+    environment:
+      - NODE_ENV=production
+    stdin_open: true
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  dotnetapi:
+    image: ghostqa/dotnetapi:${COMMITHASH}
+    ports:
+      - "80"
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=P@ssw0rd@123###
+      - DB_USER=sa
+      - DB_NAME=GhostQA
+      - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
+      - CypressAPI__PerformanceExecutor=http://codeengine:8000/codeengine/api/performance-tests/execute2/
+      - CypressAPI__ExecutorResult=http://codeengine:8000/codeengine/api/performance-container-runs/
+      - LocationFile__JMXFile=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFile
+      - LocationFile__CSVFile=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataCSVFile
+      - LocationFile__JMXFileDev=C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFileDev
+      - InvitationUrl__Url=http://127.0.0.1:30001/AcceptInvitation/
+    command: dotnet SeleniumReportAPI.dll
+    volumes:
+      - ./app/dotnet/wwwroot/TestDataFile:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFile
+      - ./app/dotnet/wwwroot/TestDataCSVFile:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataCSVFile
+      - ./app/dotnet/wwwroot/TestDataFileDev:/app/C:/GhostQA/SeleniumReportAPI/wwwroot/TestDataFileDev
+      - ./app/UploadedLogos:/app/UploadedLogos/
+    depends_on:
+      - db
+      - migrations
+    extra_hosts:
+      - host.docker.internal:host-gateway
+      
+  migrations:
+    image: ghostqa/dotnetapi-migrations:${COMMITHASH}
+    ports:
+      - "80"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=P@ssw0rd@123###
+      - DB_USER=sa
+      - DB_NAME=GhostQA
+      - ConnectionStrings__AppDBContextConnection=Server=db;Database=GhostQA;User=sa;Password=P@ssw0rd@123###
+      - CypressAPI__PerformanceExecutor=http://codeengine:8000/codeengine/api/performance-tests/execute2/
+      - CypressAPI__ExecutorResult=http://codeengine:8000/codeengine/api/performance-container-runs/
+
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
+    ports:
+      - "1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "P@ssw0rd@123###"
+    hostname: db
+    container_name: db-production
+    restart: unless-stopped
+    volumes:
+      - ms_data_prod:/var/opt/mssql/data
+      - ms_logs_prod:/var/opt/mssql/log
+    healthcheck:
+      test: ["CMD", "sqlcmd", "-U", "sa", "-P", "P@ssw0rd@123###", "-Q", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: "yourusername"  # Set your PostgreSQL username here
+      POSTGRES_PASSWORD: "yourpassword"  # Set your PostgreSQL password here
+      POSTGRES_DB: "yourdatabase"  # Set your PostgreSQL database name here
+    ports:
+      - "5432"  # Expose PostgreSQL port
+    volumes:
+      - ./ghostqa/postgres-data:/var/lib/postgresql/data 
+  
+  codeengine: &django_app
+    image: ghostqa/codeengine:${COMMITHASH}
+    command:  pipenv run gunicorn ghostqa.wsgi -w 4 -b 0.0.0.0:8000 -t 1000000000
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    environment:
+      - DOCKER_HOST=unix://var/run/docker.sock
+      - SHARED_PATH=/automation-tests
+      - SHARED_PERFORMACE_PATH=/tests
+      - DATABASE_URL=postgres://yourusername:yourpassword@postgres:5432/yourdatabase 
+    volumes:
+      - ./app/media:/app/media
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /automation-tests:/automation-tests
+      - /tests/performace:/tests/performace
+    ports:
+      - "8000"
+    depends_on:
+      - postgres
+  
+  django_app_migrate:
+    <<: *django_app
+    command: python manage.py migrate
+    depends_on:
+      - postgres
+    ports:
+      - "5000"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+  
+  adminuser:
+    <<: *django_app
+    command: python manage.py createsuperuser --noinput
+    ports:
+      - "5000"
+    environment:
+      DJANGO_SUPERUSER_USERNAME: dev
+      DJANGO_SUPERUSER_EMAIL: dev@ghostqa.com
+      DJANGO_SUPERUSER_PASSWORD: Admin@1234
+      DATABASE_URL: postgres://yourusername:yourpassword@postgres:5432/yourdatabase
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s  
+
+  

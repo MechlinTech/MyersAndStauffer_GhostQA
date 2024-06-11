@@ -13,11 +13,8 @@ BEGIN TRY
 	SELECT [TestSuites] = JSON_QUERY((
 		SELECT [TestSuiteName],[TestSuiteFlag] FROM
 		(SELECT DISTINCT [TestSuiteName] [TestSuiteName], 'InBuilt' [TestSuiteFlag]
-		FROM tbl_TestCase
-		UNION
-		SELECT DISTINCT [TestSuiteName] [TestSuiteName], 'Custom' [TestSuiteFlag]
-		FROM tbl_TestSuites) tbl
-	FOR JSON PATH)) 
+		FROM tbl_TestCase) tbl
+	FOR JSON PATH))
 END TRY
 BEGIN CATCH
 	SELECT ERROR_MESSAGE() [TestSuites]

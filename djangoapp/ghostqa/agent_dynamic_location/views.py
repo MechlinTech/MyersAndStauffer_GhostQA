@@ -59,14 +59,14 @@ class JobViewSet(viewsets.ModelViewSet):
 
     #     return Response(self.get_serializer(job).data)
     
-    # @action(detail=False,methods=['GET'])
-    # def queued_job(self, request):
-    #     queued_job = Job.objects.filter(job_status='queued').order_by('created_at').first()
-    #     if queued_job:
-    #         serializer = self.get_serializer(queued_job)
-    #         return Response(serializer.data)
-    #     else:
-    #         return Response(status=404, data={'message': 'No queued jobs found'})
+    @action(detail=False,methods=['GET'], url_path='queued-jobs-without-agentID')
+    def queued_job_without_agentid(self, request):
+        queued_job = Job.objects.filter(job_status='queued').order_by('created_at')
+        if queued_job.exists():
+            serializer = self.get_serializer(queued_job, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=404, data={'message': 'No queued jobs found'})
     
     @action(detail=False, methods=['GET'])
     def queued_job(self, request):

@@ -21,13 +21,14 @@ import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
  
 // Redux import
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/actions/authActions";
+import { getUserId, logout } from "../redux/actions/authActions";
  
 import { useStyles } from "./styles";
 import Navigations from "../Routes/Navigations";
 import { LogoutIcon, UserIcon } from "../comman/icons";
 import SettingsIcon from '@mui/icons-material/Settings'
 import { Box } from "@mui/material";
+import { fetchOrganizationDetail } from "../redux/actions/userActions";
  
 export default function MiniDrawer() {
   const classes = useStyles();
@@ -39,17 +40,26 @@ export default function MiniDrawer() {
   const [showmodel, setshowmodel] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
  
-  const userData = useSelector((store) => store.auth.userData);
+  // const userData = useSelector((store) => store.auth.userData);
+  const {userData, userId} = useSelector((store) => store.auth);
+  const { organizationDetails } = useSelector((state) => state.user);
   const getName = () => {
-    const email = sessionStorage.getItem("email");
-    const i = email.indexOf("@");
-    const name = email.substring(0, i);
-    return name.charAt(0).toUpperCase() + name.slice(1);
+    const email = localStorage?.getItem("email");
+    const i = email?.indexOf("@");
+    const name = email?.substring(0, i);
+    return name?.charAt(0)?.toUpperCase() + name?.slice(1);
   };
  
+  useEffect(()=>{
+    dispatch(getUserId())
+  },[])
+  useEffect(()=>{
+    if(userId)
+    dispatch(fetchOrganizationDetail(userId))
+  },[userId])
   // to logout when token expired
   useEffect(()=>{
-    const expiry = JSON.parse(sessionStorage.getItem("tokenExpiry"))
+    const expiry = JSON.parse(localStorage.getItem("tokenExpiry"))
     const expiryTime =  new Date(expiry?.expiration).getTime();
     const checkTokenExpiry = () => {
       const currentTime =new Date().getTime();
@@ -66,8 +76,8 @@ export default function MiniDrawer() {
   })
   const handleLogout = () => {
     dispatch(logout());
-    sessionStorage.removeItem("userData");
-    sessionStorage.removeItem("tokenExpiry");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("tokenExpiry");
     navigate("/");
   };
   const handleMouseOver = () => {
@@ -139,7 +149,7 @@ export default function MiniDrawer() {
             <Grid item> */}
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Box sx={{ marginRight: "5px" }}>
-                  <Avatar sx={{ m: 1, bgcolor: "#654DF7" }} src="" />
+                  <Avatar sx={{ m: 1, bgcolor: "#654DF7" }} src={organizationDetails?organizationDetails.LogoPath:""} />
                 </Box>
                 <Box>
                   <Box
@@ -197,7 +207,7 @@ export default function MiniDrawer() {
                           onKeyDown={() => setShowMenu(false)}
                           className={classes.customMenuList}
                         >
-                          <MenuItem
+                          {/* <MenuItem
                             onClick={() => {
                               setShowMenu(false);
                               navigate("/myaccount");
@@ -207,7 +217,7 @@ export default function MiniDrawer() {
                             <span style={{ marginLeft: "10px" }}>
                               My Account
                             </span>
-                          </MenuItem>
+                          </MenuItem> */}
                           <MenuItem
                             onClick={() => {
                               setShowMenu(false);

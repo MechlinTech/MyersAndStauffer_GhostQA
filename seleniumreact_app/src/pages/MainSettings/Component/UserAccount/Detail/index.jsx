@@ -13,9 +13,6 @@ import { useStyles } from "./style";
 import { Avatar } from "@material-ui/core";
 import { StyledTypography, StyledOutlinedInput } from "./style";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { getBaseUrl } from "../../../../../utils/configService";
-import { header } from "../../../../../utils/authheader";
 import { UpdateUserProfile, fetchUserByEmail } from "../../../../../redux/actions/userActions";
 // const BASE_URL = process.env.REACT_APP_BASE_URL || "api";
 
@@ -23,7 +20,8 @@ export default function Detail() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, loading, error } = useSelector((state) => state.user);
+  const { user, loading, organizationDetails } = useSelector((state) => state.user);
+
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [organizationName, setOrganizationName] = useState("");
@@ -34,9 +32,9 @@ export default function Detail() {
     organizationNameError: "",
   });
 
-  useEffect(() => {
-    dispatch(fetchUserByEmail());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchUserByEmail());
+  // }, []);
   useEffect(() => {
     if (user) {
       setEmail(user.Email || "");
@@ -46,7 +44,7 @@ export default function Detail() {
   }, [user]);
   // Extracting the name of user
   const getName = () => {
-    const email = sessionStorage.getItem("email");
+    const email = localStorage.getItem("email");
     const i = email.indexOf("@");
     const name = email.substring(0, i);
     return name.charAt(0).toUpperCase() + name.slice(1);
@@ -108,7 +106,7 @@ export default function Detail() {
               >
                 <Avatar
                   style={{ marginRight: "10px", backgroundColor: "#654DF7" }}
-                  src=""
+                  src={organizationDetails?organizationDetails.LogoPath:""}
                 />
                 <Typography fontSize="18px" fontFamily="Lexend Deca">
                   {getName()}

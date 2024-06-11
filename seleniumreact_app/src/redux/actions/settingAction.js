@@ -8,10 +8,11 @@ export const GET_LOC_COUNT = "GET_LOC_COUNT";
 export const GET_USER_COUNT = "GET_USER_COUNT";
 export const RESET_USER_COUNT = "RESET_USER_COUNT";
 export const RESET_LOC_COUNT = "RESET_LOC_COUNT";
-export const GET_USER_LIST ="GET_USER_LIST"
+export const GET_USER_LIST = "GET_USER_LIST";
 export const GET_PERFORMANCE_INTEGRATION = "GET_PERFORMANCE_INTEGRATION";
 export const JIRA_ISSUE_TYPES = "JIRA_ISSUE_TYPES";
 export const JIRA_PROJECT_LIST = "JIRA_PROJECT_LIST";
+export const GET_ALL_JIRA_ISSUE = "GET_ALL_JIRA_ISSUE";
 
 export const getTestSuitesList = () => {
   return async (dispatch) => {
@@ -206,7 +207,6 @@ export const DeleteBrowser = (brwId) => {
   };
 };
 
-
 // for Test User
 
 export const AddUpdateTestUser = (data) => {
@@ -218,7 +218,7 @@ export const AddUpdateTestUser = (data) => {
         data,
         header()
       );
-      console.log("/Selenium/AddTestUser",res.data)
+      console.log("/Selenium/AddTestUser", res.data);
       if (res.data.status === "success") {
         dispatch(GetTestUserList());
         toast.info(res.data.message, {
@@ -237,7 +237,6 @@ export const AddUpdateTestUser = (data) => {
   };
 };
 
-
 export const GetTestUserList = () => {
   return async (dispatch) => {
     try {
@@ -246,7 +245,7 @@ export const GetTestUserList = () => {
         `${BASE_URL}/Selenium/GetAllTestUser`,
         header()
       );
-      console.log("GetTestUserList",response)
+      console.log("GetTestUserList", response);
       dispatch({
         type: GET_USER_LIST,
         payload: response.data,
@@ -309,7 +308,12 @@ export const getPerformanceIntegrationList = (userId) => {
   };
 };
 
-export const updateZiraIntegration = (data, setOpenModal, setLoading, callback) => {
+export const updateZiraIntegration = (
+  data,
+  setOpenModal,
+  setLoading,
+  callback
+) => {
   setLoading(true);
   return async (dispatch) => {
     try {
@@ -319,30 +323,34 @@ export const updateZiraIntegration = (data, setOpenModal, setLoading, callback) 
         data,
         header()
       );
-      console.log("updateZiraIntegration====", response.data.message);
-      if(response.data.message == "Success") {
-        if(data.isIntegrated == true) {
-          toast.info('Successfully Jira Integrated', {
+      if (response.data.message == "Success") {
+        if (data.isIntegrated == true) {
+          toast.info("Successfully Jira Integrated", {
             style: {
               background: "rgb(101, 77, 247)",
               color: "rgb(255, 255, 255)",
             },
           });
+          setOpenModal(false);
+          setLoading(false);
         } else {
-          toast.info('Successfully Jira Integrated Removed', {
+          toast.info("Successfully Jira Integrated Removed", {
             style: {
               background: "rgb(101, 77, 247)",
               color: "rgb(255, 255, 255)",
             },
           });
+          setOpenModal(false);
+          setLoading(false);
         }
-        
         dispatch(getPerformanceIntegrationList(data.userId));
-        setOpenModal(false);
-        setLoading(false);
         callback(true);
-      } else {
-        setOpenModal(false);
+      } else if (response.data.message == "Not Found") {
+        toast.warn("Invalid Information Entered");
+        setLoading(false);
+        callback(false);
+      } else if (response.data.message == "Unauthorized") {
+        toast.warn("Invalid Information Entered");
         setLoading(false);
         callback(false);
       }
@@ -354,6 +362,62 @@ export const updateZiraIntegration = (data, setOpenModal, setLoading, callback) 
     }
   };
 };
+
+export const updateTeamsIntegration = (
+  data,
+  setOpenTeamsModal,
+  setLoading,
+  callback
+) => {
+  setLoading(true);
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.post(
+        `${BASE_URL}/AddInBuildTestSuite/UpdateIntegration`,
+        data,
+        header()
+      );
+      if (response.data.message == "Success") {
+        if (data.isIntegrated == true) {
+          toast.info("Successfully Teams Integrated", {
+            style: {
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
+            },
+          });
+          setOpenTeamsModal(false);
+          setLoading(false);
+        } else {
+          toast.info("Successfully Teams Integration Removed", {
+            style: {
+              background: "rgb(101, 77, 247)",
+              color: "rgb(255, 255, 255)",
+            },
+          });
+          setOpenTeamsModal(false);
+          setLoading(false);
+        }
+        dispatch(getPerformanceIntegrationList(data.userId));
+        callback(true);
+      } else if (response.data.message == "Not Found") {
+        toast.warn("Invalid Information Entered");
+        setLoading(false);
+        callback(false);
+      } else if (response.data.message == "Unauthorized") {
+        toast.warn("Invalid Information Entered");
+        setLoading(false);
+        callback(false);
+      }
+    } catch (error) {
+      console.error("Error in updateZiraIntegration:", error);
+      setOpenTeamsModal(false);
+      setLoading(false);
+      callback(false);
+    }
+  };
+};
+
 
 export const GetAllJiraIssueTypes = (userId) => {
   return async (dispatch) => {
@@ -391,7 +455,25 @@ export const GetProjectListJira = (userId) => {
   };
 };
 
-export const createIssueOnJira = (payload,closeDrawer) => {
+export const GetAllJiraIssue = (userId) => {
+  return async (dispatch) => {
+    try {
+      const BASE_URL = await getBaseUrl();
+      const res = await axios.get(
+        `${BASE_URL}/AddInBuildTestSuite/GetAllJiraIssue?userId=${userId}`,
+        header()
+      );
+      dispatch({
+        type: GET_ALL_JIRA_ISSUE,
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log("error getting project data", error);
+    }
+  };
+};
+
+export const createIssueOnJira = (payload, closeDrawer, userId) => {
   return async (dispatch) => {
     try {
       const BASE_URL = await getBaseUrl();
@@ -400,19 +482,19 @@ export const createIssueOnJira = (payload,closeDrawer) => {
         payload,
         header()
       );
-      if(res.data.status === "OK"){
-        closeDrawer(false)
-        toast.info('Successfully created', {
-                style: {
-                  background: 'rgb(101, 77, 247)',
-                  color: 'rgb(255, 255, 255)',
-                },
-              });
+
+      if (res.data.status === "OK") {
+        toast.info(`Successfully created Ticket ${res?.data?.data?.key}`, {
+          style: {
+            background: "rgb(101, 77, 247)",
+            color: "rgb(255, 255, 255)",
+          },
+        });
+        dispatch(GetAllJiraIssue(userId));
+        closeDrawer(false);
       }
     } catch (error) {
       console.log("error creating issue on jira ", error);
     }
   };
 };
-
-

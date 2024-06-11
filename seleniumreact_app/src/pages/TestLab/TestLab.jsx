@@ -16,11 +16,13 @@ import { header } from "../../utils/authheader";
 import { useParams } from "react-router-dom";
 import { getBaseUrl } from "../../utils/configService";
 import TabsPanel from "./TabsPanel";
+import { useSelector } from "react-redux";
+import Scheduler from "./scheduler";
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function TestLab() {
   const classes = useStyles();
-
+  const {isScheduling } = useSelector((state) => state.testlab);
   const [addTestCase, setAddTestCase] = useState(0);
   const [addNewProject, setAddNewProject] = useState(false);
 
@@ -195,7 +197,7 @@ export default function TestLab() {
           <Grid item xs={12} md={drawerOpen ? 9 : 12} xl={10}>
             {depth > 1 ? (
               // <AddTestCase addTestCase={addTestCase} nameSuite={nameSuite} />
-              <TabsPanel/>
+              isScheduling?<Scheduler/>:<TabsPanel/>
             ) : (
               <Box />
             )}

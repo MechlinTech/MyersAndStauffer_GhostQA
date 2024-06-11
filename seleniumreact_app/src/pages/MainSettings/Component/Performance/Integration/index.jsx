@@ -9,9 +9,11 @@ import {
 } from "@mui/material";
 import { useStyles } from "./styles";
 import AddJira from "./Jira/AddJira";
+import AddTeams from "./Teams";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPerformanceIntegrationList,
+  updateTeamsIntegration,
   updateZiraIntegration,
 } from "../../../../../redux/actions/settingAction";
 import { getUserId } from "../../../../../redux/actions/authActions";
@@ -24,15 +26,18 @@ export default function Integration() {
   const [accountUrl, setAccountUrl] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [apiKey, setApiKey] = useState("");
+  const [webhooksUrl, setwebHookUrl] = useState("");
   const [confirmApiKey, setConfirmApiKey] = useState("");
   const [switchState, setSwitchState] = useState({});
   const [openModal, setOpenModal] = useState(false);
+  const [openTeamsModal, setOpenTeamsModal] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
     accountUrl: false,
     userEmail: false,
     apiKey: false,
+    webhooksUrl: false
   });
 
   useEffect(() => {
@@ -42,6 +47,12 @@ export default function Integration() {
   useEffect(() => {
     if (userId) dispatch(getPerformanceIntegrationList(userId));
   }, [userId, dispatch]);
+
+  const handleCloseTeamsModal = () => {
+    resetFormData();
+    setOpenTeamsModal(false);
+    setSelectedCard(null);
+  };
 
   useEffect(() => {
     if (performanceIntegration) {
@@ -78,9 +89,34 @@ export default function Integration() {
       return;
     }
 
+    if (name === "MS Teams/Slack" && switchState[name]) {
+      const payload = {
+        userId: userId,
+        appName: "MS Teams/Slack",
+        isIntegrated: false,
+        apiKey: "",
+      };
+
+      dispatch(
+        updateTeamsIntegration(payload, setOpenTeamsModal, setLoading, (success) => {
+          if (success) {
+            setSwitchState((prevState) => ({
+              ...prevState,
+              [name]: false,
+            }));
+          }
+        })
+      );
+
+      return;
+    }
+
     setSelectedCard(name);
+
     if (name === "Jira" && !switchState[name]) {
       setOpenModal(true);
+    } else if (name === "MS Teams/Slack" && !switchState[name]) {
+      setOpenTeamsModal(true);
     } else {
       setSwitchState((prevState) => ({
         ...prevState,
@@ -89,11 +125,14 @@ export default function Integration() {
     }
   };
 
+
+
   const resetFormData = () => {
     setAccountUrl("");
     setUserEmail("");
     setApiKey("");
     setConfirmApiKey("");
+    setwebHookUrl("")
   };
 
   const handleCloseModal = () => {
@@ -142,6 +181,43 @@ export default function Integration() {
     }
   };
 
+  const handleTeamsSave = () => {
+    const newErrors = {
+       webhooksUrl: !webhooksUrl,
+    };
+
+    setErrors(newErrors);
+
+    if (!Object.values(newErrors).some((error) => error)) {
+      setLoading(true);
+
+      const payload = {
+        userId: userId,
+        appName: selectedCard,
+        isIntegrated: true,
+        apiKey: webhooksUrl,
+      };
+
+      dispatch(
+        updateTeamsIntegration(payload, setOpenTeamsModal, setLoading, (success) => {
+          if (success) {
+            setSwitchState((prevState) => ({
+              ...prevState,
+              [selectedCard]: true,
+            }));
+            resetFormData();
+          } else {
+            setSwitchState((prevState) => ({
+              ...prevState,
+              [selectedCard]: false,
+            }));
+          }
+        })
+      );
+    }
+  };
+
+
   return (
     <>
       <AddJira
@@ -158,6 +234,15 @@ export default function Integration() {
         confirmApiKey={confirmApiKey}
         setConfirmApiKey={setConfirmApiKey}
         loading={loading}
+      />
+       <AddTeams
+        open={openTeamsModal}
+        onClose={handleCloseTeamsModal}
+        errors={errors}
+        handleSave={handleTeamsSave}
+        loading={loading}
+        setwebHookUrl={setwebHookUrl}
+        webhooksUrl={webhooksUrl}
       />
       <Grid
         container

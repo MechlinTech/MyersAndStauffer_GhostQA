@@ -4,17 +4,29 @@ from urllib.parse import urljoin, urlparse
 import time
 import pandas as pd
 from collections import defaultdict
-from graphviz import Digraph
-from graphviz import Digraph
 
+def get_selectors(soup):
+    selectors = set()
+    for tag in soup.find_all(True):  # True finds all tags
+        if 'id' in tag.attrs:
+            selectors.add(f"#{tag.attrs['id']}")
+        if 'class' in tag.attrs:
+            for class_name in tag.attrs['class']:
+                selectors.add(f".{class_name}")
+    return selectors
 
-def crawl(url, base_url, visited, tree, links_data, max_depth=2, current_depth=0):
+def crawl(url, base_url, visited, tree, links_data, selectors, max_depth=2, current_depth=0):
     if current_depth > max_depth:
         return links_data
     
     try:
         response = requests.get(url)
         soup = BeautifulSoup(response.content, 'html.parser')
+        
+        # Collect selectors on the current page
+        page_selectors = get_selectors(soup)
+        selectors.update(page_selectors)
+        print(f"Selectors found on {url}: {page_selectors}")
 
         links = []
         for link in soup.find_all('a', href=True):
@@ -32,19 +44,14 @@ def crawl(url, base_url, visited, tree, links_data, max_depth=2, current_depth=0
                     'Page Name': soup.title.string if soup.title else 'N/A',
                     'URL': link
                 })
-                crawl(link, base_url, visited, tree, links_data, max_depth, current_depth + 1)
+                crawl(link, base_url, visited, tree, links_data, selectors, max_depth, current_depth + 1)
 
     except Exception as e:
         print(f"Error crawling {url}: {e}")
         
     return links_data
 
-def draw_tree(tree):
-    dot = Digraph(comment='Website Tree')
-    for parent, children in tree.items():
-        for child in children:
-            dot.edge(parent, child)
-    dot.render('website_tree', format='png', cleanup=True)
+
 
 if __name__ == "__main__":
     start_url = 'https://mechlintech.com/'
@@ -52,10 +59,11 @@ if __name__ == "__main__":
     visited_links.add(start_url)
     links_data = []
     tree = defaultdict(list)
+    all_selectors = set()
     
     
     start_time = time.time()
-    crawl(start_url, start_url, visited_links, tree, links_data)
+    crawl(start_url, start_url, visited_links, tree, links_data, all_selectors)
     end_time = time.time()
     
     df = pd.DataFrame(links_data)
@@ -77,5 +85,6 @@ if __name__ == "__main__":
         for child in children:
             print(f"Child URL: {child}")
     
-    draw_tree(tree)
+    for selector in sorted(all_selectors):
+        print(selector)
     

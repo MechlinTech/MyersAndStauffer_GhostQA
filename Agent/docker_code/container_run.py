@@ -38,16 +38,17 @@ def cypress_container(name, volume_path,job,container_run=None):
     print(f"{__name__}: volume_path: {volume_path}")
     
     # Build the Docker image from the Dockerfile
-    image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='ghost_qa_cypress')
-    try:
-        for log in build_logs:
-            print("LOGS:",log)
-    except Exception as e:
-        print("Exception",e)
+    # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='ghost_qa_cypress')
+    image = client.images.pull('ghostqa/cypress:latest')
+    # try:
+    #     for log in build_logs:
+    #         print("LOGS:",log)
+    # except Exception as e:
+    #     print("Exception",e)
         
         
     container = client.containers.run(
-        image="ghost_qa_cypress",
+        image=image,
         name=name,
         # remove=True,
         command='cypress run --reporter mochawesome --reporter-options reportDir="cypress/results",overwrite=false,html=false,json=true',
@@ -178,20 +179,25 @@ def monitor_jmx_docker_conatiner_With_live_reporting(container,container_run,vol
 
 def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_run=None):
     client = get_client()
+    if client:
+        logger.info("Docker client is available")
+    else:
+        logger.error("Docker client is not available")
     # print('volume_path',volume_path)
     print(f"{__name__}: volume_path: {volume_path}")
     
     # Build the Docker image from the Dockerfile
-    image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
-
+    # image, build_logs = client.images.build(path=volume_path, dockerfile=os.path.join(volume_path,'Dockerfile'), tag='jmeter_apline')
+    image = client.images.pull('ghostqa/performace:latest')
+    # volume_path = volume_path[len('/tests'):]
     container = client.containers.run(
-        image='jmeter_apline',
+        image=image,
         name=name,
         remove=False,
-        command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t /jmeter-scripts/test.jmx -l /jmeter-scripts/log.csv -e -o /jmeter-scripts/html-results',
+        command=f'-Jthreads={Jthreads} -Jrampup={Jrampup} -n -t {volume_path}/test.jmx -l {volume_path}/log.csv -e -o {volume_path}/html-results',
         tty=True,
          volumes={
-        volume_path: {'bind': '/jmeter-scripts', 'mode': 'rw'},
+        'agent-data': {'bind': '/tests/', 'mode': 'rw'},
         # f"{volume_path}/bin/filename.csv": {'bind': '/opt/apache-jmeter-5.6.3/bin/filename.csv', 'mode': 'rw'}
         },
         detach=True,
@@ -218,53 +224,133 @@ def jmeter_container(name, volume_path, job ,Jthreads=10,Jrampup=10,container_ru
     # thread.start()
     return container, related_container_details
 
+# def get_container_details(container, ref, volume_path):
+#     container_run = get_container_from_codeengine(ref)
+#     container_details =  get_container(container_run['container_id'])
+    
+#     while container_details.status != "exited":
+#         time.sleep(30)  # Wait for 30 seconds
+#         container_details = get_container(container_run['container_id'])
+        
+        
+#     container_status = container_details.status
+#     container_labels = container_details.labels
+    
+#     update_container_reporting(container_run['ref'], container_status, container_labels)
+    
+#     logs_path = f"{volume_path}/log.csv"
+#     statistics_path = f"{volume_path}/html-results/statistics.json"
+#     html_path = f"{volume_path}/html-results"
+    
+#     raw_data = csv_to_json(logs_path)
+#     raw_data = json.dumps(raw_data)
+#     update_container_for_raw_data(container_run['ref'], raw_data)
+    
+#     data = get_json_metrics(logs_path)
+#     json_data = json.dumps(data)
+#     update_container_for_json_data(container_run['ref'], json_data)
+    
+    
+#     with open(logs_path, 'rb') as file:
+#         print('monitor_jmx_docker_conatiner: file:', file.read())
+#         # raw_data = csv_to_json(logs_path)
+#         # container_run.raw_data = raw_data
+#         # update the container for raw data
+
+#     with open(statistics_path, 'rb') as file:
+#         print('monitor_jmx_docker_conatiner: file:', file.read())
+#         # file_data = file.read().decode('utf-8')
+#         # data = json.loads(file_data)
+#         # container_run.json = data
+#         # update the container for json data
+        
+        
+        
+
+#     # with open(html_path, 'rb') as file:
+#     #     print('monitor_jmx_docker_conatiner: file:', file.read())
+#     container_status = container_details.status
+#     final_update_container_after_execution(container_run['ref'], container_status)  
+#     container.remove()
+#     print(container.status)
+#     return True
+
 def get_container_details(container, ref, volume_path):
     container_run = get_container_from_codeengine(ref)
-    container_details =  get_container(container_run['container_id'])
+    container_details = get_container(container_run['container_id'])
     
-    while container_details.status != "exited":
-        time.sleep(30)  # Wait for 30 seconds
+    # logs_path = f"{volume_path}/log.csv"
+    # statistics_path = f"{volume_path}/html-results/statistics.json"
+    # html_path = f"{volume_path}/html-results"
+    
+    while True:
+        time.sleep(30)
+        logger.info("Liver reporting result")
+        # Perform live reporting while container is running
+        container_status = container_details.status
+        container_labels = container_details.labels
+        
+        update_container_reporting(container_run['ref'], container_status, container_labels)
+        
+        try:
+            logs_path = f"{volume_path}/log.csv"
+            logger.info(f"logs_path: {logs_path}")
+            statistics_path = f"{volume_path}/html-results/statistics.json"
+            logger.info(f"statistics_path: {statistics_path}")
+            html_path = f"{volume_path}/html-results"
+            logger.info(f"html_path: {html_path}")
+            
+            raw_data = csv_to_json(logs_path)
+            raw_data = json.dumps(raw_data)
+            update_container_for_raw_data(container_run['ref'], raw_data)
+            
+            data = get_json_metrics(logs_path)
+            json_data = json.dumps(data)
+            update_container_for_json_data(container_run['ref'], json_data)
+            
+            with open(logs_path, 'rb') as file:
+                print('monitor_jmx_docker_conatiner: file:', file.read())
+            
+            with open(statistics_path, 'rb') as file:
+                print('monitor_jmx_docker_conatiner: file:', file.read())
+        except Exception as e:
+            print(f"Error during live reporting: {e}")
+        
+        time.sleep(3)  # Wait for 30 seconds before the next status check
         container_details = get_container(container_run['container_id'])
-        
-        
-    container_status = container_details.status
-    container_labels = container_details.labels
-    
-    update_container_reporting(container_run['ref'], container_status, container_labels)
-    
-    logs_path = f"{volume_path}/log.csv"
-    statistics_path = f"{volume_path}/html-results/statistics.json"
-    html_path = f"{volume_path}/html-results"
-    
-    raw_data = csv_to_json(logs_path)
-    raw_data = json.dumps(raw_data)
-    update_container_for_raw_data(container_run['ref'], raw_data)
-    
-    data = get_json_metrics(logs_path)
-    json_data = json.dumps(data)
-    update_container_for_json_data(container_run['ref'], json_data)
-    
-    
-    with open(logs_path, 'rb') as file:
-        print('monitor_jmx_docker_conatiner: file:', file.read())
-        # raw_data = csv_to_json(logs_path)
-        # container_run.raw_data = raw_data
-        # update the container for raw data
 
-    with open(statistics_path, 'rb') as file:
-        print('monitor_jmx_docker_conatiner: file:', file.read())
-        # file_data = file.read().decode('utf-8')
-        # data = json.loads(file_data)
-        # container_run.json = data
-        # update the container for json data
+        # Check if the container has exited
+        if container_details.status == "exited":
+            break
+    
+    # Final reporting once the container has exited
+    time.sleep(30)
+    try:
+        logger.info("Final reporting result")
+        logs_path = f"{volume_path}/log.csv"
+        logger.info(f"logs_path: {logs_path}")
+        statistics_path = f"{volume_path}/html-results/statistics.json"
+        logger.info(f"statistics_path: {statistics_path}")
+        html_path = f"{volume_path}/html-results"
+        logger.info(f"html_path: {html_path}")
         
+        raw_data = csv_to_json(logs_path)
+        raw_data = json.dumps(raw_data)
+        update_container_for_raw_data(container_run['ref'], raw_data)
         
+        data = get_json_metrics(logs_path)
+        json_data = json.dumps(data)
+        update_container_for_json_data(container_run['ref'], json_data)
         
-
-    # with open(html_path, 'rb') as file:
-    #     print('monitor_jmx_docker_conatiner: file:', file.read())
-    container_status = container_details.status
-    final_update_container_after_execution(container_run['ref'], container_status)  
+        with open(logs_path, 'rb') as file:
+            print('monitor_jmx_docker_conatiner: file:', file.read())
+        
+        with open(statistics_path, 'rb') as file:
+            print('monitor_jmx_docker_conatiner: file:', file.read())
+    except Exception as e:
+        print(f"Error during final reporting: {e}")
+    
+    final_update_container_after_execution(container_run['ref'], container_details.status)
     container.remove()
     print(container.status)
     return True

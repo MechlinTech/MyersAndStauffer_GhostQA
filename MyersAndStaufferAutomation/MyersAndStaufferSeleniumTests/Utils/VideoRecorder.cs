@@ -53,7 +53,7 @@ namespace MyersAndStaufferSeleniumTests.Utils
             string[] screenshotFiles = System.IO.Directory.GetFiles(screenshotDirectory, "*.png");
             screenshotFiles = screenshotFiles.OrderBy(file => ExtractStepNumber(file)).ToArray();
             string inputFiles = string.Join("|", screenshotFiles.Select(file => $"\"{file}\""));
-            string ffmpegPath = @"C:\ffmpeg-6.1.1-essentials_build\bin\ffmpeg.exe";
+            string ffmpegPath = @"/usr/bin/ffmpeg";
             string ffmpegArgs = $"-framerate 1 -i \"concat:{inputFiles}\" -c:v libx264 -r 30 -pix_fmt yuv420p  -vf \"scale=trunc(iw/2)*2:trunc(ih/2)*2\" \"{outputFile}\"";
 
             ProcessStartInfo startInfo = new ProcessStartInfo

@@ -231,7 +231,10 @@ namespace SeleniumReportAPI.Controllers
         [HttpPost("ExecutePerformanceJMX")]
         public async Task<ActionResult> ExecutePerformanceJMX(Dto_LoadExecuteResponse model)
         {
-            return Ok(await _helper.ExecutePerformanceJMX(model));
+            string originalUrl = Request.Headers.Referer.ToString();
+            int lastSlashIndex = originalUrl.LastIndexOf('/');
+            var Url = lastSlashIndex != -1 ? originalUrl.Substring(0, lastSlashIndex + 1) : originalUrl;
+            return Ok(await _helper.ExecutePerformanceJMX(model, Url));
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<TestData> tbl_TestData { get; set; }
         public DbSet<Load> tbl_Load { get; set; }
         public DbSet<CypressDetails> tbl_CypressTestExecution { get; set; }
-        public DbSet<CypressPerfomanceDetaills> tbl_CypressPerfomanceDetaills {  get; set; }
+        public DbSet<CypressPerfomanceDetaills> tbl_CypressPerfomanceDetaills { get; set; }
         public DbSet<Location> tbl_Location { get; set; }
         public DbSet<FuncationalTest> tbl_FuncationalTest { get; set; }
         public DbSet<TestUser> tbl_TestUser { get; set; }
@@ -36,6 +36,8 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<FunctionalTestRun> tbl_FunctionalTestRun { get; set; }
         public DbSet<UsersOrganization> tbl_UsersOrganization { get; set; }
         public DbSet<Integration> tbl_Integration { get; set; }
+        public DbSet<ExistingSuiteRun> tbl_ExistingSuiteRun { get; set; }
+        public DbSet<FunctionalSuiteRelation> tbl_FunctionalSuiteRelation { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TestSuites>()

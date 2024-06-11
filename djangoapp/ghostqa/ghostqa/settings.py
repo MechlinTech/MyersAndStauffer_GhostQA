@@ -15,6 +15,7 @@ import os
 import datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+from django.utils.translation import gettext_lazy as _
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,6 +28,13 @@ SECRET_KEY = 'django-insecure-drca4hbpgs*=86g=143i$lbew#ovjd9aezzo!kctr46+odsj@#
 DEBUG = True
 
 ALLOWED_HOSTS = ['*','65.1.188.67']
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://app.ghostqa.com",
+    "https://dev.ghostqa.com",
+    "https://stage.ghostqa.com",
+    # Add more trusted origins if needed
+]
 
 
 # Application definition
