@@ -35,8 +35,7 @@ RUN mkdir -p /usr/local/bin
 WORKDIR /usr/local/bin/
 
 # Download ChromeDriver
-RUN wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip
-COPY SeleniumReportAPI/chrome/linux/chromedriver-linux64.zip .
+COPY SeleniumReportAPI/chrome/linux/chromedriver-linux64.zip ./chromedriver-linux64.zip
 # Unzip ChromeDriver
 RUN apt-get install -y unzip && \
     unzip chromedriver-linux64.zip 
