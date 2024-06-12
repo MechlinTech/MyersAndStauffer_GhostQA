@@ -42,9 +42,11 @@
 		<None Remove="SqlScript\stp_UpdateUserProfile.Sql" />
 		<None Remove="SqlScript\stp_UpsertTableData.Sql" />
 		<None Remove="SqlScript\stp_ValidateUser.Sql" />
+		<None Remove="SqlScript\TableScript.sql" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Include="SqlScript\TableScript.sql" />
 		<EmbeddedResource Include="SqlScript\Insert_FirstUser.sql" />
 		<EmbeddedResource Include="SqlScript\AllGhostQA_SP.sql" />
 		<EmbeddedResource Include="SqlScript\stp_AddUpdateApplication.Sql" />
