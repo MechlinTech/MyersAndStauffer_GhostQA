@@ -29,5 +29,6 @@ namespace SeleniumReportAPI.Models
 
         public string? Description { get; set; }
         public int? TestUserId { get; set; }
+        public int RootId { get; set; }
     }
 }

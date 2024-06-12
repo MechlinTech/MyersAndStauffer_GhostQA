@@ -1,4 +1,4 @@
-CREATE OR ALTER PROCEDURE [dbo].[stp_AddExecuteData]
+﻿CREATE OR ALTER PROCEDURE [dbo].[stp_AddExecuteData]
 @TestSuite                VARCHAR(100),
 @TestCase	              VARCHAR(100),
 @TestCaseDetailsId        INT,
