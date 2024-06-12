@@ -23,7 +23,7 @@ To successfully set up and run GhostQA, ensure the following software is install
 - **Network Ports**: Ensure at least two ports are open to set up backend and frontend code on different URLs.
 
 
-# On-Prem Setup Guide Using Batch File
+# Option 1: On-Prem Setup Guide Using Batch File
 
 ## Instructions to Set Up GhostQA Using a .bat File
 
@@ -82,7 +82,7 @@ Download the provided zip file for the GhostQA application setup and perform the
 
 
 
-# Open Prem Deployment Using Docker
+# Option 2: Open Prem Deployment Using Docker
 
 **Deployment Guide: Deploying GhostQA Web Application**
 
