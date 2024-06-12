@@ -8,12 +8,27 @@ EXPOSE 443
 
 #installing chrome
 RUN apt-get update \
-    && apt-get install -y wget gnupg2 unzip\
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable
-# Install Chromedriver
+    && apt-get install -y wget gnupg2 unzip
+
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    gnupg \
+    libappindicator3-1 \
+    fonts-liberation \
+    libasound2 \
+    libnspr4 \
+    libnss3 \
+    xdg-utils \
+    && rm -rf /var/lib/apt/lists/*
+# Copy the google-chrome-stable .deb file into the Docker image
+COPY SeleniumReportAPI/chrome/linux/google-chrome-stable_125.0.6422.141-1_amd64.deb /tmp/
+
+# Install the .deb package
+RUN apt-get update && \
+    dpkg -i /tmp/google-chrome-stable_125.0.6422.141-1_amd64.deb || apt-get -f install -y && \
+    rm /tmp/google-chrome-stable_125.0.6422.141-1_amd64.deb && \
+    rm -rf /var/lib/apt/lists/*
 
 # Change working directory
 RUN mkdir -p /usr/local/bin
@@ -21,7 +36,7 @@ WORKDIR /usr/local/bin/
 
 # Download ChromeDriver
 RUN wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip
-
+COPY SeleniumReportAPI/chrome/linux/chromedriver-linux64.zip .
 # Unzip ChromeDriver
 RUN apt-get install -y unzip && \
     unzip chromedriver-linux64.zip 
@@ -63,13 +78,13 @@ RUN apt-get update && \
     apt-get update && \
     ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
 
-# Copy the SQL script
-COPY ["SeleniumReportAPI/SqlScript/AllGhostQA_SP.sql", "./SqlScript/AllGhostQA_SP.sql"]
-COPY ["SeleniumReportAPI/SqlScript/Insert_FirstUser.sql", "./SqlScript/Insert_FirstUser.sql"]
+# # Copy the SQL script
+# COPY ["SeleniumReportAPI/SqlScript/AllGhostQA_SP.sql", "./SqlScript/AllGhostQA_SP.sql"]
+# COPY ["SeleniumReportAPI/SqlScript/Insert_FirstUser.sql", "./SqlScript/Insert_FirstUser.sql"]
 
 # Copy and set permissions for the entrypoint script
 COPY ["SeleniumReportAPI/entrypoint.sh", "/app/"]
-RUN apt install ffmpeg -y
+RUN apt-get update && apt install ffmpeg -y
 # Use the entrypoint script to start the application
 RUN sed -i 's/\r//' /app/entrypoint.sh \
 	&& chmod +x /app/entrypoint.sh
