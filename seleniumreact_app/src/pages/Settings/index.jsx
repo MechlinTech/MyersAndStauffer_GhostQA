@@ -1,193 +1,307 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Typography, Paper, Box, Card } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import { Link, Outlet } from "react-router-dom";
 import { useStyles } from "./styles";
 import { getTestSuitesList } from "../../redux/actions/settingAction";
-import { useDispatch } from "react-redux";
-import { ListItemIcon } from "@material-ui/core";
-import {
-    Environment,
-    RoleIcon,
-    StyledDashBoardIcon,
-} from "../../comman/icons";
-import { Link, Outlet } from "react-router-dom";
 import { GetApplication, GetBrowser } from "../../redux/actions/seleniumAction";
-//JSON is showing circular reference error
-import * as flatted from 'flatted';
+import * as flatted from "flatted";
+import { StyledDashBoardIcon } from "../../comman/icons";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import { getUserId } from "../../redux/actions/authActions";
 
-// import { BrowserIcon } from "../../comman/icons/BrowserIcon";
 export default function Settings() {
-    const classess = useStyles();
-    const dispatch = useDispatch();
-    const [selectedItem, setSelectedItem] = useState(() => {
-        // Initialize with the value from localStorage or a default value
-        const storedItem = sessionStorage.getItem("selectedCategory");
-        return storedItem
-            ? flatted.parse(storedItem)
-            : {
-                title: "Environment",
-                icon: <StyledDashBoardIcon />,
-                path: "/",
-            };
-    });
+  const classes = useStyles();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(getTestSuitesList());
-        dispatch(GetApplication())
-        dispatch(GetBrowser())
-    }, []);
+  const [selectedItem, setSelectedItem] = useState(() => {
+    const storedItem = sessionStorage.getItem("selectedChild");
+    if (storedItem) {
+      try {
+        return flatted.parse(storedItem);
+      } catch (error) {
+        console.error("Error parsing stored item:", error);
+        return null;
+      }
+    }
+    return null;
+  });
 
-    // useEffect(()=>{
-    //   setSelectedItem(()=>{
-    //     const storedItem = sessionStorage.getItem("selectedCategory");
-    //   return flatted.parse(storedItem)
-    //   })
-    // },[sessionStorage.getItem("selectedCategory")])
+  const tabLabelStyle = {
+    fontWeight: "400",
+    fontSize: "14px",
+    lineHeight: "21px",
+    padding: "10px 22px",
+  };
 
-    const handleItemClick = (category) => {
-        sessionStorage.setItem("selectedCategory", flatted.stringify(category));
-        setSelectedItem(category);
-    };
+  const [activeParent, setActiveParent] = useState(() => {
+    const storedItem = sessionStorage.getItem("selectedParent");
+    if (storedItem) {
+      try {
+        const parentData = flatted.parse(storedItem);
+        return parentData?.title || null;
+      } catch (error) {
+        console.error("Error parsing stored item:", error);
+        return null;
+      }
+    }
+    return null;
+  });
 
-    const tabLableStyle = {
-        fontWeight: "400",
-        fontSize: "14px",
-        lineHeight: "21px",
-        padding: "10px 22px",
-    };
+  useEffect(() => {
+    dispatch(getTestSuitesList());
+    dispatch(GetApplication());
+    dispatch(GetBrowser());
+  }, [dispatch]);
 
-    const categories = [
+  const handleItemClick = (category) => {
+    try {
+      const categoryData = flatted.stringify(category);
+      sessionStorage.setItem("selectedParent", categoryData);
+      // setSelectedItem(category);
+
+      if (activeParent === category?.title) {
+        setActiveParent(null);
+      } else {
+        setActiveParent(category.title);
+        if (category.title === "User Account") {
+          dispatch(getUserId());
+        }
+      }
+    } catch (error) {
+      console.error("Error saving to sessionStorage:", error);
+    }
+  };
+
+  const handleChildClick = (child) => {
+    const childData = flatted.stringify(child);
+    sessionStorage.setItem("selectedChild", childData);
+    setSelectedItem(child);
+    // const parentCategory = categories.find(
+    //   (category) =>
+    //     category?.children &&
+    //     category?.children.some((c) => c.title === child.title)
+    // );
+    // if (parentCategory) {
+    //   setActiveParent(parentCategory.title);
+    // }
+  };
+
+  const toggleParentExpansion = (parentTitle) => {
+    setActiveParent((prev) => (prev === parentTitle ? null : parentTitle));
+  };
+
+  const categories = [
+    {
+      title: "User Account",
+      path: "/settings/detail",
+      children: [
         {
-            title: "Environment",
-            icon: <StyledDashBoardIcon />,
-            path: "/",
+          title: "Detail",
+          path: "/settings/detail",
         },
         {
-            title: "Application",
-            icon: <Environment />,
-            path: "/accordian",
+          title: "Organization",
+          path: "/settings/organization",
+        },
+      ],
+    },
+    {
+      title: "Organizational Setting",
+      path: "/settings/members",
+      children: [
+        {
+          title: "Members List",
+          path: "/settings/members",
+        },
+      ],
+    },
+    {
+      title: "Performance",
+      path: "/settings/location",
+      children: [
+        {
+          title: "In-Private Locations",
+          path: "/settings/location",
         },
         {
-            title: "Browser",
-            icon: <Environment />,
-            path: "/bbbbbb",
+          title: "Integration",
+          path: "/settings/on-prem/integration",
+        },
+      ],
+    },
+    {
+      title: "Functional - Local Testing",
+      path: "/settings",
+      children: [
+        {
+          title: "Application",
+          path: "/settings/application",
         },
         {
-            title: "Test User",
-            icon: <RoleIcon />,
-            path: "/setting/test-user",
+          title: "Browser",
+          path: "/settings/browser",
         },
-        // {
-        //     title: "User",
-        //     icon: <UserManagementIcon />,
-        //     path: "/Performance",
-        // },
-    ];
+        {
+          title: "Environment",
+          path: "/settings/environment",
+        },
+        {
+          title: "Test Users",
+          path: "/settings/test-user",
+        },
+        {
+          title: "Integration",
+          path: "",
+          path: "/settings/integration",
+        },
+      ],
+    },
+    {
+      title: "Functional - Test Lab",
+      path: "/settings",
+      children: [
+        {
+          title: "Application",
+          path: "/settings/test-lab-application",
+        },
+        {
+          title: "Browser",
+          path: "/settings/test-lab-browser",
+        },
+        {
+          title: "Environment",
+          path: "/settings/test-lab-environment",
+        },
+        {
+          title: "Test Users",
+          path: "/settings/test-lab-test-user",
+        },
+        {
+          title: "Integration",
+          path: "",
+          path: "/settings/on-prem/integration",
+        },
+      ],
+    },
+  ];
 
-    const renderedCategories = categories.map((category, index) => (
-        <Grid item key={index}>
-            <Link to={category.title == "Test User" ? "test-user": category.title } className={classess.linkStyle}>
-                <Paper
-                    className={`${classess.paper} ${selectedItem && selectedItem.title === category.title
-                            ? classess.paperActive
-                            : ""
-                        }`}
-                    onClick={() => handleItemClick(category)}
-                >
-                    <Grid
-                        container
-                        alignItems="center"
-                        className={classess.paperGrid}
-                        style={{ display: "flex" }}
-                    >
-                        <Grid
-                            item
-                            className={classess.infoGridHeader}
-                            style={{ display: "flex", alignItems: "center" }}
-                        >
-                            <ListItemIcon className={classess.icon}>
-                                {React.cloneElement(category.icon, {
-                                    color:
-                                        selectedItem && selectedItem.title === category.title
-                                            ? "white"
-                                            : "black",
-                                })}
-                            </ListItemIcon>
-                            <Typography
-                                className={`${classess.infoHeader} ${selectedItem && selectedItem.title === category.title
-                                        ? classess.infoHeaderActive
-                                        : ""
-                                    }`}
-                                style={{ marginLeft: "8px" }}
-                            >
-                                {category.title}
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                </Paper>
-            </Link>
-        </Grid>
-    ));
+  // Function to render categories and their submenus
+  const renderCategoriesAndSubmenus = categories?.map((category, index) => {
+    const isParentActive =
+      category.title === activeParent &&
+      category.children.every((child) => child.title !== selectedItem?.title);
 
     return (
-        <>
-            <div className={classess.main}>
-                <Grid container spacing={2}>
-                    {/* First Section */}
-                    <Grid item xs={12} sm={2}>
-                        <Card style={{ paddingBottom: "30px", maxHeight: "84vh" }}>
-                            {/* <Box className={classess.sideBar}>Settings</Box> */}
-                            {renderedCategories}
-                        </Card>
+      <Grid item key={index} xs={12}>
+        <Paper
+          className={`
+            ${classes.paper}
+            ${isParentActive ? classes.paperActive : ""}
+          `}
+          onClick={() => handleItemClick(category)}
+        >
+          <Grid container alignItems="left" className={classes.paperGrid}>
+            <Typography
+              className={`
+                ${classes.infoHeader}
+                ${isParentActive ? classes.infoHeaderActive : ""}
+              `}
+              style={{ marginLeft: "8px" }}
+            >
+              {category.title}
+            </Typography>
+            {category.children && (
+              <Box
+                className={classes.expandButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleParentExpansion(category.title);
+                }}
+              >
+                {activeParent === category.title ? (
+                  <ArrowDropUpIcon />
+                ) : (
+                  <ArrowDropDownIcon />
+                )}
+              </Box>
+            )}
+          </Grid>
+        </Paper>
+        {category.children && activeParent === category.title && (
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "end",
+            }}
+          >
+            <Box className={classes.subMenu}>
+              {category.children?.map((child, childIndex) => (
+                <Link
+                  to={child.path}
+                  className={classes.linkStyle}
+                  key={childIndex}
+                >
+                  <Paper
+                    className={`
+                    ${classes.paper}
+                    ${classes.subPaper}
+                    ${
+                      selectedItem?.title === child.title
+                        ? classes.paperActive
+                        : ""
+                    }
+                  `}
+                    onClick={() => handleChildClick(child)}
+                  >
+                    <Grid container alignItems="left">
+                      <Typography
+                        className={`
+                          ${classes.infoHeader}
+                          ${
+                            selectedItem?.title === child.title
+                              ? classes.infoHeaderActive
+                              : ""
+                          }
+                        `}
+                        style={{ marginLeft: "8px" }}
+                      >
+                        {child.title}
+                      </Typography>
                     </Grid>
-
-                    {/* Middle Section */}
-
-                    {/* <Grid item xs={12} sm={3}>
-            <Card style={{ paddingBottom: "30px", minHeight: "84vh" }}>
-              <Box style={tabLableStyle}>Test Suits</Box>
-              <Grid container></Grid>
-            </Card>
-          </Grid> */}
-
-                    {/* Right Section */}
-
-                    <Grid item xs={12} sm={10}>
-                        <Card style={{ paddingBottom: "30px", maxHeight: "84vh" }}>
-                            {/* Common Header */}
-                            {/* <Box style={tabLableStyle}>
-                {selectedItem ? selectedItem.title : "Test Case"}
-              </Box> */}
-
-                            <Grid container>
-                                {/* Render content based on the selected item */}
-                                {selectedItem ? (
-                                    <>
-                                        {/* {selectedItem.title === "Environment" && (
-                      <ExecutionEnvironment />
-                    )}
-                    {selectedItem.title === "Application" && (
-                      <Application />
-                    )}
-                    {selectedItem.title === "Roles Management" && (
-                      <RoleManagement />
-                    )}
-                    {selectedItem.title === "User Management" && (
-                      <UserManagement />
-                    )} */}
-                                        <Outlet />
-                                    </>
-                                ) : (
-                                    <>
-                                        <Box style={tabLableStyle}>
-                                            {selectedItem ? selectedItem.title : "Test Case"}
-                                        </Box>
-                                    </>
-                                )}
-                            </Grid>
-                        </Card>
-                    </Grid>
-                </Grid>
-            </div>
-        </>
+                  </Paper>
+                </Link>
+              ))}
+            </Box>
+          </Grid>
+        )}
+      </Grid>
     );
+  });
+
+  return (
+    <div className={classes.main}>
+      <Grid container spacing={2}>
+        {/* Left Section */}
+        <Grid item xs={12} sm={3} xl={2}>
+          <Card style={{ paddingBottom: "30px", maxHeight: "84vh" }}>
+            {renderCategoriesAndSubmenus}
+          </Card>
+        </Grid>
+
+        {/* Right Section */}
+        <Grid item xs={12} sm={9} xl={10}>
+          <Card style={{ maxHeight: "84vh" }}>
+            <Grid container>
+              <Outlet />
+            </Grid>
+          </Card>
+        </Grid>
+      </Grid>
+    </div>
+  );
 }

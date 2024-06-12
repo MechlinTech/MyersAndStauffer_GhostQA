@@ -53,7 +53,7 @@ export function LocationTable({ rows }) {
   };
 
   const handleViewAgent = (row) => {
-    navigate(`/main-settings/view-agent/${row.ref}`);
+    navigate(`/settings/view-agent/${row.ref}`);
   };
 
   return (

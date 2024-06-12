@@ -7,6 +7,7 @@ import TableRow from "@mui/material/TableRow";
 import { useTableStyles, StyledTableCell } from "./styles";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
 import DeleteModal from "../Modal/DeleteModal";
+// import DeleteModal from "../Modal/DeleteModal";
 
 export function CustomTable({ rows,handleEditBrowser }) {
   const classes = useTableStyles();

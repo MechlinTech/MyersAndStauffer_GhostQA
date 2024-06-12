@@ -5,13 +5,19 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+// import {
+//   // DeleteApplication,
+//   DeleteBrowser,
+//   DeleteEnvironment,
+//   DeleteUser,
+// } from "../../../../redux/actions/settingAction";
+import { useDispatch } from "react-redux";
 import {
   DeleteApplication,
   DeleteBrowser,
   DeleteEnvironment,
   DeleteUser,
-} from "../../../../redux/actions/settingAction";
-import { useDispatch } from "react-redux";
+} from "../../../../../redux/actions/settingAction";
 
 function DeleteModal({ open, onClose, item, types }) {
   const dispatch = useDispatch();
@@ -56,7 +62,7 @@ function DeleteModal({ open, onClose, item, types }) {
           onClose();
         }
       } else if (types === "user") {
-        console.log("item",item)
+        console.log("item", item);
         const response = await dispatch(DeleteUser(item.UserId));
         setlinkedTestSuite(response.message);
         if (response.status === "fail") {

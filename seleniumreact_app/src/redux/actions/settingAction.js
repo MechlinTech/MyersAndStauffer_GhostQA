@@ -13,6 +13,8 @@ export const GET_PERFORMANCE_INTEGRATION = "GET_PERFORMANCE_INTEGRATION";
 export const JIRA_ISSUE_TYPES = "JIRA_ISSUE_TYPES";
 export const JIRA_PROJECT_LIST = "JIRA_PROJECT_LIST";
 export const GET_ALL_JIRA_ISSUE = "GET_ALL_JIRA_ISSUE";
+export const SET_ACTIVE_PARENT = 'SET_ACTIVE_PARENT';
+export const SET_SELECTED_ITEM = 'SET_SELECTED_ITEM';
 
 export const getTestSuitesList = () => {
   return async (dispatch) => {
@@ -498,3 +500,13 @@ export const createIssueOnJira = (payload, closeDrawer, userId) => {
     }
   };
 };
+
+export const setActiveParent = (parent) => ({
+  type: SET_ACTIVE_PARENT,
+  payload: parent,
+});
+
+export const setSelectedItem = (item) => ({
+  type: SET_SELECTED_ITEM,
+  payload: item,
+});

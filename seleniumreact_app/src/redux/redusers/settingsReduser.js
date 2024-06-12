@@ -4,7 +4,9 @@ import {
   GET_PERFORMANCE_INTEGRATION,
   JIRA_ISSUE_TYPES,
   JIRA_PROJECT_LIST,
-  GET_ALL_JIRA_ISSUE
+  GET_ALL_JIRA_ISSUE,
+  SET_ACTIVE_PARENT, 
+  SET_SELECTED_ITEM
 } from "../actions/settingAction";
 
 const initialState = {
@@ -15,7 +17,9 @@ const initialState = {
   performanceIntegration: [],
   jiraIssueTypes: [],
   jiraProjectList: [],
-  jiraIssueList: []
+  jiraIssueList: [],
+  activeParent: null,
+  selectedItem: null,
 };
 
 const settingsReduser = (state = initialState, action) => {
@@ -64,6 +68,16 @@ const settingsReduser = (state = initialState, action) => {
         jiraIssueList: action.payload,
       };
     }
+    case SET_ACTIVE_PARENT:
+      return {
+        ...state,
+        activeParent: action.payload,
+      };
+    case SET_SELECTED_ITEM:
+      return {
+        ...state,
+        selectedItem: action.payload,
+      };
     default:
       return state;
   }

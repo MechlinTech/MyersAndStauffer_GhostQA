@@ -4,8 +4,6 @@ import Functional from "./Stacks/Functional";
 import Api from "./Stacks/Api";
 import { Box } from "@material-ui/core";
 import EditTestSuite from "../pages/TestSuite/EditTestSuite";
-import AddNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/AddNewEnvironment";
-import EditNewEnvironment from "../pages/Settings/Component/ExecutionEnvironment/EditNewEnvironment";
 import CircularProgress from "@mui/material/CircularProgress";
 import Invitation from "../pages/Invitaion";
 import Account from "../pages/Account";
@@ -18,46 +16,43 @@ import RequestState from "../pages/Performance/Result/ResultDetails/RequestState
 import CompareGraph from "../pages/Performance/Component/Compare/CompareGraph";
 import InitialSetup from "../pages/Performance/Result/ResultDetails/InitialSetup/index";
 import TestCase from "../pages/TestCase";
-import Location from "../pages/MainSettings/Component/Performance/Location";
-import Integration from "../pages/MainSettings/Component/Performance/Integration";
-import ViewAgent from "../pages/MainSettings/Component/Performance/Location/ViewAgent";
-import Detail from "../pages/MainSettings/Component/UserAccount/Detail";
-import Organization from "../pages/MainSettings/Component/UserAccount/Organization";
-import Members from "../pages/MainSettings/Component/Organization/Members";
-import ExecutionEnvironment from "../pages/Settings/Component/ExecutionEnvironment/index";
+import Location from "../pages/Settings/Component/Performance/Location";
+import ViewAgent from "../pages/Settings/Component/Performance/Location/ViewAgent";
+import Detail from "../pages/Settings/Component/UserAccount/Detail";
+import Organization from "../pages/Settings/Component/UserAccount/Organization";
+import Members from "../pages/Settings/Component/Organization/Members";
 import TestLabSuitsDetails from "../pages/TestLab/Result/TestSuitsDetails/index";
+import Integration from "../pages/Settings/Component/Functional-Local-Testing/Integration";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
-const Environment = lazy(() =>
-  import("../pages/Settings/Component/ExecutionEnvironment/index")
+const Environment = lazy(() => import("../pages/Settings/Component/Functional-Local-Testing/ExecutionEnvironment/index"));
+const Application = lazy(() => import( "../pages/Settings/Component/Functional-Local-Testing/Application/index"));
+const Browser = lazy(() => import("../pages/Settings/Component/Functional-Local-Testing/Browser/index")
 );
-const Environment2 = lazy(() =>
-  import("../pages/MainSettings/Component/Functional/ExecutionEnvironment/index")
+const TestUser = lazy(() =>
+  import("../pages/Settings/Component/Functional-Local-Testing/TestUser/index")
 );
-const Application = lazy(() =>
-  import("../pages/Settings/Component/Application/index")
+const EnvironmentTestLab = lazy(() =>
+  import(
+    "../pages/Settings/Component/Functional-Test-Lab/ExecutionEnvironment/index"
+  )
 );
-const Application2 = lazy(() =>
-  import("../pages/MainSettings/Component/Functional/Application/index")
+const ApplicationTestLab = lazy(() =>
+  import("../pages/Settings/Component/Functional-Test-Lab/Application/index")
 );
-const Browser = lazy(() => import("../pages/Settings/Component/Browser/index"));
-const Browser2 = lazy(() => import("../pages/MainSettings/Component/Functional/Browser/index"));
-
-const TestUser = lazy(() => import("../pages/Settings/Component/TestUser"));
-const TestUser2 = lazy(() => import("../pages/MainSettings/Component/Functional/TestUser/index"));
-const RoleManagement = lazy(() =>
-  import("../pages/Settings/Component/RoleManagement/index")
+const BrowserTestLab = lazy(() =>
+  import("../pages/Settings/Component/Functional-Test-Lab/Browser/index")
 );
-const UserManagement = lazy(() =>
-  import("../pages/Settings/Component/UserManagement/index")
+const TestUserTestLab = lazy(() =>
+  import("../pages/Settings/Component/Functional-Test-Lab/TestUser/index")
 );
 const BasicAccordion = lazy(() => import("../comman/Accordion/index"));
 const TestSuitsDetails = lazy(() => import("../pages/TestSuitsDetails"));
-const Settings = lazy(() => import("../pages/Settings"));
 const AddTestSuite = lazy(() => import("../pages/TestSuite/AddTestSuite"));
+
 const NotFound = lazy(() => import("../pages/NotFound"));
 const TestLab = lazy(() => import("../pages/TestLab/TestLab"));
 const Performance = lazy(() => import("../pages/Performance/Performance"));
-const MainSettings = lazy(() => import("../pages/MainSettings"));
+const MainSettings = lazy(() => import("../pages/Settings"));
 
 export default function Navigations() {
   return (
@@ -79,14 +74,6 @@ export default function Navigations() {
         <Route path="/" element={<Functional />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/check" element={<h1>check</h1>} />
-          <Route path="settings" element={<Settings />}>
-            <Route path="Environment" element={<Environment />} />
-            <Route path="Application" element={<Application />} />
-            <Route path="Browser" element={<Browser />} />
-            <Route path="Roles" element={<RoleManagement />} />
-            <Route path="User" element={<UserManagement />} />
-            <Route path="test-user" element={<TestUser />} />
-          </Route>
           <Route path="testLab" element={<TestLab />} />
           <Route path="testLab/:nodeId" element={<TestLab />} />
           <Route
@@ -94,16 +81,15 @@ export default function Navigations() {
             element={<CreateTestCase />}
           />
           <Route
-            // path="testLab/editTestcase/:testCaseName/:testId"
             path="testLab/editTestcase/:testId"
             element={<EditTestCase />}
           />
           <Route path="testcase" element={<TestCase />} />
         </Route>
         <Route
-            path="testLab-detail/:testSuiteName/:testRunId"
-            element={<TestLabSuitsDetails/>}
-          />
+          path="testLab-detail/:testSuiteName/:testRunId"
+          element={<TestLabSuitsDetails />}
+        />
         <Route path="performance" element={<Performance />}></Route>
         <Route path="/result" element={<Results />}>
           <Route
@@ -153,36 +139,31 @@ export default function Navigations() {
           element={<TestSuitsDetails />}
         />
         <Route path="/add-suite" element={<AddTestSuite />} />
-        <Route
-          path="/setting/add-environment"
-          element={<AddNewEnvironment />}
-        />
-        <Route
-          path="/setting/edit-environment"
-          element={<EditNewEnvironment />}
-        />
         <Route path="/edit/:suiteName" element={<EditTestSuite />} />
         <Route path="/AcceptInvitation/:toEmail" element={<Invitation />} />
-        <Route path="main-settings" element={<MainSettings />}>
+        <Route path="settings" element={<MainSettings />}>
           <Route path="location" element={<Location />} />
           <Route path="view-agent/:id" element={<ViewAgent />} />
-          <Route path="integration" element={<Integration />} />
+
           <Route path="detail" element={<Detail />} />
           <Route path="organization" element={<Organization />} />
           <Route path="members" element={<Members />} />
           <Route path="add-member" element={<Organization />} />
-          <Route path="environment" element={<Environment2 />} />
-          <Route path="browser" element={<Browser2 />} />
-          <Route path="application" element={<Application2 />} />
-          <Route path="test-user" element={<TestUser2 />} />
-          <Route path="on-prem/integration" element={<h1>Integration</h1>} />
 
+          {/* Funcational Local Testing Routes */}
+          <Route path="environment" element={<Environment />} />
+          <Route path="browser" element={<Browser />} />
+          <Route path="application" element={<Application />} />
+          <Route path="test-user" element={<TestUser />} />
           <Route path="integration" element={<Integration />} />
-          {/* <Route path="Application" element={<Application />} /> */}
-          <Route
-            path="Application/Sub-Application"
-            element={<RoleManagement />}
-          />
+
+          {/* Funcational Test-Lab Routes */}
+          <Route path="test-lab-environment" element={<EnvironmentTestLab />} />
+          <Route path="test-lab-browser" element={<BrowserTestLab />} />
+          <Route path="test-lab-application" element={<ApplicationTestLab />} />
+          <Route path="test-lab-test-user" element={<TestUserTestLab />} />
+
+          <Route path="on-prem/integration" element={<h1>Integration</h1>} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
