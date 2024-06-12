@@ -221,7 +221,7 @@ export default function MiniDrawer() {
                           <MenuItem
                             onClick={() => {
                               setShowMenu(false);
-                              navigate("/main-settings");
+                              navigate("/settings");
                             }}
                           >
                             <SettingsIcon style={{ color: 'rgb(115, 115, 115' }} />
