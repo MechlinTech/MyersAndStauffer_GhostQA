@@ -56,7 +56,8 @@ After installing SQL Server, perform the following tasks:
 2. Run the script to create tables. [Table Script](https://github.com/MechlinTech/MyersAndStauffer_GhostQA/blob/main/SeleniumReportAPI/SqlScript/TableScript.sql)
 3. Run the script to create procedures. [SP Script](https://github.com/MechlinTech/MyersAndStauffer_GhostQA/blob/main/SeleniumReportAPI/SqlScript/AllGhostQA_SP.sql)
 4. Run the script for the initial user setup. [Initial User Script](https://github.com/MechlinTech/MyersAndStauffer_GhostQA/blob/main/SeleniumReportAPI/SqlScript/Insert_FirstUser.sql)
-Ensure the scripts are run in the order mentioned above.
+
+	Ensure the scripts are run in the order mentioned above.
 
 ### Step 3: Download the Provided Zip File
 Download the provided zip file for the GhostQA application setup and perform the following steps:
