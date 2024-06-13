@@ -48,6 +48,16 @@ export default function Functional() {
                 </Grid>
                 <Grid item>
                    
+                   <Link
+                       to="/local-testing"
+                       style={{ marginLeft: "20px" }}
+                       className={`${classes.linkStyle} ${location.pathname.startsWith("/local-testing") && classes.activeLink}`}
+                   >
+                        Local Testing(New)
+                   </Link>
+               </Grid>
+                <Grid item>
+                   
                     {/* <Link
                         to="/testcase"
                         style={{ marginLeft: "20px" }}

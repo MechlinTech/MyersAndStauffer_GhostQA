@@ -24,6 +24,7 @@ import Members from "../pages/Settings/Component/Organization/Members";
 import TestLabSuitsDetails from "../pages/TestLab/Result/TestSuitsDetails/index";
 import Integration from "../pages/Settings/Component/Functional-Local-Testing/Integration";
 const Dashboard = lazy(() => import("../pages/Dashboard/"));
+const LocalTesting = lazy(() => import("../pages/LocalTesting"))
 const Environment = lazy(() => import("../pages/Settings/Component/Functional-Local-Testing/ExecutionEnvironment/index"));
 const Application = lazy(() => import( "../pages/Settings/Component/Functional-Local-Testing/Application/index"));
 const Browser = lazy(() => import("../pages/Settings/Component/Functional-Local-Testing/Browser/index")
@@ -75,6 +76,7 @@ export default function Navigations() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/check" element={<h1>check</h1>} />
           <Route path="testLab" element={<TestLab />} />
+          <Route path="local-testing" element={<LocalTesting />} />
           <Route path="testLab/:nodeId" element={<TestLab />} />
           <Route
             path="testLab/createTestcase/:rootId"
