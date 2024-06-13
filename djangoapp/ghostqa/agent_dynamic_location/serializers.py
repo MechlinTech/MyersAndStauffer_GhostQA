@@ -87,7 +87,7 @@ class NewAgentSerializer(serializers.ModelSerializer):
             token = None
         agent_id = f"{instance.ref}" if instance.ref else None
         token_param = f"{token}" if token else None
-        return f"docker run -d --name GhostQA-Codeengine -e DJANGO_DEBUG=True --net=host ghostqa/agent:latest python Agent/main.py {agent_id} {token_param}"
+        return f"docker run -d --name GhostQA-Agent -v /var/run/docker.sock:/var/run/docker.sock -v agent-data:/tests -e DJANGO_DEBUG=True --net=host ghostqa/agent:latest python Agent/main.py {agent_id} {token_param}"
         #TODO need to add the agent_id
 
 
