@@ -73,6 +73,7 @@ Download the zip file [Download Zip](https://github.com/MechlinTech/MyersAndStau
 	- Click on the users one by one and `Allow All` permissions
 	- Click on `Ok` and save these changes
 	- Extract the Zip in created `Published Project` folder and it should have below files/folders -
+
              -  `GhostQA_API`
 	     -  `GhostQA_UI`
 	     -  `SetupApp.bat`
