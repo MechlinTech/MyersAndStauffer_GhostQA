@@ -14,9 +14,9 @@ Before setting up GhostQA, ensure your system meets the following hardware and s
 
   
 
--  **Windows OS**: Latest version.
+-  **Windows OS**: 10 or Later and or Windows Server 2016 or Later
 
--  **RAM**: Minimum 8 GB.
+-  **RAM**: Minimum 16 GB.
 
 -  **SSD**: At least 250 GB with a minimum of 150 GB of available space.
 
@@ -27,8 +27,8 @@ Before setting up GhostQA, ensure your system meets the following hardware and s
 ## Software Requirements
 
 To successfully set up and run GhostQA, ensure the following software is installed on your machine:
--  **SQL Server**: Latest Version
--  **IIS**: Install using the Windows feature on/off option.
+-  **SQL Server**: 18, 22 or Latest Version
+-  **IIS**: 10 or Latest, Install using the Windows feature on/off option.
   
 # On-Prem Setup Guide Using Batch File
 
