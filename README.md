@@ -72,11 +72,12 @@ Download the zip file [Download Zip](https://github.com/MechlinTech/MyersAndStau
 	- Once you find and the user is visible in the list need to click on ok till the `security` page
 	- Click on the users one by one and `Allow All` permissions
 	- Click on `Ok` and save these changes
-	- Extract the Zip in created `Published Project` folder and it should have below files/folders -
+	- Extract the Zip in created `Published Project` folder and it should have below files/folders
 
              -  `GhostQA_API`
 	     -  `GhostQA_UI`
 	     -  `SetupApp.bat`
+        
 	- Make sure the `GhostQA_API` and `GhostQA_UI` folders are directly placed in the `Published Project` folder	
 2. Right-click on the `SetupApp.bat` file and run it as an Administrator. It will create two sites on IIS, one for the API and another for the UI.
 	- Once in the `command prompt` it is showing done copy the URL provided in the `command prompt` and try to open
