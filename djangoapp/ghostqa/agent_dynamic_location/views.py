@@ -141,7 +141,13 @@ class PrivateLocationViewSet(viewsets.ModelViewSet):
         location = request.query_params.get('location')
         agent = Agent.objects.filter(location__ref=location)
         data = AgentListSerializer(agent, many=True).data
-        return Response({'message': data})
+        return Response({'data': data})
+    @action(detail=False, methods=['GET'])
+    def available_location_with_agent(self, request):
+        query = self.queryset.filter(location__agent_status='available').distinct()
+        data = self.get_serializer(query, many=True).data
+        return Response({'data': data})
+         
     
     
 class SystemInfoViewSet(viewsets.ModelViewSet):
