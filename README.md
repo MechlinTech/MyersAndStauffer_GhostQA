@@ -52,10 +52,10 @@ To successfully set up and run GhostQA, ensure the following software is install
 ### Step 2: Install SQL Server
 Follow this guide to install SQL Server with Mixed Mode Authentication: [SQL Server 2019 Installation Guide](https://www.bu.edu/csmet/files/2021/02/SQL-Server-2019-Installation-Guide.pdf).
 After installing SQL Server, perform the following tasks:
-1. Create the database using the provided database name.
-2. Run the script to create tables.
-3. Run the script to create procedures.
-4. Run the script for the initial user setup.
+1. Create the database and provide database name.
+2. Run the script to create tables. [Table Script](https://github.com/MechlinTech/MyersAndStauffer_GhostQA/blob/main/SeleniumReportAPI/SqlScript/TableScript.sql)
+3. Run the script to create procedures. [SP Script](https://github.com/MechlinTech/MyersAndStauffer_GhostQA/blob/main/SeleniumReportAPI/SqlScript/AllGhostQA_SP.sql)
+4. Run the script for the initial user setup. [Initial User Script](https://github.com/MechlinTech/MyersAndStauffer_GhostQA/blob/main/SeleniumReportAPI/SqlScript/Insert_FirstUser.sql)
 Ensure the scripts are run in the order mentioned above.
 
 ### Step 3: Download the Provided Zip File
@@ -78,21 +78,13 @@ Download the provided zip file for the GhostQA application setup and perform the
 	- make sure the `GhostQA_API` and `GhostQA_UI` folders are directly placed in the `Published Project` folder	
 3. Right-click on the `SetupApp.bat` file and run it as an Administrator. It will create two sites on IIS, one for the API and another for the UI.
 	- Once in the `command prompt` it is showing done copy the URL provided in the `command prompt` and try to open
-	- 
-
-  
+	- After launching the URL default user name and password would be - `admin@gmail.com` and `Admin@123`
 
 ### Step 5: Set Up the Application
-
-  
 
 1. Modify the `appsettings.json` file to update the connection string with the appropriate username and password.
 
 2. Create all required folders mentioned in the `appsettings.json` file.
-
-3. Create a `Data` folder in the `GhostQA_UI/Images` directory of the published application.
-
-4. Create an `UploadedLogo` folder in the `GhostQA_API` directory of the published application.
 
   
 
