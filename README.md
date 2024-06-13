@@ -60,12 +60,9 @@ After installing SQL Server, perform the following tasks:
 	Ensure the scripts are run in the order mentioned above.
 
 ### Step 3: Download the Provided Zip File
-Download the provided zip file for the GhostQA application setup and perform the following steps:
-1. Place the files:
-	-  `GhostQA_API`
-	-  `GhostQA_UI`
-	-  `SetupApp.bat`
-2. Create a Published Folder Named as `Published Project`
+Download the zip file [Download Zip](https://github.com/MechlinTech/MyersAndStauffer_GhostQA/blob/main/SeleniumReportAPI/wwwroot/LatestSetupApp.zip) for the GhostQA application setup and perform the following steps:
+
+1. Create a Published Folder Named as `Published Project`
 	-  Ensure all permissions are granted for `Published Project` for users`IUser` and `IISUser` for the folder containing the published project files.
 	- If not need to right-click on the folder and in `properties` check the `security` tab
 	- Click on `Edit` Option
@@ -75,9 +72,12 @@ Download the provided zip file for the GhostQA application setup and perform the
 	- Once you find and the user is visible in the list need to click on ok till the `security` page
 	- Click on the users one by one and `Allow All` permissions
 	- Click on `Ok` and save these changes
-	- Download the provided `zip` folder for `setupApp` and extract in the same folder [Download Zip](https://github.com/MechlinTech/MyersAndStauffer_GhostQA/blob/main/SeleniumReportAPI/wwwroot/LatestSetupApp.zip)
-	- make sure the `GhostQA_API` and `GhostQA_UI` folders are directly placed in the `Published Project` folder	
-3. Right-click on the `SetupApp.bat` file and run it as an Administrator. It will create two sites on IIS, one for the API and another for the UI.
+	- Extract the Zip in created `Published Project` folder and it should have below files/folders -
+             -  `GhostQA_API`
+	     -  `GhostQA_UI`
+	     -  `SetupApp.bat`
+	- Make sure the `GhostQA_API` and `GhostQA_UI` folders are directly placed in the `Published Project` folder	
+2. Right-click on the `SetupApp.bat` file and run it as an Administrator. It will create two sites on IIS, one for the API and another for the UI.
 	- Once in the `command prompt` it is showing done copy the URL provided in the `command prompt` and try to open
 	- After launching the URL default user name and password would be - `admin@gmail.com` and `Admin@123`
 
