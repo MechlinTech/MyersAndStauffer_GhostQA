@@ -1,9 +1,7 @@
-﻿using GitHub;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using MongoDB.Bson.IO;
 using Newtonsoft.Json.Linq;
 using SeleniumReportAPI.DTO_s;
 using SeleniumReportAPI.Helper;
@@ -189,6 +187,8 @@ namespace SeleniumReportAPI.Controllers
         [HttpPost("ExecuteTestSuite")]
         public async Task<ActionResult> ExecuteTestSuite(Dto_Execution model)
         {
+            var requestUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}{Request.QueryString}";
+
             if (await _helper.IsAnySuiteRunning())
                 return Ok(new { status = "Conflict", message = "Another test is already running on GhostQA. Please try after some time." });
 
@@ -266,7 +266,7 @@ namespace SeleniumReportAPI.Controllers
                     var webhookUrl = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dto_IntegrationRespnse>>(teamDetail);
 
                     if (webhookUrl[1].IsIntegrated)
-                        await _helper.PostReportInTeams(model.testSuiteName, _testRunName, testerName, _environmentDetails.EnvironmentName, webhookUrl[1].APIKey, mapping);
+                        await _helper.PostReportInTeams(model.testSuiteName, _testRunName, testerName, _environmentDetails.EnvironmentName, webhookUrl[1].APIKey, Url, mapping);
                 }
             }
 
@@ -564,10 +564,10 @@ namespace SeleniumReportAPI.Controllers
         /// <summary>
         /// Add Functional Suite Relation
         /// </summary>
-        [HttpPost("AddFunctionalSuiteRelation")]
-        public async Task<ActionResult> AddFunctionalSuiteRelation(FunctionalSuiteRelation model)
+        [HttpPost("AddUpdateFunctionalSuiteRelation")]
+        public async Task<ActionResult> AddUpdateFunctionalSuiteRelation(FunctionalSuiteRelation model)
         {
-            return Ok(await _helper.AddFunctionalSuiteRelation(model));
+            return Ok(await _helper.AddUpdateFunctionalSuiteRelation(model));
         }
 
         /// <summary>
@@ -577,6 +577,15 @@ namespace SeleniumReportAPI.Controllers
         public async Task<ActionResult> GetFunctionalSuiteRelation()
         {
             return Ok(await _helper.GetFunctionalSuiteRelation());
+        }
+
+        /// <summary>
+        ///  Delete Functional Suite Relation By Root Id  and Parent Id
+        /// </summary>
+        [HttpPost("DeleteFunctionalSuiteRelation")]
+        public async Task<ActionResult> DeleteFunctionalSuiteRelation(FunctionalSuiteRelation model)
+        {
+            return Ok(await _helper.DeleteFunctionalSuiteRelation(model));
         }
     }
 }

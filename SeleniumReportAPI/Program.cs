@@ -1,3 +1,5 @@
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -94,6 +96,23 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("AppDBContextConnection"), new SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        QueuePollInterval = TimeSpan.Zero,
+        UseRecommendedIsolationLevel = true,
+        UsePageLocksOnDequeue = true,
+        DisableGlobalLocks = true
+    }));
+
+// Add the processing server as IHostedService
+builder.Services.AddHangfireServer();
+
 builder.Services.AddTransient<TestExecutor>();
 builder.Services.AddScoped<DBHelper>();
 var app = builder.Build();
@@ -128,6 +147,8 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseHangfireDashboard("/myDashboard");
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
@@ -135,6 +156,7 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller}/{action=Index}/{id?}");
     endpoints.MapFallbackToFile("index.html");
+    endpoints.MapHangfireDashboard("/myDashboard");
 });
 
 app.Run();

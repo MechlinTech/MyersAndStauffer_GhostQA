@@ -302,6 +302,7 @@ namespace SeleniumReportAPI.Helper
                         command.Parameters.AddWithValue("@SelectedTestCases", string.Join(", ", model.SelectedTestCases));
                         command.Parameters.AddWithValue("@Description", model.Description);
                         command.Parameters.AddWithValue("@TestUserId", model.TestUserId);
+                        command.Parameters.AddWithValue("@RootId", model.RootId);
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
@@ -1543,6 +1544,7 @@ namespace SeleniumReportAPI.Helper
             }
             return result;
         }
+
         internal async Task<string> GetExcutedByRootId(int RootId, string TestName)
         {
             string result = string.Empty;
@@ -2547,6 +2549,7 @@ namespace SeleniumReportAPI.Helper
             var scenarios = new List<Scenarios>();
             var maxDuration = 0;
             string estimate = string.Empty;
+            var apiUrl = $"{url}codeengine/api/performance-tests/execute2";
             try
             {
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
@@ -2595,7 +2598,7 @@ namespace SeleniumReportAPI.Helper
                             formData.Add(new StringContent(data.RampUpSteps.ToString()), "jrampup_steps");
                             formData.Add(new StringContent(data.DurationInMinutes.ToString()), "durations");
                             formData.Add(new StringContent(guid), "client_reference_id");
-                            using (var response = await httpClient.PostAsync(url, formData))
+                            using (var response = await httpClient.PostAsync(apiUrl, formData))
                             {
                                 var res1 = await response.Content.ReadAsStringAsync();
                             }
@@ -3042,8 +3045,8 @@ namespace SeleniumReportAPI.Helper
                                         </tbody>
                                         </table> 
                                         <div style=""text-align: left; margin-top: 10px;"">
-                                        <img src=""cid:logoImage"" alt=""logo"" style=""max-width: 200px; height: auto;"">
-                                        <a href=""{ghostQaUrl}"" style=""text-decoration: none; color: #654DF7;"">www.ghostqa.com</a>
+                                        <img src=""cid:logoImage"" alt=""logo"" style=""max-width: 200px; height: auto; display: inline-block; vertical-align: middle;"">
+                                        <a href=""{ghostQaUrl}"" style=""text-decoration: none; color: #654DF7; display: inline-block; vertical-align: middle; margin-left: 5px;"">www.ghostqa.com</a>
                                         </div>
                                         </body>
 			                            </html>";
@@ -3105,8 +3108,8 @@ namespace SeleniumReportAPI.Helper
                                         </tbody>
                                         </table>
                                          <div style=""text-align: left; margin-top: 10px;"">
-                                            <img src=""cid:logoImage"" alt=""logo"" style=""max-width: 200px; height: auto;"">
-                                            <a href=""{ghostQaUrl}"" style=""text-decoration: none; color: #654DF7;"">www.ghostqa.com</a>
+                                            <img src=""cid:logoImage"" alt=""logo"" style=""max-width: 200px; height: auto; display: inline-block; vertical-align: middle;"">
+                                            <a href=""{ghostQaUrl}"" style=""text-decoration: none; color: #654DF7; display: inline-block; vertical-align: middle; margin-left: 5px;"">www.ghostqa.com</a>
                                         </div>
                                         </body>
 			                            </html>";
@@ -3114,7 +3117,7 @@ namespace SeleniumReportAPI.Helper
                 var from = new EmailAddress(fromEmail, senderDisplayName);
                 var to = new EmailAddress(testerName, testerName);
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, "", BodyString);
-                var logoPath = logoUrl; // Path to the logo on the server
+                var logoPath = logoUrl;
                 var logoBytes = File.ReadAllBytes(logoPath);
                 var logoAttachment = new Attachment
                 {
@@ -4207,19 +4210,23 @@ namespace SeleniumReportAPI.Helper
             }
         }
 
-        internal async Task<object> PostReportInTeams(string TestSuiteName, string TestRunName, string TesterName, string Environment, string Webhook, string TimeZone)
+        internal async Task<object> PostReportInTeams(string TestSuiteName, string TestRunName, string TesterName, string Environment, string Webhook, string Url, string TimeZone)
         {
+            int indexOfAt = TesterName.IndexOf("@");
+            string _testerName = TesterName.Substring(0, indexOfAt);
             var testrunData = GetTestRunData(TestSuiteName, TestRunName, TimeZone);
             var data = JsonConvert.DeserializeObject<Dto_TestRunData>(testrunData.Result);
-
+            string encodedQueryParameter = TestSuiteName.Replace(" ", "%20");
+            string testRunUrl = $"{Url}test/{encodedQueryParameter}/{TestRunName}";
             string summary = $@"
 **Suite Run Report**
 
 **Suite Name:** {TestSuiteName}  
+**Test Run Id**: [{data.TestRunName}]({testRunUrl})  
 **Environment:** {Environment}  
 **Start Time:** {data.TestSuiteStartDateTime}  
 **End Time:** {data.TestSuiteEndDateTime}  
-**Tester Name:** {TesterName}  
+**Tester Name:** {_testerName}  
 **Duration:** {Convert.ToDateTime(data.TestSuiteEndDateTime) - Convert.ToDateTime(data.TestSuiteStartDateTime)}  
 **Total Tests:** {data.TotalTestCases}  
 **Passed Tests:** {data.PassedTestCases}  
@@ -4241,15 +4248,16 @@ namespace SeleniumReportAPI.Helper
             return new { status = response.StatusCode, message = "Report posted successfully", data = await response.Content.ReadAsStringAsync() };
         }
 
-        internal async Task<string> AddFunctionalSuiteRelation(FunctionalSuiteRelation model)
+        internal async Task<string> AddUpdateFunctionalSuiteRelation(FunctionalSuiteRelation model)
         {
             string result = string.Empty;
             using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("stp_AddFunctionalSuiteRelation", connection))
+                using (SqlCommand command = new SqlCommand("stp_AddUpdateFunctionalSuiteRelation", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Id", model.Id);
                     command.Parameters.AddWithValue("@Parent", model.Parent);
                     command.Parameters.AddWithValue("@Name", model.Name);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -4275,6 +4283,60 @@ namespace SeleniumReportAPI.Helper
                 using (SqlCommand command = new SqlCommand("stp_GetFunctionalSuiteRelation", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            result = reader["result"].ToString();
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return result;
+        }
+
+        internal async Task<string> SaveSuiteScheduler(SuiteScheduleInfo model)
+        {
+            string result = string.Empty;
+            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("stp_SaveSuiteScheduler", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@RecurringInterval", model.RecurringInterval);
+                    command.Parameters.AddWithValue("@Interval", model.Interval);
+                    command.Parameters.AddWithValue("@SuiteName", model.SuiteName);
+                    command.Parameters.AddWithValue("@StartTime", model.StartTime);
+                    command.Parameters.AddWithValue("@EndTime", model.EndTime);
+                    command.Parameters.AddWithValue("@CreatedBy", model.CreatedBy);
+                    command.Parameters.AddWithValue("@CroneExpression", model.CroneExpression);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            result = reader["result"].ToString();
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return result;
+        }
+
+        internal async Task<string> DeleteFunctionalSuiteRelation(FunctionalSuiteRelation model)
+        {
+            string result = string.Empty;
+            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("stp_DeleteFunctionalSuiteRelation", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@RootId", model.Id);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows)

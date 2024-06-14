@@ -38,6 +38,7 @@ namespace SeleniumReportAPI.DBContext
         public DbSet<Integration> tbl_Integration { get; set; }
         public DbSet<ExistingSuiteRun> tbl_ExistingSuiteRun { get; set; }
         public DbSet<FunctionalSuiteRelation> tbl_FunctionalSuiteRelation { get; set; }
+        public DbSet<SuiteScheduleInfo> tbl_SuiteScheduleInfo { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TestSuites>()

@@ -7,19 +7,20 @@ CREATE OR ALTER PROCEDURE [dbo].[stp_AddUpdateTestSuites]
 @SelectedTestCases		NVARCHAR(MAX),
 @Description			NVARCHAR(MAX) = '',
 @TestSuiteId			INT = 0,
-@TestUserId				INT
+@TestUserId				INT,
+@RootId					INT
 AS
 /**************************************************************************************
 PROCEDURE NAME	:	stp_AddUpdateTestSuites
 CREATED BY		:	Mohammad Mobin
 CREATED DATE	:	15 Jan 2024
-MODIFIED BY		:	Mohammad Yaseer
-MODIFIED DATE	:	17 Jan 2024
+MODIFIED BY		:	Lokesh
+MODIFIED DATE	:	12th June, 2024
 PROC EXEC		:
 				EXEC stp_AddUpdateTestSuites 'Mississippi', 0
 **************************************************************************************/
 BEGIN TRY
-	IF EXISTS( SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId)
+	IF EXISTS(SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId AND [RootId] = @RootId)
 	BEGIN
 		SELECT [result] = JSON_QUERY((
 			SELECT 'fail' [status], 'Duplicate Custom Test Suite Name' [message]
@@ -28,10 +29,13 @@ BEGIN TRY
 	END
 	ELSE IF @TestSuiteId = 0
 	BEGIN
-		IF NOT EXISTS( SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId)
+		IF NOT EXISTS(SELECT 1 FROM tbl_TestSuites WHERE [TestSuiteName] = @TestSuiteName AND [TestSuiteId] <> @TestSuiteId AND [RootId] = @RootId)
 		BEGIN
-			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, [Description], [TestUserId]) 
-			VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description, @TestUserId)
+			INSERT INTO tbl_TestSuites (TestSuiteName, TestSuiteType, ApplicationId, SendEmail, EnvironmentId, SelectedTestCases, [Description], [TestUserId], [RootId]) 
+			VALUES (@TestSuiteName, @TestSuiteType, @ApplicationId, @SendEmail, @EnvironmentId, @SelectedTestCases, @Description, @TestUserId, @RootId)
+
+			INSERT INTO dbo.tbl_FunctionalSuiteRelation ([Name], Parent, IsCustomSuite)
+			VALUES (@TestSuiteName, @RootId, 1)
 		END
 		ELSE
 		BEGIN
@@ -61,7 +65,8 @@ BEGIN TRY
 		SELECT 
 		@OldTestSuiteName = TestSuiteName 
 		FROM tbl_TestSuites
-		WHERE [TestSuiteId] = @TestSuiteId;
+		WHERE [TestSuiteId] = @TestSuiteId
+		AND [RootId] = @RootId;
 
 		UPDATE tbl_TestSuites
 			SET [TestSuiteName]		= @TestSuiteName,
@@ -73,6 +78,11 @@ BEGIN TRY
 				[Description]		= @Description,
 				[TestUserId]        = @TestUserId
 		WHERE [TestSuiteId] = @TestSuiteId
+		AND [RootId] = @RootId
+
+		UPDATE dbo.tbl_FunctionalSuiteRelation
+		SET [Name] = @TestSuiteName
+		WHERE Parent = @RootId
 
 		UPDATE tbl_TestCase
 		SET TestSuiteName = @TestSuiteName
