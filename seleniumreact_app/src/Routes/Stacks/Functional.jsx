@@ -58,13 +58,13 @@ export default function Functional() {
                </Grid>
                 <Grid item>
                    
-                    {/* <Link
+                    <Link
                         to="/testcase"
                         style={{ marginLeft: "20px" }}
                         className={`${classes.linkStyle} ${location.pathname.startsWith("/testcase") && classes.activeLink}`}
                     >
                          Test Cases
-                    </Link> */}
+                    </Link>
                 </Grid>
             </Grid>
             

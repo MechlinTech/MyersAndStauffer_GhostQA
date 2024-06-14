@@ -27,6 +27,22 @@ import Graph from "./component/InbuiltSuite/Components/Graph";
 import { Tooltip } from "@mui/material";
 import DeleteSuite from "./component/InbuiltSuite/Modal/DeleteSuite";
 
+import Button from "@mui/material/Button";
+import TabsPanel from "./component/CustomSuite/TabsPanel";
+import AddNewProject from "./component/CustomSuite/AddNewProject";
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import DynamicTreeView from "./component/CustomSuite/DynamicTreeView";
+import axios from "axios";
+import { header } from "../../utils/authheader";
+import { toast } from "react-toastify";
+import { getBaseUrl } from "../../utils/configService";
+import {
+  AddWorkspace,
+  fetchWorkSpaces,
+  setRootId,
+} from "../../redux/actions/TestCase/testcaseAction";
+
 export default function Dashboard() {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -44,7 +60,11 @@ export default function Dashboard() {
   const [openDelModal, setopenDelModal] = useState(false);
   const [suitToDelete, setsuitToDelete] = useState("");
   const [inprogress, setInProgress] = useState(false);
-  const [suiteTab, setSuiteTab] = useState("1"); 
+  const [suiteTab, setSuiteTab] = useState("1");
+  const [addNewProject, setAddNewProject] = useState(false);
+  const [depth, setdepth] = useState(0);
+  const [formData, setFormData] = useState({ name: "" });
+  const [drawerOpen, setDrawerOpen] = useState(true);
 
   useEffect(() => {
     if (testSuiteAdded?.actionType === "SaveAndExecute") {
@@ -56,11 +76,6 @@ export default function Dashboard() {
     }
   }, [testSuiteAdded]);
 
-  useEffect(() => {
-    // Set default selected tab to "inbuilt"
-    dispatch(setSelectedTab("inbuilt"));
-  }, [dispatch]);
-
   const handleAddSuite = () => {
     navigate("/add-suite");
   };
@@ -70,7 +85,7 @@ export default function Dashboard() {
   };
 
   const handleSuiteTabChange = (event, newValue) => {
-    setSuiteTab(newValue); 
+    setSuiteTab(newValue);
   };
 
   const tabLableStyle = {
@@ -94,7 +109,11 @@ export default function Dashboard() {
     if (!executingSuite) {
       dispatch(getTestCaseRundetailsByTestName(selectedSuite, setInProgress));
     }
-  }, [executingSuite, dispatch, selectedSuite]);
+  }, [executingSuite]);
+
+  useEffect(() => {
+    dispatch(fetchWorkSpaces());
+  }, [dispatch]);
 
   const filteredTestSuiteData = testSuits?.filter((suite) =>
     suite?.TestSuiteName?.toLowerCase()?.includes(searchTerm?.toLowerCase())
@@ -121,10 +140,53 @@ export default function Dashboard() {
     dispatch(ExecuteTestCasesByTestSuite(data));
   };
 
-  const handleDeleteClick = (suite) => {
-    setopenDelModal(true);
-    setsuitToDelete(suite.TestSuiteName);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!formData.name.trim()) {
+      toast.error("Whitespace is not allowed.");
+      return;
+    }
+    try {
+      const BASE_URL = await getBaseUrl();
+      const response = await axios.post(
+        `${BASE_URL}/FunctionalTest/AddFunctionalTest`,
+        {
+          rootId: 0,
+          node: 0,
+          parent: formData.parentId,
+          name: formData.name,
+        },
+        header()
+      );
+      if (response.data.status === "fail") {
+        toast.error(response.data.message);
+      } else {
+        dispatch(AddWorkspace(response.data.Data[0]));
+        setFormData({ name: "" });
+        setAddNewProject(false);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ name: value, id: Math.random(), parentId: 0 });
+  };
+
+  const handleTestCaseList = (id, node) => {
+    setdepth(node);
+    setAddNewProject(false);
+    dispatch(setRootId(id));
+  };
+
+  const handleCancel = () => {
+    setAddNewProject(false);
+    setFormData({ name: "" });
+  };
+
+  const treeStyle = drawerOpen ? {} : { display: "none" };
 
   return (
     <>
@@ -217,174 +279,124 @@ export default function Dashboard() {
                                   }
                                 >
                                   <Typography
-                                    className={`${classes.infoHeader} ${
-                                      selectedSuite === suite.TestSuiteName
-                                        ? classes.activeColor
-                                        : ""
-                                    }`}
+                                    className={classes.infoGridName}
+                                    style={{
+                                      whiteSpace: "nowrap",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                    }}
                                   >
-                                    {suite.TestSuiteName?.length > 30
-                                      ? suite.TestSuiteName.slice(0, 30) + "..."
-                                      : suite.TestSuiteName}
+                                    {suite.TestSuiteName}
                                   </Typography>
                                 </Tooltip>
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  {suite.TestSuiteFlag === "Custom" && (
-                                    <>
-                                      {executingSuite ===
-                                      suite.TestSuiteName ? (
-                                        <CircularProgress
-                                          size={25}
-                                          style={{
-                                            marginRight: "8px",
-                                            color:
-                                              selectedSuite ===
-                                              suite.TestSuiteName
-                                                ? "#fff"
-                                                : "rgb(101, 77, 247)",
-                                          }}
-                                        />
-                                      ) : (
-                                        <PlayCircleIcon
-                                          style={{
-                                            marginRight: "8px",
-                                            color:
-                                              selectedSuite ===
-                                              suite.TestSuiteName
-                                                ? "#fff"
-                                                : "rgb(101, 77, 247)",
-                                            cursor: executingSuite
-                                              ? "not-allowed"
-                                              : "pointer",
-                                            opacity: executingSuite ? 0.7 : 1,
-                                          }}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            if (!executingSuite)
-                                              handleExecuteClick(suite);
-                                          }}
-                                        />
-                                      )}
-                                      <EditIcon
-                                        style={{
-                                          marginRight: "8px",
-                                          color:
-                                            selectedSuite ===
-                                            suite.TestSuiteName
-                                              ? "#fff"
-                                              : "rgb(101, 77, 247)",
-                                        }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleEditClick(suite);
-                                        }}
-                                      />
-                                      <DeleteIcon
-                                        style={{ color: "rgb(247, 77, 77)" }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleDeleteClick(suite);
-                                        }}
-                                      />
-                                    </>
-                                  )}
-                                </div>
                               </div>
                             </Grid>
                           </Grid>
                         </Paper>
                       ))
                     ) : (
-                      <Box textAlign="center">No test suite</Box>
+                      <Grid container justifyContent="center">
+                        <Typography>No Suites found.</Typography>
+                      </Grid>
                     )}
                   </>
+                )}
+                {selectedTab === "custom" && (
+                  <Grid item xs={12} md={12} xl={12} style={treeStyle}>
+                    <Card
+                      className={classes.card}
+                      style={{ paddingBottom: "30px" }}
+                    >
+                      <Grid
+                        container
+                        alignItems="center"
+                        className={classes.bodyHeader}
+                        style={{ position: "relative" }}
+                      >
+                        <Grid item xs={6}>
+                          Workspaces
+                        </Grid>
+                        <Grid item xs={5} style={{ textAlign: "right" }}>
+                          {addNewProject ? (
+                            <Button
+                              variant="contained"
+                              onClick={handleCancel}
+                              style={{
+                                fontSize: 14,
+                                backgroundColor: "rgb(101, 77, 247)",
+                                color: "#ffffff",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              onClick={() => setAddNewProject(true)}
+                              style={{
+                                fontSize: 14,
+                                backgroundColor: "rgb(101, 77, 247)",
+                                color: "#ffffff",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <Add />
+                            </Button>
+                          )}
+                        </Grid>
+                        <Grid item xs={12}>
+                          {addNewProject && (
+                            <AddNewProject
+                              handleChange={handleChange}
+                              handleSubmit={handleSubmit}
+                              formData={formData}
+                            />
+                          )}
+                        </Grid>
+                      </Grid>
+                      <Grid>
+                        <DynamicTreeView TestCaseHandle={handleTestCaseList} />
+                      </Grid>
+                    </Card>
+                  </Grid>
                 )}
               </Grid>
             </Card>
           </Grid>
-
-          {selectedSuite && (
-            <Grid item xs={12} sm={8}>
-              <Card>
-                <Box style={tabLableStyle}>
-                  {selectedTab === "inbuilt" ? "Test Run" : "Custom Suite"}
-                </Box>
+          <Grid item xs={12} sm={8}>
+            {inprogress ? (
+              <Grid container justifyContent="center">
+                <CircularProgress />
+              </Grid>
+            ) : (
+              <>
                 {selectedTab === "inbuilt" && (
-                  <Grid container>
-                    <Grid item xs={12} style={{ paddingLeft: "20px" }}>
-                      <TabContext value={suiteTab}>
-                        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                          <TabList
-                            onChange={handleSuiteTabChange}
-                            aria-label="Test Run Tabs"
-                          >
-                           <Tab
-                            label="Dashboard"
-                            value="1"
-                            style={tabHeaderStyle}
-                          />
-                          <Tab
-                            label="History"
-                            value="2"
-                            style={tabHeaderStyle}
-                          />
-                          </TabList>
-                        </Box>
-                        <TabPanel value="1" style={{ padding: "0px" }}>
-                          <Grid
-                            item
-                            style={{
-                              maxHeight: "70vh",
-                              overflow: "auto",
-                              paddingBottom: "10px",
-                            }}
-                          >
-                            {inprogress ? (
-                              <Box textAlign="center">
-                                <CircularProgress />
-                              </Box>
-                            ) : (
-                              <Graph />
-                            )}
-                          </Grid>
-                        </TabPanel>
-                        <TabPanel value="2" style={{ padding: "0px" }}>
-                          <Grid
-                            item
-                            style={{
-                              maxHeight: "70vh",
-                              overflow: "auto",
-                              paddingBottom: "10px",
-                            }}
-                          >
-                            {inprogress ? (
-                              <Box textAlign="center">
-                                <CircularProgress />
-                              </Box>
-                            ) : (
-                              <BasicAccordion />
-                            )}
-                          </Grid>
-                        </TabPanel>
-                      </TabContext>
-                    </Grid>
-                  </Grid>
+                  <TabContext value={suiteTab}>
+                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                      <TabList onChange={handleSuiteTabChange}>
+                        <Tab
+                          label="Dashboard"
+                          value="1"
+                          style={tabLableStyle}
+                        />
+                        <Tab label="History" value="2" style={tabLableStyle} />
+                      </TabList>
+                    </Box>
+                    <TabPanel value="1">
+                      <Graph />
+                    </TabPanel>
+                    <TabPanel value="2">
+                      <BasicAccordion />
+                    </TabPanel>
+                  </TabContext>
                 )}
                 {selectedTab === "custom" && (
-                  <Grid container justify="center">
-                    <Typography variant="h6" style={{ marginTop: "20px" }}>
-                      Custom Suite
-                    </Typography>
-                  </Grid>
+                  <>{depth >= 1 ? <TabsPanel /> : <Box />}</>
                 )}
-              </Card>
-            </Grid>
-          )}
+              </>
+            )}
+          </Grid>
         </Grid>
       </div>
     </>
