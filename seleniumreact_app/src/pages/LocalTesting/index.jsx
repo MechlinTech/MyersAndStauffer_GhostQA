@@ -18,9 +18,6 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { Add } from "@mui/icons-material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import Graph from "./component/InbuiltSuite/Components/Graph";
@@ -30,8 +27,6 @@ import DeleteSuite from "./component/InbuiltSuite/Modal/DeleteSuite";
 import Button from "@mui/material/Button";
 import TabsPanel from "./component/CustomSuite/TabsPanel";
 import AddNewProject from "./component/CustomSuite/AddNewProject";
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import DynamicTreeView from "./component/CustomSuite/DynamicTreeView";
 import axios from "axios";
 import { header } from "../../utils/authheader";
@@ -41,7 +36,7 @@ import {
   AddWorkspace,
   fetchWorkSpaces,
   setRootId,
-} from "../../redux/actions/TestCase/testcaseAction";
+} from "../../redux/actions/localsuiteAction";
 
 export default function Dashboard() {
   const classes = useStyles();
@@ -180,6 +175,18 @@ export default function Dashboard() {
     setAddNewProject(false);
     dispatch(setRootId(id));
   };
+  // const handleTestCaseList = (id, node) => {
+  //   setdepth(node);
+  //   setAddNewProject(false);
+  //   if (node > 1) {
+  //   //   setAddTestCase(id);
+  //   dispatch(setRootId(id))
+  //   } else {
+  //   dispatch(setRootId(0))
+  //   }
+  //   dispatch(setRootId(id))
+
+  // };
 
   const handleCancel = () => {
     setAddNewProject(false);
@@ -217,7 +224,19 @@ export default function Dashboard() {
                 <Grid item xs={12}>
                   <TabContext value={selectedTab}>
                     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                      <TabList onChange={handleTabChange} aria-label="Tabs">
+                      <TabList
+                        onChange={handleTabChange}
+                        aria-label="Tabs"
+                        textColor="black"
+                        sx={{
+                          "& .Mui-selected": {
+                            color: "#654DF7",
+                          },
+                          "& .MuiTabs-indicator": {
+                            backgroundColor: "#654DF7",
+                          },
+                        }}
+                      >
                         <Tab
                           label="In-built Suite"
                           value="inbuilt"
@@ -302,10 +321,10 @@ export default function Dashboard() {
                   </>
                 )}
                 {selectedTab === "custom" && (
-                  <Grid item xs={12} md={12} xl={12} style={treeStyle}>
-                    <Card
+                  <Grid item xs={12} md={12} xl={12} >
+                    <Grid
                       className={classes.card}
-                      style={{ paddingBottom: "30px" }}
+                      style={{ paddingBottom: "20px", paddingLeft: "20px", paddingRight: "20px"}}
                     >
                       <Grid
                         container
@@ -358,7 +377,7 @@ export default function Dashboard() {
                       <Grid>
                         <DynamicTreeView TestCaseHandle={handleTestCaseList} />
                       </Grid>
-                    </Card>
+                    </Grid>
                   </Grid>
                 )}
               </Grid>
@@ -374,7 +393,18 @@ export default function Dashboard() {
                 {selectedTab === "inbuilt" && (
                   <TabContext value={suiteTab}>
                     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                      <TabList onChange={handleSuiteTabChange}>
+                      <TabList
+                        onChange={handleSuiteTabChange}
+                        textColor="black"
+                        sx={{
+                          "& .Mui-selected": {
+                            color: "#654DF7",
+                          },
+                          "& .MuiTabs-indicator": {
+                            backgroundColor: "#654DF7",
+                          },
+                        }}
+                      >
                         <Tab
                           label="Dashboard"
                           value="1"
@@ -392,7 +422,7 @@ export default function Dashboard() {
                   </TabContext>
                 )}
                 {selectedTab === "custom" && (
-                  <>{depth >= 1 ? <TabsPanel /> : <Box />}</>
+                  <>{depth === 3 ? <TabsPanel /> : <Box />}</>
                 )}
               </>
             )}

@@ -5,7 +5,6 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { StyledTypography } from "./styles";
-import Design from "./Design";
 import Graph from "../InbuiltSuite/Components/Graph";
 import BasicAccordion from "../../../../comman/Accordion";
 

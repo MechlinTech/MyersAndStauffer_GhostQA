@@ -13,6 +13,7 @@ import { header } from "../../../../utils/authheader";
 import { Box, CircularProgress, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import DeleteModal from "./Comman/DeleteModal";
 import {
   AddWorkspace,
@@ -24,6 +25,12 @@ import {
   setSelectedNode,
 } from "../../../../redux/actions/TestCase/testcaseAction";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  getTestCaseRundetailsByTestName,
+  setSelectedSuite,
+  ExecuteTestCasesByTestSuite,
+  setExecutingSuite,
+} from "../../../../redux/actions/seleniumAction";
 
 const Card = ({
   newElementName,
@@ -49,7 +56,10 @@ const Card = ({
   expandedInputId,
   setExpandedInputId,
   handleTask,
+  executingSuite,
+  selectedSuite,
   keyData = 0,
+  handleExecuteClick
 }) => {
   const styleClass = useStylesTree();
   const dispatch = useDispatch();
@@ -109,11 +119,11 @@ const Card = ({
                       <>
                         {!expanded.includes(item.id) ? (
                           <ExpandMoreIcon
-                            onClick={() => toggleExpand(item.id)}
+                            onClick={() => toggleExpand(item.id, item)}
                           />
                         ) : (
                           <ExpandLessIcon
-                            onClick={() => toggleExpand(item.id)}
+                            onClick={() => toggleExpand(item.id, item)}
                           />
                         )}
                       </>
@@ -139,7 +149,7 @@ const Card = ({
                         onClick={() => {
                           handleTask(item.id, nodeCount);
                           dispatch(setRootId(item.id));
-                          toggleExpand(item.id)
+                          toggleExpand(item.id, item);
                         }}
                         style={{
                           cursor: "pointer",
@@ -163,6 +173,50 @@ const Card = ({
                     )}
                   </div>
                   <div className={styleClass.crud}>
+                    {nodeCount == 3 && (
+                      // <PlayCircleIcon
+                      //   style={{
+                      //     marginRight: "8px",
+                      //   }}
+                      // />
+                      <>
+                        {executingSuite && executingSuite === item.name ? (
+                          <CircularProgress
+                            size={25}
+                            style={{
+                              marginRight: "8px",
+                              // color:
+                              //   selectedSuite === item.name
+                              //     ? "#fff"
+                              //     : "rgb(101, 77, 247)",
+                              color:
+                              selectedNodeId === item.id ? "white" : "#654df7",
+                          
+                            }}
+                          />
+                        ) : (
+                          <PlayCircleIcon
+                            style={{
+                              marginRight: "8px",
+                              // color:
+                              //   selectedSuite === item.name
+                              //     ? "#fff"
+                              //     : "rgb(101, 77, 247)",
+                              color:
+                              selectedNodeId === item.id ? "white" : "#654df7",
+                              cursor: executingSuite
+                                ? "not-allowed"
+                                : "pointer",
+                              opacity: executingSuite ? 0.7 : 1,
+                            }}
+                            onClick={(e) => {
+                              if (!executingSuite) handleExecuteClick(item);
+                            }}
+                          />
+                        )}
+                      </>
+                    )}
+
                     {editMode == 0 && (
                       <EditIcon
                         sx={{
@@ -186,13 +240,15 @@ const Card = ({
                       onClick={() => handleDelete(item)}
                       style={{ cursor: "pointer" }}
                     />
-                    {nodeCount < 1 && (
+                    {nodeCount < 3 && (
                       <AddIcon
                         sx={{
                           color:
                             selectedNodeId === item.id ? "white" : "#654df7",
                         }}
-                        onClick={(event) => handleCRUD(event, item.id)}
+                        onClick={(event) =>
+                          handleCRUD(event, item.id, nodeCount)
+                        }
                         style={{
                           marginLeft: "auto",
                         }}
@@ -258,6 +314,8 @@ const Card = ({
                     handleCRUDCancel={handleCRUDCancel}
                     handleKeyPress={handleKeyPress}
                     handleDelete={handleDelete}
+                    selectedSuite={selectedSuite}
+                    handleExecuteClick={handleExecuteClick}
                   />
                 )}
               </li>
@@ -273,8 +331,9 @@ const Card = ({
 const DynamicTreeView = ({ TestCaseHandle }) => {
   const styleClass = useStylesTree();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { listData, isLoading, error, selectedNodeId, expanded } = useSelector(
-    (state) => state.testcase
+    (state) => state.localTest
   );
   const [nodeCount, setNodeCount] = useState(0);
   const [expandedInputId, setExpandedInputId] = useState(null);
@@ -283,6 +342,9 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
   const [newElementName, setNewElementName] = useState("");
   const [openDelModal, setopenDelModal] = useState(false);
   const [deleteItem, setsDeleteItem] = useState("");
+  const [inprogress, setInProgress] = useState(false);
+  const { userId } = useSelector((store) => store.auth);
+  const { executingSuite } = useSelector((state) => state.selenium);
 
   useEffect(() => {
     if (selectedNodeId) {
@@ -307,6 +369,8 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
     dispatch(setSelectedNode());
   }, [selectedNodeId]);
 
+
+
   const findDepth = (item, items) => {
     if (item.parentId === 0) {
       return 1; // Base case: root item
@@ -319,12 +383,12 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
       }
     }
   };
-  const handleCRUD = (event, parentId) => {
+  const handleCRUD = (event, parentId, value) => {
     event.preventDefault();
-    console.log(parentId);
-    // For demonstration purposes, let's add a new element if the node count is less than 2
-    if (nodeCount < 2) {
+    if (value < 2) {
       setExpandedInputId(parentId);
+    } else if (value === 2) {
+      navigate("/add-suite");
     } else {
       alert("Maximum node limit reached.");
     }
@@ -445,9 +509,14 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
     setEditData(name);
   };
 
-  const toggleExpand = (id) => {
+  const toggleExpand = (id, value) => {
     dispatch(setExpandedNodes(id));
-    console.log("expanded", expanded);
+    if (value.node == 3) {
+      let data = value.name;
+      console.log("data?", value);
+      dispatch(setSelectedSuite(data));
+      dispatch(getTestCaseRundetailsByTestName(data, setInProgress));
+    }
   };
   const handleCRUDCancel = () => {
     setNewElementName("");
@@ -514,6 +583,15 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
     setopenDelModal(false);
   };
 
+  const handleExecuteClick = (suite) => {
+    dispatch(setExecutingSuite(suite.name));
+    let data = {
+      testSuiteName: suite.name,
+      userId: userId,
+    };
+    dispatch(ExecuteTestCasesByTestSuite(data));
+  };
+
   return (
     <>
       <DeleteModal
@@ -563,6 +641,8 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
             handleCRUDCancel={handleCRUDCancel}
             handleKeyPress={handleKeyPress}
             handleDelete={handleDeleTeModal}
+            executingSuite={executingSuite}
+            handleExecuteClick={handleExecuteClick}
           />
         )}
       </div>
