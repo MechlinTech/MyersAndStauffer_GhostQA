@@ -59,7 +59,7 @@ const Card = ({
   executingSuite,
   selectedSuite,
   keyData = 0,
-  handleExecuteClick
+  handleExecuteClick,
 }) => {
   const styleClass = useStylesTree();
   const dispatch = useDispatch();
@@ -190,8 +190,9 @@ const Card = ({
                               //     ? "#fff"
                               //     : "rgb(101, 77, 247)",
                               color:
-                              selectedNodeId === item.id ? "white" : "#654df7",
-                          
+                                selectedNodeId === item.id
+                                  ? "white"
+                                  : "#654df7",
                             }}
                           />
                         ) : (
@@ -203,7 +204,9 @@ const Card = ({
                               //     ? "#fff"
                               //     : "rgb(101, 77, 247)",
                               color:
-                              selectedNodeId === item.id ? "white" : "#654df7",
+                                selectedNodeId === item.id
+                                  ? "white"
+                                  : "#654df7",
                               cursor: executingSuite
                                 ? "not-allowed"
                                 : "pointer",
@@ -369,8 +372,6 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
     dispatch(setSelectedNode());
   }, [selectedNodeId]);
 
-
-
   const findDepth = (item, items) => {
     if (item.parentId === 0) {
       return 1; // Base case: root item
@@ -403,12 +404,12 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
       }
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
-        `${BASE_URL}/FunctionalTest/AddFunctionalTest`,
+        `${BASE_URL}/Selenium/AddUpdateFunctionalSuiteRelation`,
         {
-          rootId: 0,
-          node: 0,
-          parent: newItem.parentId,
+          id: 0,
           name: newItem.name,
+          parent: newItem.parentId,
+          isCustomSuite: true,
         },
 
         header()
@@ -464,12 +465,12 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
         }
         const BASE_URL = await getBaseUrl();
         const response = await axios.post(
-          `${BASE_URL}/FunctionalTest/UpdateFunctionalTest`,
+          `${BASE_URL}/Selenium/AddUpdateFunctionalSuiteRelation`,
           {
-            rootId: itemToEdit.id,
-            node: 0,
+            id: itemToEdit.id,
             parent: itemToEdit.parentId,
             name: editData,
+            isCustomSuite: false,
           },
 
           header()
@@ -540,15 +541,11 @@ const DynamicTreeView = ({ TestCaseHandle }) => {
     try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
-        `${BASE_URL}/FunctionalTest/DeleteFunctionalTest`,
+        `${BASE_URL}/Selenium/DeleteFunctionalSuiteRelation`,
         {
-          rootId: itemToDelete.id,
-          // node: 0,
+          id: itemToDelete.id,
           parent: itemToDelete.parentId,
           name: itemToDelete.name,
-          // id: itemToDelete.id,
-          // parentId: itemToDelete.parentId,
-          // name: itemToDelete.name,
         },
 
         header()

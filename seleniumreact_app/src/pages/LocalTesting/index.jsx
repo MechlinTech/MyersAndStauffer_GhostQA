@@ -141,15 +141,15 @@ export default function Dashboard() {
       toast.error("Whitespace is not allowed.");
       return;
     }
-    try {
+      try {
       const BASE_URL = await getBaseUrl();
       const response = await axios.post(
-        `${BASE_URL}/FunctionalTest/AddFunctionalTest`,
+        `${BASE_URL}/Selenium/AddUpdateFunctionalSuiteRelation`,
         {
-          rootId: 0,
-          node: 0,
-          parent: formData.parentId,
-          name: formData.name,
+          "id": 0,
+          "name": formData.name,
+          "parent": formData.parentId,
+          "isCustomSuite": true
         },
         header()
       );

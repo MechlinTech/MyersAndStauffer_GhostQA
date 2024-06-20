@@ -56,7 +56,7 @@ export default function Functional() {
                         Local Testing(New)
                    </Link>
                </Grid>
-                <Grid item>
+                {/* <Grid item>
                    
                     <Link
                         to="/testcase"
@@ -65,7 +65,7 @@ export default function Functional() {
                     >
                          Test Cases
                     </Link>
-                </Grid>
+                </Grid> */}
             </Grid>
             
             <div style={{ paddingTop: '30px' }}>
